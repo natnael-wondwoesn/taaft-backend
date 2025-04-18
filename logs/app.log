@@ -1,0 +1,726 @@
+2025-04-17T19:13:23.042269+0300 INFO Connecting to MongoDB...
+2025-04-17T19:32:36.892149+0300 INFO Connecting to MongoDB...
+2025-04-17T21:05:31.894183+0300 INFO Connecting to MongoDB...
+2025-04-17T21:07:42.169103+0300 INFO Connecting to MongoDB...
+2025-04-17T21:08:20.569265+0300 INFO Connecting to MongoDB...
+2025-04-17T21:11:54.597212+0300 INFO Connecting to MongoDB...
+2025-04-17T21:11:54.900064+0300 INFO Connected to MongoDB!
+2025-04-17T21:12:37.527786+0300 INFO Connecting to MongoDB...
+2025-04-17T21:12:37.529785+0300 INFO Connected to MongoDB!
+2025-04-17T21:12:46.331568+0300 INFO Connecting to MongoDB...
+2025-04-17T21:12:46.334559+0300 INFO Connected to MongoDB!
+2025-04-17T21:12:49.685189+0300 INFO Created sources collection
+2025-04-17T21:12:50.481334+0300 INFO Created scraping_logs collection
+2025-04-17T21:12:51.202710+0300 INFO Created scraping_tasks collection
+2025-04-17T21:15:14.221633+0300 INFO Shutting down MongoDB connection...
+2025-04-17T21:15:14.633327+0300 INFO MongoDB connection closed.
+2025-04-17T21:15:16.743478+0300 INFO Connecting to MongoDB...
+2025-04-17T21:15:16.746492+0300 INFO Connected to MongoDB!
+2025-04-17T21:15:24.892087+0300 INFO Connecting to MongoDB...
+2025-04-17T21:15:24.894089+0300 INFO Connected to MongoDB!
+2025-04-17T21:15:30.579458+0300 INFO Connecting to MongoDB...
+2025-04-17T21:15:30.580835+0300 INFO Connected to MongoDB!
+2025-04-17T21:15:35.162075+0300 INFO Connecting to MongoDB...
+2025-04-17T21:15:35.164077+0300 INFO Connected to MongoDB!
+2025-04-17T21:15:42.923305+0300 INFO Connecting to MongoDB...
+2025-04-17T21:15:42.926440+0300 INFO Connected to MongoDB!
+2025-04-17T21:15:47.232582+0300 INFO Connecting to MongoDB...
+2025-04-17T21:15:47.234608+0300 INFO Connected to MongoDB!
+2025-04-17T21:16:00.394745+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:04.913254+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:13.124596+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:18.743405+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:25.706406+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:30.138071+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:35.517536+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:41.047495+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:45.659650+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:50.063016+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:55.130986+0300 INFO Connecting to MongoDB...
+2025-04-17T21:16:59.400468+0300 INFO Connecting to MongoDB...
+2025-04-17T21:17:09.550506+0300 INFO Connecting to MongoDB...
+2025-04-17T21:17:14.054149+0300 INFO Connecting to MongoDB...
+2025-04-17T21:17:20.903302+0300 INFO Connecting to MongoDB...
+2025-04-17T21:17:45.782696+0300 INFO Connecting to MongoDB...
+2025-04-17T21:17:45.891641+0300 INFO Connecting to MongoDB...
+2025-04-17T21:18:15.395443+0300 INFO Connecting to MongoDB...
+2025-04-17T21:18:15.620312+0300 INFO Connecting to MongoDB...
+2025-04-17T21:19:09.900723+0300 INFO Connecting to MongoDB...
+2025-04-17T21:19:09.947658+0300 INFO Connecting to MongoDB...
+2025-04-17T21:19:24.999508+0300 INFO Connecting to MongoDB...
+2025-04-17T21:19:25.143697+0300 INFO Connecting to MongoDB...
+2025-04-17T21:19:58.246476+0300 INFO Connecting to MongoDB...
+2025-04-17T21:19:58.614194+0300 INFO Connecting to MongoDB...
+2025-04-17T21:20:43.592556+0300 INFO Connecting to MongoDB...
+2025-04-17T21:20:46.271869+0300 INFO Connected to MongoDB!
+2025-04-17T21:22:52.488348+0300 INFO Connecting to MongoDB...
+2025-04-17T21:22:55.810646+0300 INFO Connected to MongoDB!
+2025-04-17T21:22:59.383187+0300 INFO Connecting to MongoDB...
+2025-04-17T21:23:02.226831+0300 INFO Connected to MongoDB!
+2025-04-17T21:28:29.619987+0300 INFO Shutting down MongoDB connection...
+2025-04-17T21:29:00.023766+0300 INFO MongoDB connection closed.
+2025-04-17T21:29:07.903258+0300 INFO Connecting to MongoDB...
+2025-04-17T21:29:42.862593+0300 INFO Connecting to MongoDB...
+2025-04-17T21:30:26.974854+0300 INFO Connecting to MongoDB...
+2025-04-17T21:32:05.008560+0300 INFO Connecting to MongoDB...
+2025-04-17T21:34:20.530408+0300 INFO Connecting to MongoDB...
+2025-04-17T21:34:40.010825+0300 INFO Connecting to MongoDB...
+2025-04-17T21:51:33.105748+0300 ERROR Failed to load Algolia settings: 5 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+mongodb_url
+  Extra inputs are not permitted [type=extra_forbidden, input_value='mongodb+srv://natnaelwon...jority&appName=Cluster0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+log_level
+  Extra inputs are not permitted [type=extra_forbidden, input_value='INFO', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+2025-04-17T21:51:58.532362+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:51:58.536342+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:51:58.587307+0300 INFO Connecting to MongoDB...
+2025-04-17T21:52:02.169091+0300 INFO Connected to MongoDB!
+2025-04-17T21:52:03.890795+0300 INFO Created chat_sessions collection
+2025-04-17T21:52:07.237123+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:52:07.240115+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:52:07.280125+0300 INFO Connecting to MongoDB...
+2025-04-17T21:52:09.601170+0300 INFO Connected to MongoDB!
+2025-04-17T21:52:11.740092+0300 INFO Created chat_messages collection
+2025-04-17T21:54:07.900976+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:54:07.904979+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:54:07.937565+0300 INFO Connecting to MongoDB...
+2025-04-17T21:54:11.652812+0300 INFO Connected to MongoDB!
+2025-04-17T21:54:13.256809+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-17T21:54:16.302205+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:54:16.305198+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:54:16.345620+0300 INFO Connecting to MongoDB...
+2025-04-17T21:54:18.632253+0300 INFO Connected to MongoDB!
+2025-04-17T21:54:20.270673+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-17T21:55:27.830748+0300 INFO Shutting down MongoDB connection...
+2025-04-17T21:55:28.065357+0300 INFO MongoDB connection closed.
+2025-04-17T21:55:31.400004+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:55:31.403007+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:55:31.449440+0300 INFO Connecting to MongoDB...
+2025-04-17T21:55:35.179046+0300 INFO Connected to MongoDB!
+2025-04-17T21:55:36.763982+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-17T21:55:39.905667+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:55:39.908667+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:55:39.942668+0300 INFO Connecting to MongoDB...
+2025-04-17T21:55:42.212566+0300 INFO Connected to MongoDB!
+2025-04-17T21:55:43.857944+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-17T21:56:02.620229+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T21:56:02.624225+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T21:56:02.654225+0300 INFO Connecting to MongoDB...
+2025-04-17T21:56:05.463911+0300 INFO Connected to MongoDB!
+2025-04-17T21:56:07.129525+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-17T21:56:36.187084+0300 INFO Shutting down MongoDB connection...
+2025-04-17T21:56:36.437034+0300 INFO MongoDB connection closed.
+2025-04-17T22:21:30.647122+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-17T22:21:30.648123+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-17T22:21:30.684120+0300 INFO Connecting to MongoDB...
+2025-04-18T19:06:03.258854+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:06:03.261853+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:06:03.327851+0300 INFO Connecting to MongoDB...
+2025-04-18T19:08:45.259366+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:08:45.262365+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:08:45.295366+0300 INFO Connecting to MongoDB...
+2025-04-18T19:10:49.943064+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:10:49.946069+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:10:49.983062+0300 INFO Connecting to MongoDB...
+2025-04-18T19:11:26.685788+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:11:26.689799+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:11:26.723535+0300 INFO Connecting to MongoDB...
+2025-04-18T19:13:53.183957+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:13:53.186951+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:13:53.223110+0300 INFO Connecting to MongoDB...
+2025-04-18T19:14:54.741990+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:14:54.746000+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:14:54.780020+0300 INFO Connecting to MongoDB...
+2025-04-18T19:16:18.115738+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...0', 'log_level': 'INFO'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:16:18.119739+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:16:18.154740+0300 INFO Connecting to MongoDB...
+2025-04-18T19:22:43.379816+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:22:43.382794+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:22:43.416795+0300 INFO Connecting to MongoDB...
+2025-04-18T19:23:51.112663+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:23:51.115672+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:23:51.150670+0300 INFO Connecting to MongoDB...
+2025-04-18T19:24:57.536740+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:24:57.539725+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:24:57.572739+0300 INFO Connecting to MongoDB...
+2025-04-18T19:25:24.590978+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:25:24.593979+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:25:24.627979+0300 INFO Connecting to MongoDB...
+2025-04-18T19:25:48.360056+0300 ERROR Error connecting to MongoDB: The resolution lifetime expired after 21.617 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.
+2025-04-18T19:25:51.932200+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:25:51.935198+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:25:51.970199+0300 INFO Connecting to MongoDB...
+2025-04-18T19:26:15.702944+0300 ERROR Error connecting to MongoDB: The resolution lifetime expired after 21.615 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.
+2025-04-18T19:26:18.686329+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:26:18.689318+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:26:18.721316+0300 INFO Connecting to MongoDB...
+2025-04-18T19:26:40.287517+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:26:40.290514+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:26:40.322517+0300 WARNING TEST_MODE enabled: Skipping MongoDB initialization
+2025-04-18T19:26:40.322517+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:27:41.978729+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:27:41.982737+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:27:42.018740+0300 WARNING TEST_MODE enabled: Skipping MongoDB initialization
+2025-04-18T19:27:42.018740+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:28:20.443534+0300 ERROR Failed to load Algolia settings: 3 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'mongodb_url': 'mongodb+...a31Xtj9hQMd8QfagfW4rsA'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:28:20.446531+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:28:20.481533+0300 WARNING TEST_MODE enabled: Skipping MongoDB initialization
+2025-04-18T19:28:20.482534+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:29:54.578369+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:29:54.581374+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:29:54.617374+0300 WARNING TEST_MODE enabled: Skipping MongoDB initialization
+2025-04-18T19:29:54.618374+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:31:29.573632+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:31:29.577634+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:31:29.612126+0300 INFO Connecting to MongoDB...
+2025-04-18T19:31:53.431928+0300 ERROR Error connecting to MongoDB: The resolution lifetime expired after 21.614 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.
+2025-04-18T19:33:31.992200+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:33:31.996190+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:33:32.028192+0300 INFO Connecting to MongoDB...
+2025-04-18T19:33:55.848145+0300 ERROR Error connecting to MongoDB: The resolution lifetime expired after 21.612 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.8.1@53 answered The DNS operation timed out.
+2025-04-18T19:34:49.123086+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:34:49.126088+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:34:49.159090+0300 INFO Connecting to MongoDB...
+2025-04-18T19:34:52.177183+0300 INFO Connected to MongoDB!
+2025-04-18T19:34:53.742992+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:35:48.978879+0300 INFO Shutting down MongoDB connection...
+2025-04-18T19:35:49.186732+0300 INFO MongoDB connection closed.
+2025-04-18T19:35:52.914861+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:35:52.916854+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:35:52.959866+0300 INFO Connecting to MongoDB...
+2025-04-18T19:35:57.491285+0300 INFO Connected to MongoDB!
+2025-04-18T19:35:59.539025+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:36:03.321713+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:36:03.324695+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:36:03.357713+0300 INFO Connecting to MongoDB...
+2025-04-18T19:36:05.658744+0300 INFO Connected to MongoDB!
+2025-04-18T19:36:07.627362+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:39:03.200851+0300 INFO Shutting down MongoDB connection...
+2025-04-18T19:39:03.426575+0300 INFO MongoDB connection closed.
+2025-04-18T19:39:07.365228+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:39:07.368228+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:39:07.401238+0300 INFO Connecting to MongoDB...
+2025-04-18T19:39:10.643018+0300 INFO Connected to MongoDB!
+2025-04-18T19:39:12.265581+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:39:15.970445+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:39:15.973453+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:39:16.031376+0300 INFO Connecting to MongoDB...
+2025-04-18T19:39:18.269273+0300 INFO Connected to MongoDB!
+2025-04-18T19:39:19.885755+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:39:23.833555+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:39:23.837573+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:39:23.871556+0300 INFO Connecting to MongoDB...
+2025-04-18T19:39:26.166054+0300 INFO Connected to MongoDB!
+2025-04-18T19:39:27.813784+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:39:31.499778+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:39:31.502779+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:39:31.536780+0300 INFO Connecting to MongoDB...
+2025-04-18T19:39:33.861410+0300 INFO Connected to MongoDB!
+2025-04-18T19:39:35.484236+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:39:49.929121+0300 INFO Shutting down MongoDB connection...
+2025-04-18T19:39:50.233703+0300 INFO MongoDB connection closed.
+2025-04-18T19:39:54.236203+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:39:54.240191+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:39:54.277193+0300 INFO Connecting to MongoDB...
+2025-04-18T19:39:56.494601+0300 INFO Connected to MongoDB!
+2025-04-18T19:39:58.073551+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:40:01.681093+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:40:01.684085+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:40:01.717086+0300 INFO Connecting to MongoDB...
+2025-04-18T19:40:04.091495+0300 INFO Connected to MongoDB!
+2025-04-18T19:40:05.775413+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:40:25.106437+0300 INFO Shutting down MongoDB connection...
+2025-04-18T19:40:25.392197+0300 INFO MongoDB connection closed.
+2025-04-18T19:40:29.348108+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:40:29.350111+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:40:29.384110+0300 INFO Connecting to MongoDB...
+2025-04-18T19:40:32.389469+0300 INFO Connected to MongoDB!
+2025-04-18T19:40:34.041797+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:40:38.316773+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:40:38.319777+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:40:38.373778+0300 INFO Connecting to MongoDB...
+2025-04-18T19:40:40.589744+0300 INFO Connected to MongoDB!
+2025-04-18T19:40:42.086015+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:40:45.950306+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:40:45.954315+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:40:45.990316+0300 INFO Connecting to MongoDB...
+2025-04-18T19:40:48.441684+0300 INFO Connected to MongoDB!
+2025-04-18T19:40:50.161843+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:41:30.137412+0300 INFO Shutting down MongoDB connection...
+2025-04-18T19:41:30.400621+0300 INFO MongoDB connection closed.
+2025-04-18T19:41:34.885777+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:41:34.890778+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:41:39.038999+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:41:39.040989+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:42:07.128378+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:42:07.131379+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:42:11.949947+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:42:11.952950+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:42:15.330012+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:42:15.336008+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:42:18.784675+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:42:18.788671+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:43:52.957077+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:43:52.960076+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:43:56.709833+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:43:56.711834+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:44:00.513658+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:44:00.517647+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:44:03.928467+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:44:03.932461+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:44:20.070685+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:44:20.074509+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:44:23.425119+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:44:23.428428+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:45:02.126915+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:45:02.130908+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:48:36.884333+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:48:36.887334+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:49:52.094864+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:49:52.097864+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:49:52.175307+0300 INFO Setting up database...
+2025-04-18T19:49:55.769139+0300 INFO Connected to MongoDB for setup
+2025-04-18T19:49:56.421119+0300 INFO Created users collection
+2025-04-18T19:49:57.386312+0300 INFO Database setup completed successfully
+2025-04-18T19:49:57.387318+0300 INFO Database setup completed
+2025-04-18T19:49:57.387318+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:52:21.926481+0300 INFO Shutting down application...
+2025-04-18T19:52:22.145295+0300 INFO Database connections closed
+2025-04-18T19:52:22.146290+0300 INFO Shutdown complete.
+2025-04-18T19:52:26.308939+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:52:26.311932+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:52:26.370696+0300 INFO Setting up database...
+2025-04-18T19:52:29.539744+0300 INFO Connected to MongoDB for setup
+2025-04-18T19:52:29.759530+0300 INFO Database setup completed successfully
+2025-04-18T19:52:29.760532+0300 INFO Database setup completed
+2025-04-18T19:52:29.760532+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:54:22.944400+0300 INFO Shutting down application...
+2025-04-18T19:54:23.196410+0300 INFO Database connections closed
+2025-04-18T19:54:23.197622+0300 INFO Shutdown complete.
+2025-04-18T19:54:28.867709+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T19:54:28.870710+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T19:54:28.916729+0300 INFO Setting up database...
+2025-04-18T19:54:32.118367+0300 INFO Connected to MongoDB for setup
+2025-04-18T19:54:32.351056+0300 INFO Database setup completed successfully
+2025-04-18T19:54:32.353058+0300 INFO Database setup completed
+2025-04-18T19:54:32.353058+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T19:54:40.653232+0300 INFO New user registered: natnael.wondwoesn@gmail.com
+2025-04-18T19:56:15.063997+0300 INFO User logged in: natnael.wondwoesn@gmail.com

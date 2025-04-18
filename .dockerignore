@@ -1,0 +1,28 @@
+# Version control
+.git
+.gitignore
+
+# Virtual environments
+venv/
+env/
+.env.local
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Logs
+logs/
+*.log
+
+# OS specific
+.DS_Store
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo 

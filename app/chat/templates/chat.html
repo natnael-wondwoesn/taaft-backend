@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAAFT Chat Interface</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --background-color: #f5f7fa;
+            --dark-bg: #2c3e50;
+            --light-text: #ecf0f1;
+            --dark-text: #34495e;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #3498db;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            gap: 1rem;
+            min-height: 0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-session {
+            padding: 0.75rem;
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chat-session:hover {
+            background-color: #e0e6ed;
+        }
+
+        .chat-session.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .new-chat-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .new-chat-btn:hover {
+            background-color: #27ae60;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header select {
+            background-color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background-color: var(--background-color);
+            border-bottom-left-radius: 0;
+        }
+
+        .message.system {
+            align-self: center;
+            background-color: var(--warning);
+            color: white;
+            font-size: 14px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .message-form {
+            display: flex;
+            padding: 1rem;
+            gap: 1rem;
+            border-top: 1px solid #e0e6ed;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e0e6ed;
+            border-radius: var(--border-radius);
+            resize: none;
+            font-size: 16px;
+            min-height: 60px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .message-input:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .send-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .send-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .system-prompt-container {
+            margin-top: 1rem;
+        }
+
+        .system-prompt-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .system-prompt {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e6ed;
+            border-radius: var(--border-radius);
+            resize: none;
+            font-size: 14px;
+            height: 80px;
+        }
+
+        .system-prompt:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+
+        .status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            background-color: var(--dark-bg);
+            color: white;
+            box-shadow: var(--box-shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status.error {
+            background-color: var(--accent-color);
+        }
+
+        .status.success {
+            background-color: var(--success);
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            font-size: 20px;
+            padding: 10px;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 900px) {
+            main {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                max-height: 200px;
+            }
+            .chat-container {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 16V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                TAAFT Chat Interface
+            </h1>
+        </header>
+        <main>
+            <div class="sidebar">
+                <button class="new-chat-btn" id="new-chat-btn">New Chat</button>
+                <div class="chat-list" id="chat-list">
+                    <!-- Chat sessions will be loaded here -->
+                </div>
+            </div>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <span id="chat-title">New Chat</span>
+                    <select id="model-select">
+                        <option value="default">Default Model</option>
+                        <option value="gpt4">GPT-4</option>
+                        <option value="claude">Claude</option>
+                        <option value="llama">Llama</option>
+                    </select>
+                </div>
+                <div class="messages" id="messages">
+                    <!-- Messages will be displayed here -->
+                </div>
+                <div class="message-form">
+                    <textarea class="message-input" id="message-input" placeholder="Type your message here..."></textarea>
+                    <button class="send-btn" id="send-btn">Send</button>
+                </div>
+            </div>
+        </main>
+        <div class="status" id="status">Status message</div>
+    </div>
+
+    <script>
+        const API_URL = '/api/chat';
+        const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
+        let currentChatId = null;
+        let userId = 'testuser-' + Math.floor(Math.random() * 10000); // Demo user ID
+        let socket = null;
+        let isConnected = false;
+        let messageQueue = [];
+
+        // DOM Elements
+        const chatList = document.getElementById('chat-list');
+        const messagesContainer = document.getElementById('messages');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const modelSelect = document.getElementById('model-select');
+        const chatTitle = document.getElementById('chat-title');
+        const statusEl = document.getElementById('status');
+
+        // Event Listeners
+        sendBtn.addEventListener('click', sendMessage);
+        newChatBtn.addEventListener('click', createNewChat);
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Initialize WebSocket connection
+        function initWebSocket() {
+            if (socket && socket.readyState !== WebSocket.CLOSED) {
+                return; // Already connected
+            }
+            
+            socket = new WebSocket(WS_URL);
+            
+            socket.onopen = function(e) {
+                console.log("WebSocket connection established");
+                isConnected = true;
+                showStatus('Connected to server', 'success');
+                
+                // Process any messages that were queued while disconnected
+                if (messageQueue.length > 0) {
+                    messageQueue.forEach(msg => socket.send(JSON.stringify(msg)));
+                    messageQueue = [];
+                }
+            };
+            
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                handleSocketMessage(data);
+            };
+            
+            socket.onclose = function(event) {
+                if (event.wasClean) {
+                    console.log(`WebSocket connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                } else {
+                    // Connection died
+                    console.error('WebSocket connection died');
+                    showStatus('Connection lost. Reconnecting...', 'error');
+                }
+                isConnected = false;
+                
+                // Try to reconnect after a delay
+                setTimeout(initWebSocket, 3000);
+            };
+            
+            socket.onerror = function(error) {
+                console.error(`WebSocket error: ${error.message}`);
+                showStatus('WebSocket connection error', 'error');
+            };
+        }
+
+        // Handle incoming WebSocket messages
+        function handleSocketMessage(data) {
+            // Message from streaming LLM response
+            if (data.type === 'llm_chunk') {
+                const currentResponseEl = document.getElementById('current-response');
+                if (currentResponseEl) {
+                    currentResponseEl.textContent += data.content;
+                    scrollToBottom();
+                }
+            } 
+            // Stream complete message
+            else if (data.type === 'stream_end') {
+                const currentResponseEl = document.getElementById('current-response');
+                if (currentResponseEl) {
+                    currentResponseEl.id = 'response-' + data.message_id;
+                    removeTypingIndicator();
+                    scrollToBottom();
+                }
+            } 
+            // Error message
+            else if (data.type === 'error') {
+                removeTypingIndicator();
+                addMessageToUI('system', `Error: ${data.message}`);
+                showStatus('Error: ' + data.message, 'error');
+            }
+            // General broadcast message
+            else if (data.type === 'broadcast') {
+                console.log('Broadcast message:', data.message);
+            }
+        }
+
+        // Initialize the application
+        function init() {
+            initWebSocket();
+            loadUserSessions();
+        }
+
+        // Functions
+        async function loadUserSessions() {
+            try {
+                const response = await fetch(`${API_URL}/sessions?user_id=${userId}`);
+                if (response.ok) {
+                    const sessions = await response.json();
+                    renderChatSessions(sessions);
+                    
+                    // If there are sessions, load the most recent one
+                    if (sessions.length > 0) {
+                        loadChatSession(sessions[0]._id);
+                    }
+                } else {
+                    showStatus('Failed to load chat sessions', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading chat sessions:', error);
+                showStatus('Error connecting to the server', 'error');
+            }
+        }
+
+        function renderChatSessions(sessions) {
+            chatList.innerHTML = '';
+            sessions.forEach(session => {
+                const sessionEl = document.createElement('div');
+                sessionEl.className = 'chat-session';
+                sessionEl.textContent = session.title || 'Untitled Chat';
+                sessionEl.dataset.id = session._id;
+                
+                sessionEl.addEventListener('click', () => {
+                    loadChatSession(session._id);
+                    document.querySelectorAll('.chat-session').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    sessionEl.classList.add('active');
+                });
+                
+                chatList.appendChild(sessionEl);
+            });
+        }
+
+        async function loadChatSession(sessionId) {
+            try {
+                // Get session details
+                const sessionResponse = await fetch(`${API_URL}/sessions/${sessionId}`);
+                if (!sessionResponse.ok) {
+                    throw new Error('Failed to load session');
+                }
+                
+                const session = await sessionResponse.json();
+                currentChatId = session._id;
+                chatTitle.textContent = session.title;
+                modelSelect.value = session.model;
+                
+                // Get messages
+                const messagesResponse = await fetch(`${API_URL}/sessions/${sessionId}/messages`);
+                if (!messagesResponse.ok) {
+                    throw new Error('Failed to load messages');
+                }
+                
+                const messages = await messagesResponse.json();
+                renderMessages(messages);
+                
+                // Highlight the active session in the sidebar
+                document.querySelectorAll('.chat-session').forEach(el => {
+                    el.classList.toggle('active', el.dataset.id === sessionId);
+                });
+                
+                showStatus('Chat loaded', 'success');
+            } catch (error) {
+                console.error('Error loading chat session:', error);
+                showStatus('Error loading chat session', 'error');
+            }
+        }
+
+        async function createNewChat() {
+            try {
+                const response = await fetch(`${API_URL}/sessions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: 'New Chat',
+                        user_id: userId,
+                        model: modelSelect.value,
+                    }),
+                });
+                
+                if (response.ok) {
+                    const session = await response.json();
+                    currentChatId = session._id;
+                    chatTitle.textContent = session.title;
+                    messagesContainer.innerHTML = '';
+                    
+                    // Add the new session to the sidebar
+                    const sessionEl = document.createElement('div');
+                    sessionEl.className = 'chat-session active';
+                    sessionEl.textContent = session.title;
+                    sessionEl.dataset.id = session._id;
+                    
+                    sessionEl.addEventListener('click', () => {
+                        loadChatSession(session._id);
+                        document.querySelectorAll('.chat-session').forEach(el => {
+                            el.classList.remove('active');
+                        });
+                        sessionEl.classList.add('active');
+                    });
+                    
+                    chatList.prepend(sessionEl);
+                    
+                    // Set all other sessions as inactive
+                    document.querySelectorAll('.chat-session').forEach(el => {
+                        if (el !== sessionEl) {
+                            el.classList.remove('active');
+                        }
+                    });
+                    
+                    showStatus('New chat created', 'success');
+                } else {
+                    throw new Error('Failed to create new chat');
+                }
+            } catch (error) {
+                console.error('Error creating new chat:', error);
+                showStatus('Error creating new chat', 'error');
+            }
+        }
+
+        function renderMessages(messages) {
+            messagesContainer.innerHTML = '';
+            messages.forEach(message => {
+                addMessageToUI(message.role, message.content, message._id);
+            });
+            scrollToBottom();
+        }
+
+        function addMessageToUI(role, content, messageId = null) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${role}`;
+            messageEl.textContent = content;
+            
+            if (messageId) {
+                messageEl.id = 'response-' + messageId;
+            }
+            
+            messagesContainer.appendChild(messageEl);
+            scrollToBottom();
+            return messageEl;
+        }
+
+        function startStreamedResponse() {
+            // Create a placeholder for the streamed response
+            const responseEl = document.createElement('div');
+            responseEl.className = 'message assistant';
+            responseEl.id = 'current-response';
+            responseEl.textContent = ''; // Will be filled by the stream
+            messagesContainer.appendChild(responseEl);
+            scrollToBottom();
+            return responseEl;
+        }
+
+        function addTypingIndicator() {
+            const indicatorEl = document.createElement('div');
+            indicatorEl.className = 'message assistant typing-indicator';
+            indicatorEl.id = 'typing-indicator';
+            indicatorEl.innerHTML = '<span></span><span></span><span></span>';
+            messagesContainer.appendChild(indicatorEl);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            if (!currentChatId) {
+                await createNewChat();
+            }
+            
+            // Add user message to UI
+            addMessageToUI('user', message);
+            messageInput.value = '';
+            
+            // If using WebSockets
+            if (isConnected) {
+                // Replace typing indicator with a streaming response placeholder
+                startStreamedResponse();
+                
+                // Send message via WebSocket
+                const messageData = {
+                    type: 'chat_message',
+                    chat_id: currentChatId,
+                    user_id: userId,
+                    message: message,
+                    model: modelSelect.value
+                };
+                
+                if (isConnected) {
+                    socket.send(JSON.stringify(messageData));
+                } else {
+                    // Queue the message to be sent when reconnected
+                    messageQueue.push(messageData);
+                    showStatus('Disconnected. Message will send when reconnected.', 'warning');
+                    initWebSocket(); // Try to reconnect
+                }
+                
+                // Update chat title for new chats
+                if (chatTitle.textContent === 'New Chat') {
+                    const newTitle = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                    chatTitle.textContent = newTitle;
+                    
+                    // Also update the title in the sidebar
+                    const activeSession = document.querySelector('.chat-session.active');
+                    if (activeSession) {
+                        activeSession.textContent = newTitle;
+                    }
+                    
+                    // Send title update to the server
+                    fetch(`${API_URL}/sessions/${currentChatId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ title: newTitle }),
+                    }).catch(error => console.error('Error updating title:', error));
+                }
+            } else {
+                // Fallback to REST API if WebSocket is not connected
+                // Show typing indicator
+                addTypingIndicator();
+                
+                try {
+                    const response = await fetch(`${API_URL}/sessions/${currentChatId}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            model: modelSelect.value,
+                        }),
+                    });
+                    
+                    removeTypingIndicator();
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        addMessageToUI('assistant', result.message, result.message_id);
+                        
+                        // Update chat title for new chats
+                        if (chatTitle.textContent === 'New Chat') {
+                            chatTitle.textContent = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                            
+                            // Also update the title in the sidebar
+                            const activeSession = document.querySelector('.chat-session.active');
+                            if (activeSession) {
+                                activeSession.textContent = chatTitle.textContent;
+                            }
+                        }
+                    } else {
+                        const error = await response.json();
+                        addMessageToUI('system', `Error: ${error.detail || 'Failed to get response'}`);
+                        showStatus('Error getting response', 'error');
+                    }
+                } catch (error) {
+                    removeTypingIndicator();
+                    console.error('Error sending message:', error);
+                    addMessageToUI('system', 'Error: Could not connect to the server');
+                    showStatus('Error connecting to the server', 'error');
+                }
+            }
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showStatus(message, type = 'info') {
+            statusEl.textContent = message;
+            statusEl.className = `status ${type} show`;
+            
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html> 
