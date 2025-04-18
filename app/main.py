@@ -253,8 +253,10 @@ async def stream_llm_response(
             "status": "streaming",
         }
 
-        async for chunk in llm_service.generate_stream(
-            messages=formatted_messages, system_prompt=system_prompt, model=model_type
+        async for chunk in llm_service.get_streaming_llm_response(
+            messages=formatted_messages,
+            model_type=model_type,
+            system_prompt=system_prompt,
         ):
             # Add new content to the accumulated response
             streamed_chunks.append(chunk)

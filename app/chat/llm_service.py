@@ -233,7 +233,7 @@ class LLMService:
     async def _get_openai_response(
         self,
         messages: List[Dict[str, str]],
-        model_type: ChatModelType,
+        model: str,
         system_prompt: Optional[str] = None,
         temperature: float = 0.7,
         max_tokens: Optional[int] = None,
@@ -256,11 +256,9 @@ class LLMService:
                     {"role": msg["role"], "content": msg["content"]}
                 )
 
-            # Get the model to use
-            model = self.model_map[model_type]
-
-            # Make the API call
-            response = await openai.ChatCompletion.acreate(
+            # Make the API call with the new API format
+            client = openai.AsyncOpenAI(api_key=self.openai_api_key)
+            response = await client.chat.completions.create(
                 model=model,
                 messages=formatted_messages,
                 temperature=temperature,
@@ -340,7 +338,7 @@ class LLMService:
         temperature: float = 0.7,
         max_tokens: Optional[int] = None,
     ) -> str:
-        """Get response from local Llama model or API"""
+        """Get a response from self-hosted Llama model"""
         # This is a placeholder implementation
         # In a real scenario, you'd connect to a local server running Llama,
         # or use a service like Replicate, Together AI, etc.
@@ -349,6 +347,27 @@ class LLMService:
             "Llama implementation is a placeholder. Configure with your chosen Llama provider."
         )
         return "Llama model support is not fully implemented. Please choose a different model or configure Llama API access."
+
+    async def generate_stream(
+        self, messages, system_prompt=None, model=ChatModelType.DEFAULT
+    ):
+        """
+        Generate a streaming response from the LLM.
+        This method is used by the WebSocket interface to stream responses.
+        It's an alias for get_streaming_llm_response to maintain API compatibility.
+        """
+        async for chunk in self.get_streaming_llm_response(
+            messages=messages, model_type=model, system_prompt=system_prompt
+        ):
+            yield chunk
+
+    def estimate_tokens(self, text: str) -> int:
+        """
+        Estimate the number of tokens in a text string.
+        This is a simple approximation - each word is roughly 1.3 tokens.
+        """
+        # A simple approximation: ~4 chars per token for English text
+        return len(text) // 4 or 1  # Ensure at least 1 token is counted
 
 
 # Create a singleton instance of the LLM service

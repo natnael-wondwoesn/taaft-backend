@@ -325,6 +325,91 @@
                 height: 50vh;
             }
         }
+
+        /* Add CSS for auth container and forms */
+        .auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .auth-forms {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            width: 350px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .auth-form h2 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-text);
+            text-align: center;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e6ed;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+        }
+
+        .auth-form input:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .auth-form button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .auth-form p {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .auth-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .auth-form a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-error {
+            color: var(--accent-color);
+            font-size: 14px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Hide auth container by default */
+        #auth-container {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -368,14 +453,65 @@
         <div class="status" id="status">Status message</div>
     </div>
 
+    <div class="auth-container" id="auth-container">
+        <div class="auth-forms">
+            <div id="sign-in-form" class="auth-form">
+                <h2>Sign In</h2>
+                <div id="sign-in-error" class="auth-error"></div>
+                <input type="email" id="sign-in-email" placeholder="Email" required>
+                <input type="password" id="sign-in-password" placeholder="Password" required>
+                <button id="sign-in-btn">Sign In</button>
+                <p>Don't have an account? <a href="#" id="show-sign-up">Sign Up</a></p>
+            </div>
+            <div id="sign-up-form" class="auth-form" style="display: none;">
+                <h2>Sign Up</h2>
+                <div id="sign-up-error" class="auth-error"></div>
+                <input type="email" id="sign-up-email" placeholder="Email" required>
+                <input type="password" id="sign-up-password" placeholder="Password" required>
+                <input type="password" id="sign-up-confirm-password" placeholder="Confirm Password" required>
+                <button id="sign-up-btn">Sign Up</button>
+                <p>Already have an account? <a href="#" id="show-sign-in">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const API_URL = '/api/chat';
+        const API_URL = 'http://localhost:8000/api/chat';
+        console.log(API_URL);
         const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
         let currentChatId = null;
-        let userId = 'testuser-' + Math.floor(Math.random() * 10000); // Demo user ID
+        let userId = null; // Will be populated from token
         let socket = null;
         let isConnected = false;
         let messageQueue = [];
+        
+        // Add headers to requests with authentication token if available
+        function getAuthHeaders() {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+            
+            return headers;
+        }
+        
+        // Initialize the application
+        function init() {
+            if (accessToken) {
+                userId = getUserIdFromToken(accessToken);
+            } else {
+                userId = 'testuser-' + Math.floor(Math.random() * 10000); // Fallback anonymous ID
+            }
+            
+            initWebSocket();
+            
+            if (isAuthenticated) {
+                loadUserSessions();
+            }
+        }
 
         // DOM Elements
         const chatList = document.getElementById('chat-list');
@@ -404,22 +540,39 @@
             }
             
             socket = new WebSocket(WS_URL);
+            console.log("Attempting WebSocket connection to:", WS_URL);
             
             socket.onopen = function(e) {
                 console.log("WebSocket connection established");
                 isConnected = true;
                 showStatus('Connected to server', 'success');
                 
+                // Send authentication info
+                const authData = {
+                    type: 'user_connected',
+                    user_id: userId,
+                    auth_token: accessToken
+                };
+                console.log("Sending auth data:", authData);
+                socket.send(JSON.stringify(authData));
+                
                 // Process any messages that were queued while disconnected
                 if (messageQueue.length > 0) {
+                    console.log(`Processing ${messageQueue.length} queued messages`);
                     messageQueue.forEach(msg => socket.send(JSON.stringify(msg)));
                     messageQueue = [];
                 }
             };
             
             socket.onmessage = function(event) {
-                const data = JSON.parse(event.data);
-                handleSocketMessage(data);
+                console.log("WebSocket message received:", event.data);
+                try {
+                    const data = JSON.parse(event.data);
+                    handleSocketMessage(data);
+                } catch (error) {
+                    console.error("Error parsing WebSocket message:", error);
+                    showStatus('Error processing server response', 'error');
+                }
             };
             
             socket.onclose = function(event) {
@@ -427,7 +580,7 @@
                     console.log(`WebSocket connection closed cleanly, code=${event.code} reason=${event.reason}`);
                 } else {
                     // Connection died
-                    console.error('WebSocket connection died');
+                    console.error('WebSocket connection died unexpectedly');
                     showStatus('Connection lost. Reconnecting...', 'error');
                 }
                 isConnected = false;
@@ -437,23 +590,54 @@
             };
             
             socket.onerror = function(error) {
-                console.error(`WebSocket error: ${error.message}`);
+                console.error(`WebSocket error:`, error);
                 showStatus('WebSocket connection error', 'error');
             };
         }
 
         // Handle incoming WebSocket messages
         function handleSocketMessage(data) {
-            // Message from streaming LLM response
-            if (data.type === 'llm_chunk') {
+            console.log("Processing WebSocket message:", data);
+            
+            // Handle different message types
+            if (data.type === 'chat_response') {
+                // Response from streaming LLM
+                const currentResponseEl = document.getElementById('current-response');
+                if (currentResponseEl) {
+                    currentResponseEl.textContent = data.content;
+                    scrollToBottom();
+                    
+                    // If the response is complete, update the ID
+                    if (data.status === 'complete') {
+                        console.log("LLM stream complete");
+                        currentResponseEl.id = 'response-' + data.message_id;
+                    }
+                } else {
+                    console.warn("No response element found for chat response");
+                    // Create a new element if needed
+                    const responseEl = document.createElement('div');
+                    responseEl.className = 'message assistant';
+                    responseEl.textContent = data.content;
+                    if (data.status === 'complete') {
+                        responseEl.id = 'response-' + data.message_id;
+                    } else {
+                        responseEl.id = 'current-response';
+                    }
+                    messagesContainer.appendChild(responseEl);
+                }
+            }
+            // Old message format - legacy support
+            else if (data.type === 'llm_chunk') {
+                console.log("Received legacy llm_chunk");
                 const currentResponseEl = document.getElementById('current-response');
                 if (currentResponseEl) {
                     currentResponseEl.textContent += data.content;
                     scrollToBottom();
                 }
             } 
-            // Stream complete message
+            // Stream complete message - legacy support
             else if (data.type === 'stream_end') {
+                console.log("Received legacy stream_end");
                 const currentResponseEl = document.getElementById('current-response');
                 if (currentResponseEl) {
                     currentResponseEl.id = 'response-' + data.message_id;
@@ -461,9 +645,22 @@
                     scrollToBottom();
                 }
             } 
+            // Connected confirmation
+            else if (data.type === 'connected') {
+                console.log("Connection confirmed by server:", data);
+                showStatus('Connected to server', 'success');
+            }
             // Error message
             else if (data.type === 'error') {
+                console.error("WebSocket error from server:", data.message);
                 removeTypingIndicator();
+                
+                // Remove the current response element if there's an error
+                const currentResponseEl = document.getElementById('current-response');
+                if (currentResponseEl) {
+                    currentResponseEl.remove();
+                }
+                
                 addMessageToUI('system', `Error: ${data.message}`);
                 showStatus('Error: ' + data.message, 'error');
             }
@@ -471,18 +668,18 @@
             else if (data.type === 'broadcast') {
                 console.log('Broadcast message:', data.message);
             }
-        }
-
-        // Initialize the application
-        function init() {
-            initWebSocket();
-            loadUserSessions();
+            // Unknown message type
+            else {
+                console.warn('Unknown message type received:', data.type);
+            }
         }
 
         // Functions
         async function loadUserSessions() {
             try {
-                const response = await fetch(`${API_URL}/sessions?user_id=${userId}`);
+                const response = await fetch(`${API_URL}/sessions?user_id=${userId}`, {
+                    headers: getAuthHeaders()
+                });
                 if (response.ok) {
                     const sessions = await response.json();
                     renderChatSessions(sessions);
@@ -490,6 +687,14 @@
                     // If there are sessions, load the most recent one
                     if (sessions.length > 0) {
                         loadChatSession(sessions[0]._id);
+                    }
+                } else if (response.status === 401) {
+                    // Token expired, try to refresh
+                    const refreshed = await refreshAccessToken();
+                    if (refreshed) {
+                        loadUserSessions();
+                    } else {
+                        handleLogout();
                     }
                 } else {
                     showStatus('Failed to load chat sessions', 'error');
@@ -523,8 +728,22 @@
         async function loadChatSession(sessionId) {
             try {
                 // Get session details
-                const sessionResponse = await fetch(`${API_URL}/sessions/${sessionId}`);
+                const sessionResponse = await fetch(`${API_URL}/sessions/${sessionId}`, {
+                    headers: getAuthHeaders()
+                });
+                
                 if (!sessionResponse.ok) {
+                    if (sessionResponse.status === 401) {
+                        // Token expired, try to refresh
+                        const refreshed = await refreshAccessToken();
+                        if (refreshed) {
+                            loadChatSession(sessionId);
+                            return;
+                        } else {
+                            handleLogout();
+                            throw new Error('Authentication failed');
+                        }
+                    }
                     throw new Error('Failed to load session');
                 }
                 
@@ -534,8 +753,22 @@
                 modelSelect.value = session.model;
                 
                 // Get messages
-                const messagesResponse = await fetch(`${API_URL}/sessions/${sessionId}/messages`);
+                const messagesResponse = await fetch(`${API_URL}/sessions/${sessionId}/messages`, {
+                    headers: getAuthHeaders()
+                });
+                
                 if (!messagesResponse.ok) {
+                    if (messagesResponse.status === 401) {
+                        // Token expired, try to refresh
+                        const refreshed = await refreshAccessToken();
+                        if (refreshed) {
+                            loadChatSession(sessionId);
+                            return;
+                        } else {
+                            handleLogout();
+                            throw new Error('Authentication failed');
+                        }
+                    }
                     throw new Error('Failed to load messages');
                 }
                 
@@ -550,7 +783,7 @@
                 showStatus('Chat loaded', 'success');
             } catch (error) {
                 console.error('Error loading chat session:', error);
-                showStatus('Error loading chat session', 'error');
+                showStatus('Error loading chat session: ' + error.message, 'error');
             }
         }
 
@@ -558,9 +791,7 @@
             try {
                 const response = await fetch(`${API_URL}/sessions`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({
                         title: 'New Chat',
                         user_id: userId,
@@ -598,12 +829,32 @@
                     });
                     
                     showStatus('New chat created', 'success');
+                } else if (response.status === 401) {
+                    // Token expired, try to refresh
+                    const refreshed = await refreshAccessToken();
+                    if (refreshed) {
+                        createNewChat();
+                    } else {
+                        handleLogout();
+                        throw new Error('Authentication failed');
+                    }
                 } else {
-                    throw new Error('Failed to create new chat');
+                    // Get the error details from the response
+                    let errorDetail = 'Failed to create new chat';
+                    try {
+                        const errorData = await response.json();
+                        errorDetail = errorData.detail || errorDetail;
+                    } catch (e) {
+                        console.error('Error parsing error response:', e);
+                    }
+                    
+                    console.error('Server error:', errorDetail);
+                    showStatus(`Error creating new chat: ${errorDetail}`, 'error');
+                    throw new Error(errorDetail);
                 }
             } catch (error) {
                 console.error('Error creating new chat:', error);
-                showStatus('Error creating new chat', 'error');
+                showStatus(`Error creating new chat: ${error.message}`, 'error');
             }
         }
 
@@ -660,101 +911,127 @@
             const message = messageInput.value.trim();
             if (!message) return;
             
-            if (!currentChatId) {
-                await createNewChat();
-            }
-            
-            // Add user message to UI
-            addMessageToUI('user', message);
-            messageInput.value = '';
-            
-            // If using WebSockets
-            if (isConnected) {
-                // Replace typing indicator with a streaming response placeholder
-                startStreamedResponse();
-                
-                // Send message via WebSocket
-                const messageData = {
-                    type: 'chat_message',
-                    chat_id: currentChatId,
-                    user_id: userId,
-                    message: message,
-                    model: modelSelect.value
-                };
-                
-                if (isConnected) {
-                    socket.send(JSON.stringify(messageData));
-                } else {
-                    // Queue the message to be sent when reconnected
-                    messageQueue.push(messageData);
-                    showStatus('Disconnected. Message will send when reconnected.', 'warning');
-                    initWebSocket(); // Try to reconnect
+            try {
+                if (!currentChatId) {
+                    await createNewChat();
                 }
                 
-                // Update chat title for new chats
-                if (chatTitle.textContent === 'New Chat') {
-                    const newTitle = message.length > 30 ? message.substring(0, 30) + '...' : message;
-                    chatTitle.textContent = newTitle;
+                // Add user message to UI
+                addMessageToUI('user', message);
+                messageInput.value = '';
+                
+                // If using WebSockets
+                if (isConnected) {
+                    console.log("Sending message via WebSocket");
+                    // Replace typing indicator with a streaming response placeholder
+                    startStreamedResponse();
                     
-                    // Also update the title in the sidebar
-                    const activeSession = document.querySelector('.chat-session.active');
-                    if (activeSession) {
-                        activeSession.textContent = newTitle;
+                    // Send message via WebSocket
+                    const messageData = {
+                        type: 'chat_message',
+                        chat_id: currentChatId,
+                        user_id: userId,
+                        message: message,
+                        model: modelSelect.value,
+                        auth_token: accessToken // Include auth token
+                    };
+                    
+                    console.log("WebSocket message data:", messageData);
+                    
+                    if (isConnected) {
+                        socket.send(JSON.stringify(messageData));
+                        console.log("Message sent via WebSocket");
+                    } else {
+                        // Queue the message to be sent when reconnected
+                        messageQueue.push(messageData);
+                        console.log("WebSocket not connected, queuing message");
+                        showStatus('Disconnected. Message will send when reconnected.', 'warning');
+                        initWebSocket(); // Try to reconnect
                     }
                     
-                    // Send title update to the server
-                    fetch(`${API_URL}/sessions/${currentChatId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ title: newTitle }),
-                    }).catch(error => console.error('Error updating title:', error));
-                }
-            } else {
-                // Fallback to REST API if WebSocket is not connected
-                // Show typing indicator
-                addTypingIndicator();
-                
-                try {
-                    const response = await fetch(`${API_URL}/sessions/${currentChatId}/messages`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
+                    // Update chat title for new chats
+                    if (chatTitle.textContent === 'New Chat') {
+                        const newTitle = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                        chatTitle.textContent = newTitle;
+                        
+                        // Also update the title in the sidebar
+                        const activeSession = document.querySelector('.chat-session.active');
+                        if (activeSession) {
+                            activeSession.textContent = newTitle;
+                        }
+                        
+                        // Send title update to the server
+                        fetch(`${API_URL}/sessions/${currentChatId}`, {
+                            method: 'PUT',
+                            headers: getAuthHeaders(),
+                            body: JSON.stringify({ title: newTitle }),
+                        }).catch(error => console.error('Error updating title:', error));
+                    }
+                } else {
+                    console.log("WebSocket not connected, using REST API fallback");
+                    // Fallback to REST API if WebSocket is not connected
+                    // Show typing indicator
+                    addTypingIndicator();
+                    
+                    try {
+                        const requestBody = {
                             message: message,
                             model: modelSelect.value,
-                        }),
-                    });
-                    
-                    removeTypingIndicator();
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        addMessageToUI('assistant', result.message, result.message_id);
+                        };
                         
-                        // Update chat title for new chats
-                        if (chatTitle.textContent === 'New Chat') {
-                            chatTitle.textContent = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                        console.log("Sending REST API request:", requestBody);
+                        
+                        const response = await fetch(`${API_URL}/sessions/${currentChatId}/messages`, {
+                            method: 'POST',
+                            headers: getAuthHeaders(),
+                            body: JSON.stringify(requestBody),
+                        });
+                        
+                        removeTypingIndicator();
+                        
+                        console.log("REST API response status:", response.status);
+                        
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log("REST API response data:", result);
+                            addMessageToUI('assistant', result.message, result.message_id);
                             
-                            // Also update the title in the sidebar
-                            const activeSession = document.querySelector('.chat-session.active');
-                            if (activeSession) {
-                                activeSession.textContent = chatTitle.textContent;
+                            // Update chat title for new chats
+                            if (chatTitle.textContent === 'New Chat') {
+                                chatTitle.textContent = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                                
+                                // Also update the title in the sidebar
+                                const activeSession = document.querySelector('.chat-session.active');
+                                if (activeSession) {
+                                    activeSession.textContent = chatTitle.textContent;
+                                }
                             }
+                        } else if (response.status === 401) {
+                            // Token expired, try to refresh
+                            const refreshed = await refreshAccessToken();
+                            if (refreshed) {
+                                console.log("Token refreshed, retrying message send");
+                                sendMessage(); // Try again with new token
+                            } else {
+                                handleLogout();
+                                showStatus('Authentication failed', 'error');
+                            }
+                        } else {
+                            const errorData = await response.json();
+                            console.error("REST API error:", errorData);
+                            addMessageToUI('system', `Error: ${errorData.detail || 'Failed to get response'}`);
+                            showStatus('Error getting response', 'error');
                         }
-                    } else {
-                        const error = await response.json();
-                        addMessageToUI('system', `Error: ${error.detail || 'Failed to get response'}`);
-                        showStatus('Error getting response', 'error');
+                    } catch (error) {
+                        removeTypingIndicator();
+                        console.error('Error sending message via REST API:', error);
+                        addMessageToUI('system', 'Error: Could not connect to the server');
+                        showStatus('Error connecting to the server', 'error');
                     }
-                } catch (error) {
-                    removeTypingIndicator();
-                    console.error('Error sending message:', error);
-                    addMessageToUI('system', 'Error: Could not connect to the server');
-                    showStatus('Error connecting to the server', 'error');
                 }
+            } catch (error) {
+                console.error('Error in sendMessage function:', error);
+                showStatus(`Error: ${error.message}`, 'error');
             }
         }
 
@@ -770,6 +1047,252 @@
                 statusEl.classList.remove('show');
             }, 3000);
         }
+
+        // Toggle between sign-in and sign-up forms
+        document.getElementById('show-sign-up').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('sign-in-form').style.display = 'none';
+            document.getElementById('sign-up-form').style.display = 'block';
+        });
+
+        document.getElementById('show-sign-in').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('sign-up-form').style.display = 'none';
+            document.getElementById('sign-in-form').style.display = 'block';
+        });
+
+        // Auth variables
+        const AUTH_API_URL = 'http://localhost:8000/auth';
+        let accessToken = localStorage.getItem('access_token');
+        let refreshToken = localStorage.getItem('refresh_token');
+        let isAuthenticated = !!accessToken;
+
+        // Auth event listeners
+        document.getElementById('sign-in-btn').addEventListener('click', handleSignIn);
+        document.getElementById('sign-up-btn').addEventListener('click', handleSignUp);
+
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+        });
+
+        // Show auth container if not authenticated
+        function checkAuthStatus() {
+            if (!isAuthenticated) {
+                document.getElementById('auth-container').style.display = 'flex';
+                document.querySelector('.container').style.display = 'none';
+            } else {
+                document.getElementById('auth-container').style.display = 'none';
+                document.querySelector('.container').style.display = 'flex';
+                
+                // Get user info if needed
+                getUserInfo();
+            }
+        }
+
+        // Handle sign in
+        async function handleSignIn() {
+            const email = document.getElementById('sign-in-email').value;
+            const password = document.getElementById('sign-in-password').value;
+            const errorEl = document.getElementById('sign-in-error');
+            
+            if (!email || !password) {
+                errorEl.textContent = 'Please enter email and password';
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('username', email); // OAuth expects username field for email
+                formData.append('password', password);
+
+                const response = await fetch(`${AUTH_API_URL}/token`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    accessToken = data.access_token;
+                    refreshToken = data.refresh_token;
+                    
+                    // Store tokens
+                    localStorage.setItem('access_token', accessToken);
+                    localStorage.setItem('refresh_token', refreshToken);
+                    
+                    // Update auth state
+                    isAuthenticated = true;
+                    
+                    // Get real user ID from token instead of random ID
+                    userId = getUserIdFromToken(accessToken);
+                    
+                    // Update UI
+                    checkAuthStatus();
+                    showStatus('Successfully signed in', 'success');
+                    
+                    // Initialize WebSocket with real user
+                    initWebSocket();
+                    
+                    // Load user data
+                    loadUserSessions();
+                } else {
+                    const errorData = await response.json();
+                    errorEl.textContent = errorData.detail || 'Invalid email or password';
+                }
+            } catch (error) {
+                console.error('Error signing in:', error);
+                errorEl.textContent = 'Error connecting to the server';
+            }
+        }
+
+        // Handle sign up
+        async function handleSignUp() {
+            const email = document.getElementById('sign-up-email').value;
+            const password = document.getElementById('sign-up-password').value;
+            const confirmPassword = document.getElementById('sign-up-confirm-password').value;
+            const errorEl = document.getElementById('sign-up-error');
+            
+            if (!email || !password) {
+                errorEl.textContent = 'Please enter email and password';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorEl.textContent = 'Passwords do not match';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${AUTH_API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        full_name: '' // Optional field
+                    })
+                });
+
+                if (response.ok) {
+                    // Registration successful, switch to sign-in form
+                    document.getElementById('sign-up-form').style.display = 'none';
+                    document.getElementById('sign-in-form').style.display = 'block';
+                    document.getElementById('sign-in-email').value = email;
+                    document.getElementById('sign-in-password').value = '';
+                    showStatus('Account created! Please sign in.', 'success');
+                } else {
+                    const errorData = await response.json();
+                    errorEl.textContent = errorData.detail || 'Error creating account';
+                }
+            } catch (error) {
+                console.error('Error signing up:', error);
+                errorEl.textContent = 'Error connecting to the server';
+            }
+        }
+
+        // Parse JWT token to get user ID
+        function getUserIdFromToken(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                const payload = JSON.parse(jsonPayload);
+                return payload.sub; // This is the user ID
+            } catch (error) {
+                console.error('Error parsing token:', error);
+                return null;
+            }
+        }
+
+        // Get user information
+        async function getUserInfo() {
+            if (!accessToken) return;
+
+            try {
+                const response = await fetch(`${AUTH_API_URL}/users/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    userId = userData.id;
+                    console.log('User data loaded:', userData);
+                } else if (response.status === 401) {
+                    // Token expired, try to refresh
+                    const refreshed = await refreshAccessToken();
+                    if (refreshed) {
+                        getUserInfo();
+                    } else {
+                        handleLogout();
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting user info:', error);
+            }
+        }
+
+        // Refresh access token using refresh token
+        async function refreshAccessToken() {
+            if (!refreshToken) return false;
+
+            try {
+                const response = await fetch(`${AUTH_API_URL}/refresh-token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        refresh_token: refreshToken
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    accessToken = data.access_token;
+                    localStorage.setItem('access_token', accessToken);
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error refreshing token:', error);
+                return false;
+            }
+        }
+
+        // Handle user logout
+        function handleLogout() {
+            // Clear tokens
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            accessToken = null;
+            refreshToken = null;
+            isAuthenticated = false;
+            
+            // Update UI
+            checkAuthStatus();
+        }
+
+        // Add logout button to header
+        const header = document.querySelector('header h1');
+        const logoutButton = document.createElement('button');
+        logoutButton.textContent = 'Logout';
+        logoutButton.style.marginLeft = 'auto';
+        logoutButton.style.padding = '0.5rem 1rem';
+        logoutButton.style.backgroundColor = 'var(--accent-color)';
+        logoutButton.style.color = 'white';
+        logoutButton.style.border = 'none';
+        logoutButton.style.borderRadius = 'var(--border-radius)';
+        logoutButton.style.cursor = 'pointer';
+        logoutButton.addEventListener('click', handleLogout);
+        header.appendChild(logoutButton);
 
         // Start the application
         init();

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, validator
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from enum import Enum
 import datetime
 from bson import ObjectId
@@ -62,6 +62,13 @@ class UserUpdate(BaseModel):
     service_tier: Optional[ServiceTier] = None
 
 
+class OAuthProvider(str, Enum):
+    """Supported OAuth providers."""
+
+    GOOGLE = "google"
+    GITHUB = "github"
+
+
 class UserInDB(BaseModel):
     """Internal user model with hashed password."""
 
@@ -75,6 +82,7 @@ class UserInDB(BaseModel):
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     last_login: Optional[datetime.datetime] = None
+    oauth_providers: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
     usage: dict = Field(
         default_factory=lambda: {
             "requests_today": 0,
@@ -95,6 +103,7 @@ class UserResponse(BaseModel):
     is_active: bool
     is_verified: bool
     created_at: datetime.datetime
+    oauth_providers: Dict[str, Dict[str, Any]] = {}
     usage: dict
 
     class Config:
