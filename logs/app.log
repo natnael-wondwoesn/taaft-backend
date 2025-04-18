@@ -1131,3 +1131,31 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-18T20:52:35.564870+0300 INFO Shutting down application...
 2025-04-18T20:52:35.818424+0300 INFO Database connections closed
 2025-04-18T20:52:35.819427+0300 INFO Shutdown complete.
+2025-04-18T20:52:41.070224+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T20:52:41.073214+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T20:52:41.134214+0300 INFO Setting up database...
+2025-04-18T20:52:41.266213+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-18T20:52:41.269215+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-18T20:52:41.324216+0300 INFO Setting up database...
+2025-04-18T20:52:43.384871+0300 INFO Connected to MongoDB for setup
+2025-04-18T20:52:43.612871+0300 INFO Database setup completed successfully
+2025-04-18T20:52:43.612871+0300 INFO Database setup completed
+2025-04-18T20:52:43.613875+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T20:52:43.622869+0300 INFO Connected to MongoDB for setup
+2025-04-18T20:52:43.867881+0300 INFO Database setup completed successfully
+2025-04-18T20:52:43.867881+0300 INFO Database setup completed
+2025-04-18T20:52:43.868871+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-18T20:52:48.781446+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-18T20:53:37.415308+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
