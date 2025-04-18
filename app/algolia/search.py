@@ -1,6 +1,6 @@
 # app/algolia/search.py
 """
-Search service for Algolia integration
+Enhanced search service for Algolia integration
 Handles tool search and natural language query processing
 """
 from typing import Dict, List, Optional, Any, Union
@@ -9,6 +9,7 @@ import json
 import openai
 import os
 from pydantic import ValidationError
+import re
 
 from .config import algolia_config
 from .models import (
@@ -18,6 +19,7 @@ from .models import (
     SearchFacet,
     NaturalLanguageQuery,
     ProcessedQuery,
+    PricingType,
 )
 from ..logger import logger
 
@@ -32,6 +34,33 @@ class AlgoliaSearch:
         self.openai_api_key = os.getenv("OPENAI_API_KEY", "")
         if self.openai_api_key:
             openai.api_key = self.openai_api_key
+
+        # Cache of known categories and pricing types
+        self.known_categories = {}
+        self.category_synonyms = {
+            "writing": ["content creation", "text generation", "copywriting"],
+            "image": ["image generation", "design", "graphic", "visual"],
+            "audio": ["sound", "voice", "speech", "music"],
+            "video": ["video generation", "animation"],
+            "code": ["programming", "development", "coding", "software"],
+            "marketing": ["seo", "social media", "advertising"],
+            "data": ["analytics", "analysis", "visualization", "statistics"],
+            "productivity": ["automation", "workflow", "efficiency"],
+            "research": ["academic", "scientific", "study"],
+            "chat": ["conversation", "assistant", "chatbot"],
+        }
+
+        # Price type mapping to standardize variations
+        self.price_type_mapping = {
+            "free": PricingType.FREE,
+            "freemium": PricingType.FREEMIUM,
+            "paid": PricingType.PAID,
+            "premium": PricingType.PAID,
+            "enterprise": PricingType.ENTERPRISE,
+            "contact": PricingType.CONTACT,
+            "contact for pricing": PricingType.CONTACT,
+            "contact sales": PricingType.CONTACT,
+        }
 
     async def search_tools(self, params: SearchParams) -> SearchResult:
         """
@@ -95,10 +124,22 @@ class AlgoliaSearch:
                 # Default is relevance, which doesn't need a sort parameter
 
             # Request facets for filtering options
-            search_args["facets"] = ["categories.name", "pricing.type"]
+            search_args["facets"] = ["categories.name", "pricing.type", "features"]
 
             # Execute search
             result = self.config.tools_index.search(**search_args)
+
+            # Log the search parameters and result summary
+            logger.info(f"Algolia search with params: {search_args}")
+            logger.info(f"Search found {result.get('nbHits', 0)} results")
+
+            # Cache category information from facets
+            if "facets" in result and "categories.name" in result["facets"]:
+                for category_name, count in result["facets"]["categories.name"].items():
+                    self.known_categories[category_name.lower()] = {
+                        "name": category_name,
+                        "count": count,
+                    }
 
             # Extract facets
             facets = SearchFacets(
@@ -177,7 +218,7 @@ class AlgoliaSearch:
                 {
                     "page": page - 1,  # Algolia uses 0-based pagination
                     "hitsPerPage": per_page,
-                    "facets": ["letter_group"],
+                    "facets": ["letter_group", "categories"],
                 },
             )
 
@@ -226,31 +267,65 @@ class AlgoliaSearch:
             )
 
         try:
-            # Define the system prompt for query processing
+            # Define the enhanced system prompt for query processing
             system_prompt = """
-            You are an AI tools search expert. Your task is to analyze a user's natural language question and convert it 
-            into an optimized search query and filters for an AI tool directory.
+            You are an AI tools search expert tasked with analyzing natural language questions to convert them into 
+            optimized search parameters for an AI tool directory. 
+            
+            Follow these steps carefully:
+            
+            1. Understand the user's intent and identify what type of AI tool they are looking for.
+            2. Extract key search terms and relevant filters.
+            3. Map to appropriate categories and pricing preferences.
+            4. Prepare a concise search query focusing on the most relevant keywords.
+            
+            Categories available include: Content Creation, Writing, Image Generation, Video Generation, Audio Processing, 
+            Chat, Code Generation, Data Analysis, Marketing, SEO, Social Media, Productivity, Research, Education, and more.
+            
+            Price types include: Free, Freemium, Paid, Enterprise, Contact.
             
             Examples:
             
             Question: "How can AI help my marketing team?"
             {
-                "search_query": "AI marketing tools",
-                "categories": ["Marketing", "Content Creation"],
+                "search_query": "marketing AI tools",
+                "categories": ["Marketing", "Content Creation", "Social Media"],
                 "pricing_types": null,
-                "interpreted_intent": "Looking for AI tools that can assist with marketing tasks"
+                "filters": null,
+                "interpreted_intent": "Looking for AI tools that can assist marketing teams with various tasks"
             }
             
             Question: "I need a free tool for writing blog posts"
             {
-                "search_query": "blog post writing",
-                "categories": ["Content Creation", "Writing"],
+                "search_query": "blog post writing generator",
+                "categories": ["Writing", "Content Creation"],
                 "pricing_types": ["Free", "Freemium"],
-                "interpreted_intent": "Seeking free AI writing tools for blog content"
+                "filters": null,
+                "interpreted_intent": "Seeking free or freemium AI writing tools specifically for blog content"
             }
             
-            Respond with a JSON object containing search_query, categories, pricing_types, and interpreted_intent.
-            Keep search_query concise and focused on keywords. Only include categories and pricing_types if clearly implied.
+            Question: "Show me AI code generators for Python with good documentation"
+            {
+                "search_query": "Python code generator documentation",
+                "categories": ["Code Generation", "Development"],
+                "pricing_types": null,
+                "filters": null,
+                "interpreted_intent": "Looking for AI tools that generate Python code and have good documentation"
+            }
+            
+            Question: "I need a tool for creating marketing videos quickly"
+            {
+                "search_query": "AI marketing video creator fast",
+                "categories": ["Video Generation", "Marketing"],
+                "pricing_types": null,
+                "filters": null,
+                "interpreted_intent": "Seeking tools that can quickly generate marketing videos using AI"
+            }
+            
+            Respond with a JSON object containing search_query, categories, pricing_types, filters, and interpreted_intent.
+            Keep search_query concise and focused on keywords (5-7 words max).
+            Only include categories and pricing_types that are clearly implied.
+            Use null (not empty arrays) when a field is not applicable.
             """
 
             # Create the chat messages
@@ -261,7 +336,10 @@ class AlgoliaSearch:
 
             # Add context if provided
             if nlq.context:
-                context_str = "Additional context: " + json.dumps(nlq.context)
+                context_str = (
+                    "Additional context about the user or their needs: "
+                    + json.dumps(nlq.context)
+                )
                 messages.append({"role": "user", "content": context_str})
 
             # Call OpenAI API
@@ -269,7 +347,7 @@ class AlgoliaSearch:
                 model="gpt-3.5-turbo",
                 messages=messages,
                 temperature=0.3,
-                max_tokens=200,
+                max_tokens=300,
             )
 
             # Extract and parse the response
@@ -277,34 +355,45 @@ class AlgoliaSearch:
 
             # Try to extract JSON from response
             try:
-                # Handle potential markdown code blocks
-                if "```json" in response_text:
-                    json_str = response_text.split("```json")[1].split("```")[0].strip()
-                elif "```" in response_text:
-                    json_str = response_text.split("```")[1].strip()
-                else:
-                    json_str = response_text.strip()
-
+                # Handle potential markdown code blocks or extract JSON
+                json_str = self._extract_json_from_text(response_text)
                 processed_data = json.loads(json_str)
+
+                # Normalize and validate pricing types
+                pricing_types = await self._normalize_pricing_types(
+                    processed_data.get("pricing_types")
+                )
+
+                # Normalize and validate categories
+                categories = await self._normalize_categories(
+                    processed_data.get("categories")
+                )
+
+                # Build filter string if needed
+                filters = processed_data.get("filters")
+
+                # If no explicit filters were provided but we have categories or pricing,
+                # we'll let the search API build the filters
 
                 # Create the processed query object
                 processed_query = ProcessedQuery(
                     original_question=nlq.question,
                     search_query=processed_data.get("search_query", nlq.question),
-                    filters=None,  # We'll build this from individual filters if needed
-                    categories=processed_data.get("categories"),
-                    pricing_types=processed_data.get("pricing_types"),
+                    filters=filters,
+                    categories=categories,
+                    pricing_types=pricing_types,
                     interpreted_intent=processed_data.get("interpreted_intent"),
                 )
 
+                logger.info(
+                    f"Processed natural language query: '{nlq.question}' -> '{processed_query.search_query}'"
+                )
                 return processed_query
 
             except (json.JSONDecodeError, ValueError, IndexError) as e:
                 logger.error(f"Error parsing NLP response: {str(e)}")
-                # Fallback to using the original query
-                return ProcessedQuery(
-                    original_question=nlq.question, search_query=nlq.question
-                )
+                # Perform basic keyword extraction as fallback
+                return await self._basic_keyword_extraction(nlq.question)
 
         except Exception as e:
             logger.error(f"Error processing natural language query: {str(e)}")
@@ -312,6 +401,177 @@ class AlgoliaSearch:
             return ProcessedQuery(
                 original_question=nlq.question, search_query=nlq.question
             )
+
+    def _extract_json_from_text(self, text: str) -> str:
+        """Extract JSON from text that may contain markdown or other formatting"""
+        # Check for code blocks with JSON
+        if "```json" in text:
+            match = re.search(r"```json\s*(.*?)\s*```", text, re.DOTALL)
+            if match:
+                return match.group(1)
+
+        # Check for any code blocks
+        if "```" in text:
+            match = re.search(r"```\s*(.*?)\s*```", text, re.DOTALL)
+            if match:
+                return match.group(1)
+
+        # Look for JSON-like structure with curly braces
+        match = re.search(r"({.*})", text, re.DOTALL)
+        if match:
+            return match.group(1)
+
+        # If no JSON structure found, return the original text
+        return text.strip()
+
+    async def _normalize_pricing_types(
+        self, pricing_types: Optional[List[str]]
+    ) -> Optional[List[PricingType]]:
+        """Normalize and validate pricing types"""
+        if not pricing_types:
+            return None
+
+        normalized = []
+        for pt in pricing_types:
+            pt_lower = pt.lower()
+            if pt_lower in self.price_type_mapping:
+                normalized.append(self.price_type_mapping[pt_lower])
+
+        return normalized if normalized else None
+
+    async def _normalize_categories(
+        self, categories: Optional[List[str]]
+    ) -> Optional[List[str]]:
+        """Normalize and validate categories against known categories"""
+        if not categories:
+            return None
+
+        # First check exact matches in known categories
+        normalized = []
+        for cat in categories:
+            cat_lower = cat.lower()
+
+            # Direct match in known categories
+            if cat_lower in self.known_categories:
+                normalized.append(self.known_categories[cat_lower]["name"])
+                continue
+
+            # Check synonyms
+            matched = False
+            for main_cat, synonyms in self.category_synonyms.items():
+                if cat_lower == main_cat or any(
+                    syn.lower() in cat_lower for syn in synonyms
+                ):
+                    # Find a known category that matches this synonym
+                    for known_cat in self.known_categories:
+                        if main_cat in known_cat.lower():
+                            normalized.append(
+                                self.known_categories[known_cat.lower()]["name"]
+                            )
+                            matched = True
+                            break
+                    if matched:
+                        break
+
+            # If no match found, use the original category
+            if not matched:
+                normalized.append(cat)
+
+        return normalized if normalized else None
+
+    async def _basic_keyword_extraction(self, question: str) -> ProcessedQuery:
+        """
+        Basic keyword extraction as a fallback when NLP processing fails
+        """
+        # Remove common stop words and extract key terms
+        stop_words = {
+            "a",
+            "an",
+            "the",
+            "and",
+            "or",
+            "but",
+            "is",
+            "are",
+            "for",
+            "with",
+            "to",
+            "in",
+            "on",
+            "at",
+            "by",
+            "of",
+        }
+        words = question.lower().split()
+        keywords = [word for word in words if word not in stop_words and len(word) > 2]
+
+        # Create a simple search query from the keywords
+        search_query = " ".join(keywords[:6])  # Limit to 6 keywords
+
+        # Try to detect pricing intent
+        pricing_types = None
+        if any(
+            word in question.lower()
+            for word in ["free", "freemium", "open source", "opensource"]
+        ):
+            pricing_types = [PricingType.FREE, PricingType.FREEMIUM]
+
+        # Try to detect categories
+        categories = []
+        for keyword in keywords:
+            # Check for category keywords
+            for main_cat, synonyms in self.category_synonyms.items():
+                if keyword == main_cat or any(
+                    syn.lower() == keyword for syn in synonyms
+                ):
+                    categories.append(main_cat.capitalize())
+
+        categories = categories if categories else None
+
+        return ProcessedQuery(
+            original_question=question,
+            search_query=search_query,
+            filters=None,
+            categories=categories,
+            pricing_types=pricing_types,
+            interpreted_intent=f"Extracted keywords from: {question}",
+        )
+
+    async def execute_nlp_search(
+        self, nlq: NaturalLanguageQuery, page: int = 1, per_page: int = 20
+    ) -> SearchResult:
+        """
+        Process a natural language query and execute search in one operation
+
+        Args:
+            nlq: Natural language query object
+            page: Page number (1-based)
+            per_page: Number of results per page
+
+        Returns:
+            SearchResult with processed query information
+        """
+        # Process the natural language query
+        processed_query = await self.process_natural_language_query(nlq)
+
+        # Create search parameters
+        params = SearchParams(
+            query=processed_query.search_query,
+            categories=processed_query.categories,
+            pricing_types=processed_query.pricing_types,
+            page=page,
+            per_page=per_page,
+            filters=processed_query.filters,
+        )
+
+        # Execute search
+        result = await self.search_tools(params)
+
+        # Add the processed query to the result
+        result_dict = result.dict()
+        result_dict["processed_query"] = processed_query
+
+        return SearchResult(**result_dict)
 
 
 # Create singleton instance

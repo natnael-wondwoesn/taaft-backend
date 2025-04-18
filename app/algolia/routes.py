@@ -121,69 +121,69 @@ async def search_glossary(
     return result
 
 
-@router.post("/nlp", response_model=ProcessedQuery)
-async def process_nlp_query(
-    nlq: NaturalLanguageQuery,
-):
-    """
-    Process a natural language query into structured search parameters
+# @router.post("/nlp", response_model=ProcessedQuery)
+# async def process_nlp_query(
+#     nlq: NaturalLanguageQuery,
+# ):
+#     """
+#     Process a natural language query into structured search parameters
 
-    Args:
-        nlq: Natural language query object
+#     Args:
+#         nlq: Natural language query object
 
-    Returns:
-        ProcessedQuery object with structured search parameters
-    """
-    # Process the query
-    processed_query = await algolia_search.process_natural_language_query(nlq)
-    return processed_query
+#     Returns:
+#         ProcessedQuery object with structured search parameters
+#     """
+#     # Process the query
+#     processed_query = await algolia_search.process_natural_language_query(nlq)
+#     return processed_query
 
 
-@router.post("/nlp-search", response_model=SearchResult)
-async def nlp_search(
-    nlq: NaturalLanguageQuery,
-    page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1, le=100),
-):
-    """
-    Perform a natural language search in one step
+# @router.post("/nlp-search", response_model=SearchResult)
+# async def nlp_search(
+#     nlq: NaturalLanguageQuery,
+#     page: int = Query(1, ge=1),
+#     per_page: int = Query(20, ge=1, le=100),
+# ):
+#     """
+#     Perform a natural language search in one step
 
-    Args:
-        nlq: Natural language query object
-        page: Page number (1-based)
-        per_page: Number of results per page
+#     Args:
+#         nlq: Natural language query object
+#         page: Page number (1-based)
+#         per_page: Number of results per page
 
-    Returns:
-        SearchResult object with tools and metadata
-    """
-    # Validate Algolia configuration
-    if not algolia_config.is_configured():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Search service is not configured",
-        )
+#     Returns:
+#         SearchResult object with tools and metadata
+#     """
+#     # Validate Algolia configuration
+#     if not algolia_config.is_configured():
+#         raise HTTPException(
+#             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+#             detail="Search service is not configured",
+#         )
 
-    # Process the query
-    processed_query = await algolia_search.process_natural_language_query(nlq)
+#     # Process the query
+#     processed_query = await algolia_search.process_natural_language_query(nlq)
 
-    # Create search parameters
-    params = SearchParams(
-        query=processed_query.search_query,
-        categories=processed_query.categories,
-        pricing_types=processed_query.pricing_types,
-        page=page,
-        per_page=per_page,
-        filters=processed_query.filters,
-    )
+#     # Create search parameters
+#     params = SearchParams(
+#         query=processed_query.search_query,
+#         categories=processed_query.categories,
+#         pricing_types=processed_query.pricing_types,
+#         page=page,
+#         per_page=per_page,
+#         filters=processed_query.filters,
+#     )
 
-    # Execute search
-    result = await algolia_search.search_tools(params)
+#     # Execute search
+#     result = await algolia_search.search_tools(params)
 
-    # Add the interpreted query to the result
-    result_dict = result.dict()
-    result_dict["processed_query"] = processed_query
+#     # Add the interpreted query to the result
+#     result_dict = result.dict()
+#     result_dict["processed_query"] = processed_query
 
-    return result_dict
+#     return result_dict
 
 
 @router.post("/index/tools", status_code=status.HTTP_202_ACCEPTED)
@@ -354,3 +354,134 @@ async def get_search_config():
         "glossary_index_name": algolia_config.glossary_index_name,
         "is_configured": algolia_config.is_configured(),
     }
+
+
+@router.post("/nlp", response_model=ProcessedQuery)
+async def process_nlp_query(
+    nlq: NaturalLanguageQuery,
+):
+    """
+    Process a natural language query into structured search parameters
+
+    This endpoint analyzes user questions in natural language and converts them
+    into optimized search parameters for the AI tool directory.
+
+    Args:
+        nlq: Natural language query object with question and optional context
+
+    Returns:
+        ProcessedQuery object with structured search parameters including
+        optimized search terms, categories, pricing types, and filters
+    """
+    # Process the query
+    processed_query = await algolia_search.process_natural_language_query(nlq)
+    return processed_query
+
+
+@router.post("/nlp-search", response_model=SearchResult)
+async def nlp_search(
+    nlq: NaturalLanguageQuery,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100),
+):
+    """
+    Perform a natural language search in one step
+
+    This endpoint handles both NLP query processing and search execution in a
+    single API call. It's the most direct way to search for AI tools using
+    natural language questions.
+
+    Examples:
+        - "I need a free tool for writing blog posts"
+        - "What AI can help my marketing team with social media?"
+        - "Looking for an enterprise-grade coding assistant"
+        - "Show me the most popular image generation tools"
+
+    Args:
+        nlq: Natural language query object with question and optional context
+        page: Page number (1-based)
+        per_page: Number of results per page
+
+    Returns:
+        SearchResult object with tools and metadata, including the processed query
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    # Execute the NLP search
+    result = await algolia_search.execute_nlp_search(nlq, page, per_page)
+
+    # Return the search result along with the processed query
+    return result
+
+
+@router.get("/suggest", response_model=List[str])
+async def search_suggestions(
+    query: str = Query(..., min_length=2),
+    limit: int = Query(5, ge=1, le=20),
+):
+    """
+    Get search suggestions based on a partial query
+
+    This endpoint provides autocomplete suggestions for search queries,
+    making it easier for users to discover relevant search terms.
+
+    Args:
+        query: Partial search query to get suggestions for
+        limit: Maximum number of suggestions to return
+
+    Returns:
+        List of suggested search queries
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    try:
+        # Use Algolia query suggestions if available
+        # If not, fall back to basic prefix matching
+        # For this implementation, we'll use a simple array of suggestions as a mockup
+
+        # In a production environment, this would be connected to a proper Algolia Query Suggestions index
+        # or another source of query suggestions
+
+        suggestions = []
+
+        # Simple mock suggestions based on query prefix for now
+        common_queries = [
+            "AI writing tools",
+            "AI image generation",
+            "AI code assistant",
+            "AI video creation",
+            "AI marketing tools",
+            "AI data analysis",
+            "AI chat applications",
+            "AI personal assistant",
+            "AI productivity tools",
+            "AI for social media",
+            "AI audio processing",
+            "AI translation tools",
+            "AI research assistant",
+            "AI presentation maker",
+            "AI for email management",
+        ]
+
+        query_lower = query.lower()
+        for q in common_queries:
+            if q.lower().startswith(query_lower) or query_lower in q.lower():
+                suggestions.append(q)
+            if len(suggestions) >= limit:
+                break
+
+        return suggestions
+
+    except Exception as e:
+        logger.error(f"Error getting search suggestions: {str(e)}")
+        return []
