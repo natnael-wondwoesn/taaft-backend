@@ -18,9 +18,9 @@ class PydanticObjectId(str):
 
     @classmethod
     def validate(cls, v):
-        if not ObjectId.is_valid(v):
+        if not ObjectId.is_valid(str(v)):
             raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
+        return str(v)  # Return string representation instead of ObjectId
 
 
 # Models for Algolia indexing
@@ -77,10 +77,11 @@ class AlgoliaToolRecord(BaseModel):
     is_featured: bool = False
     is_sponsored: bool = False
 
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {datetime.datetime: lambda dt: dt.isoformat(), ObjectId: str}
+    model_config = {
+        "allow_population_by_field_name": True,
+        "arbitrary_types_allowed": True,
+        "json_encoders": {datetime.datetime: lambda dt: dt.isoformat(), ObjectId: str},
+    }
 
 
 # Models for search

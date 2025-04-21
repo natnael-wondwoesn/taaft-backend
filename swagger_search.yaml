@@ -1,0 +1,487 @@
+paths:
+  /api/search/tools:
+    get:
+      tags:
+        - Search
+      summary: Search tools
+      description: Search for tools using Algolia
+      operationId: searchTools
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search query
+        - name: categories
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: List of category IDs to filter by
+        - name: pricing_types
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: List of pricing types to filter by
+        - name: min_rating
+          in: query
+          required: false
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+          description: Minimum rating to filter by
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-based)
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of results per page
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [relevance, newest, trending]
+          description: Sort order
+        - name: filters
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Custom Algolia filter query
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+        '503':
+          description: Search service is not configured
+
+  /api/search/glossary:
+    get:
+      tags:
+        - Search
+      summary: Search glossary
+      description: Search glossary terms using Algolia
+      operationId: searchGlossary
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search query
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-based)
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of results per page
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hits:
+                    type: array
+                    items:
+                      type: object
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+                  total_hits:
+                    type: integer
+                  total_pages:
+                    type: integer
+        '503':
+          description: Search service is not configured
+
+  /api/search/nlp:
+    post:
+      tags:
+        - Search
+      summary: Process NLP query
+      description: Process a natural language query into structured search parameters
+      operationId: processNlpQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaturalLanguageQuery'
+      responses:
+        '200':
+          description: Processed query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessedQuery'
+
+  /api/search/nlp-search:
+    post:
+      tags:
+        - Search
+      summary: NLP search
+      description: Perform a natural language search in one step
+      operationId: nlpSearch
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-based)
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of results per page
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaturalLanguageQuery'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SearchResult'
+                  - type: object
+                    properties:
+                      processed_query:
+                        $ref: '#/components/schemas/ProcessedQuery'
+        '503':
+          description: Search service is not configured
+
+  /api/search/index/tools:
+    post:
+      tags:
+        - Search
+      summary: Index tools
+      description: Index all tools in MongoDB to Algolia (asynchronous operation)
+      operationId: indexTools
+      parameters:
+        - name: batch_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Number of tools to index in each batch
+      responses:
+        '202':
+          description: Indexing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "processing"
+                  message:
+                    type: string
+                    example: "Indexing tools to Algolia in the background"
+        '503':
+          description: Search service is not configured
+
+  /api/search/index/glossary:
+    post:
+      tags:
+        - Search
+      summary: Index glossary
+      description: Index all glossary terms in MongoDB to Algolia (asynchronous operation)
+      operationId: indexGlossary
+      parameters:
+        - name: batch_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Number of terms to index in each batch
+      responses:
+        '202':
+          description: Indexing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "processing"
+                  message:
+                    type: string
+                    example: "Indexing glossary terms to Algolia in the background"
+        '503':
+          description: Search service is not configured
+
+  /api/search/index/tool/{tool_id}:
+    post:
+      tags:
+        - Search
+      summary: Index single tool
+      description: Index a single tool to Algolia
+      operationId: indexSingleTool
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the tool to index
+      responses:
+        '200':
+          description: Tool indexed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Tool indexed successfully"
+                  object_id:
+                    type: string
+        '404':
+          description: Tool not found
+        '503':
+          description: Search service is not configured
+
+    delete:
+      tags:
+        - Search
+      summary: Delete tool from index
+      description: Delete a tool from the Algolia index
+      operationId: deleteToolFromIndex
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the tool to delete from the index
+      responses:
+        '200':
+          description: Tool deleted from index successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Tool deleted from index successfully"
+        '404':
+          description: Tool not found in index
+        '503':
+          description: Search service is not configured
+
+  /api/search/config:
+    get:
+      tags:
+        - Search
+      summary: Get search config
+      description: Get the current search configuration
+      operationId: getSearchConfig
+      responses:
+        '200':
+          description: Search configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  configured:
+                    type: boolean
+                  indices:
+                    type: object
+                    properties:
+                      tools:
+                        type: string
+                      glossary:
+                        type: string
+
+  /api/search/suggest:
+    get:
+      tags:
+        - Search
+      summary: Search suggestions
+      description: Get search suggestions/autocomplete
+      operationId: searchSuggestions
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Partial search query
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+          description: Maximum number of suggestions to return
+      responses:
+        '200':
+          description: Search suggestions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '503':
+          description: Search service is not configured
+
+components:
+  schemas:
+    SearchParams:
+      type: object
+      properties:
+        query:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        pricing_types:
+          type: array
+          items:
+            type: string
+        min_rating:
+          type: number
+          minimum: 0
+          maximum: 5
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        per_page:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        sort_by:
+          type: string
+          enum: [relevance, newest, trending]
+        filters:
+          type: string
+
+    SearchResult:
+      type: object
+      properties:
+        hits:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_hits:
+          type: integer
+        total_pages:
+          type: integer
+        processing_time_ms:
+          type: integer
+        query:
+          type: string
+
+    NaturalLanguageQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: Natural language search query
+        context:
+          type: object
+          additionalProperties: true
+          description: Additional context for the search
+
+    ProcessedQuery:
+      type: object
+      properties:
+        original_query:
+          type: string
+        search_query:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        pricing_types:
+          type: array
+          items:
+            type: string
+        filters:
+          type: string
+        interpretation:
+          type: string 

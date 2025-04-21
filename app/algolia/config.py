@@ -16,6 +16,7 @@ class AlgoliaSettings(BaseSettings):
     app_id: str
     api_key: str
     search_only_api_key: str
+    write_api_key: str
     tools_index_name: str = "taaft_tools"
     glossary_index_name: str = "taaft_glossary"
 
@@ -37,6 +38,7 @@ except Exception as e:
         app_id="",
         api_key="",
         search_only_api_key="",
+        write_api_key="",
         tools_index_name="taaft_tools",
         glossary_index_name="taaft_glossary",
     )
@@ -59,6 +61,7 @@ class AlgoliaConfig:
         self.app_id = settings.app_id
         self.api_key = settings.api_key
         self.search_only_api_key = settings.search_only_api_key
+        self.write_api_key = settings.write_api_key
         self.tools_index_name = settings.tools_index_name
         self.glossary_index_name = settings.glossary_index_name
 
@@ -70,7 +73,7 @@ class AlgoliaConfig:
         if self.app_id and self.api_key:
             try:
                 # Create the client using the SearchClientSync constructor
-                self.client = SearchClientSync(self.app_id, self.api_key)
+                self.client = SearchClientSync(self.app_id, self.write_api_key)
 
                 # Initialize indexes
                 if self.client:
@@ -146,7 +149,9 @@ class AlgoliaConfig:
             }
 
             # Fix: Use the correct format for set_settings
-            response = self.client.set_settings(self.tools_index_name, body=settings)
+            response = self.client.set_settings(
+                index_name=self.tools_index_name, index_settings=settings
+            )
             logger.info("Algolia tools index configured successfully")
         except Exception as e:
             logger.error(f"Failed to configure Algolia tools index: {str(e)}")
@@ -180,7 +185,9 @@ class AlgoliaConfig:
             }
 
             # Fix: Use the correct format for set_settings
-            response = self.client.set_settings(self.glossary_index_name, body=settings)
+            response = self.client.set_settings(
+                index_name=self.glossary_index_name, index_settings=settings
+            )
             logger.info("Algolia glossary index configured successfully")
         except Exception as e:
             logger.error(f"Failed to configure Algolia glossary index: {str(e)}")

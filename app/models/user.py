@@ -1,8 +1,10 @@
-from pydantic import BaseModel, EmailStr, Field, validator
-from typing import Optional, List, Dict, Any
+from pydantic import BaseModel, EmailStr, Field, validator, BeforeValidator
+from typing import Optional, List, Dict, Any, ClassVar, Annotated
 from enum import Enum
 import datetime
 from bson import ObjectId
+from pydantic.json_schema import JsonSchemaMode
+from bson.objectid import ObjectId
 
 
 class PydanticObjectId(str):
@@ -16,7 +18,7 @@ class PydanticObjectId(str):
     def validate(cls, v):
         if not ObjectId.is_valid(str(v)):
             raise ValueError("Invalid ObjectId")
-        return ObjectId(str(v))
+        return str(v)  # Return string representation instead of ObjectId
 
 
 class ServiceTier(str, Enum):
@@ -72,7 +74,7 @@ class OAuthProvider(str, Enum):
 class UserInDB(BaseModel):
     """Internal user model with hashed password."""
 
-    id: Optional[PydanticObjectId] = Field(alias="_id", default=None)
+    id: Optional[ObjectId] = Field(alias="_id", default=None)
     email: EmailStr
     hashed_password: str
     full_name: Optional[str] = None
@@ -92,6 +94,8 @@ class UserInDB(BaseModel):
         }
     )
 
+    model_config = {"arbitrary_types_allowed": True, "json_encoders": {ObjectId: str}}
+
 
 class UserResponse(BaseModel):
     """Public user response model (without sensitive data)."""
@@ -106,8 +110,7 @@ class UserResponse(BaseModel):
     oauth_providers: Dict[str, Dict[str, Any]] = {}
     usage: dict
 
-    class Config:
-        json_encoders = {ObjectId: lambda oid: str(oid)}
+    model_config = {"json_encoders": {ObjectId: lambda oid: str(oid)}}
 
 
 class TokenData(BaseModel):

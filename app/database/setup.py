@@ -68,27 +68,6 @@ async def setup_database():
 
             logger.info("Admin user created successfully")
 
-    # Initialize other collections as needed
-    if "sources" not in collections:
-        await database.create_collection("sources")
-        logger.info("Created sources collection")
-
-        # Create indexes for sources collection
-        await database.sources.create_index("next_scrape_at")
-        await database.sources.create_index("status")
-        await database.sources.create_index([("priority", 1), ("next_scrape_at", 1)])
-
-    if "scraping_logs" not in collections:
-        await database.create_collection("scraping_logs")
-        logger.info("Created scraping_logs collection")
-
-        # Create index for scraping_logs
-        await database.scraping_logs.create_index("completed_at")
-
-    if "scraping_tasks" not in collections:
-        await database.create_collection("scraping_tasks")
-        logger.info("Created scraping_tasks collection")
-
     if "chat_sessions" not in collections:
         await database.create_collection("chat_sessions")
         logger.info("Created chat_sessions collection")
@@ -121,6 +100,19 @@ async def setup_database():
         await database.tools.create_index("name")
         await database.tools.create_index("created_at")
         await database.tools.create_index([("name", "text"), ("description", "text")])
+
+    # Initialize sites collection
+    if "sites" not in collections:
+        await database.create_collection("sites")
+        logger.info("Created sites collection")
+
+        # Create indexes for sites collection
+        await database.sites.create_index("status")
+        await database.sites.create_index("priority")
+        await database.sites.create_index("category")
+        await database.sites.create_index("created_at")
+        await database.sites.create_index([("priority", 1), ("created_at", 1)])
+        await database.sites.create_index([("name", "text"), ("description", "text")])
 
     logger.info("Database setup completed successfully")
 

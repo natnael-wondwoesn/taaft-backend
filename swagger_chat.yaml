@@ -1,0 +1,415 @@
+paths:
+  /api/chat/sessions:
+    post:
+      tags:
+        - Chat
+      summary: Create chat session
+      description: Create a new chat session
+      operationId: createChatSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionCreate'
+      responses:
+        '201':
+          description: Chat session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+    
+    get:
+      tags:
+        - Chat
+      summary: Get user sessions
+      description: Get all chat sessions for a user
+      operationId: getUserSessions
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of chat sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSession'
+        '400':
+          description: User ID is required
+
+  /api/chat/sessions/{session_id}:
+    get:
+      tags:
+        - Chat
+      summary: Get chat session
+      description: Get a chat session by ID
+      operationId: getChatSession
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chat session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+    
+    put:
+      tags:
+        - Chat
+      summary: Update chat session
+      description: Update a chat session
+      operationId: updateChatSession
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                model:
+                  $ref: '#/components/schemas/ChatModelType'
+                system_prompt:
+                  type: string
+      responses:
+        '200':
+          description: Chat session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+    
+    delete:
+      tags:
+        - Chat
+      summary: Delete chat session
+      description: Delete a chat session and all its messages
+      operationId: deleteChatSession
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Chat session deleted successfully
+        '404':
+          description: Chat session not found
+
+  /api/chat/sessions/{session_id}/archive:
+    post:
+      tags:
+        - Chat
+      summary: Archive chat session
+      description: Archive a chat session (mark as inactive)
+      operationId: archiveChatSession
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chat session archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+
+  /api/chat/sessions/{session_id}/messages:
+    get:
+      tags:
+        - Chat
+      summary: Get chat messages
+      description: Get all messages for a chat session
+      operationId: getChatMessages
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+      responses:
+        '200':
+          description: List of messages in the chat session
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          description: Chat session not found
+    
+    post:
+      tags:
+        - Chat
+      summary: Send chat message
+      description: Send a message to the chat and get a response from the LLM
+      operationId: sendChatMessage
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Chat message sent and response received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '404':
+          description: Chat session not found
+        '500':
+          description: Error getting response from language model
+
+  /api/chat/search:
+    get:
+      tags:
+        - Chat
+      summary: Search chat messages
+      description: Search for chat messages across sessions
+      operationId: searchChatMessages
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+
+  /api/chat:
+    post:
+      tags:
+        - Chat
+      summary: Quick chat
+      description: Send a message without creating a session first (one-shot query)
+      operationId: quickChat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Response from the LLM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '500':
+          description: Error getting response from language model
+
+  /ws:
+    get:
+      tags:
+        - Chat
+      summary: WebSocket connection
+      description: Establish a WebSocket connection for real-time chat
+      operationId: websocketEndpoint
+      responses:
+        '101':
+          description: WebSocket connection established
+
+components:
+  schemas:
+    MessageRole:
+      type: string
+      enum: [user, assistant, system]
+      
+    ChatModelType:
+      type: string
+      enum: [gpt4, claude, llama, default]
+      
+    MessageBase:
+      type: object
+      required:
+        - role
+        - content
+      properties:
+        role:
+          $ref: '#/components/schemas/MessageRole'
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          
+    Message:
+      allOf:
+        - $ref: '#/components/schemas/MessageBase'
+        - type: object
+          properties:
+            id:
+              type: string
+            chat_id:
+              type: string
+            metadata:
+              type: object
+              additionalProperties: true
+              
+    ChatSessionBase:
+      type: object
+      properties:
+        title:
+          type: string
+          default: "New Chat"
+        user_id:
+          type: string
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+          default: "default"
+        system_prompt:
+          type: string
+          
+    ChatSessionCreate:
+      $ref: '#/components/schemas/ChatSessionBase'
+      
+    ChatSession:
+      allOf:
+        - $ref: '#/components/schemas/ChatSessionBase'
+        - type: object
+          properties:
+            id:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+            message_count:
+              type: integer
+              default: 0
+            is_active:
+              type: boolean
+              default: true
+            metadata:
+              type: object
+              additionalProperties: true
+              
+    ChatMessageRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+        system_prompt:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+          
+    ChatMessageResponse:
+      type: object
+      required:
+        - message
+        - chat_id
+        - message_id
+        - timestamp
+        - model
+      properties:
+        message:
+          type: string
+        chat_id:
+          type: string
+        message_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+        metadata:
+          type: object
+          additionalProperties: true 

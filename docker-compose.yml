@@ -4,9 +4,9 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"
+      - "8001:8001"
     environment:
-      - MONGODB_URL=mongodb://mongo:27017/taaft_db
+      - MONGODB_URL=mongodb+srv://natnaelwondwoesn:rBBwT2s6s5YsEjsO@cluster0.0gsof12.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     depends_on:
       mongo:
         condition: service_healthy

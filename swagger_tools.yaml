@@ -1,0 +1,394 @@
+paths:
+  /tools:
+    get:
+      tags:
+        - Tools
+      summary: List tools
+      description: List all tools with pagination
+      operationId: listTools
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+
+    post:
+      tags:
+        - Tools
+      summary: Create tool
+      description: Create a new tool
+      operationId: createNewTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolCreate'
+      responses:
+        '201':
+          description: Tool created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /tools/search:
+    get:
+      tags:
+        - Tools
+      summary: Search tools
+      description: Search for tools by name or description
+      operationId: searchToolsEndpoint
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+
+  /tools/{tool_id}:
+    get:
+      tags:
+        - Tools
+      summary: Get tool
+      description: Get a specific tool by its UUID
+      operationId: getTool
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tool UUID
+      responses:
+        '200':
+          description: Tool details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+
+    put:
+      tags:
+        - Tools
+      summary: Update tool
+      description: Update an existing tool
+      operationId: updateExistingTool
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tool UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolUpdate'
+      responses:
+        '200':
+          description: Tool updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+
+    delete:
+      tags:
+        - Tools
+      summary: Delete tool
+      description: Delete a tool
+      operationId: deleteExistingTool
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tool UUID
+      responses:
+        '204':
+          description: Tool deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+
+  /tools/unique/{unique_id}:
+    get:
+      tags:
+        - Tools
+      summary: Get tool by unique ID
+      description: Get a specific tool by its unique_id
+      operationId: getToolByUniqueIdentifier
+      parameters:
+        - name: unique_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Tool unique ID
+      responses:
+        '200':
+          description: Tool details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+
+components:
+  schemas:
+    ToolCreate:
+      type: object
+      required:
+        - name
+        - description
+        - unique_id
+      properties:
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: Tool description
+        unique_id:
+          type: string
+          description: Unique identifier for the tool
+        category_ids:
+          type: array
+          items:
+            type: string
+          description: Categories this tool belongs to
+        pricing_type:
+          type: string
+          enum: [free, freemium, paid, subscription]
+          description: Pricing type
+        website_url:
+          type: string
+          format: uri
+          description: Tool website URL
+        api_url:
+          type: string
+          format: uri
+          description: Tool API URL
+        documentation_url:
+          type: string
+          format: uri
+          description: Tool documentation URL
+        logo_url:
+          type: string
+          format: uri
+          description: Tool logo URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Key features of this tool
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+
+    ToolUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: Tool description
+        category_ids:
+          type: array
+          items:
+            type: string
+          description: Categories this tool belongs to
+        pricing_type:
+          type: string
+          enum: [free, freemium, paid, subscription]
+          description: Pricing type
+        website_url:
+          type: string
+          format: uri
+          description: Tool website URL
+        api_url:
+          type: string
+          format: uri
+          description: Tool API URL
+        documentation_url:
+          type: string
+          format: uri
+          description: Tool documentation URL
+        logo_url:
+          type: string
+          format: uri
+          description: Tool logo URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Key features of this tool
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+
+    ToolResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Tool UUID
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: Tool description
+        unique_id:
+          type: string
+          description: Unique identifier for the tool
+        category_ids:
+          type: array
+          items:
+            type: string
+          description: Categories this tool belongs to
+        pricing_type:
+          type: string
+          enum: [free, freemium, paid, subscription]
+          description: Pricing type
+        website_url:
+          type: string
+          format: uri
+          description: Tool website URL
+        api_url:
+          type: string
+          format: uri
+          description: Tool API URL
+        documentation_url:
+          type: string
+          format: uri
+          description: Tool documentation URL
+        logo_url:
+          type: string
+          format: uri
+          description: Tool logo URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Key features of this tool
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          description: Average rating
+        rating_count:
+          type: integer
+          minimum: 0
+          description: Number of ratings
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata 

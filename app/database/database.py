@@ -24,11 +24,6 @@ async def create_collection(name):
     return await database.create_collection(name)
 
 
-# Access collections directly
-sources = database.get_collection("sources")
-scraping_logs = database.get_collection("scraping_logs")
-scraping_tasks = database.get_collection("scraping_tasks")
-
 # Chat collections
 chat_sessions = database.get_collection("chat_sessions")
 chat_messages = database.get_collection("chat_messages")
@@ -38,3 +33,6 @@ users = database.get_collection("users")
 
 # Tools collection
 tools = database.get_collection("tools")
+
+# Sites queue collection
+sites = database.get_collection("sites")

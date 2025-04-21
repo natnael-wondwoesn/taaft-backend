@@ -1,0 +1,428 @@
+paths:
+  /api/sites:
+    post:
+      tags:
+        - Sites Queue
+      summary: Create site
+      description: Create a new site in the queue
+      operationId: createSite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteCreate'
+      responses:
+        '201':
+          description: Site created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+    
+    get:
+      tags:
+        - Sites Queue
+      summary: Get sites
+      description: Get all sites in the queue with optional filtering
+      operationId: getSites
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Maximum number of items to return
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SiteStatus'
+          description: Filter by site status
+        - name: priority
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SitePriority'
+          description: Filter by site priority
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by site category
+      responses:
+        '200':
+          description: List of sites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteResponse'
+
+  /api/sites/webhook:
+    get:
+      tags:
+        - Sites Queue
+      summary: Data feed for n8n automation
+      description: |
+        Provides site data for n8n automation in the format:
+        ```
+        {
+          "_id": { "$oid": "680685a5856a3a9ff097944b" },
+          "price": { "$numberDouble": "14.99" },
+          "link": "https://theresanaiforthat.com/ai/younet/?fid=2187",
+          "name": "Younet",
+          "rating": { "$numberDouble": "4.4" },
+          "unique_id": "2187",
+          "description": "Personalized AI agents that expedite your work 10X"
+        }
+        ```
+      operationId: n8nWebhook
+      responses:
+        '200':
+          description: List of sites formatted for n8n
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebhookPayload'
+
+  /api/sites/{site_id}:
+    get:
+      tags:
+        - Sites Queue
+      summary: Get site
+      description: Get a specific site by ID
+      operationId: getSite
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Site ID
+      responses:
+        '200':
+          description: Site details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+        '404':
+          description: Site not found
+    
+    put:
+      tags:
+        - Sites Queue
+      summary: Update site
+      description: Update a site in the queue
+      operationId: updateSite
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Site ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteUpdate'
+      responses:
+        '200':
+          description: Site updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+        '404':
+          description: Site not found
+    
+    delete:
+      tags:
+        - Sites Queue
+      summary: Delete site
+      description: Delete a site from the queue
+      operationId: deleteSite
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Site ID
+      responses:
+        '204':
+          description: Site deleted successfully
+        '404':
+          description: Site not found
+        '500':
+          description: Failed to delete site
+
+  /api/sites/n8n:
+    get:
+      tags:
+        - Sites Queue
+      summary: Data feed for n8n automation
+      description: |
+        Provides site data for n8n automation in the simple format:
+        ```
+        {
+          "_id": { "$oid": "680685e2856a3a9ff097944c" },
+          "link": "https://theresanaiforthat.com/*",
+          "category_id": "6806415d856a3a9ff0979444"
+        }
+        ```
+        
+        This simple format contains only the essential fields needed for n8n integration.
+      operationId: getSitesForN8n
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of sites formatted for n8n integration
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/N8nSiteFormat'
+
+components:
+  schemas:
+    SiteStatus:
+      type: string
+      enum: [pending, in_progress, completed, failed, cancelled]
+      description: Status of the site in the queue
+      
+    SitePriority:
+      type: string
+      enum: [low, medium, high, critical]
+      description: Priority of the site in the queue
+      
+    WebhookPayload:
+      type: object
+      required:
+        - link
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: MongoDB ObjectId in string format
+        price:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Price as a string representation of a double
+        link:
+          type: string
+          description: Site URL
+        name:
+          type: string
+          description: Name of the site or tool
+        rating:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Rating as a string representation of a double
+        unique_id:
+          type: string
+          description: Unique identifier for the site
+        description:
+          type: string
+          description: Description of the site
+      
+    SiteCreate:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        name:
+          type: string
+          description: Site name
+        description:
+          type: string
+          description: Site description
+        category:
+          type: string
+          description: Site category
+        priority:
+          $ref: '#/components/schemas/SitePriority'
+          default: medium
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+          
+    SiteUpdate:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        name:
+          type: string
+          description: Site name
+        description:
+          type: string
+          description: Site description
+        category:
+          type: string
+          description: Site category
+        priority:
+          $ref: '#/components/schemas/SitePriority'
+        status:
+          $ref: '#/components/schemas/SiteStatus'
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+          
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Site ID
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        name:
+          type: string
+          description: Site name
+        description:
+          type: string
+          description: Site description
+        category:
+          type: string
+          description: Site category
+        priority:
+          $ref: '#/components/schemas/SitePriority'
+        status:
+          $ref: '#/components/schemas/SiteStatus'
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        processed_at:
+          type: string
+          format: date-time
+          description: When the site was processed
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+          
+    SiteResponse:
+      type: object
+      properties:
+        hits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_hits:
+          type: integer
+        total_pages:
+          type: integer
+
+    N8nSiteFormat:
+      type: object
+      required:
+        - _id
+        - link
+        - category_id
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: MongoDB ObjectId in string format
+        link:
+          type: string
+          description: Site URL
+        category_id:
+          type: string
+          description: Category ID
+
+    N8nToolFormat:
+      type: object
+      required:
+        - _id
+        - price
+        - link
+        - name
+        - rating
+        - unique_id
+        - description
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: MongoDB ObjectId in string format
+        price:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Price as a string representation of a double
+        link:
+          type: string
+          description: Site URL
+        name:
+          type: string
+          description: Name of the site or tool
+        rating:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Rating as a string representation of a double
+        unique_id:
+          type: string
+          description: Unique identifier for the site
+        description:
+          type: string
+          description: Description of the site 

@@ -1,0 +1,1828 @@
+openapi: 3.0.3
+info:
+  title: TAAFT Backend API
+  description: API for the TAAFT (Tools Analysis and Functionality Testing) application
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@taaft.com
+servers:
+- url: http://localhost:8000
+  description: Local development server
+- url: https://api.taaft.com
+  description: Production server
+tags:
+- name: Authentication
+  description: User authentication and authorization
+- name: Chat
+  description: Chat sessions and messages
+- name: Search
+  description: Search functionality using Algolia
+- name: Tools
+  description: Tools management
+- name: Sites Queue
+  description: Prioritized queue of sites
+paths:
+  /auth/register:
+    post:
+      tags:
+      - Authentication
+      summary: Register a new user
+      description: Register a new user and assign to free tier
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              - full_name
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                  minimum: 8
+                full_name:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: User with this email already exists
+      security: []
+  /auth/token:
+    post:
+      tags:
+      - Authentication
+      summary: Login for access token
+      description: Authenticate user and return access and refresh tokens
+      operationId: loginForAccessToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - username
+              - password
+              properties:
+                username:
+                  type: string
+                  description: User email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: bearer
+        '401':
+          description: Incorrect email or password
+      security: []
+  /auth/refresh-token:
+    post:
+      tags:
+      - Authentication
+      summary: Refresh access token
+      description: Get a new access token using refresh token
+      operationId: refreshAccessToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: New access token generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: bearer
+        '401':
+          description: Invalid or expired refresh token
+      security: []
+  /auth/me:
+    get:
+      tags:
+      - Authentication
+      summary: Get current user info
+      description: Get information about the currently authenticated user
+      operationId: getCurrentUserInfo
+      responses:
+        '200':
+          description: User information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Not authenticated
+  /auth/verify-email:
+    post:
+      tags:
+      - Authentication
+      summary: Verify email
+      description: Verify user email with verification token
+      operationId: verifyEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email verified successfully
+        '400':
+          description: Invalid verification token
+      security: []
+  /auth/request-password-reset:
+    post:
+      tags:
+      - Authentication
+      summary: Request password reset
+      description: Request a password reset token
+      operationId: requestPasswordReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Password reset request processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: If the email exists, a password reset link will be sent
+      security: []
+  /auth/reset-password:
+    post:
+      tags:
+      - Authentication
+      summary: Reset password
+      description: Reset user password with a valid token
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - token
+              - new_password
+              properties:
+                token:
+                  type: string
+                new_password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password reset successfully
+        '400':
+          description: Invalid or expired reset token
+      security: []
+  /api/chat/sessions:
+    post:
+      tags:
+      - Chat
+      summary: Create chat session
+      description: Create a new chat session
+      operationId: createChatSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionCreate'
+      responses:
+        '201':
+          description: Chat session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+    get:
+      tags:
+      - Chat
+      summary: Get user sessions
+      description: Get all chat sessions for a user
+      operationId: getUserSessions
+      parameters:
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      responses:
+        '200':
+          description: List of chat sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSession'
+        '400':
+          description: User ID is required
+  /api/chat/sessions/{session_id}:
+    get:
+      tags:
+      - Chat
+      summary: Get chat session
+      description: Get a chat session by ID
+      operationId: getChatSession
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Chat session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+    put:
+      tags:
+      - Chat
+      summary: Update chat session
+      description: Update a chat session
+      operationId: updateChatSession
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                model:
+                  $ref: '#/components/schemas/ChatModelType'
+                system_prompt:
+                  type: string
+      responses:
+        '200':
+          description: Chat session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+    delete:
+      tags:
+      - Chat
+      summary: Delete chat session
+      description: Delete a chat session and all its messages
+      operationId: deleteChatSession
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Chat session deleted successfully
+        '404':
+          description: Chat session not found
+  /api/chat/sessions/{session_id}/archive:
+    post:
+      tags:
+      - Chat
+      summary: Archive chat session
+      description: Archive a chat session (mark as inactive)
+      operationId: archiveChatSession
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Chat session archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+  /api/chat/sessions/{session_id}/messages:
+    get:
+      tags:
+      - Chat
+      summary: Get chat messages
+      description: Get all messages for a chat session
+      operationId: getChatMessages
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+      responses:
+        '200':
+          description: List of messages in the chat session
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          description: Chat session not found
+    post:
+      tags:
+      - Chat
+      summary: Send chat message
+      description: Send a message to the chat and get a response from the LLM
+      operationId: sendChatMessage
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Chat message sent and response received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '404':
+          description: Chat session not found
+        '500':
+          description: Error getting response from language model
+  /api/chat/search:
+    get:
+      tags:
+      - Chat
+      summary: Search chat messages
+      description: Search for chat messages across sessions
+      operationId: searchChatMessages
+      parameters:
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+  /api/chat:
+    post:
+      tags:
+      - Chat
+      summary: Quick chat
+      description: Send a message without creating a session first (one-shot query)
+      operationId: quickChat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Response from the LLM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '500':
+          description: Error getting response from language model
+  /ws:
+    get:
+      tags:
+      - Chat
+      summary: WebSocket connection
+      description: Establish a WebSocket connection for real-time chat
+      operationId: websocketEndpoint
+      responses:
+        '101':
+          description: WebSocket connection established
+  /api/search/tools:
+    get:
+      tags:
+      - Search
+      summary: Search tools
+      description: Search for tools using Algolia
+      operationId: searchTools
+      parameters:
+      - name: query
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search query
+      - name: categories
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+        description: List of category IDs to filter by
+      - name: pricing_types
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+        description: List of pricing types to filter by
+      - name: min_rating
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0
+          maximum: 5
+        description: Minimum rating to filter by
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based)
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Number of results per page
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - relevance
+          - newest
+          - trending
+        description: Sort order
+      - name: filters
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Custom Algolia filter query
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+        '503':
+          description: Search service is not configured
+  /api/search/glossary:
+    get:
+      tags:
+      - Search
+      summary: Search glossary
+      description: Search glossary terms using Algolia
+      operationId: searchGlossary
+      parameters:
+      - name: query
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search query
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based)
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Number of results per page
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hits:
+                    type: array
+                    items:
+                      type: object
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+                  total_hits:
+                    type: integer
+                  total_pages:
+                    type: integer
+        '503':
+          description: Search service is not configured
+  /api/search/nlp:
+    post:
+      tags:
+      - Search
+      summary: Process NLP query
+      description: Process a natural language query into structured search parameters
+      operationId: processNlpQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaturalLanguageQuery'
+      responses:
+        '200':
+          description: Processed query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessedQuery'
+  /api/search/nlp-search:
+    post:
+      tags:
+      - Search
+      summary: NLP search
+      description: Perform a natural language search in one step
+      operationId: nlpSearch
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based)
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Number of results per page
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NaturalLanguageQuery'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SearchResult'
+                - type: object
+                  properties:
+                    processed_query:
+                      $ref: '#/components/schemas/ProcessedQuery'
+        '503':
+          description: Search service is not configured
+  /api/search/index/tools:
+    post:
+      tags:
+      - Search
+      summary: Index tools
+      description: Index all tools in MongoDB to Algolia (asynchronous operation)
+      operationId: indexTools
+      parameters:
+      - name: batch_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Number of tools to index in each batch
+      responses:
+        '202':
+          description: Indexing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: processing
+                  message:
+                    type: string
+                    example: Indexing tools to Algolia in the background
+        '503':
+          description: Search service is not configured
+  /api/search/index/glossary:
+    post:
+      tags:
+      - Search
+      summary: Index glossary
+      description: Index all glossary terms in MongoDB to Algolia (asynchronous operation)
+      operationId: indexGlossary
+      parameters:
+      - name: batch_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Number of terms to index in each batch
+      responses:
+        '202':
+          description: Indexing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: processing
+                  message:
+                    type: string
+                    example: Indexing glossary terms to Algolia in the background
+        '503':
+          description: Search service is not configured
+  /api/search/index/tool/{tool_id}:
+    post:
+      tags:
+      - Search
+      summary: Index single tool
+      description: Index a single tool to Algolia
+      operationId: indexSingleTool
+      parameters:
+      - name: tool_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the tool to index
+      responses:
+        '200':
+          description: Tool indexed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Tool indexed successfully
+                  object_id:
+                    type: string
+        '404':
+          description: Tool not found
+        '503':
+          description: Search service is not configured
+    delete:
+      tags:
+      - Search
+      summary: Delete tool from index
+      description: Delete a tool from the Algolia index
+      operationId: deleteToolFromIndex
+      parameters:
+      - name: tool_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the tool to delete from the index
+      responses:
+        '200':
+          description: Tool deleted from index successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Tool deleted from index successfully
+        '404':
+          description: Tool not found in index
+        '503':
+          description: Search service is not configured
+  /api/search/config:
+    get:
+      tags:
+      - Search
+      summary: Get search config
+      description: Get the current search configuration
+      operationId: getSearchConfig
+      responses:
+        '200':
+          description: Search configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  configured:
+                    type: boolean
+                  indices:
+                    type: object
+                    properties:
+                      tools:
+                        type: string
+                      glossary:
+                        type: string
+  /api/search/suggest:
+    get:
+      tags:
+      - Search
+      summary: Search suggestions
+      description: Get search suggestions/autocomplete
+      operationId: searchSuggestions
+      parameters:
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 2
+        description: Partial search query
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 5
+        description: Maximum number of suggestions to return
+      responses:
+        '200':
+          description: Search suggestions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '503':
+          description: Search service is not configured
+  /tools:
+    get:
+      tags:
+      - Tools
+      summary: List tools
+      description: List all tools with pagination
+      operationId: listTools
+      parameters:
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        description: Number of items to skip
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+      - Tools
+      summary: Create tool
+      description: Create a new tool
+      operationId: createNewTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolCreate'
+      responses:
+        '201':
+          description: Tool created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /tools/search:
+    get:
+      tags:
+      - Tools
+      summary: Search tools
+      description: Search for tools by name or description
+      operationId: searchToolsEndpoint
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Search query
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        description: Number of items to skip
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Maximum number of items to return
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+  /tools/{tool_id}:
+    get:
+      tags:
+      - Tools
+      summary: Get tool
+      description: Get a specific tool by its UUID
+      operationId: getTool
+      parameters:
+      - name: tool_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Tool UUID
+      responses:
+        '200':
+          description: Tool details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+    put:
+      tags:
+      - Tools
+      summary: Update tool
+      description: Update an existing tool
+      operationId: updateExistingTool
+      parameters:
+      - name: tool_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Tool UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolUpdate'
+      responses:
+        '200':
+          description: Tool updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+    delete:
+      tags:
+      - Tools
+      summary: Delete tool
+      description: Delete a tool
+      operationId: deleteExistingTool
+      parameters:
+      - name: tool_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Tool UUID
+      responses:
+        '204':
+          description: Tool deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+  /tools/unique/{unique_id}:
+    get:
+      tags:
+      - Tools
+      summary: Get tool by unique ID
+      description: Get a specific tool by its unique_id
+      operationId: getToolByUniqueIdentifier
+      parameters:
+      - name: unique_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Tool unique ID
+      responses:
+        '200':
+          description: Tool details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+  /api/sites:
+    post:
+      tags:
+      - Sites Queue
+      summary: Create site
+      description: Create a new site in the queue
+      operationId: createSite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteCreate'
+      responses:
+        '201':
+          description: Site created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+    get:
+      tags:
+      - Sites Queue
+      summary: Get sites
+      description: Get all sites in the queue with optional filtering
+      operationId: getSites
+      parameters:
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        description: Number of items to skip
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Maximum number of items to return
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/SiteStatus'
+        description: Filter by site status
+      - name: priority
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/SitePriority'
+        description: Filter by site priority
+      - name: category
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter by site category
+      responses:
+        '200':
+          description: List of sites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteResponse'
+  /api/sites/{site_id}:
+    get:
+      tags:
+      - Sites Queue
+      summary: Get site
+      description: Get a specific site by ID
+      operationId: getSite
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Site ID
+      responses:
+        '200':
+          description: Site details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+        '404':
+          description: Site not found
+    put:
+      tags:
+      - Sites Queue
+      summary: Update site
+      description: Update a site in the queue
+      operationId: updateSite
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Site ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteUpdate'
+      responses:
+        '200':
+          description: Site updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+        '404':
+          description: Site not found
+    delete:
+      tags:
+      - Sites Queue
+      summary: Delete site
+      description: Delete a site from the queue
+      operationId: deleteSite
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Site ID
+      responses:
+        '204':
+          description: Site deleted successfully
+        '404':
+          description: Site not found
+        '500':
+          description: Failed to delete site
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        service_tier:
+          type: string
+          enum:
+          - FREE
+          - BASIC
+          - PRO
+          - ENTERPRISE
+        is_active:
+          type: boolean
+        is_verified:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        usage:
+          type: object
+          properties:
+            requests_today:
+              type: integer
+            requests_reset_date:
+              type: string
+              format: date-time
+            total_requests:
+              type: integer
+            storage_used_bytes:
+              type: integer
+    MessageRole:
+      type: string
+      enum:
+      - user
+      - assistant
+      - system
+    ChatModelType:
+      type: string
+      enum:
+      - gpt4
+      - claude
+      - llama
+      - default
+    MessageBase:
+      type: object
+      required:
+      - role
+      - content
+      properties:
+        role:
+          $ref: '#/components/schemas/MessageRole'
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    Message:
+      allOf:
+      - $ref: '#/components/schemas/MessageBase'
+      - type: object
+        properties:
+          id:
+            type: string
+          chat_id:
+            type: string
+          metadata:
+            type: object
+            additionalProperties: true
+    ChatSessionBase:
+      type: object
+      properties:
+        title:
+          type: string
+          default: New Chat
+        user_id:
+          type: string
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+          default: default
+        system_prompt:
+          type: string
+    ChatSessionCreate:
+      $ref: '#/components/schemas/ChatSessionBase'
+    ChatSession:
+      allOf:
+      - $ref: '#/components/schemas/ChatSessionBase'
+      - type: object
+        properties:
+          id:
+            type: string
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+          message_count:
+            type: integer
+            default: 0
+          is_active:
+            type: boolean
+            default: true
+          metadata:
+            type: object
+            additionalProperties: true
+    ChatMessageRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+        system_prompt:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    ChatMessageResponse:
+      type: object
+      required:
+      - message
+      - chat_id
+      - message_id
+      - timestamp
+      - model
+      properties:
+        message:
+          type: string
+        chat_id:
+          type: string
+        message_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+        metadata:
+          type: object
+          additionalProperties: true
+    SearchParams:
+      type: object
+      properties:
+        query:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        pricing_types:
+          type: array
+          items:
+            type: string
+        min_rating:
+          type: number
+          minimum: 0
+          maximum: 5
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        per_page:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        sort_by:
+          type: string
+          enum:
+          - relevance
+          - newest
+          - trending
+        filters:
+          type: string
+    SearchResult:
+      type: object
+      properties:
+        hits:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_hits:
+          type: integer
+        total_pages:
+          type: integer
+        processing_time_ms:
+          type: integer
+        query:
+          type: string
+    NaturalLanguageQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language search query
+        context:
+          type: object
+          additionalProperties: true
+          description: Additional context for the search
+    ProcessedQuery:
+      type: object
+      properties:
+        original_query:
+          type: string
+        search_query:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        pricing_types:
+          type: array
+          items:
+            type: string
+        filters:
+          type: string
+        interpretation:
+          type: string
+    ToolCreate:
+      type: object
+      required:
+      - name
+      - description
+      - unique_id
+      properties:
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: Tool description
+        unique_id:
+          type: string
+          description: Unique identifier for the tool
+        category_ids:
+          type: array
+          items:
+            type: string
+          description: Categories this tool belongs to
+        pricing_type:
+          type: string
+          enum:
+          - free
+          - freemium
+          - paid
+          - subscription
+          description: Pricing type
+        website_url:
+          type: string
+          format: uri
+          description: Tool website URL
+        api_url:
+          type: string
+          format: uri
+          description: Tool API URL
+        documentation_url:
+          type: string
+          format: uri
+          description: Tool documentation URL
+        logo_url:
+          type: string
+          format: uri
+          description: Tool logo URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Key features of this tool
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+    ToolUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: Tool description
+        category_ids:
+          type: array
+          items:
+            type: string
+          description: Categories this tool belongs to
+        pricing_type:
+          type: string
+          enum:
+          - free
+          - freemium
+          - paid
+          - subscription
+          description: Pricing type
+        website_url:
+          type: string
+          format: uri
+          description: Tool website URL
+        api_url:
+          type: string
+          format: uri
+          description: Tool API URL
+        documentation_url:
+          type: string
+          format: uri
+          description: Tool documentation URL
+        logo_url:
+          type: string
+          format: uri
+          description: Tool logo URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Key features of this tool
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+    ToolResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Tool UUID
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: Tool description
+        unique_id:
+          type: string
+          description: Unique identifier for the tool
+        category_ids:
+          type: array
+          items:
+            type: string
+          description: Categories this tool belongs to
+        pricing_type:
+          type: string
+          enum:
+          - free
+          - freemium
+          - paid
+          - subscription
+          description: Pricing type
+        website_url:
+          type: string
+          format: uri
+          description: Tool website URL
+        api_url:
+          type: string
+          format: uri
+          description: Tool API URL
+        documentation_url:
+          type: string
+          format: uri
+          description: Tool documentation URL
+        logo_url:
+          type: string
+          format: uri
+          description: Tool logo URL
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Key features of this tool
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          description: Average rating
+        rating_count:
+          type: integer
+          minimum: 0
+          description: Number of ratings
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+    SiteStatus:
+      type: string
+      enum:
+      - pending
+      - in_progress
+      - completed
+      - failed
+      - cancelled
+      description: Status of the site in the queue
+    SitePriority:
+      type: string
+      enum:
+      - low
+      - medium
+      - high
+      - critical
+      description: Priority of the site in the queue
+    SiteCreate:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        name:
+          type: string
+          description: Site name
+        description:
+          type: string
+          description: Site description
+        category:
+          type: string
+          description: Site category
+        priority:
+          $ref: '#/components/schemas/SitePriority'
+          default: medium
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+    SiteUpdate:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        name:
+          type: string
+          description: Site name
+        description:
+          type: string
+          description: Site description
+        category:
+          type: string
+          description: Site category
+        priority:
+          $ref: '#/components/schemas/SitePriority'
+        status:
+          $ref: '#/components/schemas/SiteStatus'
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Site ID
+        url:
+          type: string
+          format: uri
+          description: Site URL
+        name:
+          type: string
+          description: Site name
+        description:
+          type: string
+          description: Site description
+        category:
+          type: string
+          description: Site category
+        priority:
+          $ref: '#/components/schemas/SitePriority'
+        status:
+          $ref: '#/components/schemas/SiteStatus'
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        processed_at:
+          type: string
+          format: date-time
+          description: When the site was processed
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+    SiteResponse:
+      type: object
+      properties:
+        hits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_hits:
+          type: integer
+        total_pages:
+          type: integer
+security:
+- bearerAuth: []

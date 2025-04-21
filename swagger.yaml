@@ -1,0 +1,38 @@
+openapi: 3.0.3
+info:
+  title: TAAFT Backend API
+  description: API for the TAAFT (Tools Analysis and Functionality Testing) application
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@taaft.com
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.taaft.com
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Chat
+    description: Chat sessions and messages
+  - name: Search
+    description: Search functionality using Algolia
+  - name: Tools
+    description: Tools management
+  - name: Sites Queue
+    description: Prioritized queue of sites
+
+paths:
+  # Placeholder for paths - will be filled in separate files
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: [] 

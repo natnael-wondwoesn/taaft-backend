@@ -15,10 +15,6 @@ import asyncio
 from bson import ObjectId
 import datetime
 
-# Import routers for source queue manager
-from .source_queue_manager import router as source_router
-from .dashboard_api import router as dashboard_router
-
 # Import the chat router
 from .chat import router as chat_router
 
@@ -31,6 +27,10 @@ from .auth.dependencies import RateLimitMiddleware
 
 # Import the tools router
 from .tools import router as tools_router
+
+# Import the site queue routers
+from .queue import api_router as site_queue_router
+from .queue import dashboard_router as site_dashboard_router
 
 load_dotenv()
 
@@ -88,13 +88,13 @@ app.add_middleware(
 # Add rate limit middleware
 app.add_middleware(RateLimitMiddleware)
 
-# Include routers for source queue manager
-app.include_router(source_router)
-app.include_router(dashboard_router)
+# Include routers
 app.include_router(chat_router)
 app.include_router(algolia_router)
 app.include_router(auth_router)  # Include auth router
 app.include_router(tools_router)  # Include tools router
+app.include_router(site_queue_router)  # Include site queue router
+app.include_router(site_dashboard_router)  # Include site dashboard router
 
 # Add StaticFiles mount
 app.mount("/static", StaticFiles(directory="static"), name="static")
