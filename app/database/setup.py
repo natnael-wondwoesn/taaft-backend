@@ -110,6 +110,18 @@ async def setup_database():
             [("content", "text")]
         )  # Full-text search index
 
+    # Initialize tools collection
+    if "tools" not in collections:
+        await database.create_collection("tools")
+        logger.info("Created tools collection")
+
+        # Create indexes for tools collection
+        await database.tools.create_index("id", unique=True)
+        await database.tools.create_index("unique_id", unique=True)
+        await database.tools.create_index("name")
+        await database.tools.create_index("created_at")
+        await database.tools.create_index([("name", "text"), ("description", "text")])
+
     logger.info("Database setup completed successfully")
 
 

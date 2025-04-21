@@ -35,3 +35,6 @@ chat_messages = database.get_collection("chat_messages")
 
 # User collections
 users = database.get_collection("users")
+
+# Tools collection
+tools = database.get_collection("tools")

@@ -29,6 +29,9 @@ from .algolia import router as algolia_router, algolia_config
 from .auth import router as auth_router
 from .auth.dependencies import RateLimitMiddleware
 
+# Import the tools router
+from .tools import router as tools_router
+
 load_dotenv()
 
 # Check for test mode
@@ -91,6 +94,7 @@ app.include_router(dashboard_router)
 app.include_router(chat_router)
 app.include_router(algolia_router)
 app.include_router(auth_router)  # Include auth router
+app.include_router(tools_router)  # Include tools router
 
 # Add StaticFiles mount
 app.mount("/static", StaticFiles(directory="static"), name="static")

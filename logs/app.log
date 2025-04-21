@@ -1231,3 +1231,569 @@ search_only_api_key
 2025-04-18T22:19:24.967150+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6802a59e5ed8d0c33db38f64, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
 2025-04-18T22:19:25.244342+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6802a59e825f9c753aa0f351, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
 2025-04-18T22:19:25.247334+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6802a59e825f9c753aa0f351, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:36:49.289492+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:36:49.291491+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:36:49.372487+0300 INFO Setting up database...
+2025-04-21T12:37:13.387336+0300 ERROR Could not connect to MongoDB: The resolution lifetime expired after 21.615 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.
+2025-04-21T12:37:13.388330+0300 ERROR Error during startup: The resolution lifetime expired after 21.615 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:192.168.74.77@53 answered The DNS operation timed out.
+2025-04-21T12:37:59.445035+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:37:59.448038+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:37:59.531034+0300 INFO Setting up database...
+2025-04-21T12:38:34.946448+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680611fcda1616061425628d, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:38:34.950451+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680611fcda1616061425628d, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:39:48.129708+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:39:48.132711+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:39:48.191710+0300 INFO Setting up database...
+2025-04-21T12:39:54.562482+0300 INFO Connected to MongoDB for setup
+2025-04-21T12:39:54.737631+0300 INFO Database setup completed successfully
+2025-04-21T12:39:54.738628+0300 INFO Database setup completed
+2025-04-21T12:39:54.738628+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T12:56:10.257984+0300 INFO Shutting down application...
+2025-04-21T12:56:40.514904+0300 INFO Database connections closed
+2025-04-21T12:56:40.515904+0300 INFO Shutdown complete.
+2025-04-21T12:56:45.888304+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:56:45.891306+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:56:45.942945+0300 INFO Setting up database...
+2025-04-21T12:57:16.651187+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6806165e6229b6e749f8644e, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:57:16.653195+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6806165e6229b6e749f8644e, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:57:20.800882+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:57:20.803879+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:57:20.855881+0300 INFO Setting up database...
+2025-04-21T12:57:51.261031+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 68061680ab370011501b3dd1, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:57:51.263032+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 68061680ab370011501b3dd1, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T12:57:55.316297+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:57:55.319294+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:58:53.335380+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:58:53.338369+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:58:56.656595+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:58:56.659598+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:05.127209+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:05.129225+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:08.422646+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:08.426645+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:17.906545+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:17.909540+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:21.122983+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:21.126983+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:30.805722+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:30.809704+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:34.162069+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:34.164067+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:42.513926+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:42.516911+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T12:59:46.158018+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T12:59:46.160016+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:00:25.651483+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:00:25.654487+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:00:41.560304+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:00:41.563309+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:02:23.713959+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:02:23.717231+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:02:23.790614+0300 INFO Setting up database...
+2025-04-21T13:02:54.843970+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680617b0f9ab6044dc0c2624, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T13:02:54.846963+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680617b0f9ab6044dc0c2624, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1000) (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T13:02:58.684997+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:02:58.688004+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:03:13.968270+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:03:13.971275+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:03:17.397594+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:03:17.400603+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:03:26.793944+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:03:26.796936+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:03:31.100341+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:03:31.104346+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:03:51.446638+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:03:51.450636+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:03:54.914865+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:03:54.917871+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:04:34.448511+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:04:34.450499+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:05:08.392155+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:05:08.395180+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:05:08.475162+0300 INFO Setting up database...
+2025-04-21T13:05:11.798293+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:05:12.507639+0300 INFO Created tools collection
+2025-04-21T13:05:13.872526+0300 INFO Database setup completed successfully
+2025-04-21T13:05:13.874270+0300 INFO Database setup completed
+2025-04-21T13:05:13.874522+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:05:17.995632+0300 ERROR Failed to load Algolia settings: 2 validation errors for AlgoliaSettings
+app_id
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+search_only_api_key
+  Field required [type=missing, input_value={'api_key': '69a52e416789...ation_id': 'AMO2SU5APR'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-04-21T13:05:18.000633+0300 WARNING Algolia credentials not provided. Search functionality will be limited.
+2025-04-21T13:05:18.073609+0300 INFO Setting up database...
+2025-04-21T13:05:20.186712+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:05:20.391470+0300 INFO Database setup completed successfully
+2025-04-21T13:05:20.392032+0300 INFO Database setup completed
+2025-04-21T13:05:20.393081+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:09:36.892379+0300 INFO Shutting down application...
+2025-04-21T13:09:37.107967+0300 INFO Database connections closed
+2025-04-21T13:09:37.109075+0300 INFO Shutdown complete.
+2025-04-21T13:09:41.402677+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:09:41.403672+0300 ERROR Failed to initialize Algolia client: type object 'SearchClient' has no attribute 'create'
+2025-04-21T13:09:41.478689+0300 INFO Setting up database...
+2025-04-21T13:09:44.479384+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:09:44.684153+0300 INFO Database setup completed successfully
+2025-04-21T13:09:44.685158+0300 INFO Database setup completed
+2025-04-21T13:09:44.685158+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:13:39.221011+0300 INFO Shutting down application...
+2025-04-21T13:13:39.424846+0300 INFO Database connections closed
+2025-04-21T13:13:39.424846+0300 INFO Shutdown complete.
+2025-04-21T13:13:43.345422+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:13:43.346427+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:13:43.416515+0300 INFO Setting up database...
+2025-04-21T13:13:46.773140+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:13:46.981642+0300 INFO Database setup completed successfully
+2025-04-21T13:13:46.983641+0300 INFO Database setup completed
+2025-04-21T13:13:46.983641+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:13:46.984641+0300 ERROR Failed to configure Algolia tools index: 'NoneType' object has no attribute 'set_settings'
+2025-04-21T13:13:46.985644+0300 ERROR Failed to configure Algolia glossary index: 'NoneType' object has no attribute 'set_settings'
+2025-04-21T13:13:46.985644+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:17:44.861637+0300 INFO Shutting down application...
+2025-04-21T13:17:45.143960+0300 INFO Database connections closed
+2025-04-21T13:17:45.144689+0300 INFO Shutdown complete.
+2025-04-21T13:17:49.148647+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:17:49.150649+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:17:49.220378+0300 INFO Setting up database...
+2025-04-21T13:17:52.617968+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:17:52.823306+0300 INFO Database setup completed successfully
+2025-04-21T13:17:52.827313+0300 INFO Database setup completed
+2025-04-21T13:17:52.828313+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:18:08.837355+0300 INFO Shutting down application...
+2025-04-21T13:18:09.040354+0300 INFO Database connections closed
+2025-04-21T13:18:09.041356+0300 INFO Shutdown complete.
+2025-04-21T13:18:13.296896+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:18:13.297893+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:18:13.368602+0300 INFO Setting up database...
+2025-04-21T13:18:16.172837+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:18:16.375725+0300 INFO Database setup completed successfully
+2025-04-21T13:18:16.376566+0300 INFO Database setup completed
+2025-04-21T13:18:16.376566+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:18:17.686540+0300 INFO Shutting down application...
+2025-04-21T13:18:17.860570+0300 INFO Database connections closed
+2025-04-21T13:18:17.861322+0300 INFO Shutdown complete.
+2025-04-21T13:18:21.968053+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:18:21.969998+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:18:22.044000+0300 INFO Setting up database...
+2025-04-21T13:18:24.669437+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:18:24.977195+0300 INFO Database setup completed successfully
+2025-04-21T13:18:24.978196+0300 INFO Database setup completed
+2025-04-21T13:18:24.978196+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:18:55.556961+0300 INFO Shutting down application...
+2025-04-21T13:18:55.798899+0300 INFO Database connections closed
+2025-04-21T13:18:55.800895+0300 INFO Shutdown complete.
+2025-04-21T13:18:59.950602+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:18:59.951597+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:19:00.024023+0300 INFO Setting up database...
+2025-04-21T13:19:02.045317+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:19:02.250220+0300 INFO Database setup completed successfully
+2025-04-21T13:19:02.251708+0300 INFO Database setup completed
+2025-04-21T13:19:02.252214+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:19:36.340056+0300 INFO Shutting down application...
+2025-04-21T13:19:36.642008+0300 INFO Database connections closed
+2025-04-21T13:19:36.643020+0300 INFO Shutdown complete.
+2025-04-21T13:19:40.709453+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:19:40.710451+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:19:40.784465+0300 INFO Setting up database...
+2025-04-21T13:19:43.915101+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:19:44.104119+0300 INFO Database setup completed successfully
+2025-04-21T13:19:44.105120+0300 INFO Database setup completed
+2025-04-21T13:19:44.106110+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:20:21.952640+0300 INFO Shutting down application...
+2025-04-21T13:20:22.223926+0300 INFO Database connections closed
+2025-04-21T13:20:22.224937+0300 INFO Shutdown complete.
+2025-04-21T13:20:26.537247+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:20:26.539266+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:20:26.606252+0300 INFO Setting up database...
+2025-04-21T13:20:29.085127+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:20:29.309385+0300 INFO Database setup completed successfully
+2025-04-21T13:20:29.310387+0300 INFO Database setup completed
+2025-04-21T13:20:29.310387+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:20:33.545152+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:20:33.546157+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:20:33.621152+0300 INFO Setting up database...
+2025-04-21T13:20:36.234806+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:20:36.458317+0300 INFO Database setup completed successfully
+2025-04-21T13:20:36.459317+0300 INFO Database setup completed
+2025-04-21T13:20:36.459317+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:20:37.980025+0300 INFO Shutting down application...
+2025-04-21T13:20:38.205038+0300 INFO Database connections closed
+2025-04-21T13:20:38.206037+0300 INFO Shutdown complete.
+2025-04-21T13:20:42.294244+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:20:42.295243+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:20:42.364249+0300 INFO Setting up database...
+2025-04-21T13:20:44.956651+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:20:45.161941+0300 INFO Database setup completed successfully
+2025-04-21T13:20:45.163398+0300 INFO Database setup completed
+2025-04-21T13:20:45.164474+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:21:12.807232+0300 INFO Shutting down application...
+2025-04-21T13:21:13.117522+0300 INFO Database connections closed
+2025-04-21T13:21:13.118529+0300 INFO Shutdown complete.
+2025-04-21T13:21:17.303636+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:21:17.304542+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:21:17.372564+0300 INFO Setting up database...
+2025-04-21T13:21:20.592148+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:21:20.899872+0300 INFO Database setup completed successfully
+2025-04-21T13:21:20.901014+0300 INFO Database setup completed
+2025-04-21T13:21:20.901014+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:21:25.004609+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:21:25.006607+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:21:25.094772+0300 INFO Setting up database...
+2025-04-21T13:21:27.766351+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:21:27.994356+0300 INFO Database setup completed successfully
+2025-04-21T13:21:27.995463+0300 INFO Database setup completed
+2025-04-21T13:21:27.995463+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:21:34.984217+0300 INFO Shutting down application...
+2025-04-21T13:21:35.645873+0300 INFO Database connections closed
+2025-04-21T13:21:35.646947+0300 INFO Shutdown complete.
+2025-04-21T13:21:39.548194+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:21:39.550191+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:21:39.669282+0300 INFO Setting up database...
+2025-04-21T13:21:41.966061+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:21:42.199059+0300 INFO Database setup completed successfully
+2025-04-21T13:21:42.200057+0300 INFO Database setup completed
+2025-04-21T13:21:42.201053+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:21:43.850995+0300 INFO Shutting down application...
+2025-04-21T13:21:44.142684+0300 INFO Database connections closed
+2025-04-21T13:21:44.143683+0300 INFO Shutdown complete.
+2025-04-21T13:21:48.054066+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:21:48.055066+0300 ERROR Failed to initialize Algolia client: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-21T13:21:48.126070+0300 INFO Setting up database...
+2025-04-21T13:21:50.492334+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:21:50.698439+0300 INFO Database setup completed successfully
+2025-04-21T13:21:50.699449+0300 INFO Database setup completed
+2025-04-21T13:21:50.699449+0300 WARNING Algolia not configured. Search functionality will be limited.
+2025-04-21T13:23:24.054321+0300 INFO Shutting down application...
+2025-04-21T13:23:24.291778+0300 INFO Database connections closed
+2025-04-21T13:23:24.292217+0300 INFO Shutdown complete.
+2025-04-21T13:23:28.592210+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:23:28.593191+0300 INFO Algolia client initialized successfully
+2025-04-21T13:23:28.667808+0300 INFO Setting up database...
+2025-04-21T13:23:31.852578+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:23:32.175316+0300 INFO Database setup completed successfully
+2025-04-21T13:23:32.176363+0300 INFO Database setup completed
+2025-04-21T13:23:32.177293+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:23:32.178290+0300 ERROR Failed to configure Algolia tools index: 'str' object has no attribute 'set_settings'
+2025-04-21T13:23:32.178290+0300 ERROR Failed to configure Algolia glossary index: 'str' object has no attribute 'set_settings'
+2025-04-21T13:23:32.179294+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:23:36.459216+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:23:36.460321+0300 INFO Algolia client initialized successfully
+2025-04-21T13:23:36.543222+0300 INFO Setting up database...
+2025-04-21T13:23:38.833040+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:23:39.139422+0300 INFO Database setup completed successfully
+2025-04-21T13:23:39.140155+0300 INFO Database setup completed
+2025-04-21T13:23:39.141228+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:23:39.141228+0300 ERROR Failed to configure Algolia tools index: 'str' object has no attribute 'set_settings'
+2025-04-21T13:23:39.142161+0300 ERROR Failed to configure Algolia glossary index: 'str' object has no attribute 'set_settings'
+2025-04-21T13:23:39.143155+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:23:48.840689+0300 INFO Shutting down application...
+2025-04-21T13:23:49.057059+0300 INFO Database connections closed
+2025-04-21T13:23:49.057614+0300 INFO Shutdown complete.
+2025-04-21T13:23:53.215719+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:23:53.217475+0300 INFO Algolia client initialized successfully
+2025-04-21T13:23:53.323670+0300 INFO Setting up database...
+2025-04-21T13:23:56.137331+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:23:56.432549+0300 INFO Database setup completed successfully
+2025-04-21T13:23:56.433548+0300 INFO Database setup completed
+2025-04-21T13:23:56.433548+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:23:56.434553+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:23:56.434553+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:23:56.435550+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:24:04.500696+0300 INFO Shutting down application...
+2025-04-21T13:24:04.722550+0300 INFO Database connections closed
+2025-04-21T13:24:04.723621+0300 INFO Shutdown complete.
+2025-04-21T13:24:08.881347+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:24:08.883360+0300 INFO Algolia client initialized successfully
+2025-04-21T13:24:08.951350+0300 INFO Setting up database...
+2025-04-21T13:24:11.394558+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:24:11.702129+0300 INFO Database setup completed successfully
+2025-04-21T13:24:11.702965+0300 INFO Database setup completed
+2025-04-21T13:24:11.702965+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:24:11.703901+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:24:11.704903+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:24:11.704903+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:24:36.473437+0300 INFO Shutting down application...
+2025-04-21T13:24:36.687638+0300 INFO Database connections closed
+2025-04-21T13:24:36.688630+0300 INFO Shutdown complete.
+2025-04-21T13:24:41.062050+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:24:41.062992+0300 INFO Algolia client initialized successfully
+2025-04-21T13:24:41.136995+0300 INFO Setting up database...
+2025-04-21T13:24:43.710829+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:24:43.957916+0300 INFO Database setup completed successfully
+2025-04-21T13:24:43.959362+0300 INFO Database setup completed
+2025-04-21T13:24:43.959888+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:24:43.959888+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:24:43.960895+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:24:43.961896+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:25:00.881801+0300 INFO Shutting down application...
+2025-04-21T13:25:01.156729+0300 INFO Database connections closed
+2025-04-21T13:25:01.157733+0300 INFO Shutdown complete.
+2025-04-21T13:25:05.369317+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:25:05.370299+0300 INFO Algolia client initialized successfully
+2025-04-21T13:25:05.443306+0300 INFO Setting up database...
+2025-04-21T13:25:09.315906+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:25:09.558292+0300 INFO Database setup completed successfully
+2025-04-21T13:25:09.559267+0300 INFO Database setup completed
+2025-04-21T13:25:09.559267+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:25:09.560266+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:09.561268+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:09.561268+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:25:24.186451+0300 INFO Shutting down application...
+2025-04-21T13:25:24.787950+0300 INFO Database connections closed
+2025-04-21T13:25:24.789462+0300 INFO Shutdown complete.
+2025-04-21T13:25:29.037869+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:25:29.038954+0300 INFO Algolia client initialized successfully
+2025-04-21T13:25:29.107629+0300 INFO Setting up database...
+2025-04-21T13:25:32.085106+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:25:32.495199+0300 INFO Database setup completed successfully
+2025-04-21T13:25:32.496278+0300 INFO Database setup completed
+2025-04-21T13:25:32.496278+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:25:32.497188+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:32.497188+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:32.498189+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:25:36.752033+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:25:36.753133+0300 INFO Algolia client initialized successfully
+2025-04-21T13:25:36.827120+0300 INFO Setting up database...
+2025-04-21T13:25:39.560864+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:25:39.815839+0300 INFO Database setup completed successfully
+2025-04-21T13:25:39.816835+0300 INFO Database setup completed
+2025-04-21T13:25:39.817843+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:25:39.817843+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:39.818844+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:39.819843+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:25:40.252989+0300 INFO Shutting down application...
+2025-04-21T13:25:40.588644+0300 INFO Database connections closed
+2025-04-21T13:25:40.588644+0300 INFO Shutdown complete.
+2025-04-21T13:25:44.688754+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:25:44.689752+0300 INFO Algolia client initialized successfully
+2025-04-21T13:25:44.757757+0300 INFO Setting up database...
+2025-04-21T13:25:47.445270+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:25:47.855294+0300 INFO Database setup completed successfully
+2025-04-21T13:25:47.855941+0300 INFO Database setup completed
+2025-04-21T13:25:47.856943+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:25:47.856943+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:47.857921+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:25:47.858911+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:25:54.637087+0300 INFO Shutting down application...
+2025-04-21T13:25:54.908768+0300 INFO Database connections closed
+2025-04-21T13:25:54.909772+0300 INFO Shutdown complete.
+2025-04-21T13:25:59.154697+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:25:59.155808+0300 INFO Algolia client initialized successfully
+2025-04-21T13:25:59.228701+0300 INFO Setting up database...
+2025-04-21T13:26:01.793946+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:26:02.088732+0300 INFO Database setup completed successfully
+2025-04-21T13:26:02.089743+0300 INFO Database setup completed
+2025-04-21T13:26:02.089743+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:26:02.090725+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:26:02.090725+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:26:02.091730+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:26:06.559380+0300 INFO Shutting down application...
+2025-04-21T13:26:07.646705+0300 INFO Database connections closed
+2025-04-21T13:26:07.647798+0300 INFO Shutdown complete.
+2025-04-21T13:26:11.760135+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:26:11.761130+0300 INFO Algolia client initialized successfully
+2025-04-21T13:26:11.838824+0300 INFO Setting up database...
+2025-04-21T13:26:14.888978+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:26:15.291148+0300 INFO Database setup completed successfully
+2025-04-21T13:26:15.292805+0300 INFO Database setup completed
+2025-04-21T13:26:15.292805+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:26:15.293807+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:26:15.293807+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:26:15.294800+0300 INFO Algolia indexes configured successfully
+2025-04-21T13:26:18.130311+0300 INFO Shutting down application...
+2025-04-21T13:26:18.371500+0300 INFO Database connections closed
+2025-04-21T13:26:18.371500+0300 INFO Shutdown complete.
+2025-04-21T13:26:22.609289+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T13:26:22.610289+0300 INFO Algolia client initialized successfully
+2025-04-21T13:26:22.679439+0300 INFO Setting up database...
+2025-04-21T13:26:26.290902+0300 INFO Connected to MongoDB for setup
+2025-04-21T13:26:26.552188+0300 INFO Database setup completed successfully
+2025-04-21T13:26:26.553187+0300 INFO Database setup completed
+2025-04-21T13:26:26.553187+0300 INFO Configuring Algolia indexes...
+2025-04-21T13:26:26.554185+0300 ERROR Failed to configure Algolia tools index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:26:26.554185+0300 ERROR Failed to configure Algolia glossary index: SearchClientSync.set_settings() got an unexpected keyword argument 'settings'
+2025-04-21T13:26:26.555182+0300 INFO Algolia indexes configured successfully
+2025-04-21T14:57:51.100650+0300 INFO Shutting down application...
+2025-04-21T14:58:21.295241+0300 INFO Database connections closed
+2025-04-21T14:58:21.296241+0300 INFO Shutdown complete.
+2025-04-21T14:58:27.984334+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T14:58:27.985343+0300 INFO Algolia client initialized successfully
+2025-04-21T14:58:28.051347+0300 INFO Setting up database...
+2025-04-21T14:58:58.954501+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680632e49386a048a7b3bb36, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T14:58:58.956502+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680632e49386a048a7b3bb36, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T14:59:05.588919+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-21T14:59:05.589910+0300 INFO Algolia client initialized successfully
+2025-04-21T14:59:05.660898+0300 INFO Setting up database...
+2025-04-21T14:59:36.349328+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6806330a20b3050ff0ae41a8, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-21T14:59:36.352317+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6806330a20b3050ff0ae41a8, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
