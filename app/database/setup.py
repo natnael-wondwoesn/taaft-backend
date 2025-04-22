@@ -99,6 +99,10 @@ async def setup_database():
         await database.tools.create_index("unique_id", unique=True)
         await database.tools.create_index("name")
         await database.tools.create_index("created_at")
+        await database.tools.create_index("category")  # Index for new category field
+        await database.tools.create_index(
+            "is_featured"
+        )  # Index for new is_featured field
         await database.tools.create_index([("name", "text"), ("description", "text")])
 
     # Initialize sites collection

@@ -1,0 +1,179 @@
+paths:
+  /api/terms/define:
+    post:
+      tags:
+        - Terms
+      summary: Define a term
+      description: Get a definition and examples for a specific term or concept
+      operationId: defineTerm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermDefinitionRequest'
+      responses:
+        '200':
+          description: Term definition successfully generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermDefinitionResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Error getting response from language model
+
+  /api/terms/history:
+    get:
+      tags:
+        - Terms
+      summary: Get term definition history
+      description: Get history of previously requested term definitions
+      operationId: getTermHistory
+      parameters:
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of term definition history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TermDefinition'
+
+  /api/terms/popular:
+    get:
+      tags:
+        - Terms
+      summary: Get popular terms
+      description: Get most frequently requested terms
+      operationId: getPopularTerms
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: List of popular terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PopularTerm'
+
+components:
+  schemas:
+    TermDefinitionRequest:
+      type: object
+      required:
+        - term
+      properties:
+        term:
+          type: string
+          description: The term or concept to define
+        user_id:
+          type: string
+          description: Optional user ID for tracking history
+        model:
+          $ref: '#/components/schemas/TermModelType'
+
+    TermDefinitionResponse:
+      type: object
+      properties:
+        term:
+          type: string
+          description: The term that was defined
+        description:
+          type: string
+          description: Brief description of the term
+        examples:
+          type: array
+          items:
+            type: string
+          description: Examples demonstrating the term
+        id:
+          type: string
+          description: Unique ID for this definition
+        timestamp:
+          type: string
+          format: date-time
+          description: When this definition was generated
+        model:
+          $ref: '#/components/schemas/TermModelType'
+
+    TermDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for this definition
+        term:
+          type: string
+          description: The term that was defined
+        description:
+          type: string
+          description: Brief description of the term
+        examples:
+          type: array
+          items:
+            type: string
+          description: Examples demonstrating the term
+        user_id:
+          type: string
+          description: User who requested this definition
+        timestamp:
+          type: string
+          format: date-time
+          description: When this definition was generated
+        model:
+          $ref: '#/components/schemas/TermModelType'
+      
+    PopularTerm:
+      type: object
+      properties:
+        term:
+          type: string
+          description: The popular term
+        count:
+          type: integer
+          description: Number of times this term has been requested
+        last_requested:
+          type: string
+          format: date-time
+          description: When this term was last requested
+
+    TermModelType:
+      type: string
+      enum:
+        - gpt4
+        - claude
+        - llama
+        - default
+      default: default 

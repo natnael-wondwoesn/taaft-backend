@@ -41,6 +41,35 @@ def get_glossary_collection() -> AsyncIOMotorCollection:
     return database.client.get_database("taaft_db").get_collection("glossary")
 
 
+@router.get("/search-by-category", response_model=SearchResult)
+async def search_by_category(
+    category: str = Query(..., description="Category ID or name to search for"),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100),
+):
+    """
+    Search for tools by category
+
+    Args:
+        category: Category ID or name to search for
+        page: Page number (1-based)
+        per_page: Number of results per page
+
+    Returns:
+        SearchResult with tools in the specified category
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    # Execute search by category
+    result = await algolia_search.search_by_category(category, page, per_page)
+    return result
+
+
 @router.get("/tools", response_model=SearchResult)
 async def search_tools(
     query: str = "",

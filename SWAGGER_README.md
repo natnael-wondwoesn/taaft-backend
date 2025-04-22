@@ -12,6 +12,8 @@ The API documentation is split into several YAML files:
 - `swagger_search.yaml`: Search-related endpoints
 - `swagger_tools.yaml`: Tools management endpoints
 - `swagger_queue.yaml`: Sites queue endpoints
+- `swagger_glossary.yaml`: Glossary-related endpoints
+- `swagger_categories.yaml`: Categories management endpoints
 
 ## Combining Documentation
 

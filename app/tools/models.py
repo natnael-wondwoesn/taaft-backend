@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, validator, ConfigDict
-from typing import Optional, Dict, Any, ClassVar, Annotated
+from typing import Optional, Dict, Any, ClassVar, Annotated, List
 from pydantic.functional_validators import BeforeValidator
 from uuid import UUID, uuid4
 import datetime
@@ -28,6 +28,11 @@ class ToolBase(BaseModel):
     unique_id: str
     rating: Optional[str] = None
     saved_numbers: Optional[int] = None
+    # New fields for UI
+    category: Optional[str] = None
+    features: Optional[List[str]] = None
+    is_featured: bool = False
+    saved_by_user: bool = False
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -48,6 +53,9 @@ class ToolUpdate(BaseModel):
     unique_id: Optional[str] = None
     rating: Optional[str] = None
     saved_numbers: Optional[int] = None
+    category: Optional[str] = None
+    features: Optional[List[str]] = None
+    is_featured: Optional[bool] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -65,6 +73,20 @@ class ToolResponse(ToolBase):
 
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        json_encoders={ObjectId: lambda oid: str(oid), UUID: lambda uuid: str(uuid)},
+    )
+
+
+class PaginatedToolsResponse(BaseModel):
+    """Response model for paginated list of tools."""
+
+    tools: List[ToolResponse]
+    total: int
+    skip: int
+    limit: int
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,

@@ -930,6 +930,46 @@ paths:
                   type: string
         '503':
           description: Search service is not configured
+  /api/search/search-by-category:
+    get:
+      tags:
+      - Search
+      summary: Search by category
+      description: Search for tools by category
+      operationId: searchByCategory
+      parameters:
+      - name: category
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Category ID or name to search for
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based)
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Number of results per page
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+        '503':
+          description: Search service is not configured
   /tools:
     get:
       tags:
@@ -957,13 +997,11 @@ paths:
         description: Maximum number of items to return
       responses:
         '200':
-          description: List of tools
+          description: List of tools with pagination info
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ToolResponse'
+                $ref: '#/components/schemas/PaginatedToolsResponse'
         '401':
           description: Unauthorized
     post:
@@ -1024,13 +1062,11 @@ paths:
         description: Maximum number of items to return
       responses:
         '200':
-          description: Search results
+          description: Search results with pagination info
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ToolResponse'
+                $ref: '#/components/schemas/PaginatedToolsResponse'
         '401':
           description: Unauthorized
   /tools/{tool_id}:
@@ -1605,6 +1641,154 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/categories:
+    get:
+      tags:
+      - Categories
+      summary: Get all categories
+      description: Get all available categories for tools
+      operationId: getCategories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponse'
+  /api/categories/{category_id}:
+    get:
+      tags:
+      - Categories
+      summary: Get category by ID
+      description: Get a category by its ID
+      operationId: getCategoryById
+      parameters:
+      - name: category_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the category to fetch
+      responses:
+        '200':
+          description: Category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '404':
+          description: Category not found
+  /api/categories/slug/{slug}:
+    get:
+      tags:
+      - Categories
+      summary: Get category by slug
+      description: Get a category by its slug
+      operationId: getCategoryBySlug
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Slug of the category to fetch
+      responses:
+        '200':
+          description: Category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '404':
+          description: Category not found
+  /api/terms/define:
+    post:
+      tags:
+      - Terms
+      summary: Define a term
+      description: Get a definition and examples for a specific term or concept
+      operationId: defineTerm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermDefinitionRequest'
+      responses:
+        '200':
+          description: Term definition successfully generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermDefinitionResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Error getting response from language model
+  /api/terms/history:
+    get:
+      tags:
+      - Terms
+      summary: Get term definition history
+      description: Get history of previously requested term definitions
+      operationId: getTermHistory
+      parameters:
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      responses:
+        '200':
+          description: List of term definition history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TermDefinition'
+  /api/terms/popular:
+    get:
+      tags:
+      - Terms
+      summary: Get popular terms
+      description: Get most frequently requested terms
+      operationId: getPopularTerms
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 10
+      responses:
+        '200':
+          description: List of popular terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PopularTerm'
 components:
   securitySchemes:
     bearerAuth:
@@ -1845,12 +2029,26 @@ components:
           type: string
         interpretation:
           type: string
+    PricingType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pricing type ID
+        name:
+          type: string
+          description: Pricing type name
+      required:
+      - id
+      - name
     ToolCreate:
       type: object
       required:
       - name
       - description
       - unique_id
+      - link
+      - price
       properties:
         name:
           type: string
@@ -1861,6 +2059,28 @@ components:
         unique_id:
           type: string
           description: Unique identifier for the tool
+        link:
+          type: string
+          format: uri
+          description: Tool website URL
+        price:
+          type: string
+          description: Pricing information
+        rating:
+          type: string
+          description: Tool rating
+        category:
+          type: string
+          nullable: true
+          description: Primary category for the tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Features of the tool
+        is_featured:
+          type: boolean
+          description: Whether the tool is featured
         category_ids:
           type: array
           items:
@@ -1895,11 +2115,6 @@ components:
           items:
             type: string
           description: Tags associated with this tool
-        features:
-          type: array
-          items:
-            type: string
-          description: Key features of this tool
         metadata:
           type: object
           additionalProperties: true
@@ -1913,6 +2128,31 @@ components:
         description:
           type: string
           description: Tool description
+        unique_id:
+          type: string
+          description: Unique identifier for the tool
+        link:
+          type: string
+          format: uri
+          description: Tool website URL
+        price:
+          type: string
+          description: Pricing information
+        rating:
+          type: string
+          description: Tool rating
+        category:
+          type: string
+          nullable: true
+          description: Primary category for the tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Features of the tool
+        is_featured:
+          type: boolean
+          description: Whether the tool is featured
         category_ids:
           type: array
           items:
@@ -1947,11 +2187,6 @@ components:
           items:
             type: string
           description: Tags associated with this tool
-        features:
-          type: array
-          items:
-            type: string
-          description: Key features of this tool
         metadata:
           type: object
           additionalProperties: true
@@ -1962,7 +2197,7 @@ components:
         id:
           type: string
           format: uuid
-          description: Tool UUID
+          description: Tool ID
         name:
           type: string
           description: Tool name
@@ -1972,67 +2207,64 @@ components:
         unique_id:
           type: string
           description: Unique identifier for the tool
-        category_ids:
-          type: array
-          items:
-            type: string
-          description: Categories this tool belongs to
-        pricing_type:
-          type: string
-          enum:
-          - free
-          - freemium
-          - paid
-          - subscription
-          description: Pricing type
-        website_url:
+        link:
           type: string
           format: uri
           description: Tool website URL
-        api_url:
+        price:
           type: string
-          format: uri
-          description: Tool API URL
-        documentation_url:
+          description: Pricing information
+        rating:
           type: string
-          format: uri
-          description: Tool documentation URL
-        logo_url:
+          description: Tool rating
+        saved_numbers:
+          type: integer
+          nullable: true
+          description: Number of users who saved this tool
+        category:
           type: string
-          format: uri
-          description: Tool logo URL
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with this tool
+          nullable: true
+          description: Primary category for the tool
         features:
           type: array
           items:
             type: string
-          description: Key features of this tool
-        rating:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 5
-          description: Average rating
-        rating_count:
-          type: integer
-          minimum: 0
-          description: Number of ratings
+          description: Features of the tool
+        is_featured:
+          type: boolean
+          description: Whether the tool is featured
+        saved_by_user:
+          type: boolean
+          description: Whether the authenticated user has saved this tool
         created_at:
           type: string
           format: date-time
-          description: Creation timestamp
+          description: Tool creation timestamp
         updated_at:
           type: string
           format: date-time
-          description: Last update timestamp
+          description: Tool last update timestamp
         metadata:
           type: object
           additionalProperties: true
           description: Additional metadata
+    PaginatedToolsResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolResponse'
+          description: List of tools
+        total:
+          type: integer
+          description: Total number of tools
+        skip:
+          type: integer
+          description: Number of items skipped
+        limit:
+          type: integer
+          description: Maximum number of items returned
     SiteStatus:
       type: string
       enum:
@@ -2346,5 +2578,107 @@ components:
         detail:
           type: string
           description: Error message
+    CategoryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Category ID
+        name:
+          type: string
+          description: Category name
+        slug:
+          type: string
+          description: URL-friendly version of the category name
+        count:
+          type: integer
+          description: Number of tools in this category
+      required:
+      - id
+      - name
+      - slug
+    TermDefinitionRequest:
+      type: object
+      required:
+      - term
+      properties:
+        term:
+          type: string
+          description: The term or concept to define
+        user_id:
+          type: string
+          description: Optional user ID for tracking history
+        model:
+          $ref: '#/components/schemas/TermModelType'
+    TermDefinitionResponse:
+      type: object
+      properties:
+        term:
+          type: string
+          description: The term that was defined
+        description:
+          type: string
+          description: Brief description of the term
+        examples:
+          type: array
+          items:
+            type: string
+          description: Examples demonstrating the term
+        id:
+          type: string
+          description: Unique ID for this definition
+        timestamp:
+          type: string
+          format: date-time
+          description: When this definition was generated
+        model:
+          $ref: '#/components/schemas/TermModelType'
+    TermDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for this definition
+        term:
+          type: string
+          description: The term that was defined
+        description:
+          type: string
+          description: Brief description of the term
+        examples:
+          type: array
+          items:
+            type: string
+          description: Examples demonstrating the term
+        user_id:
+          type: string
+          description: User who requested this definition
+        timestamp:
+          type: string
+          format: date-time
+          description: When this definition was generated
+        model:
+          $ref: '#/components/schemas/TermModelType'
+    PopularTerm:
+      type: object
+      properties:
+        term:
+          type: string
+          description: The popular term
+        count:
+          type: integer
+          description: Number of times this term has been requested
+        last_requested:
+          type: string
+          format: date-time
+          description: When this term was last requested
+    TermModelType:
+      type: string
+      enum:
+      - gpt4
+      - claude
+      - llama
+      - default
+      default: default
 security:
 - bearerAuth: []

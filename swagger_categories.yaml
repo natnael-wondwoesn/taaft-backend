@@ -1,0 +1,87 @@
+paths:
+  /api/categories:
+    get:
+      tags:
+        - Categories
+      summary: Get all categories
+      description: Get all available categories for tools
+      operationId: getCategories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponse'
+
+  /api/categories/{category_id}:
+    get:
+      tags:
+        - Categories
+      summary: Get category by ID
+      description: Get a category by its ID
+      operationId: getCategoryById
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the category to fetch
+      responses:
+        '200':
+          description: Category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '404':
+          description: Category not found
+
+  /api/categories/slug/{slug}:
+    get:
+      tags:
+        - Categories
+      summary: Get category by slug
+      description: Get a category by its slug
+      operationId: getCategoryBySlug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Slug of the category to fetch
+      responses:
+        '200':
+          description: Category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '404':
+          description: Category not found
+
+components:
+  schemas:
+    CategoryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Category ID
+        name:
+          type: string
+          description: Category name
+        slug:
+          type: string
+          description: URL-friendly version of the category name
+        count:
+          type: integer
+          description: Number of tools in this category
+      required:
+        - id
+        - name
+        - slug 

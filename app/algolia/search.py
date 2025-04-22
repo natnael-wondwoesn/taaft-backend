@@ -48,6 +48,8 @@ class AlgoliaSearch:
             "productivity": ["automation", "workflow", "efficiency"],
             "research": ["academic", "scientific", "study"],
             "chat": ["conversation", "assistant", "chatbot"],
+            "e-commerce": ["shopping", "store", "retail", "sales"],
+            "analytics": ["data analysis", "metrics", "performance", "tracking"],
         }
 
         # Price type mapping to standardize variations
@@ -572,6 +574,32 @@ class AlgoliaSearch:
         result_dict["processed_query"] = processed_query
 
         return SearchResult(**result_dict)
+
+    async def search_by_category(
+        self, category: str, page: int = 1, per_page: int = 20
+    ) -> SearchResult:
+        """
+        Search for tools by category
+
+        Args:
+            category: Category ID or name to search for
+            page: Page number (1-based)
+            per_page: Number of results per page
+
+        Returns:
+            SearchResult with tools in the specified category
+        """
+        # Create search parameters with category filter
+        params = SearchParams(
+            query="",  # Empty query to match all documents
+            categories=[category],  # Filter by this category
+            page=page,
+            per_page=per_page,
+        )
+
+        # Execute the search using the existing search method
+        result = await self.search_tools(params)
+        return result
 
 
 # Create singleton instance

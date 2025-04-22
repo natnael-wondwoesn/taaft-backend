@@ -3,7 +3,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from ..auth.dependencies import get_current_active_user
-from .models import ToolCreate, ToolUpdate, ToolResponse
+from .models import ToolCreate, ToolUpdate, ToolResponse, PaginatedToolsResponse
 from ..models.user import UserResponse
 from .tools_service import (
     get_tools,
@@ -18,7 +18,7 @@ from .tools_service import (
 router = APIRouter(prefix="/tools", tags=["tools"])
 
 
-@router.get("/", response_model=List[ToolResponse])
+@router.get("/", response_model=PaginatedToolsResponse)
 async def list_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -27,10 +27,12 @@ async def list_tools(
     """
     List all tools with pagination.
     """
-    return await get_tools(skip=skip, limit=limit)
+    tools = await get_tools(skip=skip, limit=limit)
+    total = await get_tools(count_only=True)
+    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
 
-@router.get("/search", response_model=List[ToolResponse])
+@router.get("/search", response_model=PaginatedToolsResponse)
 async def search_tools_endpoint(
     q: str,
     skip: int = Query(0, ge=0),
@@ -40,7 +42,9 @@ async def search_tools_endpoint(
     """
     Search for tools by name or description.
     """
-    return await search_tools(query=q, skip=skip, limit=limit)
+    tools = await search_tools(query=q, skip=skip, limit=limit)
+    total = await search_tools(query=q, count_only=True)
+    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
 
 @router.get("/{tool_id}", response_model=ToolResponse)

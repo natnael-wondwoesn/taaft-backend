@@ -26,13 +26,11 @@ paths:
           description: Maximum number of items to return
       responses:
         '200':
-          description: List of tools
+          description: List of tools with pagination info
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ToolResponse'
+                $ref: '#/components/schemas/PaginatedToolsResponse'
         '401':
           description: Unauthorized
 
@@ -95,13 +93,11 @@ paths:
           description: Maximum number of items to return
       responses:
         '200':
-          description: Search results
+          description: Search results with pagination info
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ToolResponse'
+                $ref: '#/components/schemas/PaginatedToolsResponse'
         '401':
           description: Unauthorized
 
@@ -220,6 +216,8 @@ components:
         - name
         - description
         - unique_id
+        - link
+        - price
       properties:
         name:
           type: string
@@ -230,6 +228,28 @@ components:
         unique_id:
           type: string
           description: Unique identifier for the tool
+        link:
+          type: string
+          format: uri
+          description: Tool website URL
+        price:
+          type: string
+          description: Pricing information
+        rating:
+          type: string
+          description: Tool rating
+        category:
+          type: string
+          nullable: true
+          description: Primary category for the tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Features of the tool
+        is_featured:
+          type: boolean
+          description: Whether the tool is featured
         category_ids:
           type: array
           items:
@@ -260,11 +280,6 @@ components:
           items:
             type: string
           description: Tags associated with this tool
-        features:
-          type: array
-          items:
-            type: string
-          description: Key features of this tool
         metadata:
           type: object
           additionalProperties: true
@@ -279,6 +294,31 @@ components:
         description:
           type: string
           description: Tool description
+        unique_id:
+          type: string
+          description: Unique identifier for the tool
+        link:
+          type: string
+          format: uri
+          description: Tool website URL
+        price:
+          type: string
+          description: Pricing information
+        rating:
+          type: string
+          description: Tool rating
+        category:
+          type: string
+          nullable: true
+          description: Primary category for the tool
+        features:
+          type: array
+          items:
+            type: string
+          description: Features of the tool
+        is_featured:
+          type: boolean
+          description: Whether the tool is featured
         category_ids:
           type: array
           items:
@@ -309,11 +349,6 @@ components:
           items:
             type: string
           description: Tags associated with this tool
-        features:
-          type: array
-          items:
-            type: string
-          description: Key features of this tool
         metadata:
           type: object
           additionalProperties: true
@@ -325,7 +360,7 @@ components:
         id:
           type: string
           format: uuid
-          description: Tool UUID
+          description: Tool ID
         name:
           type: string
           description: Tool name
@@ -335,60 +370,62 @@ components:
         unique_id:
           type: string
           description: Unique identifier for the tool
-        category_ids:
-          type: array
-          items:
-            type: string
-          description: Categories this tool belongs to
-        pricing_type:
-          type: string
-          enum: [free, freemium, paid, subscription]
-          description: Pricing type
-        website_url:
+        link:
           type: string
           format: uri
           description: Tool website URL
-        api_url:
+        price:
           type: string
-          format: uri
-          description: Tool API URL
-        documentation_url:
+          description: Pricing information
+        rating:
           type: string
-          format: uri
-          description: Tool documentation URL
-        logo_url:
+          description: Tool rating
+        saved_numbers:
+          type: integer
+          nullable: true
+          description: Number of users who saved this tool
+        category:
           type: string
-          format: uri
-          description: Tool logo URL
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with this tool
+          nullable: true
+          description: Primary category for the tool
         features:
           type: array
           items:
             type: string
-          description: Key features of this tool
-        rating:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 5
-          description: Average rating
-        rating_count:
-          type: integer
-          minimum: 0
-          description: Number of ratings
+          description: Features of the tool
+        is_featured:
+          type: boolean
+          description: Whether the tool is featured
+        saved_by_user:
+          type: boolean
+          description: Whether the authenticated user has saved this tool
         created_at:
           type: string
           format: date-time
-          description: Creation timestamp
+          description: Tool creation timestamp
         updated_at:
           type: string
           format: date-time
-          description: Last update timestamp
+          description: Tool last update timestamp
         metadata:
           type: object
           additionalProperties: true
-          description: Additional metadata 
+          description: Additional metadata
+
+    PaginatedToolsResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolResponse'
+          description: List of tools
+        total:
+          type: integer
+          description: Total number of tools
+        skip:
+          type: integer
+          description: Number of items skipped
+        limit:
+          type: integer
+          description: Maximum number of items returned 
