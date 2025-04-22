@@ -36,3 +36,6 @@ tools = database.get_collection("tools")
 
 # Sites queue collection
 sites = database.get_collection("sites")
+
+# Glossary terms collection
+glossary_terms = database.get_collection("glossary_terms")

@@ -1,0 +1,384 @@
+openapi: 3.0.0
+info:
+  title: TAAFT Glossary API
+  description: API for accessing and managing glossary terms
+  version: 1.0.0
+tags:
+  - name: glossary
+    description: Operations for managing glossary terms
+
+paths:
+  /api/glossary/terms:
+    get:
+      tags:
+        - glossary
+      summary: List glossary terms
+      description: |
+        List glossary terms with pagination and filtering.
+        No authentication required (free tier access).
+      parameters:
+        - name: category
+          in: query
+          description: Filter by category
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search text in name and definition
+          required: false
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 500
+        - name: sort_by
+          in: query
+          description: Field to sort by
+          required: false
+          schema:
+            type: string
+            default: name
+        - name: sort_desc
+          in: query
+          description: Sort in descending order
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: List of glossary terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlossaryTermResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    post:
+      tags:
+        - glossary
+      summary: Create a glossary term
+      description: |
+        Create a new glossary term.
+        No authentication required (free tier access).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlossaryTermCreate'
+      responses:
+        '201':
+          description: Glossary term created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermResponse'
+        '409':
+          description: Glossary term with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/glossary/terms/{term_id}:
+    get:
+      tags:
+        - glossary
+      summary: Get a glossary term
+      description: |
+        Get a specific glossary term by ID.
+        No authentication required (free tier access).
+      parameters:
+        - name: term_id
+          in: path
+          description: ID of the glossary term
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Glossary term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermResponse'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    put:
+      tags:
+        - glossary
+      summary: Update a glossary term
+      description: |
+        Update an existing glossary term.
+        No authentication required (free tier access).
+      parameters:
+        - name: term_id
+          in: path
+          description: ID of the glossary term
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlossaryTermUpdate'
+      responses:
+        '200':
+          description: Updated glossary term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermResponse'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Glossary term with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    delete:
+      tags:
+        - glossary
+      summary: Delete a glossary term
+      description: |
+        Delete a glossary term.
+        No authentication required (free tier access).
+      parameters:
+        - name: term_id
+          in: path
+          description: ID of the glossary term
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Glossary term deleted
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/glossary/categories:
+    get:
+      tags:
+        - glossary
+      summary: Get all categories
+      description: |
+        Get all unique categories from the glossary terms.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/glossary/terms/count:
+    get:
+      tags:
+        - glossary
+      summary: Count glossary terms
+      description: |
+        Count the total number of glossary terms with optional filtering.
+        No authentication required (free tier access).
+      parameters:
+        - name: category
+          in: query
+          description: Filter by category
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search text in name and definition
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Count of glossary terms
+          content:
+            application/json:
+              schema:
+                type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    GlossaryTermResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the glossary term
+        name:
+          type: string
+          description: The name/title of the glossary term
+        definition:
+          type: string
+          description: Detailed definition of the term
+        related_terms:
+          type: array
+          items:
+            type: string
+          description: List of related term names
+        tool_references:
+          type: array
+          items:
+            type: string
+          description: List of tool IDs that are related to this term
+        categories:
+          type: array
+          items:
+            type: string
+          description: Categories this term belongs to
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      required:
+        - id
+        - name
+        - definition
+        - created_at
+        - updated_at
+    
+    GlossaryTermCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name/title of the glossary term
+        definition:
+          type: string
+          description: Detailed definition of the term
+        related_terms:
+          type: array
+          items:
+            type: string
+          description: List of related term names
+        tool_references:
+          type: array
+          items:
+            type: string
+          description: List of tool IDs that are related to this term
+        categories:
+          type: array
+          items:
+            type: string
+          description: Categories this term belongs to
+      required:
+        - name
+        - definition
+    
+    GlossaryTermUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name/title of the glossary term
+        definition:
+          type: string
+          description: Detailed definition of the term
+        related_terms:
+          type: array
+          items:
+            type: string
+          description: List of related term names
+        tool_references:
+          type: array
+          items:
+            type: string
+          description: List of tool IDs that are related to this term
+        categories:
+          type: array
+          items:
+            type: string
+          description: Categories this term belongs to
+    
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message 

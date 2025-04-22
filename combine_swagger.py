@@ -49,6 +49,7 @@ def main():
         "swagger_search.yaml",
         "swagger_tools.yaml",
         "swagger_queue.yaml",
+        "swagger_glossary.yaml",
     ]
 
     # Process each module file

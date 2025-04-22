@@ -114,6 +114,20 @@ async def setup_database():
         await database.sites.create_index([("priority", 1), ("created_at", 1)])
         await database.sites.create_index([("name", "text"), ("description", "text")])
 
+    # Initialize glossary terms collection
+    if "glossary_terms" not in collections:
+        await database.create_collection("glossary_terms")
+        logger.info("Created glossary_terms collection")
+
+        # Create indexes for glossary_terms collection
+        await database.glossary_terms.create_index("name", unique=True)
+        await database.glossary_terms.create_index("categories")
+        await database.glossary_terms.create_index("created_at")
+        await database.glossary_terms.create_index("updated_at")
+        await database.glossary_terms.create_index(
+            [("name", "text"), ("definition", "text")]
+        )
+
     logger.info("Database setup completed successfully")
 
 

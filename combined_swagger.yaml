@@ -1205,6 +1205,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SiteResponse'
+  /api/sites/webhook:
+    get:
+      tags:
+      - Sites Queue
+      summary: Data feed for n8n automation
+      description: "Provides site data for n8n automation in the format:\n```\n{\n\
+        \  \"_id\": { \"$oid\": \"680685a5856a3a9ff097944b\" },\n  \"price\": { \"\
+        $numberDouble\": \"14.99\" },\n  \"link\": \"https://theresanaiforthat.com/ai/younet/?fid=2187\"\
+        ,\n  \"name\": \"Younet\",\n  \"rating\": { \"$numberDouble\": \"4.4\" },\n\
+        \  \"unique_id\": \"2187\",\n  \"description\": \"Personalized AI agents that\
+        \ expedite your work 10X\"\n}\n```\n"
+      operationId: n8nWebhook
+      responses:
+        '200':
+          description: List of sites formatted for n8n
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebhookPayload'
   /api/sites/{site_id}:
     get:
       tags:
@@ -1276,6 +1297,314 @@ paths:
           description: Site not found
         '500':
           description: Failed to delete site
+  /api/sites/n8n:
+    get:
+      tags:
+      - Sites Queue
+      summary: Data feed for n8n automation
+      description: "Provides site data for n8n automation in the simple format:\n\
+        ```\n{\n  \"_id\": { \"$oid\": \"680685e2856a3a9ff097944c\" },\n  \"link\"\
+        : \"https://theresanaiforthat.com/*\",\n  \"category_id\": \"6806415d856a3a9ff0979444\"\
+        \n}\n```\n\nThis simple format contains only the essential fields needed for\
+        \ n8n integration.\n"
+      operationId: getSitesForN8n
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of sites formatted for n8n integration
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/N8nSiteFormat'
+  /api/glossary/terms:
+    get:
+      tags:
+      - glossary
+      summary: List glossary terms
+      description: 'List glossary terms with pagination and filtering.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: category
+        in: query
+        description: Filter by category
+        required: false
+        schema:
+          type: string
+      - name: search
+        in: query
+        description: Search text in name and definition
+        required: false
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: Number of items to skip
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: limit
+        in: query
+        description: Number of items to return
+        required: false
+        schema:
+          type: integer
+          default: 100
+          minimum: 1
+          maximum: 500
+      - name: sort_by
+        in: query
+        description: Field to sort by
+        required: false
+        schema:
+          type: string
+          default: name
+      - name: sort_desc
+        in: query
+        description: Sort in descending order
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: List of glossary terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlossaryTermResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+      - glossary
+      summary: Create a glossary term
+      description: 'Create a new glossary term.
+
+        No authentication required (free tier access).
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlossaryTermCreate'
+      responses:
+        '201':
+          description: Glossary term created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermResponse'
+        '409':
+          description: Glossary term with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/glossary/terms/{term_id}:
+    get:
+      tags:
+      - glossary
+      summary: Get a glossary term
+      description: 'Get a specific glossary term by ID.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: term_id
+        in: path
+        description: ID of the glossary term
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Glossary term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermResponse'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - glossary
+      summary: Update a glossary term
+      description: 'Update an existing glossary term.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: term_id
+        in: path
+        description: ID of the glossary term
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlossaryTermUpdate'
+      responses:
+        '200':
+          description: Updated glossary term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermResponse'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Glossary term with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - glossary
+      summary: Delete a glossary term
+      description: 'Delete a glossary term.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: term_id
+        in: path
+        description: ID of the glossary term
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Glossary term deleted
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/glossary/categories:
+    get:
+      tags:
+      - glossary
+      summary: Get all categories
+      description: 'Get all unique categories from the glossary terms.
+
+        No authentication required (free tier access).
+
+        '
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/glossary/terms/count:
+    get:
+      tags:
+      - glossary
+      summary: Count glossary terms
+      description: 'Count the total number of glossary terms with optional filtering.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: category
+        in: query
+        description: Filter by category
+        required: false
+        schema:
+          type: string
+      - name: search
+        in: query
+        description: Search text in name and definition
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Count of glossary terms
+          content:
+            application/json:
+              schema:
+                type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -1721,6 +2050,41 @@ components:
       - high
       - critical
       description: Priority of the site in the queue
+    WebhookPayload:
+      type: object
+      required:
+      - link
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: MongoDB ObjectId in string format
+        price:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Price as a string representation of a double
+        link:
+          type: string
+          description: Site URL
+        name:
+          type: string
+          description: Name of the site or tool
+        rating:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Rating as a string representation of a double
+        unique_id:
+          type: string
+          description: Unique identifier for the site
+        description:
+          type: string
+          description: Description of the site
     SiteCreate:
       type: object
       required:
@@ -1824,5 +2188,163 @@ components:
           type: integer
         total_pages:
           type: integer
+    N8nSiteFormat:
+      type: object
+      required:
+      - _id
+      - link
+      - category_id
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: MongoDB ObjectId in string format
+        link:
+          type: string
+          description: Site URL
+        category_id:
+          type: string
+          description: Category ID
+    N8nToolFormat:
+      type: object
+      required:
+      - _id
+      - price
+      - link
+      - name
+      - rating
+      - unique_id
+      - description
+      properties:
+        _id:
+          type: object
+          properties:
+            $oid:
+              type: string
+              description: MongoDB ObjectId in string format
+        price:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Price as a string representation of a double
+        link:
+          type: string
+          description: Site URL
+        name:
+          type: string
+          description: Name of the site or tool
+        rating:
+          type: object
+          properties:
+            $numberDouble:
+              type: string
+              description: Rating as a string representation of a double
+        unique_id:
+          type: string
+          description: Unique identifier for the site
+        description:
+          type: string
+          description: Description of the site
+    GlossaryTermResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the glossary term
+        name:
+          type: string
+          description: The name/title of the glossary term
+        definition:
+          type: string
+          description: Detailed definition of the term
+        related_terms:
+          type: array
+          items:
+            type: string
+          description: List of related term names
+        tool_references:
+          type: array
+          items:
+            type: string
+          description: List of tool IDs that are related to this term
+        categories:
+          type: array
+          items:
+            type: string
+          description: Categories this term belongs to
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      required:
+      - id
+      - name
+      - definition
+      - created_at
+      - updated_at
+    GlossaryTermCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name/title of the glossary term
+        definition:
+          type: string
+          description: Detailed definition of the term
+        related_terms:
+          type: array
+          items:
+            type: string
+          description: List of related term names
+        tool_references:
+          type: array
+          items:
+            type: string
+          description: List of tool IDs that are related to this term
+        categories:
+          type: array
+          items:
+            type: string
+          description: Categories this term belongs to
+      required:
+      - name
+      - definition
+    GlossaryTermUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name/title of the glossary term
+        definition:
+          type: string
+          description: Detailed definition of the term
+        related_terms:
+          type: array
+          items:
+            type: string
+          description: List of related term names
+        tool_references:
+          type: array
+          items:
+            type: string
+          description: List of tool IDs that are related to this term
+        categories:
+          type: array
+          items:
+            type: string
+          description: Categories this term belongs to
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
 security:
 - bearerAuth: []

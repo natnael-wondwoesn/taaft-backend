@@ -32,6 +32,9 @@ from .tools import router as tools_router
 from .queue import api_router as site_queue_router
 from .queue import dashboard_router as site_dashboard_router
 
+# Import the glossary router
+from .glossary import router as glossary_router
+
 load_dotenv()
 
 # Check for test mode
@@ -95,6 +98,7 @@ app.include_router(auth_router)  # Include auth router
 app.include_router(tools_router)  # Include tools router
 app.include_router(site_queue_router)  # Include site queue router
 app.include_router(site_dashboard_router)  # Include site dashboard router
+app.include_router(glossary_router)  # Include glossary router
 
 # Add StaticFiles mount
 app.mount("/static", StaticFiles(directory="static"), name="static")
