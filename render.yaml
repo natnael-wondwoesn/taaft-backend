@@ -1,0 +1,58 @@
+services:
+  # A web service
+  - type: web
+    name: taaft-backend
+    env: python
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGODB_URL
+        fromDatabase:
+          name: taaft-db
+          property: connectionString
+      - key: LOG_LEVEL
+        value: INFO
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 60
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: 7
+      - key: PORT
+        value: 8001
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ALGOLIA_APP_ID
+        sync: false
+      - key: ALGOLIA_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+    disk:
+      name: data
+      mountPath: /app/logs
+      sizeGB: 1
+
+  # MongoDB Database
+  - type: pserv
+    name: taaft-db
+    env: docker
+    repo: https://github.com/render-examples/mongodb.git
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        generateValue: true
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        generateValue: true
+    disk:
+      name: mongo-data
+      mountPath: /data/db
+      sizeGB: 10 
