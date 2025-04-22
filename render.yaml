@@ -4,7 +4,7 @@ services:
     name: taaft-backend
     env: python
     region: oregon
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && mkdir -p static
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: MONGODB_URL
@@ -23,11 +23,23 @@ services:
         value: 8001
       - key: PYTHON_VERSION
         value: 3.12.3
+      - key: TEST_MODE
+        value: "false"
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
       - key: OPENAI_API_KEY
         sync: false
       - key: ALGOLIA_APP_ID
         sync: false
       - key: ALGOLIA_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: FRONTEND_SUCCESS_URL
+        sync: false
+      - key: FRONTEND_ERROR_URL
         sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
