@@ -53,6 +53,10 @@ services:
       name: data
       mountPath: /app/logs
       sizeGB: 1
+    routes:
+       - type: rewrite
+         source: /ws
+         destination: /ws
 
   # MongoDB Database
   - type: pserv
