@@ -294,6 +294,12 @@ async def get_terms_grouped_by_letter(
     """
     try:
         grouped_terms = await glossary_db.get_terms_grouped_by_letter()
+
+        # Convert ObjectId to string for response
+        for letter, terms in grouped_terms.items():
+            for term in terms:
+                term["id"] = str(term.pop("_id"))
+
         return grouped_terms
 
     except Exception as e:
