@@ -2500,3 +2500,108 @@ search_only_api_key
 2025-04-23T09:29:11.718384+0300 INFO Algolia client initialized successfully
 2025-04-23T09:29:57.313506+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
 2025-04-23T09:29:57.315506+0300 INFO Algolia client initialized successfully
+2025-04-23T10:00:30.079483+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T10:00:30.081479+0300 INFO Algolia client initialized successfully
+2025-04-23T10:00:30.201482+0300 INFO Setting up database...
+2025-04-23T10:00:33.137334+0300 INFO Connected to MongoDB for setup
+2025-04-23T10:00:33.327673+0300 INFO Database setup completed successfully
+2025-04-23T10:00:33.328770+0300 INFO Database setup completed
+2025-04-23T10:00:33.328770+0300 INFO Seeding glossary terms...
+2025-04-23T10:00:33.545879+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-23T10:00:33.546884+0300 INFO Glossary seeding completed
+2025-04-23T10:00:33.547877+0300 INFO Configuring Algolia indexes...
+2025-04-23T10:00:34.179875+0300 INFO Algolia tools index configured successfully
+2025-04-23T10:00:34.327889+0300 INFO Algolia glossary index configured successfully
+2025-04-23T10:00:34.328899+0300 INFO Algolia indexes configured successfully
+2025-04-23T10:00:48.087553+0300 INFO Shutting down application...
+2025-04-23T10:00:48.442172+0300 INFO Database connections closed
+2025-04-23T10:00:48.443165+0300 INFO Shutdown complete.
+2025-04-23T10:00:52.838698+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T10:00:52.839690+0300 INFO Algolia client initialized successfully
+2025-04-23T10:00:52.959689+0300 INFO Setting up database...
+2025-04-23T10:00:55.137053+0300 INFO Connected to MongoDB for setup
+2025-04-23T10:00:55.328053+0300 INFO Database setup completed successfully
+2025-04-23T10:00:55.328053+0300 INFO Database setup completed
+2025-04-23T10:00:55.329053+0300 INFO Seeding glossary terms...
+2025-04-23T10:00:55.627567+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-23T10:00:55.628573+0300 INFO Glossary seeding completed
+2025-04-23T10:00:55.628573+0300 INFO Configuring Algolia indexes...
+2025-04-23T10:00:56.078555+0300 INFO Algolia tools index configured successfully
+2025-04-23T10:00:56.219560+0300 INFO Algolia glossary index configured successfully
+2025-04-23T10:00:56.219560+0300 INFO Algolia indexes configured successfully
+2025-04-23T10:01:13.312472+0300 INFO Shutting down application...
+2025-04-23T10:01:13.506733+0300 INFO Database connections closed
+2025-04-23T10:01:13.507730+0300 INFO Shutdown complete.
+2025-04-23T10:01:17.647927+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T10:01:17.649935+0300 INFO Algolia client initialized successfully
+2025-04-23T10:01:17.774928+0300 INFO Setting up database...
+2025-04-23T10:01:19.812772+0300 INFO Connected to MongoDB for setup
+2025-04-23T10:01:20.003797+0300 INFO Database setup completed successfully
+2025-04-23T10:01:20.004798+0300 INFO Database setup completed
+2025-04-23T10:01:20.004798+0300 INFO Seeding glossary terms...
+2025-04-23T10:01:20.189808+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-23T10:01:20.190805+0300 INFO Glossary seeding completed
+2025-04-23T10:01:20.190805+0300 INFO Configuring Algolia indexes...
+2025-04-23T10:01:20.650865+0300 INFO Algolia tools index configured successfully
+2025-04-23T10:01:20.795895+0300 INFO Algolia glossary index configured successfully
+2025-04-23T10:01:20.796893+0300 INFO Algolia indexes configured successfully
+2025-04-23T10:02:00.093006+0300 INFO Shutting down application...
+2025-04-23T10:02:00.285383+0300 INFO Database connections closed
+2025-04-23T10:02:00.286385+0300 INFO Shutdown complete.
+2025-04-23T10:02:04.828188+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T10:02:04.830181+0300 INFO Algolia client initialized successfully
+2025-04-23T10:02:05.007189+0300 INFO Setting up database...
+2025-04-23T10:02:08.514078+0300 INFO Connected to MongoDB for setup
+2025-04-23T10:02:08.735166+0300 INFO Database setup completed successfully
+2025-04-23T10:02:08.736164+0300 INFO Database setup completed
+2025-04-23T10:02:08.737159+0300 INFO Seeding glossary terms...
+2025-04-23T10:02:08.954158+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-23T10:02:08.955158+0300 INFO Glossary seeding completed
+2025-04-23T10:02:08.955158+0300 INFO Configuring Algolia indexes...
+2025-04-23T10:02:09.567374+0300 INFO Algolia tools index configured successfully
+2025-04-23T10:02:09.710956+0300 INFO Algolia glossary index configured successfully
+2025-04-23T10:02:09.711955+0300 INFO Algolia indexes configured successfully
+2025-04-23T10:02:14.120649+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T10:02:14.122636+0300 INFO Algolia client initialized successfully
+2025-04-23T10:02:14.237155+0300 INFO Setting up database...
+2025-04-23T10:02:16.671269+0300 INFO Connected to MongoDB for setup
+2025-04-23T10:02:16.913354+0300 INFO Database setup completed successfully
+2025-04-23T10:02:16.914540+0300 INFO Database setup completed
+2025-04-23T10:02:16.915108+0300 INFO Seeding glossary terms...
+2025-04-23T10:02:17.268636+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-23T10:02:17.269636+0300 INFO Glossary seeding completed
+2025-04-23T10:02:17.270638+0300 INFO Configuring Algolia indexes...
+2025-04-23T10:02:17.779782+0300 INFO Algolia tools index configured successfully
+2025-04-23T10:02:17.939786+0300 INFO Algolia glossary index configured successfully
+2025-04-23T10:02:17.940787+0300 INFO Algolia indexes configured successfully
+2025-04-23T10:02:33.599014+0300 INFO Connected to MongoDB for setup
+2025-04-23T10:02:33.862547+0300 INFO Database setup completed successfully
+2025-04-23T10:02:34.760895+0300 INFO Added OpenAI to queue successfully
+2025-04-23T10:02:35.330893+0300 INFO Added Runway ML to queue successfully
+2025-04-23T10:02:36.232000+0300 INFO Added Copy.ai to queue successfully
+2025-04-23T10:02:36.979182+0300 INFO Added Notion AI to queue successfully
+2025-04-23T10:02:37.759178+0300 INFO Added Jasper to queue successfully
+2025-04-23T10:02:38.619311+0300 INFO Added Midjourney to queue successfully
+2025-04-23T10:02:39.481817+0300 INFO Added Hugging Face to queue successfully
+2025-04-23T10:02:40.245665+0300 INFO Added OpenAI API to queue successfully
+2025-04-23T10:02:41.054129+0300 INFO Added Azure AI to queue successfully
+2025-04-23T10:02:41.874527+0300 INFO Added Meta AI to queue successfully
+2025-04-23T10:02:42.548620+0300 INFO Added Replicate to queue successfully
+2025-04-23T10:02:43.342998+0300 INFO Added Papers with Code to queue successfully
+2025-04-23T10:02:44.184405+0300 INFO Added Product Hunt to queue successfully
+2025-04-23T10:02:45.178658+0300 INFO Added G2 to queue successfully
+2025-04-23T10:02:46.279321+0300 INFO Added Capterra to queue successfully
+2025-04-23T10:02:47.779590+0300 INFO Added GetApp to queue successfully
+2025-04-23T10:02:48.569100+0300 INFO Added AlternativeTo to queue successfully
+2025-04-23T10:02:49.325836+0300 INFO Added GitHub AI to queue successfully
+2025-04-23T10:02:50.173333+0300 INFO Added TechCrunch AI to queue successfully
+2025-04-23T10:02:50.769723+0300 INFO Added VentureBeat AI to queue successfully
+2025-04-23T10:02:51.345914+0300 INFO Added Analytics Vidhya to queue successfully
+2025-04-23T10:02:52.024663+0300 INFO Added MarkTechPost to queue successfully
+2025-04-23T10:02:52.625277+0300 INFO Added The Next Web to queue successfully
+2025-04-23T10:02:53.265256+0300 INFO Added Google AI Blog to queue successfully
+2025-04-23T10:02:53.849338+0300 INFO Added Futurepedia to queue successfully
+2025-04-23T10:02:54.439511+0300 INFO Added AI For That to queue successfully
+2025-04-23T10:02:55.026556+0300 INFO Added Toolify to queue successfully
+2025-04-23T10:02:55.629973+0300 INFO Added There's An AI For That to queue successfully
+2025-04-23T10:02:55.630976+0300 INFO Seeding complete. Added: 28, Failed: 0, Skipped: 0
