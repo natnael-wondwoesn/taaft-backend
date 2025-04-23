@@ -20,7 +20,7 @@ PydanticObjectId = Annotated[ObjectId, BeforeValidator(validate_object_id)]
 class ToolBase(BaseModel):
     """Base model for tool schema."""
 
-    id: UUID = Field(default_factory=uuid4)
+    # id: UUID = Field(default_factory=uuid4)
     price: str
     name: str
     description: str
