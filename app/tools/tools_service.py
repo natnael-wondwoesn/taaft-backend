@@ -14,8 +14,17 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
     Helper function to create a ToolResponse with default values for missing fields.
     """
     try:
+        # Ensure we always have a valid ID
+        tool_id = tool.get("id")
+        if not tool_id:
+            tool_id = str(uuid4())
+            # Log this occurrence as it shouldn't normally happen
+            from ..logger import logger
+
+            logger.warning(f"Tool without ID found, generated new ID: {tool_id}")
+
         return ToolResponse(
-            id=tool.get("id") or str(uuid4()),
+            id=tool_id,
             price=tool.get("price") or "",
             name=tool.get("name") or "",
             description=tool.get("description") or "",
@@ -101,8 +110,11 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
         tool_dict["created_at"] = now
         tool_dict["updated_at"] = now
 
-        # Ensure the UUID is stored as a string in MongoDB
-        tool_dict["id"] = str(tool_dict.get("id", uuid4()))
+        # Ensure the UUID is stored as a string in MongoDB and is never null
+        if not tool_dict.get("id"):
+            tool_dict["id"] = str(uuid4())
+        else:
+            tool_dict["id"] = str(tool_dict["id"])
 
         # Process categories
         categories_list = []
