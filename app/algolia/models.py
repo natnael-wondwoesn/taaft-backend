@@ -122,6 +122,9 @@ class SearchResult(BaseModel):
     pages: int
     facets: Optional[SearchFacets] = None
     processing_time_ms: Optional[int] = None
+    processed_query: Optional["ProcessedQuery"] = None
+
+    model_config = {"arbitrary_types_allowed": True}
 
 
 # Models for natural language processing

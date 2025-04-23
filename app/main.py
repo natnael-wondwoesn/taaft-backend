@@ -1,7 +1,7 @@
 # app/main.py
-from fastapi import FastAPI, WebSocket, Depends, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, Depends, WebSocketDisconnect, Body
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .websocket import manager
 from .database import database
@@ -14,6 +14,16 @@ import json
 import asyncio
 from bson import ObjectId
 import datetime
+from .algolia.models import (
+    SearchResult,
+    NaturalLanguageQuery,
+    ProcessedQuery,
+    AlgoliaToolRecord,
+    ToolCategory,
+    ToolPricing,
+    ToolRatings,
+    PricingType,
+)
 
 # Import the chat router
 from .chat import router as chat_router
@@ -329,3 +339,159 @@ async def read_root():
 async def health_check():
     """Health check endpoint"""
     return {"status": "ok", "timestamp": datetime.datetime.utcnow().isoformat()}
+
+
+@app.get("/test-nlp-search")
+async def test_nlp_search_page():
+    """Serve the NLP search test page"""
+    return FileResponse("static/test-nlp-search.html")
+
+
+@app.get("/simple-nlp-test")
+async def simple_nlp_test_page():
+    """Serve the simple NLP test page"""
+    return FileResponse("static/simple-nlp-test.html")
+
+
+@app.post("/test-api/nlp-search")
+async def test_nlp_search_api(request_data: dict):
+    """Debug endpoint for NLP search API"""
+    return {
+        "received": request_data,
+        "message": "This is a test endpoint to debug the NLP search API request format",
+    }
+
+
+@app.post("/mock-api/nlp-search")
+async def mock_nlp_search_api(nlq: NaturalLanguageQuery = Body(...)):
+    """Mock NLP search endpoint that returns a valid SearchResult without requiring Algolia"""
+
+    question = nlq.question.lower()
+
+    # Create some mock tool data based on the query
+    mock_tools = []
+
+    # Writing tool example
+    if "writing" in question or "blog" in question or "content" in question:
+        mock_tools.append(
+            AlgoliaToolRecord(
+                objectID="writing-tool-1",
+                name="BlogGenius AI",
+                description="AI-powered blog post generator with SEO optimization",
+                slug="bloggenius-ai",
+                logo_url="https://via.placeholder.com/100",
+                website="https://example.com/bloggenius",
+                categories=[
+                    ToolCategory(id="writing", name="Writing", slug="writing"),
+                    ToolCategory(
+                        id="content", name="Content Creation", slug="content-creation"
+                    ),
+                ],
+                features=["Blog generation", "SEO optimization", "Content planning"],
+                pricing=ToolPricing(type=PricingType.FREEMIUM, starting_at="$0"),
+                ratings=ToolRatings(average=4.7, count=120),
+                trending_score=95,
+            )
+        )
+
+    # Image tool example
+    if "image" in question or "picture" in question or "photo" in question:
+        mock_tools.append(
+            AlgoliaToolRecord(
+                objectID="image-tool-1",
+                name="PixelMaster AI",
+                description="Create stunning images with AI in seconds",
+                slug="pixelmaster-ai",
+                logo_url="https://via.placeholder.com/100",
+                website="https://example.com/pixelmaster",
+                categories=[
+                    ToolCategory(
+                        id="image", name="Image Generation", slug="image-generation"
+                    ),
+                    ToolCategory(id="design", name="Design", slug="design"),
+                ],
+                features=["Image generation", "Style transfer", "Image editing"],
+                pricing=ToolPricing(type=PricingType.FREEMIUM, starting_at="$0"),
+                ratings=ToolRatings(average=4.5, count=250),
+                trending_score=98,
+            )
+        )
+
+    # Code tool example
+    if "code" in question or "programming" in question or "developer" in question:
+        mock_tools.append(
+            AlgoliaToolRecord(
+                objectID="code-tool-1",
+                name="CodeCompanion AI",
+                description="AI assistant for developers that helps write, debug and optimize code",
+                slug="codecompanion-ai",
+                logo_url="https://via.placeholder.com/100",
+                website="https://example.com/codecompanion",
+                categories=[
+                    ToolCategory(
+                        id="code", name="Code Generation", slug="code-generation"
+                    ),
+                    ToolCategory(
+                        id="development", name="Development", slug="development"
+                    ),
+                ],
+                features=["Code completion", "Bug fixing", "Code optimization"],
+                pricing=ToolPricing(type=PricingType.FREEMIUM, starting_at="$0"),
+                ratings=ToolRatings(average=4.8, count=320),
+                trending_score=97,
+            )
+        )
+
+    # Add a generic AI tool if no specific matches or to pad results
+    if len(mock_tools) < 2:
+        mock_tools.append(
+            AlgoliaToolRecord(
+                objectID="ai-tool-generic",
+                name="AI Assistant Pro",
+                description="A versatile AI assistant for everyday tasks",
+                slug="ai-assistant-pro",
+                logo_url="https://via.placeholder.com/100",
+                website="https://example.com/aiassistant",
+                categories=[
+                    ToolCategory(
+                        id="productivity", name="Productivity", slug="productivity"
+                    ),
+                    ToolCategory(id="assistant", name="Assistant", slug="assistant"),
+                ],
+                features=["Task automation", "Information lookup", "Scheduling"],
+                pricing=ToolPricing(type=PricingType.FREE, starting_at="$0"),
+                ratings=ToolRatings(average=4.3, count=150),
+                trending_score=85,
+            )
+        )
+
+    # Create a processed query based on the input
+    processed_query = ProcessedQuery(
+        original_question=nlq.question,
+        search_query="AI tools "
+        + nlq.question.lower().replace("i need", "").replace("looking for", ""),
+        categories=(
+            ["Writing", "Content Creation"]
+            if "writing" in question or "blog" in question
+            else None
+        ),
+        pricing_types=(
+            [PricingType.FREE, PricingType.FREEMIUM] if "free" in question else None
+        ),
+        interpreted_intent=f"User is looking for AI tools related to {nlq.question}",
+    )
+
+    # Construct the SearchResult
+    result = SearchResult(
+        tools=mock_tools,
+        total=len(mock_tools),
+        page=1,
+        per_page=10,
+        pages=1,
+        processing_time_ms=123,
+    )
+
+    # Add the processed query to the result
+    result.processed_query = processed_query
+
+    return result

@@ -504,16 +504,44 @@ class AlgoliaSearch:
                 )
                 messages.append({"role": "user", "content": context_str})
 
-            # Call OpenAI API
-            response = await openai.ChatCompletion.acreate(
-                model="gpt-3.5-turbo",
-                messages=messages,
-                temperature=0.3,
-                max_tokens=300,
-            )
+            # Call OpenAI API - handle both sync and async clients
+            try:
+                # For the new OpenAI client (v1.0+)
+                try:
+                    from openai import AsyncOpenAI
 
-            # Extract and parse the response
-            response_text = response.choices[0].message.content
+                    client = AsyncOpenAI(api_key=self.openai_api_key)
+                    response = await client.chat.completions.create(
+                        model="gpt-3.5-turbo",
+                        messages=messages,
+                        temperature=0.3,
+                        max_tokens=300,
+                    )
+                    response_text = response.choices[0].message.content
+                except (ImportError, AttributeError):
+                    # If AsyncOpenAI is not available, use the synchronous client
+                    client = openai.OpenAI(api_key=self.openai_api_key)
+                    response = client.chat.completions.create(
+                        model="gpt-3.5-turbo",
+                        messages=messages,
+                        temperature=0.3,
+                        max_tokens=300,
+                    )
+                    response_text = response.choices[0].message.content
+            except Exception as api_error:
+                # Last resort - fall back to legacy OpenAI API format
+                try:
+                    response = await openai.ChatCompletion.acreate(
+                        model="gpt-3.5-turbo",
+                        messages=messages,
+                        temperature=0.3,
+                        max_tokens=300,
+                    )
+                    response_text = response.choices[0].message.content
+                except Exception as legacy_error:
+                    logger.error(f"OpenAI API error (modern): {str(api_error)}")
+                    logger.error(f"OpenAI API error (legacy): {str(legacy_error)}")
+                    raise RuntimeError(f"Failed to call OpenAI API: {str(api_error)}")
 
             # Try to extract JSON from response
             try:
@@ -713,34 +741,66 @@ class AlgoliaSearch:
         Returns:
             SearchResult object with tools and metadata
         """
+        processed_query = None
+
         try:
             # Process the query to extract search parameters
             processed_query = await self.process_natural_language_query(nlq)
 
             # Create search parameters
             params = SearchParams(
-                query=processed_query.query,
+                query=processed_query.search_query,  # Use search_query instead of query
                 page=page,
                 per_page=per_page,
                 categories=processed_query.categories,
                 pricing_types=processed_query.pricing_types,
-                min_rating=processed_query.min_rating,
-                sort_by=processed_query.sort_by,
+                min_rating=getattr(
+                    processed_query, "min_rating", None
+                ),  # Use getattr for optional attributes
+                sort_by=getattr(processed_query, "sort_by", None),
                 filters=processed_query.filters,
             )
 
             # Execute the search with the extracted parameters
             search_result = await self.search_tools(params)
 
-            # Add the processed query information to the result
-            search_result.processed_query = processed_query
+            # Create a new search result with the processed query to avoid field not found errors
+            result = SearchResult(
+                tools=search_result.tools,
+                total=search_result.total,
+                page=search_result.page,
+                per_page=search_result.per_page,
+                pages=search_result.pages,
+                facets=search_result.facets,
+                processing_time_ms=search_result.processing_time_ms,
+                processed_query=processed_query,  # Add processed query
+            )
 
-            return search_result
+            return result
+
         except Exception as e:
             logger.error(f"Error executing NLP search: {str(e)}")
-            # Return empty result on error
+
+            # If we couldn't process the query, create a basic one
+            if processed_query is None:
+                processed_query = ProcessedQuery(
+                    original_question=nlq.question,
+                    search_query=nlq.question,
+                    filters=None,
+                    categories=None,
+                    pricing_types=None,
+                    interpreted_intent="Failed to process with NLP",
+                )
+
+            # Return empty result on error, but include the processed query if available
             return SearchResult(
-                tools=[], total=0, page=page, per_page=per_page, pages=0
+                tools=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                pages=0,
+                processing_time_ms=0,
+                processed_query=processed_query,
             )
 
     async def search_by_category(
@@ -779,3 +839,161 @@ class AlgoliaSearch:
 
 # Create singleton instance
 algolia_search = AlgoliaSearch()
+
+
+# Script mode for command-line testing
+if __name__ == "__main__":
+    import asyncio
+    import sys
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Test NLP-powered Algolia search from the command line"
+    )
+    parser.add_argument("query", nargs="?", help="Natural language query to process")
+    parser.add_argument(
+        "--mock",
+        action="store_true",
+        help="Use mock data instead of real Algolia search",
+    )
+    parser.add_argument("--page", type=int, default=1, help="Page number")
+    parser.add_argument("--per-page", type=int, default=10, help="Results per page")
+    args = parser.parse_args()
+
+    async def run_search():
+        # If no query provided, prompt for one
+        query = args.query
+        if not query:
+            query = input("Enter your natural language query: ")
+
+        print(f"\nProcessing query: '{query}'")
+        print("-" * 80)
+
+        # Create NLQ object
+        nlq = NaturalLanguageQuery(question=query)
+
+        # Process the query
+        processed_query = await algolia_search.process_natural_language_query(nlq)
+
+        print("Processed Query:")
+        print(f"  Search query: {processed_query.search_query}")
+        print(f"  Categories: {processed_query.categories}")
+        print(f"  Pricing types: {processed_query.pricing_types}")
+        print(f"  Filters: {processed_query.filters}")
+        print(f"  Interpreted intent: {processed_query.interpreted_intent}")
+        print("-" * 80)
+
+        # If mock mode, return mock results
+        if args.mock:
+            print("Generating mock search results...")
+
+            # Create mock tools based on the query
+            mock_tools = []
+            question = query.lower()
+
+            # Writing tool example
+            if "writing" in question or "blog" in question or "content" in question:
+                mock_tools.append(
+                    {
+                        "objectID": "writing-tool-1",
+                        "name": "BlogGenius AI",
+                        "description": "AI-powered blog post generator with SEO optimization",
+                        "categories": [
+                            {"id": "writing", "name": "Writing", "slug": "writing"},
+                            {
+                                "id": "content",
+                                "name": "Content Creation",
+                                "slug": "content-creation",
+                            },
+                        ],
+                        "pricing": {"type": "Freemium", "starting_at": "$0"},
+                    }
+                )
+
+            # Image tool example
+            if "image" in question or "picture" in question or "photo" in question:
+                mock_tools.append(
+                    {
+                        "objectID": "image-tool-1",
+                        "name": "PixelMaster AI",
+                        "description": "Create stunning images with AI in seconds",
+                        "categories": [
+                            {
+                                "id": "image",
+                                "name": "Image Generation",
+                                "slug": "image-generation",
+                            },
+                            {"id": "design", "name": "Design", "slug": "design"},
+                        ],
+                        "pricing": {"type": "Freemium", "starting_at": "$0"},
+                    }
+                )
+
+            # Add a generic AI tool if no specific matches
+            if len(mock_tools) < 1:
+                mock_tools.append(
+                    {
+                        "objectID": "ai-tool-generic",
+                        "name": "AI Assistant Pro",
+                        "description": "A versatile AI assistant for everyday tasks",
+                        "categories": [
+                            {
+                                "id": "productivity",
+                                "name": "Productivity",
+                                "slug": "productivity",
+                            },
+                            {
+                                "id": "assistant",
+                                "name": "Assistant",
+                                "slug": "assistant",
+                            },
+                        ],
+                        "pricing": {"type": "Free", "starting_at": "$0"},
+                    }
+                )
+
+            print(f"Found {len(mock_tools)} mock tools")
+            for i, tool in enumerate(mock_tools, 1):
+                print(f"\nResult {i}:")
+                print(f"  Name: {tool['name']}")
+                print(f"  Description: {tool['description']}")
+                print(
+                    f"  Categories: {', '.join(cat['name'] for cat in tool['categories'])}"
+                )
+                print(f"  Pricing: {tool['pricing']['type']}")
+
+        else:
+            # Execute the actual search
+            try:
+                print("Executing search against Algolia...")
+                result = await algolia_search.execute_nlp_search(
+                    nlq, page=args.page, per_page=args.per_page
+                )
+
+                print(
+                    f"Found {result.total} tools (page {result.page} of {result.pages})"
+                )
+                print(f"Processing time: {result.processing_time_ms}ms")
+
+                # Display results
+                for i, tool in enumerate(result.tools, 1):
+                    print(f"\nResult {i}:")
+                    print(f"  Name: {tool.name}")
+                    print(f"  Description: {tool.description}")
+                    if tool.categories:
+                        print(
+                            f"  Categories: {', '.join(cat.name for cat in tool.categories)}"
+                        )
+                    if tool.pricing:
+                        print(f"  Pricing: {tool.pricing.type}")
+
+                if not result.tools:
+                    print("No tools found matching your query.")
+            except Exception as e:
+                print(f"Error executing search: {str(e)}")
+                print(
+                    "Note: If Algolia is not configured, try adding --mock to use mock data."
+                )
+
+    # Run the async function
+    asyncio.run(run_search())

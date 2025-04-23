@@ -1,0 +1,32 @@
+# Sample NLP search queries for testing
+# One query per line, lines starting with # are ignored
+
+# Writing tools
+I need a free tool for writing blog posts
+What's the best AI content generator for marketing?
+Looking for an AI that helps with content repurposing
+
+# Image generation
+I need to create AI images for my project
+What tool can generate realistic portraits?
+Show me free AI art generators
+
+# Code and development
+I need an AI programming assistant for Python
+What are the best tools for code auto-completion?
+Looking for an enterprise-grade AI coding platform
+
+# Specific pricing preferences
+I need free AI tools for social media management
+Show me the best premium AI video editors
+What are the most affordable AI customer service tools?
+
+# Multiple filter criteria
+I need a free tool for image generation with good customization options
+What are the best enterprise AI tools for content marketing?
+Looking for an AI writing assistant with built-in SEO features
+
+# Open-ended questions
+What are the most popular AI tools right now?
+How can AI help my small business?
+What's new in AI tools for 2023? 
