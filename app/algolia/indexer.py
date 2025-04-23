@@ -107,7 +107,12 @@ class AlgoliaIndexer:
                 # Send batch to Algolia
                 if algolia_records:
                     try:
-                        result = self.config.tools_index.save_objects(algolia_records)
+                        # Use v4 client syntax to save objects
+                        result = self.config.client.save_objects(
+                            self.config.tools_index_name,
+                            algolia_records,
+                            {"wait_for_task": True},
+                        )
                         stats["indexed"] += len(algolia_records)
                         stats["batches"] += 1
                         logger.info(
@@ -184,8 +189,10 @@ class AlgoliaIndexer:
             ):
                 tool_copy["updated_at"] = tool_copy["updated_at"].isoformat()
 
-            # Save to Algolia
-            self.config.tools_index.save_object(tool_copy)
+            # Save to Algolia using v4 client syntax
+            self.config.client.save_objects(
+                self.config.tools_index_name, [tool_copy], {"wait_for_task": True}
+            )
             logger.info(f"Indexed tool {tool_copy['objectID']} to Algolia")
             return True
 
@@ -198,7 +205,7 @@ class AlgoliaIndexer:
         Delete a tool from Algolia
 
         Args:
-            tool_id: MongoDB _id of the tool
+            tool_id: MongoDB _id of the tool to delete
 
         Returns:
             Boolean indicating success
@@ -208,11 +215,13 @@ class AlgoliaIndexer:
             return False
 
         try:
-            # Convert to string if ObjectId
+            # Convert ObjectId to string if needed
             object_id = str(tool_id)
 
-            # Delete from Algolia
-            self.config.tools_index.delete_object(object_id)
+            # Delete from Algolia using v4 client syntax
+            self.config.client.delete_object(
+                self.config.tools_index_name, object_id, {"wait_for_task": True}
+            )
             logger.info(f"Deleted tool {object_id} from Algolia")
             return True
 
@@ -272,6 +281,15 @@ class AlgoliaIndexer:
                         # Convert MongoDB _id to Algolia objectID
                         term["objectID"] = str(term.pop("_id"))
 
+                        # Add letter group for alphabetical grouping if not present
+                        if "term" in term and "letter_group" not in term:
+                            first_letter = (
+                                term["term"][0].upper() if term["term"] else "#"
+                            )
+                            term["letter_group"] = (
+                                first_letter if first_letter.isalpha() else "#"
+                            )
+
                         # Simplify datetime objects for JSON serialization
                         if "created_at" in term and isinstance(
                             term["created_at"], datetime.datetime
@@ -281,20 +299,6 @@ class AlgoliaIndexer:
                             term["updated_at"], datetime.datetime
                         ):
                             term["updated_at"] = term["updated_at"].isoformat()
-
-                        # Convert related terms if they're ObjectIds
-                        if "related_terms" in term and term["related_terms"]:
-                            if isinstance(term["related_terms"][0], ObjectId):
-                                term["related_terms"] = [
-                                    str(term_id) for term_id in term["related_terms"]
-                                ]
-
-                        # Convert related tools if they're ObjectIds
-                        if "related_tools" in term and term["related_tools"]:
-                            if isinstance(term["related_tools"][0], ObjectId):
-                                term["related_tools"] = [
-                                    str(tool_id) for tool_id in term["related_tools"]
-                                ]
 
                         algolia_records.append(term)
                     except Exception as e:
@@ -306,8 +310,11 @@ class AlgoliaIndexer:
                 # Send batch to Algolia
                 if algolia_records:
                     try:
-                        result = self.config.glossary_index.save_objects(
-                            algolia_records
+                        # Use v4 client syntax to save objects
+                        result = self.config.client.save_objects(
+                            self.config.glossary_index_name,
+                            algolia_records,
+                            {"wait_for_task": True},
                         )
                         stats["indexed"] += len(algolia_records)
                         stats["batches"] += 1
@@ -336,7 +343,7 @@ class AlgoliaIndexer:
             return stats
 
         except Exception as e:
-            logger.error(f"Error during Algolia glossary indexing: {str(e)}")
+            logger.error(f"Error during glossary indexing: {str(e)}")
             stats["success"] = False
             stats["message"] = str(e)
             return stats
@@ -362,6 +369,15 @@ class AlgoliaIndexer:
             # Convert MongoDB _id to Algolia objectID
             term_copy["objectID"] = str(term_copy.pop("_id"))
 
+            # Add letter group for alphabetical grouping if not present
+            if "term" in term_copy and "letter_group" not in term_copy:
+                first_letter = (
+                    term_copy["term"][0].upper() if term_copy["term"] else "#"
+                )
+                term_copy["letter_group"] = (
+                    first_letter if first_letter.isalpha() else "#"
+                )
+
             # Simplify datetime objects for JSON serialization
             if "created_at" in term_copy and isinstance(
                 term_copy["created_at"], datetime.datetime
@@ -372,22 +388,10 @@ class AlgoliaIndexer:
             ):
                 term_copy["updated_at"] = term_copy["updated_at"].isoformat()
 
-            # Convert related terms if they're ObjectIds
-            if "related_terms" in term_copy and term_copy["related_terms"]:
-                if isinstance(term_copy["related_terms"][0], ObjectId):
-                    term_copy["related_terms"] = [
-                        str(term_id) for term_id in term_copy["related_terms"]
-                    ]
-
-            # Convert related tools if they're ObjectIds
-            if "related_tools" in term_copy and term_copy["related_tools"]:
-                if isinstance(term_copy["related_tools"][0], ObjectId):
-                    term_copy["related_tools"] = [
-                        str(tool_id) for tool_id in term_copy["related_tools"]
-                    ]
-
-            # Save to Algolia
-            self.config.glossary_index.save_object(term_copy)
+            # Save to Algolia using v4 client syntax
+            self.config.client.save_objects(
+                self.config.glossary_index_name, [term_copy], {"wait_for_task": True}
+            )
             logger.info(f"Indexed glossary term {term_copy['objectID']} to Algolia")
             return True
 
@@ -400,7 +404,7 @@ class AlgoliaIndexer:
         Delete a glossary term from Algolia
 
         Args:
-            term_id: MongoDB _id of the term
+            term_id: MongoDB _id of the term to delete
 
         Returns:
             Boolean indicating success
@@ -410,11 +414,13 @@ class AlgoliaIndexer:
             return False
 
         try:
-            # Convert to string if ObjectId
+            # Convert ObjectId to string if needed
             object_id = str(term_id)
 
-            # Delete from Algolia
-            self.config.glossary_index.delete_object(object_id)
+            # Delete from Algolia using v4 client syntax
+            self.config.client.delete_object(
+                self.config.glossary_index_name, object_id, {"wait_for_task": True}
+            )
             logger.info(f"Deleted glossary term {object_id} from Algolia")
             return True
 
@@ -423,5 +429,5 @@ class AlgoliaIndexer:
             return False
 
 
-# Create singleton instance
+# Create a singleton instance of AlgoliaIndexer
 algolia_indexer = AlgoliaIndexer()

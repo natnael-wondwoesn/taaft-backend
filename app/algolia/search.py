@@ -128,57 +128,157 @@ class AlgoliaSearch:
             # Request facets for filtering options
             search_args["facets"] = ["categories.name", "pricing.type", "features"]
 
-            # Execute search
-            result = self.config.tools_index.search(**search_args)
+            # Execute search using v4 client syntax
+            result = self.config.client.search_single_index(
+                self.config.tools_index_name, search_args
+            )
 
             # Log the search parameters and result summary
             logger.info(f"Algolia search with params: {search_args}")
-            logger.info(f"Search found {result.get('nbHits', 0)} results")
 
-            # Cache category information from facets
-            if "facets" in result and "categories.name" in result["facets"]:
-                for category_name, count in result["facets"]["categories.name"].items():
+            # Extract data from the search response - try different access patterns
+            try:
+                # Try accessing as object attributes first
+                hits = result.hits if hasattr(result, "hits") else []
+                nb_hits = result.nbHits if hasattr(result, "nbHits") else 0
+                processing_time_ms = (
+                    result.processingTimeMS
+                    if hasattr(result, "processingTimeMS")
+                    else 0
+                )
+                facets = result.facets if hasattr(result, "facets") else {}
+
+                logger.info(f"Search found {nb_hits} results")
+
+                # Cache category information from facets
+                categories_dict = {}
+                if hasattr(facets, "categories_name"):
+                    categories_dict = facets.categories_name
+                elif isinstance(facets, dict) and "categories.name" in facets:
+                    categories_dict = facets["categories.name"]
+
+                # Extract pricing types
+                pricing_dict = {}
+                if hasattr(facets, "pricing_type"):
+                    pricing_dict = facets.pricing_type
+                elif isinstance(facets, dict) and "pricing.type" in facets:
+                    pricing_dict = facets["pricing.type"]
+
+                # Update known categories
+                for category_name, count in categories_dict.items():
                     self.known_categories[category_name.lower()] = {
                         "name": category_name,
                         "count": count,
                     }
 
-            # Extract facets
-            facets = SearchFacets(
-                categories=[
-                    SearchFacet(name=name, count=count)
-                    for name, count in result.get("facets", {})
-                    .get("categories.name", {})
-                    .items()
-                ],
-                pricing_types=[
-                    SearchFacet(name=name, count=count)
-                    for name, count in result.get("facets", {})
-                    .get("pricing.type", {})
-                    .items()
-                ],
-            )
+                # Create facets objects
+                facets_obj = SearchFacets(
+                    categories=[
+                        SearchFacet(name=name, count=count)
+                        for name, count in categories_dict.items()
+                    ],
+                    pricing_types=[
+                        SearchFacet(name=name, count=count)
+                        for name, count in pricing_dict.items()
+                    ],
+                )
 
-            # Calculate total pages
-            total_hits = result.get("nbHits", 0)
-            total_pages = (
-                (total_hits + params.per_page - 1) // params.per_page
-                if params.per_page > 0
-                else 0
-            )
+                # Calculate total pages
+                total_pages = (
+                    (nb_hits + params.per_page - 1) // params.per_page
+                    if params.per_page > 0
+                    else 0
+                )
 
-            # Prepare the search result
-            search_result = SearchResult(
-                tools=result.get("hits", []),
-                total=total_hits,
-                page=params.page,
-                per_page=params.per_page,
-                pages=total_pages,
-                facets=facets,
-                processing_time_ms=result.get("processingTimeMS"),
-            )
+                # Prepare the search result
+                search_result = SearchResult(
+                    tools=hits,
+                    total=nb_hits,
+                    page=params.page,
+                    per_page=params.per_page,
+                    pages=total_pages,
+                    facets=facets_obj,
+                    processing_time_ms=processing_time_ms,
+                )
 
-            return search_result
+                return search_result
+
+            except Exception as e:
+                logger.warning(
+                    f"Error accessing response properties as attributes: {str(e)}. Falling back to dictionary access."
+                )
+
+                # Fall back to dictionary access
+                hits = result.get("hits", []) if hasattr(result, "get") else []
+                if not hits and isinstance(result, dict):
+                    hits = result.get("hits", [])
+
+                nb_hits = 0
+                if hasattr(result, "get"):
+                    nb_hits = result.get("nbHits", 0)
+                elif isinstance(result, dict):
+                    nb_hits = result.get("nbHits", 0)
+
+                processing_time_ms = 0
+                if hasattr(result, "get"):
+                    processing_time_ms = result.get("processingTimeMS", 0)
+                elif isinstance(result, dict):
+                    processing_time_ms = result.get("processingTimeMS", 0)
+
+                # Extract facets from result
+                facets_dict = {}
+                if hasattr(result, "get"):
+                    facets_dict = result.get("facets", {})
+                elif isinstance(result, dict):
+                    facets_dict = result.get("facets", {})
+
+                # Process facets dictionary
+                categories_dict = {}
+                if isinstance(facets_dict, dict) and "categories.name" in facets_dict:
+                    categories_dict = facets_dict.get("categories.name", {})
+
+                pricing_dict = {}
+                if isinstance(facets_dict, dict) and "pricing.type" in facets_dict:
+                    pricing_dict = facets_dict.get("pricing.type", {})
+
+                # Update known categories
+                for category_name, count in categories_dict.items():
+                    self.known_categories[category_name.lower()] = {
+                        "name": category_name,
+                        "count": count,
+                    }
+
+                # Create facets objects
+                facets = SearchFacets(
+                    categories=[
+                        SearchFacet(name=name, count=count)
+                        for name, count in categories_dict.items()
+                    ],
+                    pricing_types=[
+                        SearchFacet(name=name, count=count)
+                        for name, count in pricing_dict.items()
+                    ],
+                )
+
+                # Calculate total pages
+                total_pages = (
+                    (nb_hits + params.per_page - 1) // params.per_page
+                    if params.per_page > 0
+                    else 0
+                )
+
+                # Prepare the search result
+                search_result = SearchResult(
+                    tools=hits,
+                    total=nb_hits,
+                    page=params.page,
+                    per_page=params.per_page,
+                    pages=total_pages,
+                    facets=facets,
+                    processing_time_ms=processing_time_ms,
+                )
+
+                return search_result
 
         except Exception as e:
             logger.error(f"Error searching tools with Algolia: {str(e)}")
@@ -202,52 +302,112 @@ class AlgoliaSearch:
             Dictionary with search results
         """
         if not self.config.is_configured():
-            logger.warning(
-                "Algolia not configured. Returning empty glossary search results."
-            )
+            logger.warning("Algolia not configured. Returning empty glossary results.")
             return {
-                "terms": [],
+                "hits": [],
                 "total": 0,
                 "page": page,
-                "per_page": per_page,
                 "pages": 0,
+                "processing_time_ms": 0,
             }
 
         try:
-            # Execute search
-            result = self.config.glossary_index.search(
-                query,
-                {
-                    "page": page - 1,  # Algolia uses 0-based pagination
-                    "hitsPerPage": per_page,
-                    "facets": ["letter_group", "categories"],
-                },
+            # Build search parameters
+            search_args = {
+                "query": query,
+                "page": page - 1,  # Algolia uses 0-based pagination
+                "hitsPerPage": per_page,
+                "attributesToRetrieve": [
+                    "term",
+                    "definition",
+                    "related_terms",
+                    "categories",
+                    "letter_group",
+                ],
+                "attributesToHighlight": ["term", "definition"],
+                "highlightPreTag": "<mark>",
+                "highlightPostTag": "</mark>",
+            }
+
+            # Execute search using v4 client syntax
+            result = self.config.client.search_single_index(
+                self.config.glossary_index_name, search_args
             )
 
-            # Calculate total pages
-            total_hits = result.get("nbHits", 0)
-            total_pages = (total_hits + per_page - 1) // per_page if per_page > 0 else 0
+            # Try accessing response properties (handling both object attributes and dictionary access)
+            try:
+                # Try accessing as object attributes first
+                hits = result.hits if hasattr(result, "hits") else []
+                nb_hits = result.nbHits if hasattr(result, "nbHits") else 0
+                processing_time_ms = (
+                    result.processingTimeMS
+                    if hasattr(result, "processingTimeMS")
+                    else 0
+                )
 
-            # Return the search result
-            return {
-                "terms": result.get("hits", []),
-                "total": total_hits,
-                "page": page,
-                "per_page": per_page,
-                "pages": total_pages,
-                "facets": result.get("facets", {}),
-                "processing_time_ms": result.get("processingTimeMS"),
-            }
+                # Calculate total pages
+                total_pages = (
+                    (nb_hits + per_page - 1) // per_page if per_page > 0 else 0
+                )
+
+                # Prepare the search result
+                search_result = {
+                    "hits": hits,
+                    "total": nb_hits,
+                    "page": page,
+                    "pages": total_pages,
+                    "processing_time_ms": processing_time_ms,
+                }
+
+                return search_result
+
+            except Exception as e:
+                logger.warning(
+                    f"Error accessing response properties as attributes: {str(e)}. Falling back to dictionary access."
+                )
+
+                # Fall back to dictionary access
+                hits = result.get("hits", []) if hasattr(result, "get") else []
+                if not hits and isinstance(result, dict):
+                    hits = result.get("hits", [])
+
+                nb_hits = 0
+                if hasattr(result, "get"):
+                    nb_hits = result.get("nbHits", 0)
+                elif isinstance(result, dict):
+                    nb_hits = result.get("nbHits", 0)
+
+                processing_time_ms = 0
+                if hasattr(result, "get"):
+                    processing_time_ms = result.get("processingTimeMS", 0)
+                elif isinstance(result, dict):
+                    processing_time_ms = result.get("processingTimeMS", 0)
+
+                # Calculate total pages
+                total_pages = (
+                    (nb_hits + per_page - 1) // per_page if per_page > 0 else 0
+                )
+
+                # Prepare the search result
+                search_result = {
+                    "hits": hits,
+                    "total": nb_hits,
+                    "page": page,
+                    "pages": total_pages,
+                    "processing_time_ms": processing_time_ms,
+                }
+
+                return search_result
 
         except Exception as e:
             logger.error(f"Error searching glossary with Algolia: {str(e)}")
             # Return empty result on error
             return {
-                "terms": [],
+                "hits": [],
                 "total": 0,
                 "page": page,
-                "per_page": per_page,
                 "pages": 0,
+                "processing_time_ms": 0,
             }
 
     async def process_natural_language_query(
@@ -543,7 +703,7 @@ class AlgoliaSearch:
         self, nlq: NaturalLanguageQuery, page: int = 1, per_page: int = 20
     ) -> SearchResult:
         """
-        Process a natural language query and execute search in one operation
+        Process natural language query and execute search
 
         Args:
             nlq: Natural language query object
@@ -551,55 +711,70 @@ class AlgoliaSearch:
             per_page: Number of results per page
 
         Returns:
-            SearchResult with processed query information
+            SearchResult object with tools and metadata
         """
-        # Process the natural language query
-        processed_query = await self.process_natural_language_query(nlq)
+        try:
+            # Process the query to extract search parameters
+            processed_query = await self.process_natural_language_query(nlq)
 
-        # Create search parameters
-        params = SearchParams(
-            query=processed_query.search_query,
-            categories=processed_query.categories,
-            pricing_types=processed_query.pricing_types,
-            page=page,
-            per_page=per_page,
-            filters=processed_query.filters,
-        )
+            # Create search parameters
+            params = SearchParams(
+                query=processed_query.query,
+                page=page,
+                per_page=per_page,
+                categories=processed_query.categories,
+                pricing_types=processed_query.pricing_types,
+                min_rating=processed_query.min_rating,
+                sort_by=processed_query.sort_by,
+                filters=processed_query.filters,
+            )
 
-        # Execute search
-        result = await self.search_tools(params)
+            # Execute the search with the extracted parameters
+            search_result = await self.search_tools(params)
 
-        # Add the processed query to the result
-        result_dict = result.dict()
-        result_dict["processed_query"] = processed_query
+            # Add the processed query information to the result
+            search_result.processed_query = processed_query
 
-        return SearchResult(**result_dict)
+            return search_result
+        except Exception as e:
+            logger.error(f"Error executing NLP search: {str(e)}")
+            # Return empty result on error
+            return SearchResult(
+                tools=[], total=0, page=page, per_page=per_page, pages=0
+            )
 
     async def search_by_category(
         self, category: str, page: int = 1, per_page: int = 20
     ) -> SearchResult:
         """
-        Search for tools by category
+        Search tools by category
 
         Args:
-            category: Category ID or name to search for
+            category: Category to search for
             page: Page number (1-based)
             per_page: Number of results per page
 
         Returns:
-            SearchResult with tools in the specified category
+            SearchResult object with tools and metadata
         """
-        # Create search parameters with category filter
-        params = SearchParams(
-            query="",  # Empty query to match all documents
-            categories=[category],  # Filter by this category
-            page=page,
-            per_page=per_page,
-        )
+        try:
+            # Create search parameters with category filter
+            params = SearchParams(
+                query="",  # Empty query for category browsing
+                page=page,
+                per_page=per_page,
+                filters=f"categories.id:{category}",  # Filter by category ID
+                sort_by="trending",  # Sort by trending score for browsing
+            )
 
-        # Execute the search using the existing search method
-        result = await self.search_tools(params)
-        return result
+            # Execute the search with the category filter
+            return await self.search_tools(params)
+        except Exception as e:
+            logger.error(f"Error searching by category: {str(e)}")
+            # Return empty result on error
+            return SearchResult(
+                tools=[], total=0, page=page, per_page=per_page, pages=0
+            )
 
 
 # Create singleton instance

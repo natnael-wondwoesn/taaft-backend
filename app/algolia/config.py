@@ -6,7 +6,7 @@ Handles initialization and configuration of Algolia client and indexes
 import os
 from typing import Dict, List, Optional, Any, Union
 from pydantic_settings import BaseSettings
-from algoliasearch.search.client import SearchClientSync
+from algoliasearch.search.client import SearchClientSync as SearchClient
 from ..logger import logger
 
 
@@ -67,21 +67,11 @@ class AlgoliaConfig:
 
         # Initialize client only if credentials are provided
         self.client = None
-        self.tools_index = None
-        self.glossary_index = None
 
         if self.app_id and self.api_key:
             try:
-                # Create the client using the SearchClientSync constructor
-                self.client = SearchClientSync(self.app_id, self.write_api_key)
-
-                # Initialize indexes
-                if self.client:
-                    # The client doesn't have init_index method directly
-                    # We need to create indexes differently
-                    self.tools_index = self.tools_index_name
-                    self.glossary_index = self.glossary_index_name
-
+                # Create the client using the SearchClient constructor with v4 syntax
+                self.client = SearchClient(self.app_id, self.write_api_key)
                 logger.info("Algolia client initialized successfully")
             except Exception as e:
                 logger.error(f"Failed to initialize Algolia client: {str(e)}")
@@ -149,9 +139,7 @@ class AlgoliaConfig:
             }
 
             # Fix: Use the correct format for set_settings
-            response = self.client.set_settings(
-                index_name=self.tools_index_name, index_settings=settings
-            )
+            response = self.client.set_settings(self.tools_index_name, settings)
             logger.info("Algolia tools index configured successfully")
         except Exception as e:
             logger.error(f"Failed to configure Algolia tools index: {str(e)}")
@@ -185,9 +173,7 @@ class AlgoliaConfig:
             }
 
             # Fix: Use the correct format for set_settings
-            response = self.client.set_settings(
-                index_name=self.glossary_index_name, index_settings=settings
-            )
+            response = self.client.set_settings(self.glossary_index_name, settings)
             logger.info("Algolia glossary index configured successfully")
         except Exception as e:
             logger.error(f"Failed to configure Algolia glossary index: {str(e)}")
@@ -199,28 +185,33 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Save an object to the specified index
+        Save an object to an Algolia index
 
         Args:
-            index_name: The name of the index
-            obj: The object to save (must include an objectID or it will be auto-generated)
-            request_options: Additional request options
+            index_name: Name of the index
+            obj: Object to save
+            request_options: Optional request options
 
         Returns:
-            Dict containing the result of the operation
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot save object.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping save_object.")
+            return {"error": "Algolia not configured"}
 
         try:
-            response = self.client.save_object(
-                index_name=index_name, obj=obj, request_options=request_options
-            )
-            return response.raw_responses[0]
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Save object to Algolia
+            response = self.client.save_objects(index_name, [obj], request_options)
+            return response
         except Exception as e:
-            logger.error(f"Failed to save object: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error saving object to Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def save_objects(
         self,
@@ -229,28 +220,33 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Save multiple objects to the specified index
+        Save multiple objects to an Algolia index
 
         Args:
-            index_name: The name of the index
-            objects: List of objects to save (each must include an objectID or it will be auto-generated)
-            request_options: Additional request options
+            index_name: Name of the index
+            objects: Objects to save
+            request_options: Optional request options
 
         Returns:
-            Dict containing the result of the operation
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot save objects.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping save_objects.")
+            return {"error": "Algolia not configured"}
 
         try:
-            response = self.client.save_objects(
-                index_name=index_name, objects=objects, request_options=request_options
-            )
-            return response.raw_responses[0]
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Save objects to Algolia
+            response = self.client.save_objects(index_name, objects, request_options)
+            return response
         except Exception as e:
-            logger.error(f"Failed to save objects: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error saving objects to Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def delete_object(
         self,
@@ -259,33 +255,33 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Delete a single object from the specified index
+        Delete an object from an Algolia index
 
         Args:
-            index_name: The name of the index
-            object_id: The ID of the object to delete
+            index_name: Name of the index
+            object_id: ID of the object to delete
             request_options: Optional request options
 
         Returns:
-            Dict containing the operation result
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot delete object.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping delete_object.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's delete_object method with the index_name parameter
-            response = self.client.delete_object(
-                index_name=index_name,
-                object_id=object_id,
-                request_options=request_options,
-            )
-            return response.raw_responses[0]
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Delete object from Algolia
+            response = self.client.delete_object(index_name, object_id, request_options)
+            return response
         except Exception as e:
-            logger.error(
-                f"Failed to delete object {object_id} from index {index_name}: {str(e)}"
-            )
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error deleting object from Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def delete_objects(
         self,
@@ -294,31 +290,35 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Delete multiple objects from the specified index
+        Delete multiple objects from an Algolia index
 
         Args:
-            index_name: The name of the index
-            object_ids: The IDs of the objects to delete
+            index_name: Name of the index
+            object_ids: IDs of the objects to delete
             request_options: Optional request options
 
         Returns:
-            Dict containing the operation result
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot delete objects.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping delete_objects.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's delete_objects method with the index_name parameter
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Delete objects from Algolia
             response = self.client.delete_objects(
-                index_name=index_name,
-                object_ids=object_ids,
-                request_options=request_options,
+                index_name, object_ids, request_options
             )
-            return response.raw_responses[0]
+            return response
         except Exception as e:
-            logger.error(f"Failed to delete objects from index {index_name}: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error deleting objects from Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def partial_update_object(
         self,
@@ -328,44 +328,44 @@ class AlgoliaConfig:
         create_if_not_exists: bool = True,
     ) -> Dict[str, Any]:
         """
-        Update parts of an object in the specified index
+        Partially update an object in an Algolia index
 
         Args:
-            index_name: The name of the index
-            partial_object: Object containing the fields to update.
-                            Must include an objectID field.
-            request_options: Additional request options
+            index_name: Name of the index
+            partial_object: Object with partial updates (must include objectID)
+            request_options: Optional request options
             create_if_not_exists: Whether to create the object if it doesn't exist
 
         Returns:
-            Dict containing the result of the operation
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot perform partial update.")
-            return {"status": "error", "message": "Algolia not configured"}
-
-        if "objectID" not in partial_object:
-            logger.error("Object must have an objectID for partial update")
-            return {
-                "status": "error",
-                "message": "Object must have an objectID for partial update",
-            }
+            logger.warning("Algolia not configured. Skipping partial_update_object.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's partial_update_object method with the parameters
-            options = request_options or {}
-            if "createIfNotExists" not in options:
-                options["createIfNotExists"] = create_if_not_exists
+            # Verify objectID is present
+            if "objectID" not in partial_object:
+                return {"error": "objectID is required for partial updates"}
 
-            response = self.client.partial_update_object(
-                index_name=index_name,
-                partial_object=partial_object,
-                request_options=options,
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Create or update options
+            if create_if_not_exists:
+                request_options["create_if_not_exists"] = True
+
+            # Partially update object in Algolia
+            response = self.client.partial_update_objects(
+                index_name, [partial_object], request_options
             )
-            return response.raw_responses[0]
+            return response
         except Exception as e:
-            logger.error(f"Failed to partially update object: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error partially updating object in Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def partial_update_objects(
         self,
@@ -375,46 +375,45 @@ class AlgoliaConfig:
         create_if_not_exists: bool = True,
     ) -> Dict[str, Any]:
         """
-        Update parts of multiple objects in the specified index
+        Partially update multiple objects in an Algolia index
 
         Args:
-            index_name: The name of the index
-            partial_objects: List of objects containing the fields to update.
-                           Each object must include an objectID field.
-            request_options: Additional request options
+            index_name: Name of the index
+            partial_objects: Objects with partial updates (must include objectID)
+            request_options: Optional request options
             create_if_not_exists: Whether to create objects if they don't exist
 
         Returns:
-            Dict containing the result of the operation
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot perform partial updates.")
-            return {"status": "error", "message": "Algolia not configured"}
-
-        # Verify all objects have objectID
-        for obj in partial_objects:
-            if "objectID" not in obj:
-                logger.error("All objects must have an objectID for partial update")
-                return {
-                    "status": "error",
-                    "message": "All objects must have an objectID for partial update",
-                }
+            logger.warning("Algolia not configured. Skipping partial_update_objects.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's partial_update_objects method with the parameters
-            options = request_options or {}
-            if "createIfNotExists" not in options:
-                options["createIfNotExists"] = create_if_not_exists
+            # Verify objectID is present in all objects
+            for obj in partial_objects:
+                if "objectID" not in obj:
+                    return {"error": "objectID is required for all partial updates"}
 
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Create or update options
+            if create_if_not_exists:
+                request_options["create_if_not_exists"] = True
+
+            # Partially update objects in Algolia
             response = self.client.partial_update_objects(
-                index_name=index_name,
-                partial_objects=partial_objects,
-                request_options=options,
+                index_name, partial_objects, request_options
             )
-            return response.raw_responses[0]
+            return response
         except Exception as e:
-            logger.error(f"Failed to partially update objects: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error partially updating objects in Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def clear_index(
         self,
@@ -422,82 +421,80 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Clear all objects from the specified index
+        Clear all objects from an Algolia index
 
         Args:
-            index_name: The name of the index
+            index_name: Name of the index
             request_options: Optional request options
 
         Returns:
-            Dict containing the operation result
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot clear index.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping clear_index.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's clear_objects method with the index_name parameter
-            response = self.client.clear_objects(
-                index_name=index_name, request_options=request_options
-            )
-            return response.raw_responses[0]
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Clear index in Algolia
+            response = self.client.clear_objects(index_name, request_options)
+            return response
         except Exception as e:
-            logger.error(f"Failed to clear index {index_name}: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error clearing Algolia index: {str(e)}")
+            return {"error": str(e)}
 
     def get_index_settings(self, index_name: str) -> Dict[str, Any]:
         """
-        Get the settings for the specified index
+        Get settings for an Algolia index
 
         Args:
-            index_name: The name of the index
+            index_name: Name of the index
 
         Returns:
-            Dict containing the index settings
+            Settings for the index
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot get index settings.")
-            return {}
+            logger.warning("Algolia not configured. Skipping get_settings.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's get_settings method with the index_name parameter
-            response = self.client.get_settings(index_name=index_name)
-            return response.body
+            # Get index settings from Algolia
+            response = self.client.get_settings(index_name)
+            return response
         except Exception as e:
-            logger.error(f"Failed to get settings for index {index_name}: {str(e)}")
-            return {}
+            logger.error(f"Error getting Algolia index settings: {str(e)}")
+            return {"error": str(e)}
 
     def wait_for_task(
         self, index_name: str, task_id: int, timeout_ms: int = 5000
     ) -> Dict[str, Any]:
         """
-        Wait for a task to complete on the specified index
+        Wait for a task to complete in Algolia
 
         Args:
-            index_name: The name of the index
-            task_id: The task ID to wait for
-            timeout_ms: The timeout in milliseconds (default: 5000)
+            index_name: Name of the index
+            task_id: ID of the task to wait for
+            timeout_ms: Timeout in milliseconds
 
         Returns:
-            Dict containing the task status
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot wait for task.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping wait_for_task.")
+            return {"error": "Algolia not configured"}
 
         try:
-            # Use the client's wait_for_task method with the index_name parameter
-            response = self.client.wait_for_task(
-                index_name=index_name,
-                task_id=task_id,
-                request_options={"timeoutMs": timeout_ms},
-            )
-            return response.body
+            # Wait for task to complete in Algolia
+            response = self.client.wait_task(index_name, task_id, timeout_ms)
+            return response
         except Exception as e:
-            logger.error(
-                f"Failed to wait for task {task_id} on index {index_name}: {str(e)}"
-            )
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error waiting for Algolia task: {str(e)}")
+            return {"error": str(e)}
 
     def search(
         self,
@@ -507,60 +504,77 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Search for objects in the specified index
+        Search for objects in an Algolia index
 
         Args:
-            index_name: The name of the index
-            query: The search query string
-            search_params: Additional search parameters (filters, pagination, etc.)
-            request_options: Additional request options
+            index_name: Name of the index
+            query: Search query
+            search_params: Optional search parameters
+            request_options: Optional request options
 
         Returns:
-            Dict containing search results or error information
+            Search results from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot perform search.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping search.")
+            return {
+                "hits": [],
+                "nbHits": 0,
+                "page": 0,
+                "nbPages": 0,
+                "hitsPerPage": 0,
+                "processingTimeMS": 0,
+                "query": query,
+                "params": search_params or {},
+                "error": "Algolia not configured",
+            }
 
         try:
-            response = self.client.search(
-                index_name=index_name,
-                query=query,
-                search_params=search_params,
-                request_options=request_options,
+            # Prepare search parameters
+            params = {"query": query}
+            if search_params:
+                params.update(search_params)
+
+            # Search in Algolia
+            response = self.client.search_single_index(
+                index_name, params, request_options
             )
-            return {"status": "success", "results": response}
+            return response
         except Exception as e:
-            logger.error(f"Failed to search objects: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error searching in Algolia: {str(e)}")
+            return {
+                "hits": [],
+                "nbHits": 0,
+                "page": 0,
+                "nbPages": 0,
+                "hitsPerPage": 0,
+                "processingTimeMS": 0,
+                "query": query,
+                "params": search_params or {},
+                "error": str(e),
+            }
 
     def multi_search(self, queries: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Perform multiple searches with one API call
+        Execute multiple searches in parallel
 
         Args:
-            queries: List of search queries. Each query should be a dict with:
-                - indexName: The index name to search in
-                - query: The search query
-                - Optional params like hitsPerPage, filters, etc.
+            queries: List of search queries
 
         Returns:
-            Dict containing the search results
+            Search results from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Search functionality is limited.")
-            return {"results": [{"hits": []} for _ in queries]}
+            logger.warning("Algolia not configured. Skipping multi_search.")
+            return {"results": [], "error": "Algolia not configured"}
 
         try:
-            # Format the requests for the multi_search method
-            search_params = {"requests": queries}
-
-            # Execute the search
-            response = self.client.search(search_params)
-            return {"results": response.results}
+            # Execute multi-search in Algolia
+            response = self.client.multiple_queries(queries)
+            return response
         except Exception as e:
-            logger.error(f"Multi-search failed: {str(e)}")
-            return {"results": [{"hits": []} for _ in queries]}
+            logger.error(f"Error executing multi-search in Algolia: {str(e)}")
+            return {"results": [], "error": str(e)}
 
     def update_object(
         self,
@@ -569,32 +583,37 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Update an object in the specified index (replaces the entire object)
+        Update an object in an Algolia index (complete replacement)
 
         Args:
-            index_name: The name of the index
-            obj: The object to update (must include an objectID)
-            request_options: Additional request options
+            index_name: Name of the index
+            obj: Object to update (must include objectID)
+            request_options: Optional request options
 
         Returns:
-            Dict containing the result of the operation
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot update object.")
-            return {"status": "error", "message": "Algolia not configured"}
-
-        if "objectID" not in obj:
-            logger.error("objectID is required for update_object")
-            return {"status": "error", "message": "objectID is required"}
+            logger.warning("Algolia not configured. Skipping update_object.")
+            return {"error": "Algolia not configured"}
 
         try:
-            response = self.client.replace_all_objects(
-                index_name=index_name, objects=[obj], request_options=request_options
-            )
-            return response.raw_responses[0]
+            # Verify objectID is present
+            if "objectID" not in obj:
+                return {"error": "objectID is required for updates"}
+
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Update object in Algolia
+            response = self.client.save_objects(index_name, [obj], request_options)
+            return response
         except Exception as e:
-            logger.error(f"Failed to update object: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error updating object in Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def update_objects(
         self,
@@ -603,37 +622,38 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Update multiple objects in the specified index (replaces entire objects)
+        Update multiple objects in an Algolia index (complete replacement)
 
         Args:
-            index_name: The name of the index
-            objects: List of objects to update (each must include an objectID)
-            request_options: Additional request options
+            index_name: Name of the index
+            objects: Objects to update (must include objectID)
+            request_options: Optional request options
 
         Returns:
-            Dict containing the result of the operation
+            Response from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot update objects.")
-            return {"status": "error", "message": "Algolia not configured"}
-
-        # Check if all objects have objectID
-        missing_ids = [i for i, obj in enumerate(objects) if "objectID" not in obj]
-        if missing_ids:
-            logger.error(f"Objects at indices {missing_ids} are missing objectID")
-            return {
-                "status": "error",
-                "message": f"Objects at indices {missing_ids} are missing objectID",
-            }
+            logger.warning("Algolia not configured. Skipping update_objects.")
+            return {"error": "Algolia not configured"}
 
         try:
-            response = self.client.replace_all_objects(
-                index_name=index_name, objects=objects, request_options=request_options
-            )
-            return response.raw_responses[0]
+            # Verify objectID is present in all objects
+            for obj in objects:
+                if "objectID" not in obj:
+                    return {"error": "objectID is required for all updates"}
+
+            # Add wait_for_task to request options if it doesn't exist
+            if request_options is None:
+                request_options = {}
+            if "wait_for_task" not in request_options:
+                request_options["wait_for_task"] = True
+
+            # Update objects in Algolia
+            response = self.client.save_objects(index_name, objects, request_options)
+            return response
         except Exception as e:
-            logger.error(f"Failed to update objects: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error updating objects in Algolia: {str(e)}")
+            return {"error": str(e)}
 
     def get_object(
         self,
@@ -642,37 +662,28 @@ class AlgoliaConfig:
         request_options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Get an object from the specified index by its ID
+        Get an object from an Algolia index
 
         Args:
-            index_name: The name of the index
-            object_id: The ID of the object to retrieve
-            request_options: Additional request options
+            index_name: Name of the index
+            object_id: ID of the object to get
+            request_options: Optional request options
 
         Returns:
-            Dict containing the object or error information
+            Object from Algolia
         """
         if not self.is_configured():
-            logger.warning("Algolia not configured. Cannot get object.")
-            return {"status": "error", "message": "Algolia not configured"}
+            logger.warning("Algolia not configured. Skipping get_object.")
+            return {"error": "Algolia not configured"}
 
         try:
-            response = self.client.get_objects(
-                index_name=index_name,
-                object_ids=[object_id],
-                request_options=request_options,
-            )
-            if (
-                response
-                and response.get("results")
-                and len(response.get("results", [])) > 0
-            ):
-                return {"status": "success", "object": response["results"][0]}
-            return {"status": "error", "message": "Object not found"}
+            # Get object from Algolia
+            response = self.client.get_object(index_name, object_id, request_options)
+            return response
         except Exception as e:
-            logger.error(f"Failed to get object: {str(e)}")
-            return {"status": "error", "message": str(e)}
+            logger.error(f"Error getting object from Algolia: {str(e)}")
+            return {"error": str(e)}
 
 
-# Create singleton instance
+# Create a singleton instance of AlgoliaConfig
 algolia_config = AlgoliaConfig()

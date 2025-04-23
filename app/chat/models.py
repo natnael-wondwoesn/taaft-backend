@@ -122,6 +122,8 @@ class ChatSession(ChatSessionBase):
 
 # Models for API interactions
 class ChatMessageRequest(BaseModel):
+    """Request for sending a chat message"""
+
     message: str
     model: Optional[ChatModelType] = None
     system_prompt: Optional[str] = None
@@ -129,9 +131,18 @@ class ChatMessageRequest(BaseModel):
 
 
 class ChatMessageResponse(BaseModel):
+    """Response for a chat message"""
+
     message: str
     chat_id: str
     message_id: str
     timestamp: datetime.datetime
     model: ChatModelType
     metadata: Optional[Dict[str, Any]] = None
+    tool_recommendations: Optional[List[Dict[str, Any]]] = None
+
+    class Config:
+        json_encoders = {
+            datetime.datetime: lambda dt: dt.isoformat(),
+            ObjectId: lambda oid: str(oid),
+        }

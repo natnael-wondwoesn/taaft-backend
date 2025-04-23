@@ -4,3 +4,4 @@
 app.log
 logs/app.log
 /logs/*
+app/algolia/migrater/Algolia_index_load.py

@@ -362,12 +362,116 @@ class LLMService:
             yield chunk
 
     def estimate_tokens(self, text: str) -> int:
+        """Estimate the number of tokens in a text string"""
+        # Simple estimate: ~4 characters per token
+        return len(text) // 4 + 1
+
+    async def analyze_for_tool_search(self, messages, system_prompt=None):
         """
-        Estimate the number of tokens in a text string.
-        This is a simple approximation - each word is roughly 1.3 tokens.
+        Analyze chat messages to detect when a user is looking for tools
+        and generate a structured search query
+
+        Args:
+            messages: List of chat messages
+            system_prompt: Optional system prompt
+
+        Returns:
+            Dict with search_intent (bool) and nlp_query (NaturalLanguageQuery) if relevant
         """
-        # A simple approximation: ~4 chars per token for English text
-        return len(text) // 4 or 1  # Ensure at least 1 token is counted
+        # Only process if we have at least one user message
+        if not any(m["role"] == "user" for m in messages):
+            return {"search_intent": False}
+
+        # Get the last user message
+        last_user_msg = next(
+            (m for m in reversed(messages) if m["role"] == "user"), None
+        )
+        if not last_user_msg:
+            return {"search_intent": False}
+
+        # Define the system prompt for detecting tool search intent
+        detect_prompt = """
+        You are an AI tool assistant that helps users find AI tools. Your job is to:
+        
+        1. Determine if the user is asking about or looking for AI tools
+        2. If they are, extract the search intent into a structured format
+        3. If they're not asking about tools, simply respond with {"search_intent": false}
+        
+        When users are asking about tools, respond with a JSON object like:
+        {
+            "search_intent": true,
+            "query": "the search query to use",
+            "industry": "the industry or domain if specified",
+            "task": "the specific task they want tools for"
+        }
+        
+        Example user messages looking for tools:
+        - "Can you recommend AI tools for marketing?"
+        - "What are the best AI writing assistants?"
+        - "I need help finding free AI image generators"
+        - "Show me tools for data analysis"
+        
+        Only respond with JSON. Do not include any other text.
+        """
+
+        # Combine system prompts if provided
+        if system_prompt:
+            combined_prompt = f"{system_prompt}\n\n{detect_prompt}"
+        else:
+            combined_prompt = detect_prompt
+
+        # Prepare messages for the LLM
+        formatted_messages = [
+            {"role": "system", "content": combined_prompt},
+            {"role": "user", "content": last_user_msg["content"]},
+        ]
+
+        try:
+            # Call the LLM to analyze the messages
+            response = await self._get_openai_response(
+                formatted_messages,
+                model=self.model_map[ChatModelType.DEFAULT],
+                temperature=0.3,
+            )
+
+            # Extract JSON from the response
+            import json
+            import re
+
+            # Try to find JSON in the response
+            json_match = re.search(r"({.*})", response, re.DOTALL)
+            if json_match:
+                json_str = json_match.group(1)
+                result = json.loads(json_str)
+
+                # If there's search intent, create an NLP query
+                if result.get("search_intent", False):
+                    from ..algolia.models import NaturalLanguageQuery
+
+                    # Create context with additional information if available
+                    context = {}
+                    if "industry" in result:
+                        context["industry"] = result["industry"]
+                    if "task" in result:
+                        context["task"] = result["task"]
+
+                    # Use the original question or a constructed query
+                    query = result.get("query", last_user_msg["content"])
+
+                    # Create and return the NLP query
+                    return {
+                        "search_intent": True,
+                        "nlp_query": NaturalLanguageQuery(
+                            question=query, context=context if context else None
+                        ),
+                    }
+
+            # Return no search intent if any error or no search intent detected
+            return {"search_intent": False}
+
+        except Exception as e:
+            logger.error(f"Error analyzing messages for tool search: {str(e)}")
+            return {"search_intent": False}
 
 
 # Create a singleton instance of the LLM service

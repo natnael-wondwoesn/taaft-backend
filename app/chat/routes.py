@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, Any
 from bson import ObjectId
 import datetime
 from fastapi.responses import HTMLResponse
+import json
 
 from .models import (
     ChatSessionCreate,
@@ -195,6 +196,93 @@ async def send_chat_message(
         if msg["role"] != MessageRole.SYSTEM  # System messages are handled separately
     ]
 
+    # Analyze if the user is asking about tools
+    search_analysis = await llm_service.analyze_for_tool_search(
+        formatted_messages, system_prompt=system_prompt
+    )
+
+    # Check if we should perform a tool search
+    if search_analysis.get("search_intent", False):
+        try:
+            # Import required modules
+            from ..algolia.search import algolia_search
+
+            # Get the NLP query
+            nlp_query = search_analysis.get("nlp_query")
+
+            # Add user ID to the query if available
+            if "user_id" in session:
+                nlp_query.user_id = session["user_id"]
+
+            # Execute NLP search
+            search_result = await algolia_search.execute_nlp_search(
+                nlp_query, page=1, per_page=5
+            )
+
+            # Format top tools for the response
+            top_tools = []
+            for tool in search_result.tools[:5]:  # Limit to top 5 tools
+                top_tools.append(
+                    {
+                        "name": tool.name,
+                        "description": tool.description,
+                        "website": tool.website,
+                        "pricing_type": tool.pricing.type if tool.pricing else None,
+                        "categories": (
+                            [cat.name for cat in tool.categories]
+                            if tool.categories
+                            else []
+                        ),
+                        "logo_url": tool.logo_url,
+                    }
+                )
+
+            # Format the interpreted query
+            search_info = {
+                "search_query": search_result.processed_query.search_query,
+                "interpreted_intent": search_result.processed_query.interpreted_intent,
+                "total_results": search_result.total,
+                "top_tools": top_tools,
+            }
+
+            # Create the prompt for the LLM with search results
+            search_results_prompt = f"""
+            The user is asking about AI tools. I've performed a search and found {search_result.total} relevant tools.
+            
+            Search query: "{search_result.processed_query.search_query}"
+            Interpretation: {search_result.processed_query.interpreted_intent or "N/A"}
+            
+            Top results:
+            {json.dumps(top_tools, indent=2)}
+            
+            Please provide a helpful response about these tools. Mention that these are just a few recommendations,
+            and the user can ask for more specific tools if needed.
+            """
+
+            # Add the search results as a system message for context
+            formatted_messages.append(
+                {"role": "system", "content": search_results_prompt}
+            )
+
+            # Save the search info as metadata
+            search_metadata = {
+                "type": "tool_search",
+                "query": search_result.processed_query.search_query,
+                "total_results": search_result.total,
+            }
+
+            # Save tool recommendations for the response
+            tool_recommendations = top_tools
+
+        except Exception as e:
+            logger.error(f"Error performing tool search: {str(e)}")
+            # Continue with normal LLM response if search fails
+            search_metadata = None
+            tool_recommendations = None
+    else:
+        search_metadata = None
+        tool_recommendations = None
+
     # Get response from LLM
     try:
         llm_response = await llm_service.get_llm_response(
@@ -209,7 +297,11 @@ async def send_chat_message(
             "content": llm_response,
             "chat_id": ObjectId(session_id),
             "timestamp": datetime.datetime.utcnow(),
-            "metadata": {"model": model_type, "source": "llm_service"},
+            "metadata": {
+                "model": model_type,
+                "source": "llm_service",
+                **(search_metadata or {}),
+            },
         }
         assistant_message = await chat_db.add_message(assistant_message_data)
 
@@ -231,6 +323,7 @@ async def send_chat_message(
             timestamp=assistant_message["timestamp"],
             model=model_type,
             metadata=assistant_message.get("metadata"),
+            tool_recommendations=tool_recommendations,
         )
 
     except Exception as e:
