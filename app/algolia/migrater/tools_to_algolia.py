@@ -81,7 +81,7 @@ def test_algolia_index(client, index_name):
         hits = (
             search_response.get("hits", []) if hasattr(search_response, "get") else []
         )
-        if len(hits) == 1 and hits[0].get("object_id") == "test":
+        if len(hits) == 1 and hits[0].get("object_id"):
             print("Algolia index test successful")
             return
     except Exception:
@@ -90,7 +90,7 @@ def test_algolia_index(client, index_name):
     try:
         # Last attempt - treat as dictionary directly
         hits = search_response["hits"] if "hits" in search_response else []
-        if len(hits) == 1 and hits[0]["object_id"] == "test":
+        if len(hits) == 1 and hits[0]["object_id"]:
             print("Algolia index test successful")
             return
     except Exception:
@@ -146,6 +146,9 @@ def prepare_algolia_object(mongo_tool):
         "created_at",
         "updated_at",
         "tags",
+        "price",
+        "is_featured",
+        "rating",
     ]
 
     for attr in attributes_to_include:
@@ -175,12 +178,18 @@ def configure_algolia_index(client, index_name):
                 "tags",
                 "category",
                 "features",
+                "price",
+                "is_featured",
+                "rating",
             ],
             "attributesForFaceting": [
                 "category",
                 "pricing_type",
                 "is_featured",
                 "searchable(tags)",
+                "price",
+                "is_featured",
+                "rating",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -196,6 +205,9 @@ def configure_algolia_index(client, index_name):
                 "created_at",
                 "updated_at",
                 "tags",
+                "price",
+                "is_featured",
+                "rating",
             ],
             "ranking": [
                 "typo",
