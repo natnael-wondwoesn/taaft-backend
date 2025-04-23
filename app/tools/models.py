@@ -1,4 +1,12 @@
-from pydantic import BaseModel, Field, validator, ConfigDict
+from pydantic import (
+    BaseModel,
+    Field,
+    validator,
+    ConfigDict,
+    field_validator,
+    root_validator,
+    model_validator,
+)
 from typing import Optional, Dict, Any, ClassVar, Annotated, List
 from pydantic.functional_validators import BeforeValidator
 from uuid import UUID, uuid4
@@ -20,7 +28,7 @@ PydanticObjectId = Annotated[ObjectId, BeforeValidator(validate_object_id)]
 class ToolBase(BaseModel):
     """Base model for tool schema."""
 
-    # id: UUID = Field(default_factory=uuid4)
+    id: UUID = Field(default_factory=uuid4)
     price: str
     name: str
     description: str
@@ -40,7 +48,26 @@ class ToolBase(BaseModel):
 class ToolCreate(ToolBase):
     """Model for creating a new tool."""
 
-    pass
+    @model_validator(mode="before")
+    @classmethod
+    def handle_field_mappings(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Map fields with spaces to their proper names.
+        """
+        if isinstance(data, dict):
+            # Handle "saved numbers" vs "saved_numbers"
+            if "saved numbers" in data:
+                data["saved_numbers"] = data.pop("saved numbers")
+
+            # Handle category_id vs category
+            if "category_id" in data and "category" not in data:
+                data["category"] = data.pop("category_id")
+
+            # Ensure ID is a valid UUID
+            if "id" not in data:
+                data["id"] = str(uuid4())
+
+        return data
 
 
 class ToolUpdate(BaseModel):

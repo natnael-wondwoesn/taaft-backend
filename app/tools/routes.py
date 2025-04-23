@@ -85,7 +85,21 @@ async def create_new_tool(
     except HTTPException as e:
         raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create tool: {str(e)}")
+        # Log the error for debugging
+        from ..logger import logger
+
+        logger.error(f"Tool creation error in route: {str(e)}")
+
+        # Provide a more helpful error message
+        if "validation error" in str(e).lower():
+            raise HTTPException(
+                status_code=400,
+                detail=f"Validation error: Please check that all required fields are provided correctly. Error: {str(e)}",
+            )
+        else:
+            raise HTTPException(
+                status_code=500, detail=f"Failed to create tool: {str(e)}"
+            )
 
 
 @router.put("/{tool_id}", response_model=ToolResponse)

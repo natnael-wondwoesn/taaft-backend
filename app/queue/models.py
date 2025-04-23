@@ -45,7 +45,7 @@ class SiteCreate(SiteBase):
 
 
 class Site(SiteBase):
-    id: Optional[str] = Field(default=None, alias="_id")
+    id: Optional[str] = Field(default=None)
     created_at: Optional[datetime.datetime] = None
     last_updated_at: Optional[datetime.datetime] = None
     status: SiteStatus = SiteStatus.PENDING
@@ -54,7 +54,7 @@ class Site(SiteBase):
         populate_by_name = True
         json_schema_extra = {
             "example": {
-                "_id": "507f1f77bcf86cd799439011",
+                "id": "507f1f77bcf86cd799439011",
                 "name": "Example Site",
                 "url": "https://example.com",
                 "priority": "medium",

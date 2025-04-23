@@ -1,11 +1,40 @@
 from fastapi import HTTPException
-from uuid import UUID
+from uuid import UUID, uuid4
 from datetime import datetime
 from typing import List, Optional, Union, Dict, Any
 
 from ..database.database import tools
 from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
+
+
+def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
+    """
+    Helper function to create a ToolResponse with default values for missing fields.
+    """
+    try:
+        return ToolResponse(
+            id=tool.get("id") or str(uuid4()),
+            price=tool.get("price") or "",
+            name=tool.get("name") or "",
+            description=tool.get("description") or "",
+            link=tool.get("link") or "",
+            unique_id=tool.get("unique_id") or "",
+            rating=tool.get("rating"),
+            saved_numbers=tool.get("saved_numbers"),
+            created_at=tool.get("created_at") or datetime.utcnow(),
+            updated_at=tool.get("updated_at") or datetime.utcnow(),
+            category=tool.get("category"),
+            features=tool.get("features"),
+            is_featured=tool.get("is_featured", False),
+            saved_by_user=False,  # Default value, will be set per-user when implemented
+        )
+    except Exception as e:
+        # Log the error
+        from ..logger import logger
+
+        logger.error(f"Error creating ToolResponse: {str(e)}")
+        return None
 
 
 async def get_tools(
@@ -22,23 +51,9 @@ async def get_tools(
     tools_list = []
 
     async for tool in cursor:
-        tool_response = ToolResponse(
-            id=tool.get("id"),
-            price=tool.get("price"),
-            name=tool.get("name"),
-            description=tool.get("description"),
-            link=tool.get("link"),
-            unique_id=tool.get("unique_id"),
-            rating=tool.get("rating"),
-            saved_numbers=tool.get("saved_numbers"),
-            created_at=tool.get("created_at"),
-            updated_at=tool.get("updated_at"),
-            category=tool.get("category"),
-            features=tool.get("features"),
-            is_featured=tool.get("is_featured", False),
-            saved_by_user=False,  # Default value, will be set per-user when implemented
-        )
-        tools_list.append(tool_response)
+        tool_response = create_tool_response(tool)
+        if tool_response:
+            tools_list.append(tool_response)
 
     return tools_list
 
@@ -52,22 +67,7 @@ async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
     if not tool:
         return None
 
-    return ToolResponse(
-        id=tool.get("id"),
-        price=tool.get("price"),
-        name=tool.get("name"),
-        description=tool.get("description"),
-        link=tool.get("link"),
-        unique_id=tool.get("unique_id"),
-        rating=tool.get("rating"),
-        saved_numbers=tool.get("saved_numbers"),
-        created_at=tool.get("created_at"),
-        updated_at=tool.get("updated_at"),
-        category=tool.get("category"),
-        features=tool.get("features"),
-        is_featured=tool.get("is_featured", False),
-        saved_by_user=False,  # Default value, will be set per-user when implemented
-    )
+    return create_tool_response(tool)
 
 
 async def get_tool_by_unique_id(unique_id: str) -> Optional[ToolResponse]:
@@ -79,69 +79,52 @@ async def get_tool_by_unique_id(unique_id: str) -> Optional[ToolResponse]:
     if not tool:
         return None
 
-    return ToolResponse(
-        id=tool.get("id"),
-        price=tool.get("price"),
-        name=tool.get("name"),
-        description=tool.get("description"),
-        link=tool.get("link"),
-        unique_id=tool.get("unique_id"),
-        rating=tool.get("rating"),
-        saved_numbers=tool.get("saved_numbers"),
-        created_at=tool.get("created_at"),
-        updated_at=tool.get("updated_at"),
-        category=tool.get("category"),
-        features=tool.get("features"),
-        is_featured=tool.get("is_featured", False),
-        saved_by_user=False,  # Default value, will be set per-user when implemented
-    )
+    return create_tool_response(tool)
 
 
 async def create_tool(tool_data: ToolCreate) -> ToolResponse:
     """
     Create a new tool.
     """
-    # Check if a tool with the unique_id already exists
-    existing_tool = await tools.find_one({"unique_id": tool_data.unique_id})
-    if existing_tool:
-        raise HTTPException(
-            status_code=400, detail="Tool with this unique_id already exists"
-        )
+    try:
+        # Check if a tool with the unique_id already exists
+        existing_tool = await tools.find_one({"unique_id": tool_data.unique_id})
+        if existing_tool:
+            raise HTTPException(
+                status_code=400, detail="Tool with this unique_id already exists"
+            )
 
-    # Create the tool
-    now = datetime.utcnow()
-    tool_dict = tool_data.model_dump()
-    tool_dict["created_at"] = now
-    tool_dict["updated_at"] = now
+        # Create the tool
+        now = datetime.utcnow()
+        tool_dict = tool_data.model_dump()
+        tool_dict["created_at"] = now
+        tool_dict["updated_at"] = now
 
-    # Ensure the UUID is stored as a string in MongoDB
-    tool_dict["id"] = str(tool_dict["id"])
+        # Ensure the UUID is stored as a string in MongoDB
+        tool_dict["id"] = str(tool_dict.get("id", uuid4()))
 
-    # Insert into MongoDB
-    result = await tools.insert_one(tool_dict)
+        # Insert into MongoDB
+        result = await tools.insert_one(tool_dict)
 
-    # Return the created tool
-    created_tool = await tools.find_one({"_id": result.inserted_id})
+        # Return the created tool
+        created_tool = await tools.find_one({"_id": result.inserted_id})
 
-    # Index in Algolia
-    await algolia_indexer.index_tool(created_tool)
+        # Index in Algolia
+        await algolia_indexer.index_tool(created_tool)
 
-    return ToolResponse(
-        id=created_tool.get("id"),
-        price=created_tool.get("price"),
-        name=created_tool.get("name"),
-        description=created_tool.get("description"),
-        link=created_tool.get("link"),
-        unique_id=created_tool.get("unique_id"),
-        rating=created_tool.get("rating"),
-        saved_numbers=created_tool.get("saved_numbers"),
-        created_at=created_tool.get("created_at"),
-        updated_at=created_tool.get("updated_at"),
-        category=created_tool.get("category"),
-        features=created_tool.get("features"),
-        is_featured=created_tool.get("is_featured", False),
-        saved_by_user=False,  # Default value, will be set per-user when implemented
-    )
+        # Create and return the response
+        tool_response = create_tool_response(created_tool)
+        if not tool_response:
+            raise HTTPException(
+                status_code=500, detail="Failed to create tool response"
+            )
+        return tool_response
+    except Exception as e:
+        # Log the error for debugging
+        from ..logger import logger
+
+        logger.error(f"Tool creation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create tool: {str(e)}")
 
 
 async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolResponse]:
@@ -168,22 +151,8 @@ async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolRe
     # Update in Algolia
     await algolia_indexer.index_tool(updated_tool)
 
-    return ToolResponse(
-        id=updated_tool.get("id"),
-        price=updated_tool.get("price"),
-        name=updated_tool.get("name"),
-        description=updated_tool.get("description"),
-        link=updated_tool.get("link"),
-        unique_id=updated_tool.get("unique_id"),
-        rating=updated_tool.get("rating"),
-        saved_numbers=updated_tool.get("saved_numbers"),
-        created_at=updated_tool.get("created_at"),
-        updated_at=updated_tool.get("updated_at"),
-        category=updated_tool.get("category"),
-        features=updated_tool.get("features"),
-        is_featured=updated_tool.get("is_featured", False),
-        saved_by_user=False,  # Default value, will be set per-user when implemented
-    )
+    # Create and return the response
+    return create_tool_response(updated_tool)
 
 
 async def delete_tool(tool_id: UUID) -> bool:
@@ -239,37 +208,40 @@ async def search_tools(
             # Convert Algolia results to ToolResponse objects
             tools_list = []
             for tool in result.tools:
-                tool_response = ToolResponse(
-                    id=tool.objectID,
-                    price=(
+                # Convert Algolia result to a dictionary format compatible with our helper
+                tool_dict = {
+                    "id": tool.objectID,
+                    "price": (
                         tool.pricing.type.value
                         if hasattr(tool, "pricing") and tool.pricing
-                        else None
+                        else ""
                     ),
-                    name=tool.name,
-                    description=tool.description,
-                    link=tool.website if hasattr(tool, "website") else None,
-                    unique_id=tool.slug if hasattr(tool, "slug") else None,
-                    rating=(
+                    "name": tool.name,
+                    "description": tool.description,
+                    "link": tool.website if hasattr(tool, "website") else "",
+                    "unique_id": tool.slug if hasattr(tool, "slug") else "",
+                    "rating": (
                         str(tool.ratings.average)
                         if hasattr(tool, "ratings") and tool.ratings
                         else None
                     ),
-                    saved_numbers=None,
-                    created_at=tool.created_at,
-                    updated_at=tool.updated_at,
-                    category=(
+                    "saved_numbers": None,
+                    "created_at": tool.created_at,
+                    "updated_at": tool.updated_at,
+                    "category": (
                         tool.categories[0].name
                         if hasattr(tool, "categories") and tool.categories
                         else None
                     ),
-                    features=tool.features if hasattr(tool, "features") else None,
-                    is_featured=(
+                    "features": tool.features if hasattr(tool, "features") else None,
+                    "is_featured": (
                         tool.is_featured if hasattr(tool, "is_featured") else False
                     ),
-                    saved_by_user=False,  # Default value, will be set per-user when implemented
-                )
-                tools_list.append(tool_response)
+                }
+
+                tool_response = create_tool_response(tool_dict)
+                if tool_response:
+                    tools_list.append(tool_response)
             return tools_list
         except Exception as e:
             # Log the error and fall back to MongoDB
@@ -286,24 +258,9 @@ async def search_tools(
     cursor = tools.find({"$text": {"$search": query}}).skip(skip).limit(limit)
 
     tools_list = []
-
     async for tool in cursor:
-        tool_response = ToolResponse(
-            id=tool.get("id"),
-            price=tool.get("price"),
-            name=tool.get("name"),
-            description=tool.get("description"),
-            link=tool.get("link"),
-            unique_id=tool.get("unique_id"),
-            rating=tool.get("rating"),
-            saved_numbers=tool.get("saved_numbers"),
-            created_at=tool.get("created_at"),
-            updated_at=tool.get("updated_at"),
-            category=tool.get("category"),
-            features=tool.get("features"),
-            is_featured=tool.get("is_featured", False),
-            saved_by_user=False,  # Default value, will be set per-user when implemented
-        )
-        tools_list.append(tool_response)
+        tool_response = create_tool_response(tool)
+        if tool_response:
+            tools_list.append(tool_response)
 
     return tools_list
