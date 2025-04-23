@@ -31,6 +31,14 @@ class GlossaryDB:
                 # Use text index for search
                 query["$text"] = {"$search": filter_params.search}
 
+            # Filter by first letter if provided
+            if filter_params.first_letter:
+                # Case-insensitive regex to match terms starting with the given letter
+                query["name"] = {
+                    "$regex": f"^{filter_params.first_letter}",
+                    "$options": "i",
+                }
+
         # Execute query with pagination
         cursor = glossary_terms.find(query).skip(skip).limit(limit)
 
@@ -39,6 +47,13 @@ class GlossaryDB:
 
         # Convert cursor to list
         results = await cursor.to_list(length=limit)
+
+        # Add first_letter field to each result
+        for result in results:
+            if "name" in result and result["name"]:
+                # Extract first letter and convert to uppercase
+                result["first_letter"] = result["name"][0].upper()
+
         return results
 
     async def get_term_by_id(self, term_id: str) -> Optional[Dict[str, Any]]:
@@ -47,15 +62,33 @@ class GlossaryDB:
             return None
 
         term = await glossary_terms.find_one({"_id": ObjectId(term_id)})
+
+        # Add first_letter field if term exists
+        if term and "name" in term and term["name"]:
+            term["first_letter"] = term["name"][0].upper()
+
         return term
 
     async def get_term_by_name(self, name: str) -> Optional[Dict[str, Any]]:
         """Get a glossary term by name."""
         term = await glossary_terms.find_one({"name": name})
+
+        # Add first_letter field if term exists
+        if term and "name" in term and term["name"]:
+            term["first_letter"] = term["name"][0].upper()
+
         return term
 
     async def create_term(self, term_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new glossary term."""
+        # Add first_letter field if not present
+        if (
+            "name" in term_data
+            and term_data["name"]
+            and "first_letter" not in term_data
+        ):
+            term_data["first_letter"] = term_data["name"][0].upper()
+
         result = await glossary_terms.insert_one(term_data)
 
         # Fetch the created document
@@ -75,6 +108,10 @@ class GlossaryDB:
         if not clean_update:
             # No valid update fields, just return the current document
             return await self.get_term_by_id(term_id)
+
+        # Update first_letter if name is being updated
+        if "name" in clean_update and clean_update["name"]:
+            clean_update["first_letter"] = clean_update["name"][0].upper()
 
         # Update the document
         result = await glossary_terms.update_one(
@@ -109,6 +146,14 @@ class GlossaryDB:
             if filter_params.search:
                 query["$text"] = {"$search": filter_params.search}
 
+            # Filter by first letter if provided
+            if filter_params.first_letter:
+                # Case-insensitive regex to match terms starting with the given letter
+                query["name"] = {
+                    "$regex": f"^{filter_params.first_letter}",
+                    "$options": "i",
+                }
+
         count = await glossary_terms.count_documents(query)
         return count
 
@@ -126,6 +171,43 @@ class GlossaryDB:
         # Extract category names from results
         categories = [doc["_id"] for doc in results]
         return categories
+
+    async def get_available_letters(self) -> List[str]:
+        """Get all available first letters from the glossary terms."""
+        pipeline = [
+            {"$project": {"first_letter": {"$toUpper": {"$substr": ["$name", 0, 1]}}}},
+            {"$group": {"_id": "$first_letter"}},
+            {"$sort": {"_id": 1}},
+        ]
+
+        cursor = glossary_terms.aggregate(pipeline)
+        results = await cursor.to_list(length=None)
+
+        # Extract letters from results
+        letters = [doc["_id"] for doc in results]
+        return letters
+
+    async def get_terms_grouped_by_letter(self) -> Dict[str, List[Dict[str, Any]]]:
+        """Get all terms grouped by their first letter."""
+        # Get all terms sorted by name
+        all_terms = await self.list_terms(
+            limit=1000,  # Set a high limit to get all terms
+            sort_by="name",
+            sort_order=ASCENDING,
+        )
+
+        # Group terms by first letter
+        grouped_terms = {}
+        for term in all_terms:
+            if "name" in term and term["name"]:
+                first_letter = term["name"][0].upper()
+                term["first_letter"] = first_letter  # Ensure first_letter is set
+
+                if first_letter not in grouped_terms:
+                    grouped_terms[first_letter] = []
+                grouped_terms[first_letter].append(term)
+
+        return grouped_terms
 
 
 async def get_glossary_db() -> GlossaryDB:

@@ -29,6 +29,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: first_letter
+          in: query
+          description: Filter by first letter of the term name
+          required: false
+          schema:
+            type: string
         - name: skip
           in: query
           description: Number of items to skip
@@ -265,6 +271,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: first_letter
+          in: query
+          description: Filter by first letter of the term name
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Count of glossary terms
@@ -272,6 +284,96 @@ paths:
             application/json:
               schema:
                 type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/glossary/letters:
+    get:
+      tags:
+        - glossary
+      summary: Get available first letters
+      description: |
+        Get all available first letters from the glossary terms.
+        This is used for alphabetical navigation in the UI.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: List of available first letters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/glossary/grouped:
+    get:
+      tags:
+        - glossary
+      summary: Get terms grouped by letter
+      description: |
+        Get all glossary terms grouped by their first letter.
+        This endpoint supports the alphabetical glossary UI.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: Glossary terms grouped by first letter
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/GlossaryTermResponse'
+                example:
+                  "A": [
+                    {
+                      "id": "123456789",
+                      "name": "AI",
+                      "definition": "Artificial Intelligence is...",
+                      "related_terms": ["Machine Learning", "Deep Learning"],
+                      "tool_references": ["123", "456"],
+                      "categories": ["Core Concepts"],
+                      "created_at": "2023-01-01T00:00:00Z",
+                      "updated_at": "2023-01-01T00:00:00Z",
+                      "first_letter": "A"
+                    },
+                    {
+                      "id": "987654321",
+                      "name": "API",
+                      "definition": "Application Programming Interface is...",
+                      "related_terms": ["REST", "GraphQL"],
+                      "tool_references": ["789"],
+                      "categories": ["Web Development"],
+                      "created_at": "2023-01-02T00:00:00Z",
+                      "updated_at": "2023-01-02T00:00:00Z",
+                      "first_letter": "A"
+                    }
+                  ],
+                  "B": [
+                    {
+                      "id": "123123123",
+                      "name": "Big Data",
+                      "definition": "Big data refers to...",
+                      "related_terms": ["Data Science", "Analytics"],
+                      "tool_references": [],
+                      "categories": ["Data"],
+                      "created_at": "2023-01-03T00:00:00Z",
+                      "updated_at": "2023-01-03T00:00:00Z",
+                      "first_letter": "B"
+                    }
+                  ]
         '500':
           description: Internal server error
           content:
@@ -286,7 +388,7 @@ components:
       properties:
         id:
           type: string
-          description: Unique identifier for the glossary term
+          description: Unique identifier for the term
         name:
           type: string
           description: The name/title of the glossary term
@@ -311,11 +413,14 @@ components:
         created_at:
           type: string
           format: date-time
-          description: Creation timestamp
+          description: Timestamp when the term was created
         updated_at:
           type: string
           format: date-time
-          description: Last update timestamp
+          description: Timestamp when the term was last updated
+        first_letter:
+          type: string
+          description: First letter of the term name (for alphabetical organization)
       required:
         - id
         - name
@@ -375,6 +480,21 @@ components:
           items:
             type: string
           description: Categories this term belongs to
+    
+    GlossaryAlphaGroup:
+      type: object
+      properties:
+        letter:
+          type: string
+          description: The letter this group represents
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/GlossaryTermResponse'
+          description: List of terms starting with this letter
+      required:
+        - letter
+        - terms
     
     ErrorResponse:
       type: object

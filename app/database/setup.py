@@ -1,3 +1,4 @@
+from motor.motor_asyncio import AsyncIOMotorClient
 from .database import database, client
 from ..logger import logger
 from ..models.user import ServiceTier, UserInDB
@@ -5,6 +6,7 @@ from ..auth.utils import get_password_hash
 import datetime
 import os
 from dotenv import load_dotenv
+from pymongo import ASCENDING, TEXT
 
 load_dotenv()
 
@@ -129,8 +131,11 @@ async def setup_database():
         await database.glossary_terms.create_index("created_at")
         await database.glossary_terms.create_index("updated_at")
         await database.glossary_terms.create_index(
-            [("name", "text"), ("definition", "text")]
+            [("name", TEXT), ("definition", TEXT), ("related_terms", TEXT)]
         )
+
+        # Add index for first letter search (for alphabetical grouping)
+        await database.glossary_terms.create_index([("first_letter", ASCENDING)])
 
     logger.info("Database setup completed successfully")
 

@@ -41,6 +41,9 @@ from .categories import router as categories_router
 # Import the terms router
 from .terms import router as terms_router
 
+# Import the glossary seed script
+from .seed_glossary import seed_glossary_terms
+
 load_dotenv()
 
 # Check for test mode
@@ -55,6 +58,11 @@ async def lifespan(app: FastAPI):
             logger.info("Setting up database...")
             await setup_database()
             logger.info("Database setup completed")
+
+            # Seed glossary terms
+            logger.info("Seeding glossary terms...")
+            await seed_glossary_terms()
+            logger.info("Glossary seeding completed")
 
             # Configure Algolia indexes if available
             if algolia_config.is_configured():

@@ -7,6 +7,7 @@ from ..models.glossary import (
     GlossaryTermCreate,
     GlossaryTermUpdate,
     GlossaryTermFilter,
+    GlossaryAlphaGroup,
 )
 from .database import get_glossary_db, GlossaryDB
 from ..logger import logger
@@ -28,6 +29,9 @@ async def list_glossary_terms(
     search: Optional[str] = Query(
         None, description="Search text in name and definition"
     ),
+    first_letter: Optional[str] = Query(
+        None, description="Filter by first letter of the term name"
+    ),
     skip: int = Query(0, ge=0, description="Number of items to skip"),
     limit: int = Query(100, ge=1, le=500, description="Number of items to return"),
     sort_by: str = Query("name", description="Field to sort by"),
@@ -40,7 +44,9 @@ async def list_glossary_terms(
     """
     try:
         # Create filter parameters
-        filter_params = GlossaryTermFilter(category=category, search=search)
+        filter_params = GlossaryTermFilter(
+            category=category, search=search, first_letter=first_letter
+        )
 
         # Determine sort order
         sort_order = DESCENDING if sort_desc else ASCENDING
@@ -235,6 +241,9 @@ async def count_glossary_terms(
     search: Optional[str] = Query(
         None, description="Search text in name and definition"
     ),
+    first_letter: Optional[str] = Query(
+        None, description="Filter by first letter of the term name"
+    ),
     glossary_db: GlossaryDB = Depends(get_glossary_db),
 ):
     """
@@ -243,7 +252,9 @@ async def count_glossary_terms(
     """
     try:
         # Create filter parameters
-        filter_params = GlossaryTermFilter(category=category, search=search)
+        filter_params = GlossaryTermFilter(
+            category=category, search=search, first_letter=first_letter
+        )
 
         # Count terms
         count = await glossary_db.count_terms(filter_params=filter_params)
@@ -251,4 +262,40 @@ async def count_glossary_terms(
 
     except Exception as e:
         logger.error(f"Error counting glossary terms: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.get("/letters", response_model=List[str])
+async def get_available_letters(
+    glossary_db: GlossaryDB = Depends(get_glossary_db),
+):
+    """
+    Get all available first letters from the glossary terms.
+    This is used for alphabetical navigation in the UI.
+    No authentication required (free tier access).
+    """
+    try:
+        letters = await glossary_db.get_available_letters()
+        return letters
+
+    except Exception as e:
+        logger.error(f"Error getting available letters: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.get("/grouped", response_model=Dict[str, List[GlossaryTermResponse]])
+async def get_terms_grouped_by_letter(
+    glossary_db: GlossaryDB = Depends(get_glossary_db),
+):
+    """
+    Get all glossary terms grouped by their first letter.
+    This endpoint supports the alphabetical glossary UI.
+    No authentication required (free tier access).
+    """
+    try:
+        grouped_terms = await glossary_db.get_terms_grouped_by_letter()
+        return grouped_terms
+
+    except Exception as e:
+        logger.error(f"Error getting grouped terms: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")

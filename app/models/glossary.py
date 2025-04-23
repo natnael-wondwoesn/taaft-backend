@@ -50,6 +50,7 @@ class GlossaryTermResponse(BaseModel):
     categories: List[str] = []
     created_at: datetime.datetime
     updated_at: datetime.datetime
+    first_letter: Optional[str] = None  # Added to support alphabetical organization
 
     model_config = {"json_encoders": {ObjectId: lambda oid: str(oid)}}
 
@@ -79,3 +80,11 @@ class GlossaryTermFilter(BaseModel):
 
     category: Optional[str] = None
     search: Optional[str] = None
+    first_letter: Optional[str] = None  # Added to support filtering by first letter
+
+
+class GlossaryAlphaGroup(BaseModel):
+    """Model for alphabetically grouped glossary terms."""
+
+    letter: str
+    terms: List[GlossaryTermResponse]
