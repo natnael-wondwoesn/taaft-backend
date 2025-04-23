@@ -101,11 +101,10 @@ async def setup_database():
         await database.tools.create_index("unique_id", unique=True)
         await database.tools.create_index("name")
         await database.tools.create_index("created_at")
-        await database.tools.create_index("category")  # Index for new category field
-        await database.tools.create_index(
-            "is_featured"
-        )  # Index for new is_featured field
+        await database.tools.create_index("category")  # Index for category field
+        await database.tools.create_index("is_featured")  # Index for is_featured field
         await database.tools.create_index([("name", "text"), ("description", "text")])
+        logger.info("Created indexes for tools collection")
 
     # Initialize sites collection
     if "sites" not in collections:
@@ -136,6 +135,18 @@ async def setup_database():
 
         # Add index for first letter search (for alphabetical grouping)
         await database.glossary_terms.create_index([("first_letter", ASCENDING)])
+
+    # Initialize categories collection
+    if "categories" not in collections:
+        await database.create_collection("categories")
+        logger.info("Created categories collection")
+
+        # Create indexes for categories collection
+        await database.categories.create_index("id", unique=True)
+        await database.categories.create_index("slug", unique=True)
+        await database.categories.create_index("count")
+        await database.categories.create_index([("name", TEXT)])
+        logger.info("Created indexes for categories collection")
 
     logger.info("Database setup completed successfully")
 

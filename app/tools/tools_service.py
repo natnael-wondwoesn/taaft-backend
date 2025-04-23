@@ -6,6 +6,7 @@ from typing import List, Optional, Union, Dict, Any
 from ..database.database import tools
 from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
+from ..categories.service import categories_service
 
 
 def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
@@ -103,6 +104,52 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
         # Ensure the UUID is stored as a string in MongoDB
         tool_dict["id"] = str(tool_dict.get("id", uuid4()))
 
+        # Process categories
+        categories_list = []
+        # Handle single category field
+        if tool_dict.get("category"):
+            # Process single category
+            category_id = tool_dict["category"]
+            category_name = category_id.replace("-", " ").title()
+            category_slug = category_id.lower()
+
+            # Create category data
+            category_data = {
+                "id": category_id,
+                "name": category_name,
+                "slug": category_slug,
+            }
+
+            # Update or create the category
+            await categories_service.update_or_create_category(category_data)
+
+            # Add to the list of categories
+            categories_list.append(category_data)
+
+        # Handle categories list (category_ids)
+        if tool_dict.get("category_ids"):
+            for category_id in tool_dict["category_ids"]:
+                if not any(cat["id"] == category_id for cat in categories_list):
+                    category_name = category_id.replace("-", " ").title()
+                    category_slug = category_id.lower()
+
+                    # Create category data
+                    category_data = {
+                        "id": category_id,
+                        "name": category_name,
+                        "slug": category_slug,
+                    }
+
+                    # Update or create the category
+                    await categories_service.update_or_create_category(category_data)
+
+                    # Add to the list of categories
+                    categories_list.append(category_data)
+
+        # Store categories in tool document
+        if categories_list:
+            tool_dict["categories"] = categories_list
+
         # Insert into MongoDB
         result = await tools.insert_one(tool_dict)
 
@@ -141,6 +188,78 @@ async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolRe
 
     if update_data:
         update_data["updated_at"] = datetime.utcnow()
+
+        # Process categories if update includes category-related fields
+        categories_list = existing_tool.get("categories", [])
+        has_category_changes = False
+
+        # Check for category updates
+        if "category" in update_data:
+            has_category_changes = True
+            category_id = update_data["category"]
+
+            # Only process if category is changed
+            if not any(cat.get("id") == category_id for cat in categories_list):
+                # Process single category
+                category_name = category_id.replace("-", " ").title()
+                category_slug = category_id.lower()
+
+                # Create category data
+                category_data = {
+                    "id": category_id,
+                    "name": category_name,
+                    "slug": category_slug,
+                }
+
+                # Update or create the category
+                await categories_service.update_or_create_category(category_data)
+
+                # Replace with new category or add if none exists
+                if categories_list:
+                    categories_list = [
+                        cat for cat in categories_list if cat.get("id") != category_id
+                    ]
+                    categories_list.append(category_data)
+                else:
+                    categories_list = [category_data]
+
+        # Handle categories list (category_ids)
+        if "category_ids" in update_data:
+            has_category_changes = True
+            new_categories = []
+
+            for category_id in update_data["category_ids"]:
+                # Check if the category is already in the list
+                existing_category = next(
+                    (cat for cat in categories_list if cat.get("id") == category_id),
+                    None,
+                )
+                if existing_category:
+                    new_categories.append(existing_category)
+                else:
+                    # Process new category
+                    category_name = category_id.replace("-", " ").title()
+                    category_slug = category_id.lower()
+
+                    # Create category data
+                    category_data = {
+                        "id": category_id,
+                        "name": category_name,
+                        "slug": category_slug,
+                    }
+
+                    # Update or create the category
+                    await categories_service.update_or_create_category(category_data)
+
+                    # Add to the new list
+                    new_categories.append(category_data)
+
+            # Replace categories list with the new one
+            categories_list = new_categories
+
+        # Add updated categories to update data if changed
+        if has_category_changes:
+            update_data["categories"] = categories_list
 
         # Update the tool
         await tools.update_one({"id": str(tool_id)}, {"$set": update_data})

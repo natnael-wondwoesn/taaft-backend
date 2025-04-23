@@ -36,6 +36,7 @@ async def migrate_tools():
     # - category: Optional string
     # - features: Optional list of strings
     # - is_featured: Boolean (default False)
+    # - unique_id: String
 
     # Set default values for new fields
     update_fields = {
@@ -62,6 +63,10 @@ async def migrate_tools():
             update_ops["is_featured"] = False
             needs_update = True
 
+        if "unique_id" not in tool and "id" in tool:
+            update_ops["unique_id"] = tool["id"]
+            needs_update = True
+
         # Update if needed
         if needs_update:
             update_ops["updated_at"] = datetime.utcnow()
@@ -83,6 +88,7 @@ async def verify_migration():
                 {"category": {"$exists": False}},
                 {"features": {"$exists": False}},
                 {"is_featured": {"$exists": False}},
+                {"unique_id": {"$exists": False}},
             ]
         }
     )
