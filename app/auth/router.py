@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends, Body
+from fastapi import APIRouter, HTTPException, status, Depends, Body, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from ..models.user import UserCreate, UserInDB, UserResponse, ServiceTier
 from ..database.database import database
@@ -16,7 +16,7 @@ from bson import ObjectId
 from pydantic import EmailStr
 from ..logger import logger
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post(

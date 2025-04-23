@@ -22,13 +22,53 @@ router = APIRouter(prefix="/tools", tags=["tools"])
 async def list_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
+    price_type: Optional[str] = Query(None, description="Filter by price type"),
+    sort_by: Optional[str] = Query(
+        None, description="Field to sort by (name, created_at, updated_at)"
+    ),
+    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
-    List all tools with pagination.
+    List all tools with pagination, filtering and sorting.
     """
-    tools = await get_tools(skip=skip, limit=limit)
-    total = await get_tools(count_only=True)
+    # Build filters dictionary from query parameters
+    filters = {}
+    if category:
+        filters["category"] = category
+    if is_featured is not None:
+        filters["is_featured"] = is_featured
+    if price_type:
+        filters["price"] = price_type
+
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    # Get the tools with filtering and sorting
+    tools = await get_tools(
+        skip=skip,
+        limit=limit,
+        filters=filters if filters else None,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
+
+    # Get total count with the same filters
+    total = await get_tools(count_only=True, filters=filters if filters else None)
+
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
 
@@ -49,7 +89,8 @@ async def search_tools_endpoint(
 
 @router.get("/{tool_id}", response_model=ToolResponse)
 async def get_tool(
-    tool_id: UUID, current_user: UserResponse = Depends(get_current_active_user)
+    tool_id: UUID,
+    current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Get a specific tool by its UUID.
@@ -62,7 +103,8 @@ async def get_tool(
 
 @router.get("/unique/{unique_id}", response_model=ToolResponse)
 async def get_tool_by_unique_identifier(
-    unique_id: str, current_user: UserResponse = Depends(get_current_active_user)
+    unique_id: str,
+    current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Get a specific tool by its unique_id.
@@ -75,7 +117,8 @@ async def get_tool_by_unique_identifier(
 
 @router.post("/", response_model=ToolResponse, status_code=201)
 async def create_new_tool(
-    tool_data: ToolCreate, current_user: UserResponse = Depends(get_current_active_user)
+    tool_data: ToolCreate,
+    current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Create a new tool.
@@ -119,7 +162,8 @@ async def update_existing_tool(
 
 @router.delete("/{tool_id}", status_code=204)
 async def delete_existing_tool(
-    tool_id: UUID, current_user: UserResponse = Depends(get_current_active_user)
+    tool_id: UUID,
+    current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Delete a tool.

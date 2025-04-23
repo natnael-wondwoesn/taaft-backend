@@ -48,18 +48,65 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
 
 
 async def get_tools(
-    skip: int = 0, limit: int = 100, count_only: bool = False
+    skip: int = 0,
+    limit: int = 100,
+    count_only: bool = False,
+    filters: Optional[Dict[str, Any]] = None,
+    sort_by: Optional[str] = None,
+    sort_order: Optional[str] = "asc",
 ) -> Union[List[ToolResponse], int]:
     """
-    Retrieve a list of tools with pagination.
-    If count_only is True, returns only the total count of tools.
+    Retrieve a list of tools with pagination, filtering and sorting.
+
+    Args:
+        skip: Number of items to skip for pagination
+        limit: Maximum number of items to return
+        count_only: If True, returns only the count of tools
+        filters: Dictionary of field-value pairs for filtering
+        sort_by: Field to sort by
+        sort_order: Sort order ('asc' or 'desc')
+
+    Returns:
+        Either a list of tools or the total count
     """
+    # Build the query
+    query = {}
+
+    # Apply filters if provided
+    if filters:
+        for field, value in filters.items():
+            # Handle special filter cases
+            if field == "category":
+                query["category"] = value
+            elif field == "is_featured":
+                query["is_featured"] = bool(value)
+            elif field == "price":
+                query["price"] = value
+            elif field == "features":
+                if isinstance(value, list):
+                    query["features"] = {"$all": value}
+                else:
+                    query["features"] = value
+            else:
+                # Default to exact match for other fields
+                query[field] = value
+
+    # Count documents if requested
     if count_only:
-        return await tools.count_documents({})
+        return await tools.count_documents(query)
 
-    cursor = tools.find().skip(skip).limit(limit)
+    # Create the cursor
+    cursor = tools.find(query).skip(skip).limit(limit)
+
+    # Apply sorting if requested
+    if sort_by:
+        # Map the field names
+        sort_field = sort_by
+        sort_direction = 1 if sort_order.lower() == "asc" else -1
+        cursor = cursor.sort(sort_field, sort_direction)
+
+    # Process results
     tools_list = []
-
     async for tool in cursor:
         tool_response = create_tool_response(tool)
         if tool_response:
