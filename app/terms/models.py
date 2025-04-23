@@ -37,6 +37,12 @@ class TermDefinitionRequest(BaseModel):
     model: Optional[TermModelType] = TermModelType.DEFAULT
 
 
+class GlossaryTermRequest(BaseModel):
+    term: str
+    user_id: Optional[str] = None
+    model: Optional[TermModelType] = TermModelType.DEFAULT
+
+
 class TermDefinitionResponse(BaseModel):
     term: str
     description: str

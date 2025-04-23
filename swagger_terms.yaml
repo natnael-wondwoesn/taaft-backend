@@ -88,6 +88,31 @@ paths:
                 items:
                   $ref: '#/components/schemas/PopularTerm'
 
+  /api/terms/glossary-term:
+    post:
+      tags:
+        - Terms
+      summary: Get a specific term from the glossary
+      description: Retrieve a specific term from the glossary, or generate it using LLM if it doesn't exist
+      operationId: getGlossaryTerm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlossaryTermRequest'
+      responses:
+        '200':
+          description: Term definition successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermDefinitionResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Error retrieving glossary term
+
 components:
   schemas:
     TermDefinitionRequest:
@@ -176,4 +201,18 @@ components:
         - claude
         - llama
         - default
-      default: default 
+      default: default
+
+    GlossaryTermRequest:
+      type: object
+      required:
+        - term
+      properties:
+        term:
+          type: string
+          description: The specific term to retrieve from the glossary
+        user_id:
+          type: string
+          description: Optional user ID for tracking history
+        model:
+          $ref: '#/components/schemas/TermModelType' 
