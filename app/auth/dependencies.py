@@ -293,7 +293,7 @@ class AdminControlMiddleware:
         """Initialize the middleware with the ASGI application."""
         self.app = app
         # Paths that are allowed for non-admin users
-        self.unrestricted_prefixes = ["/chat", "/algolia"]
+        self.unrestricted_prefixes = ["/chat", "/algolia", "/api/chat"]
         # Auth endpoints should also be accessible
         self.unrestricted_prefixes.append("/auth")
         # Health check should be accessible

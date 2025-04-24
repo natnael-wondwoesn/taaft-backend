@@ -2763,3 +2763,34 @@ id
 2025-04-24T15:15:49.842440+0300 INFO Existing user natnael.wondwoesn@gmail.com promoted to first admin
 2025-04-24T15:20:59.467306+0300 INFO User logged in: natnael.wondwoesn@gmail.com
 2025-04-24T15:23:20.932593+0300 ERROR Error creating admin user: 403: Admin users already exist. This endpoint is disabled.
+2025-04-24T19:04:51.265544+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:04:51.266545+0300 INFO Algolia client initialized successfully
+2025-04-24T19:04:52.598712+0300 INFO Setting up database...
+2025-04-24T19:04:55.795602+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:04:56.009081+0300 INFO Database setup completed successfully
+2025-04-24T19:04:56.010081+0300 INFO Database setup completed
+2025-04-24T19:04:56.010081+0300 INFO Seeding glossary terms...
+2025-04-24T19:04:56.228728+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:04:56.229810+0300 INFO Glossary seeding completed
+2025-04-24T19:04:56.229810+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:04:56.789288+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:04:56.919738+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:04:56.920731+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:05:10.675541+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T19:07:42.576286+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T19:09:33.070300+0300 INFO Shutting down application...
+2025-04-24T19:09:33.308651+0300 INFO Database connections closed
+2025-04-24T19:09:33.309641+0300 INFO Shutdown complete.
+2025-04-24T19:09:37.160045+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:09:37.161050+0300 INFO Algolia client initialized successfully
+2025-04-24T19:09:38.361386+0300 INFO Setting up database...
+2025-04-24T19:09:41.446466+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:09:41.647924+0300 INFO Database setup completed successfully
+2025-04-24T19:09:41.647924+0300 INFO Database setup completed
+2025-04-24T19:09:41.648932+0300 INFO Seeding glossary terms...
+2025-04-24T19:09:41.855294+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:09:41.856299+0300 INFO Glossary seeding completed
+2025-04-24T19:09:41.857526+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:09:42.506002+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:09:42.642679+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:09:42.643355+0300 INFO Algolia indexes configured successfully

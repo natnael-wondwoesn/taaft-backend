@@ -7,9 +7,33 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="chat-container">
+    <!-- Login Container -->
+    <div class="login-container" id="login-container">
+        <h2 id="auth-title">Login</h2>
+        <div class="login-form">
+            <input type="text" id="username-input" placeholder="Username">
+            <input type="password" id="password-input" placeholder="Password">
+            <div id="register-fields" style="display: none;">
+                <input type="password" id="confirm-password-input" placeholder="Confirm Password">
+                <input type="email" id="email-input" placeholder="Email (optional)">
+            </div>
+            <button id="login-btn">Login</button>
+            <p id="login-error" class="error-message"></p>
+            <div class="auth-toggle">
+                <span id="auth-toggle-text">Don't have an account?</span>
+                <button id="auth-toggle-btn">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Container (initially hidden) -->
+    <div class="chat-container" id="chat-container" style="display: none;">
         <div class="chat-header">
             <h1>Chat Application</h1>
+            <div class="user-info">
+                <span id="user-display">User: </span>
+                <button id="logout-btn">Logout</button>
+            </div>
             <div class="chat-controls">
                 <button id="new-chat-btn">New Chat</button>
                 <select id="model-select">
