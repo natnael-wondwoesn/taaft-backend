@@ -139,7 +139,6 @@ class ChatMessageResponse(BaseModel):
     timestamp: datetime.datetime
     model: ChatModelType
     metadata: Optional[Dict[str, Any]] = None
-    tool_recommendations: Optional[List[Dict[str, Any]]] = None
 
     class Config:
         json_encoders = {

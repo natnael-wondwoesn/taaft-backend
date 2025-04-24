@@ -333,6 +333,8 @@ async def stream_llm_response(
 
         # Mark the response as complete
         response_data["status"] = "complete"
+
+        # Send final response to all connections
         for conn in chat_connections:
             await manager.send_personal_json(response_data, conn["websocket"])
 

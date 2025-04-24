@@ -298,7 +298,7 @@ async def send_chat_message(
             system_prompt=system_prompt,
         )
 
-        # Save assistant response to database
+        # Save assistant's response to database
         message_id = str(ObjectId())
         assistant_message = {
             "role": MessageRole.ASSISTANT,
@@ -313,20 +313,30 @@ async def send_chat_message(
         }
         await chat_db.add_message(assistant_message)
 
-        # Return response
-        return {
-            "message": llm_response,
-            "chat_id": session_id,
-            "message_id": message_id,
-            "timestamp": datetime.datetime.utcnow(),
-            "model": model_type,
-        }
+        # Update session metadata
+        await chat_db.update_session(
+            session_id,
+            {
+                "updated_at": datetime.datetime.utcnow(),
+                "message_count": (session.get("message_count") or 0) + 2,
+            },
+        )
+
+        # Return the formatted response
+        return ChatMessageResponse(
+            message=llm_response,
+            chat_id=session_id,
+            message_id=message_id,
+            timestamp=assistant_message["timestamp"],
+            model=model_type,
+            metadata=assistant_message.get("metadata"),
+        )
 
     except Exception as e:
         logger.error(f"Error in send_chat_message: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting response: {str(e)}",
+            detail=f"Error getting response from language model: {str(e)}",
         )
 
 
