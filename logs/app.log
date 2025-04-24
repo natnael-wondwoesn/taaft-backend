@@ -1129,3 +1129,1347 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-24T12:24:16.195883+0300 INFO Algolia glossary index configured successfully
 2025-04-24T12:24:16.196885+0300 INFO Algolia indexes configured successfully
 2025-04-24T12:24:29.239520+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-24T14:24:18.501751+0300 INFO Shutting down application...
+2025-04-24T14:24:20.038537+0300 INFO Database connections closed
+2025-04-24T14:24:20.038537+0300 INFO Shutdown complete.
+2025-04-24T14:24:23.916184+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:24:23.917189+0300 INFO Algolia client initialized successfully
+2025-04-24T14:24:25.237408+0300 INFO Setting up database...
+2025-04-24T14:24:27.596970+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:24:27.766960+0300 INFO Database setup completed successfully
+2025-04-24T14:24:27.767951+0300 INFO Database setup completed
+2025-04-24T14:24:27.768951+0300 INFO Seeding glossary terms...
+2025-04-24T14:24:27.948592+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T14:24:27.949593+0300 INFO Glossary seeding completed
+2025-04-24T14:24:27.950604+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:24:28.750847+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:24:28.939846+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:24:28.939846+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:24:44.898571+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T14:25:03.312808+0300 WARNING Tool without ID found, generated new ID: f3f38e49-4e2d-4de2-b663-e6e14a558fcf
+2025-04-24T14:25:03.324999+0300 WARNING Tool without ID found, generated new ID: 1b2a3c1f-a325-4357-9b0d-94da8f1984cc
+2025-04-24T14:25:03.326987+0300 WARNING Tool without ID found, generated new ID: 21bdb6ef-a40c-4760-b51c-087ab1324da6
+2025-04-24T14:25:03.327993+0300 WARNING Tool without ID found, generated new ID: 17a6155c-62d5-40a8-a680-1d0b70667eb6
+2025-04-24T14:25:03.327993+0300 WARNING Tool without ID found, generated new ID: d4985a83-8ff9-41c7-bf9b-e6ef1946f79c
+2025-04-24T14:25:03.328982+0300 WARNING Tool without ID found, generated new ID: 7ca34210-9c44-428d-8cb7-50bc9382de12
+2025-04-24T14:25:03.329983+0300 WARNING Tool without ID found, generated new ID: a7bcc1c4-5bbf-4a84-a7ae-0e5c866baef4
+2025-04-24T14:25:03.329983+0300 WARNING Tool without ID found, generated new ID: b820a8ab-2bb1-41ce-bb8c-05ac91bbbf3d
+2025-04-24T14:25:03.330984+0300 WARNING Tool without ID found, generated new ID: 8a265df1-0b8b-4e9d-805d-6541ef3cbc4c
+2025-04-24T14:25:03.331987+0300 WARNING Tool without ID found, generated new ID: dab5c5b6-21ea-48d7-990a-e43c2c61e1ef
+2025-04-24T14:25:03.332989+0300 WARNING Tool without ID found, generated new ID: b807ac17-e4b6-42bd-9f1e-aa7dd0629d10
+2025-04-24T14:25:03.333987+0300 WARNING Tool without ID found, generated new ID: 270dbf65-630e-46b0-88ba-1f62f0000d6e
+2025-04-24T14:25:03.334987+0300 WARNING Tool without ID found, generated new ID: 6c9f7fd0-c19d-46d1-9af0-1261c33d59c0
+2025-04-24T14:25:03.335986+0300 WARNING Tool without ID found, generated new ID: 5fdb5e37-9d9a-457a-84fc-0d57dd3269fe
+2025-04-24T14:25:03.336985+0300 WARNING Tool without ID found, generated new ID: 95277648-f674-46ce-a35a-db53664fdea9
+2025-04-24T14:25:03.338989+0300 WARNING Tool without ID found, generated new ID: 2fe3bc09-7b19-44ab-bac0-b17c097a0bc9
+2025-04-24T14:25:03.338989+0300 WARNING Tool without ID found, generated new ID: 171e5f89-bdc7-470e-9289-497d241f81e5
+2025-04-24T14:25:03.339981+0300 WARNING Tool without ID found, generated new ID: 12dc8cd2-a6f0-4b0b-9116-06d1e7c29f61
+2025-04-24T14:25:03.340983+0300 WARNING Tool without ID found, generated new ID: 0f7b070a-8669-4640-bb8c-7984ec89878e
+2025-04-24T14:25:03.340983+0300 WARNING Tool without ID found, generated new ID: 641b7744-e5e4-446d-8285-ffb27dbbe5a8
+2025-04-24T14:25:03.341987+0300 WARNING Tool without ID found, generated new ID: 1025e79c-7c32-42f2-b017-2bbb01f4286f
+2025-04-24T14:25:03.342987+0300 WARNING Tool without ID found, generated new ID: 5c3ed707-2209-491a-b443-fef3bd225fee
+2025-04-24T14:25:03.343985+0300 WARNING Tool without ID found, generated new ID: 44ebcb33-f761-43c3-857b-31eea5d7644f
+2025-04-24T14:25:03.344984+0300 WARNING Tool without ID found, generated new ID: ea17a435-e676-43a7-846e-b5ed2ead247a
+2025-04-24T14:25:03.345981+0300 WARNING Tool without ID found, generated new ID: fe6dbb25-8cc3-4152-841a-873bd959971e
+2025-04-24T14:25:03.346983+0300 WARNING Tool without ID found, generated new ID: 2afebd13-92d2-4b90-b81f-7b3cb7167501
+2025-04-24T14:25:03.347983+0300 WARNING Tool without ID found, generated new ID: c954e567-9389-475c-ab3d-fdd0cc3affcb
+2025-04-24T14:25:03.347983+0300 WARNING Tool without ID found, generated new ID: e15673e7-657a-43b0-aa13-47ba798b9ceb
+2025-04-24T14:25:03.348984+0300 WARNING Tool without ID found, generated new ID: 8f69ca66-6cc0-45a2-9055-a3094b2e02e4
+2025-04-24T14:25:03.349982+0300 WARNING Tool without ID found, generated new ID: 11cb1aa3-fc69-45bb-9b8b-6532afc01339
+2025-04-24T14:25:03.349982+0300 WARNING Tool without ID found, generated new ID: dae4cb85-5022-416e-a9d5-fb99e7f393e8
+2025-04-24T14:25:03.350984+0300 WARNING Tool without ID found, generated new ID: fe88966c-2179-41d6-97ed-43205f3b5c94
+2025-04-24T14:25:03.350984+0300 WARNING Tool without ID found, generated new ID: 4c9906eb-74de-4244-9c92-b6ce5a3c2b55
+2025-04-24T14:25:03.352995+0300 WARNING Tool without ID found, generated new ID: 1db17a7d-0ee5-4b4e-b069-fe12d16c42cf
+2025-04-24T14:25:03.353988+0300 WARNING Tool without ID found, generated new ID: a2995973-ea0f-43f5-a99f-ff19b91ab9c8
+2025-04-24T14:25:03.354990+0300 WARNING Tool without ID found, generated new ID: b6290692-beb9-43a0-b8d1-047476786fed
+2025-04-24T14:25:03.354990+0300 WARNING Tool without ID found, generated new ID: ad705dca-9e99-4218-8774-284458c018cc
+2025-04-24T14:25:03.355987+0300 WARNING Tool without ID found, generated new ID: e10a16ba-6428-47bf-9d05-6994c9932cec
+2025-04-24T14:25:03.356987+0300 WARNING Tool without ID found, generated new ID: 44782684-1762-42a5-b490-2c8ed7e4cfc8
+2025-04-24T14:25:03.356987+0300 WARNING Tool without ID found, generated new ID: e2ff6506-5b4d-49ff-80ca-cd33eff98b00
+2025-04-24T14:25:03.357987+0300 WARNING Tool without ID found, generated new ID: b202e95a-ce41-4b1d-976b-802c33a2688e
+2025-04-24T14:25:03.358986+0300 WARNING Tool without ID found, generated new ID: f1ef197a-3be8-4f77-b206-4ef1316c4684
+2025-04-24T14:25:03.358986+0300 WARNING Tool without ID found, generated new ID: fd4029e4-c7d4-4a2f-a9e3-3b4ed3a7c231
+2025-04-24T14:25:03.359989+0300 WARNING Tool without ID found, generated new ID: 120075f0-9f3b-4591-b45e-d197a5ef5c6b
+2025-04-24T14:25:03.359989+0300 WARNING Tool without ID found, generated new ID: b1ef6dec-2d1d-47da-8095-8d866d2dfb1e
+2025-04-24T14:25:03.361980+0300 WARNING Tool without ID found, generated new ID: 72aab5cb-dbf6-4344-a6d2-52efe7b41b67
+2025-04-24T14:25:03.361980+0300 WARNING Tool without ID found, generated new ID: ef2b17ab-6273-4722-a634-99c977a1679b
+2025-04-24T14:25:03.363987+0300 WARNING Tool without ID found, generated new ID: e3e54daf-88b3-4e21-87dc-fffb01c2351b
+2025-04-24T14:25:03.363987+0300 WARNING Tool without ID found, generated new ID: 586dcebd-4b9d-4dc0-84c7-d1beda5be68a
+2025-04-24T14:25:03.364987+0300 WARNING Tool without ID found, generated new ID: d0276837-26a7-4059-ae81-e89fa8c92b21
+2025-04-24T14:25:03.365985+0300 WARNING Tool without ID found, generated new ID: a1ad780f-378e-48f8-bbec-b0395eceb3a7
+2025-04-24T14:25:03.365985+0300 WARNING Tool without ID found, generated new ID: 156d7bf1-ea81-4bb4-9018-9bd18dd6bc8c
+2025-04-24T14:25:03.366983+0300 WARNING Tool without ID found, generated new ID: b9cc1b72-6b70-4d6a-b2fe-f83190c8e384
+2025-04-24T14:25:03.367984+0300 WARNING Tool without ID found, generated new ID: cf6e6aae-ac10-4696-86aa-1ef639f418d2
+2025-04-24T14:25:03.368992+0300 WARNING Tool without ID found, generated new ID: 06b4df0a-817e-41c5-ac3e-1013c666a425
+2025-04-24T14:25:03.371000+0300 WARNING Tool without ID found, generated new ID: fb800a72-87f4-4888-a96c-5fe291e6661a
+2025-04-24T14:25:03.372001+0300 WARNING Tool without ID found, generated new ID: 3b4a8682-7bd6-4244-9595-1875bca9ac43
+2025-04-24T14:25:03.372990+0300 WARNING Tool without ID found, generated new ID: dc4e1c9d-2b04-4e15-bc51-c87a3433d6f0
+2025-04-24T14:25:03.372990+0300 WARNING Tool without ID found, generated new ID: 424af338-9b77-45f8-90c7-018bc323951d
+2025-04-24T14:25:03.373993+0300 WARNING Tool without ID found, generated new ID: 67605794-a76b-48c1-829c-f97b96f3591e
+2025-04-24T14:25:03.374985+0300 WARNING Tool without ID found, generated new ID: df4130f2-e7a1-4584-b101-8f9cea841cb3
+2025-04-24T14:25:03.374985+0300 WARNING Tool without ID found, generated new ID: 6a61de22-963a-4cf9-adb3-9e1fb0aa8e9c
+2025-04-24T14:25:03.375982+0300 WARNING Tool without ID found, generated new ID: 1a9f4242-e7e8-4c5d-8c9f-5d40618e2480
+2025-04-24T14:25:03.375982+0300 WARNING Tool without ID found, generated new ID: 240bb73f-e969-4b68-adae-35782820e915
+2025-04-24T14:25:03.376984+0300 WARNING Tool without ID found, generated new ID: c8bc6380-2f00-4479-aaad-c4b074a3f5ea
+2025-04-24T14:25:03.376984+0300 WARNING Tool without ID found, generated new ID: 6ef1fe7f-df2b-4942-970f-d8f7f8a3ce87
+2025-04-24T14:25:03.377983+0300 WARNING Tool without ID found, generated new ID: d90c1ac2-315a-4c44-b02a-12808ae877cd
+2025-04-24T14:25:03.377983+0300 WARNING Tool without ID found, generated new ID: 03e6204f-b527-4c9e-98af-ca03de568230
+2025-04-24T14:25:03.378986+0300 WARNING Tool without ID found, generated new ID: c4d996d4-f49c-45c1-a66b-55f2abadf0a9
+2025-04-24T14:25:03.379983+0300 WARNING Tool without ID found, generated new ID: 70f1bb9f-417e-431a-a28c-90f50ee9e1b6
+2025-04-24T14:25:03.379983+0300 WARNING Tool without ID found, generated new ID: a79fa368-ea7c-4f49-ba46-beafc6b08225
+2025-04-24T14:25:03.380984+0300 WARNING Tool without ID found, generated new ID: e24be2bf-8943-4cb5-8a14-0c1ff4a1b7bb
+2025-04-24T14:25:03.380984+0300 WARNING Tool without ID found, generated new ID: 80c16f8c-a1d7-4cb6-8719-b8f4251d3278
+2025-04-24T14:25:03.381983+0300 WARNING Tool without ID found, generated new ID: c8b5a14c-565b-4080-a736-0fc4954f2820
+2025-04-24T14:25:03.381983+0300 WARNING Tool without ID found, generated new ID: d0ef73a5-fb1e-403b-bcbb-48de8f2f6350
+2025-04-24T14:25:03.382982+0300 WARNING Tool without ID found, generated new ID: 763d37fc-eb9f-401e-9e97-17df062ef69d
+2025-04-24T14:25:03.382982+0300 WARNING Tool without ID found, generated new ID: 88e34eb8-f1b0-413e-93f3-a228b8b5fb9b
+2025-04-24T14:25:03.383985+0300 WARNING Tool without ID found, generated new ID: e0dd03ab-64d4-49e2-9271-d768e0655539
+2025-04-24T14:25:03.384991+0300 WARNING Tool without ID found, generated new ID: bfe3b6e7-380d-41c5-85c7-e362154954fe
+2025-04-24T14:25:03.385992+0300 WARNING Tool without ID found, generated new ID: 51441363-b95d-4307-99f8-c6e0e3c34eca
+2025-04-24T14:25:03.386991+0300 WARNING Tool without ID found, generated new ID: 5b562fd9-56fa-44a0-b848-de4b3bca4291
+2025-04-24T14:25:03.388006+0300 WARNING Tool without ID found, generated new ID: fc56aa18-1e40-495a-86de-add9f697b7ce
+2025-04-24T14:25:03.388990+0300 WARNING Tool without ID found, generated new ID: f6f22cbc-00d4-41bb-b2e0-8907b5d8992a
+2025-04-24T14:25:03.389984+0300 WARNING Tool without ID found, generated new ID: f298fbbe-6e05-41ae-9e4c-5fb8facc72bb
+2025-04-24T14:25:03.389984+0300 WARNING Tool without ID found, generated new ID: 0c96642e-191c-4a03-8ef8-9924c122ae78
+2025-04-24T14:25:03.390983+0300 WARNING Tool without ID found, generated new ID: 271e0367-93e4-4e45-8591-6779cd760be0
+2025-04-24T14:25:03.390983+0300 WARNING Tool without ID found, generated new ID: 51a32a6d-bc3f-44db-9f13-47e0d6a942c8
+2025-04-24T14:25:03.391983+0300 WARNING Tool without ID found, generated new ID: 496768af-56c5-44f7-b51a-77c37a5ddd27
+2025-04-24T14:25:03.391983+0300 WARNING Tool without ID found, generated new ID: b0163135-0217-49b6-bb52-197d267e1515
+2025-04-24T14:25:03.391983+0300 WARNING Tool without ID found, generated new ID: 83564215-3239-4038-8780-9cfec1c6cf8f
+2025-04-24T14:25:03.392983+0300 WARNING Tool without ID found, generated new ID: d9cf5d2e-da19-4a3f-be37-b75f8f2fad01
+2025-04-24T14:25:03.393984+0300 WARNING Tool without ID found, generated new ID: 598f9b26-fb3a-4104-a1b8-b84ae6dbf073
+2025-04-24T14:25:03.393984+0300 WARNING Tool without ID found, generated new ID: eb47d2b4-05d7-4a97-aa07-ffcbcbd9d529
+2025-04-24T14:25:03.394984+0300 WARNING Tool without ID found, generated new ID: 10051c0c-b454-4beb-99d2-6492b9d46219
+2025-04-24T14:25:03.395983+0300 WARNING Tool without ID found, generated new ID: 58f9e6cc-7228-4e31-ad06-5e3c4d0c384c
+2025-04-24T14:25:03.395983+0300 WARNING Tool without ID found, generated new ID: 811c174e-00ad-4adc-8ccc-b361c0c65b42
+2025-04-24T14:25:03.396983+0300 WARNING Tool without ID found, generated new ID: 1527c30d-93bc-4cbf-8eca-e36997bad3b5
+2025-04-24T14:25:03.396983+0300 WARNING Tool without ID found, generated new ID: abab8622-c5f5-4d77-a33d-e36e9980e9ba
+2025-04-24T14:25:03.397989+0300 WARNING Tool without ID found, generated new ID: 9f3d01cd-ffc8-4323-b180-97fedd078c13
+2025-04-24T14:25:03.398986+0300 WARNING Tool without ID found, generated new ID: 116db1d1-3ee5-4454-8291-c3822c2d122c
+2025-04-24T14:28:05.040948+0300 INFO Shutting down application...
+2025-04-24T14:28:05.261959+0300 INFO Database connections closed
+2025-04-24T14:28:05.262949+0300 INFO Shutdown complete.
+2025-04-24T14:28:08.771139+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:28:08.773127+0300 INFO Algolia client initialized successfully
+2025-04-24T14:28:10.112791+0300 INFO Setting up database...
+2025-04-24T14:28:13.104819+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:28:13.312889+0300 INFO Database setup completed successfully
+2025-04-24T14:28:13.313888+0300 INFO Database setup completed
+2025-04-24T14:28:13.313888+0300 INFO Seeding glossary terms...
+2025-04-24T14:28:13.510889+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:28:13.510889+0300 INFO Glossary seeding completed
+2025-04-24T14:28:13.511886+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:28:14.094534+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:28:14.240527+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:28:14.241531+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:28:17.925683+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:28:17.926686+0300 INFO Algolia client initialized successfully
+2025-04-24T14:28:19.091115+0300 INFO Setting up database...
+2025-04-24T14:28:21.199102+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:28:21.402744+0300 INFO Database setup completed successfully
+2025-04-24T14:28:21.402744+0300 INFO Database setup completed
+2025-04-24T14:28:21.403746+0300 INFO Seeding glossary terms...
+2025-04-24T14:28:21.606757+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:28:21.606757+0300 INFO Glossary seeding completed
+2025-04-24T14:28:21.607751+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:28:22.052767+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:28:22.188747+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:28:22.188747+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:28:25.277888+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:28:25.279872+0300 INFO Algolia client initialized successfully
+2025-04-24T14:28:26.259083+0300 INFO Setting up database...
+2025-04-24T14:28:28.214735+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:28:28.386873+0300 INFO Database setup completed successfully
+2025-04-24T14:28:28.387736+0300 INFO Database setup completed
+2025-04-24T14:28:28.388742+0300 INFO Seeding glossary terms...
+2025-04-24T14:28:28.580845+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:28:28.581840+0300 INFO Glossary seeding completed
+2025-04-24T14:28:28.581840+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:28:28.998413+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:28:29.140665+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:28:29.141647+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:29:13.772401+0300 INFO Shutting down application...
+2025-04-24T14:29:13.945401+0300 INFO Database connections closed
+2025-04-24T14:29:13.945401+0300 INFO Shutdown complete.
+2025-04-24T14:29:17.591703+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:29:17.592686+0300 INFO Algolia client initialized successfully
+2025-04-24T14:29:18.900961+0300 INFO Setting up database...
+2025-04-24T14:29:21.028062+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:29:21.225063+0300 INFO Database setup completed successfully
+2025-04-24T14:29:21.226062+0300 INFO Database setup completed
+2025-04-24T14:29:21.226062+0300 INFO Seeding glossary terms...
+2025-04-24T14:29:21.422797+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:29:21.423788+0300 INFO Glossary seeding completed
+2025-04-24T14:29:21.423788+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:29:21.808796+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:29:21.947821+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:29:21.947821+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:29:25.136946+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:29:25.137956+0300 INFO Algolia client initialized successfully
+2025-04-24T14:29:26.081568+0300 INFO Setting up database...
+2025-04-24T14:29:28.042523+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:29:28.223709+0300 INFO Database setup completed successfully
+2025-04-24T14:29:28.224709+0300 INFO Database setup completed
+2025-04-24T14:29:28.225711+0300 INFO Seeding glossary terms...
+2025-04-24T14:29:28.395731+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:29:28.396739+0300 INFO Glossary seeding completed
+2025-04-24T14:29:28.397713+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:29:28.827890+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:29:28.950998+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:29:28.951997+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:30:18.289489+0300 INFO Shutting down application...
+2025-04-24T14:30:18.468171+0300 INFO Database connections closed
+2025-04-24T14:30:18.469175+0300 INFO Shutdown complete.
+2025-04-24T14:30:21.982187+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:30:21.983185+0300 INFO Algolia client initialized successfully
+2025-04-24T14:30:23.006757+0300 INFO Setting up database...
+2025-04-24T14:30:26.950765+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:30:27.186953+0300 INFO Database setup completed successfully
+2025-04-24T14:30:27.187947+0300 INFO Database setup completed
+2025-04-24T14:30:27.187947+0300 INFO Seeding glossary terms...
+2025-04-24T14:30:27.409099+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:30:27.410099+0300 INFO Glossary seeding completed
+2025-04-24T14:30:27.410099+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:30:27.931708+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:30:28.061704+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:30:28.062707+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:30:31.286488+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:30:31.287487+0300 INFO Algolia client initialized successfully
+2025-04-24T14:30:32.387390+0300 INFO Setting up database...
+2025-04-24T14:30:34.456751+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:30:34.661250+0300 INFO Database setup completed successfully
+2025-04-24T14:30:34.662247+0300 INFO Database setup completed
+2025-04-24T14:30:34.662247+0300 INFO Seeding glossary terms...
+2025-04-24T14:30:34.894241+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:30:34.895241+0300 INFO Glossary seeding completed
+2025-04-24T14:30:34.896256+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:30:35.299370+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:30:35.430376+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:30:35.431381+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:33:07.755663+0300 WARNING Tool without ID found, generated new ID: b9fd757a-b2f0-43ac-86ba-66164a246574
+2025-04-24T14:33:07.756675+0300 WARNING Tool without ID found, generated new ID: 9a40c860-fdee-4e24-80bb-4d960b6da4bc
+2025-04-24T14:33:07.757652+0300 WARNING Tool without ID found, generated new ID: 20fbb28a-a111-4915-ab0d-6c9e154837b2
+2025-04-24T14:33:07.758664+0300 WARNING Tool without ID found, generated new ID: 768e6d76-f63f-4320-acad-9f0aad7a49b8
+2025-04-24T14:33:07.759654+0300 WARNING Tool without ID found, generated new ID: 875c933a-7cab-4e53-b586-272b3ece028b
+2025-04-24T14:33:07.759654+0300 WARNING Tool without ID found, generated new ID: 12e7eb8f-bb12-4da0-bb61-0b32f68b7367
+2025-04-24T14:33:07.760657+0300 WARNING Tool without ID found, generated new ID: d174bb37-4d58-4b0c-af38-77c29c39ff86
+2025-04-24T14:33:07.761658+0300 WARNING Tool without ID found, generated new ID: 3959dd19-993d-4eac-b307-142ec5bc8ed8
+2025-04-24T14:33:07.762660+0300 WARNING Tool without ID found, generated new ID: 94f946e8-380f-4002-9ee0-63a01ddfe0ac
+2025-04-24T14:33:07.763678+0300 WARNING Tool without ID found, generated new ID: 41ace7b0-f137-4622-a3d5-5e3e7e37bc18
+2025-04-24T14:33:07.764657+0300 WARNING Tool without ID found, generated new ID: f47f8fe5-d113-4d52-8ef6-90ac399d78d8
+2025-04-24T14:33:07.765657+0300 WARNING Tool without ID found, generated new ID: ef9efe46-8b63-4ae8-8487-e1836c28ff8d
+2025-04-24T14:33:07.765657+0300 WARNING Tool without ID found, generated new ID: fc368f01-c213-47d3-8c1b-540d281eaa08
+2025-04-24T14:33:07.766655+0300 WARNING Tool without ID found, generated new ID: f97ec285-8848-43b7-9b45-ac77a05ad2b1
+2025-04-24T14:33:07.767665+0300 WARNING Tool without ID found, generated new ID: b212c7ae-2e31-4e57-bfd3-3c7dbf15ed74
+2025-04-24T14:33:07.768664+0300 WARNING Tool without ID found, generated new ID: 42d94162-583f-4497-87c3-ce7f82e2292e
+2025-04-24T14:33:07.769662+0300 WARNING Tool without ID found, generated new ID: e8eaf3dd-0b75-402c-a9de-86887c619195
+2025-04-24T14:33:07.770656+0300 WARNING Tool without ID found, generated new ID: d41333d7-9165-4a91-ac37-f5f43d0f13aa
+2025-04-24T14:33:07.771656+0300 WARNING Tool without ID found, generated new ID: edda833a-55be-4001-aa30-c0235bb0f2c5
+2025-04-24T14:33:07.772662+0300 WARNING Tool without ID found, generated new ID: 5e5c1011-08dc-4228-a15b-c8971784aae3
+2025-04-24T14:33:07.773653+0300 WARNING Tool without ID found, generated new ID: 943b5b6c-6dc9-472f-b2e7-e7110e6f7ae6
+2025-04-24T14:33:07.774659+0300 WARNING Tool without ID found, generated new ID: 35f789b9-d8fd-4eda-8987-9bf3fae83f00
+2025-04-24T14:33:07.775654+0300 WARNING Tool without ID found, generated new ID: 708f0cec-5c91-4631-ad7d-06fdfe5acaea
+2025-04-24T14:33:07.776658+0300 WARNING Tool without ID found, generated new ID: b0bffeda-0e39-4efe-856c-f5327a14719a
+2025-04-24T14:33:07.778659+0300 WARNING Tool without ID found, generated new ID: 93daa9fc-a73b-4fe4-be3e-d9a2f2d0bedd
+2025-04-24T14:33:07.779659+0300 WARNING Tool without ID found, generated new ID: cee5c2ef-5a06-49b3-a7a9-80ed4244d41f
+2025-04-24T14:33:07.780656+0300 WARNING Tool without ID found, generated new ID: f7b95389-fd91-4acc-866d-dba6d006be6a
+2025-04-24T14:33:07.781657+0300 WARNING Tool without ID found, generated new ID: 2034aae1-4beb-4033-8e72-87c9dff806ec
+2025-04-24T14:33:07.782657+0300 WARNING Tool without ID found, generated new ID: 37c052d0-2851-412e-b8b1-cf193d374cd0
+2025-04-24T14:33:07.783660+0300 WARNING Tool without ID found, generated new ID: 530ceafb-bcc1-4756-b0cf-4aedbc990263
+2025-04-24T14:33:07.783660+0300 WARNING Tool without ID found, generated new ID: 62c9fa00-ccbf-46a7-87b5-d9466bf9680d
+2025-04-24T14:33:07.784655+0300 WARNING Tool without ID found, generated new ID: a2e746d8-61de-423e-9b13-38a54a18ac09
+2025-04-24T14:33:07.785664+0300 WARNING Tool without ID found, generated new ID: b382ea13-d5c6-44a3-bc60-aaaaab9f0580
+2025-04-24T14:33:07.785664+0300 WARNING Tool without ID found, generated new ID: cefc380c-88ef-47c2-bea3-fe36483c84a1
+2025-04-24T14:33:07.786657+0300 WARNING Tool without ID found, generated new ID: 8e91c374-7f6f-475a-a0e4-d76713efd9f7
+2025-04-24T14:33:07.786657+0300 WARNING Tool without ID found, generated new ID: 950a6acb-80e3-4a37-9944-84b16d770859
+2025-04-24T14:33:07.787661+0300 WARNING Tool without ID found, generated new ID: 5bcc467a-8bac-46bf-ba43-872c41067ef6
+2025-04-24T14:33:07.788658+0300 WARNING Tool without ID found, generated new ID: a89daf11-93f2-4f6f-a6fc-45258f56449d
+2025-04-24T14:33:07.789663+0300 WARNING Tool without ID found, generated new ID: c31a2679-dcf3-42a2-b380-1e873ec80577
+2025-04-24T14:33:07.789663+0300 WARNING Tool without ID found, generated new ID: fca744f9-95c2-487e-8629-9fca825f6dca
+2025-04-24T14:33:07.790659+0300 WARNING Tool without ID found, generated new ID: f9b241d9-04fa-41d0-9f08-573f756268d2
+2025-04-24T14:33:07.791671+0300 WARNING Tool without ID found, generated new ID: 888566c2-3c5c-45d7-911b-4bd624eb66e0
+2025-04-24T14:33:07.791671+0300 WARNING Tool without ID found, generated new ID: aac4fc75-5474-40e9-98c9-8fec0b26de25
+2025-04-24T14:33:07.792676+0300 WARNING Tool without ID found, generated new ID: 776fca36-2764-4ddd-bfb3-5ac3cb00aa44
+2025-04-24T14:33:07.794660+0300 WARNING Tool without ID found, generated new ID: c79d3a27-8f97-4051-95ab-7f915c0dd581
+2025-04-24T14:33:07.795657+0300 WARNING Tool without ID found, generated new ID: f7c21779-4842-4c6e-93cf-ec6d8171393b
+2025-04-24T14:33:07.796663+0300 WARNING Tool without ID found, generated new ID: 83c22da9-967f-4366-9ef2-7bf4602c73c3
+2025-04-24T14:33:07.796663+0300 WARNING Tool without ID found, generated new ID: d3c1324b-34fb-4efb-af14-2b84cb06a962
+2025-04-24T14:33:07.797668+0300 WARNING Tool without ID found, generated new ID: de36489d-0f44-4f9e-bc2c-c5d39503b86c
+2025-04-24T14:33:07.798658+0300 WARNING Tool without ID found, generated new ID: 9d8a7acf-94cf-439c-8482-7c081239f831
+2025-04-24T14:33:07.799663+0300 WARNING Tool without ID found, generated new ID: c8ef5fe7-19e8-40d5-82ee-c9d0442ee302
+2025-04-24T14:33:07.799663+0300 WARNING Tool without ID found, generated new ID: cd82db46-dcfb-41cb-babf-148af10b0d50
+2025-04-24T14:33:07.800659+0300 WARNING Tool without ID found, generated new ID: e0abba48-2e49-4677-9944-bbeeed0afea5
+2025-04-24T14:33:07.800659+0300 WARNING Tool without ID found, generated new ID: 999e1aee-09b5-4249-96c5-349ddcefee93
+2025-04-24T14:33:07.800659+0300 WARNING Tool without ID found, generated new ID: 9fa921e1-f5a0-46f3-90ff-bceadb0f551f
+2025-04-24T14:33:07.801661+0300 WARNING Tool without ID found, generated new ID: b4a9ee81-1a51-4ef2-8990-b3bb4b8db13b
+2025-04-24T14:33:07.802661+0300 WARNING Tool without ID found, generated new ID: 7b24cde0-6b1b-42d1-8195-e93c11f3e17a
+2025-04-24T14:33:07.802661+0300 WARNING Tool without ID found, generated new ID: 9b090e6a-5c6e-41c2-96f8-31d400b5d7ab
+2025-04-24T14:33:07.803663+0300 WARNING Tool without ID found, generated new ID: f95dc1fe-dfb2-4cf1-a13d-bed3ac8fb0dd
+2025-04-24T14:33:07.804663+0300 WARNING Tool without ID found, generated new ID: b6ac9a65-0678-4c88-811d-628314d57d07
+2025-04-24T14:33:07.804663+0300 WARNING Tool without ID found, generated new ID: 5c73b935-a63f-4610-bf09-64b399ffa717
+2025-04-24T14:33:07.805659+0300 WARNING Tool without ID found, generated new ID: c750f4a4-97d6-4198-b590-fa01f38158d9
+2025-04-24T14:33:07.805659+0300 WARNING Tool without ID found, generated new ID: ea56e55b-a872-4a8f-b237-88a194aa2d0b
+2025-04-24T14:33:07.806661+0300 WARNING Tool without ID found, generated new ID: b49d409f-a0b6-4742-a167-8096ecf907ff
+2025-04-24T14:33:07.806661+0300 WARNING Tool without ID found, generated new ID: b6bf7173-f3af-454b-be5c-9b49fc6497fa
+2025-04-24T14:33:07.807666+0300 WARNING Tool without ID found, generated new ID: c10dd36f-9cab-43c0-a42c-1468d37f9f25
+2025-04-24T14:33:07.808663+0300 WARNING Tool without ID found, generated new ID: a576c218-2440-4b89-b442-806528de62ce
+2025-04-24T14:33:07.809658+0300 WARNING Tool without ID found, generated new ID: e4030c38-132a-4f11-be48-1ef7a718613c
+2025-04-24T14:33:07.810660+0300 WARNING Tool without ID found, generated new ID: 94c56778-7c4f-4448-b6fb-132b247b5d16
+2025-04-24T14:33:07.811658+0300 WARNING Tool without ID found, generated new ID: a19523f0-0636-4000-becc-dda1f8dfa530
+2025-04-24T14:33:07.812665+0300 WARNING Tool without ID found, generated new ID: 79354fe9-c44d-4b97-9680-3a7282edca98
+2025-04-24T14:33:07.813662+0300 WARNING Tool without ID found, generated new ID: 4978bbb3-330a-437b-8e20-75918c4d227e
+2025-04-24T14:33:07.814660+0300 WARNING Tool without ID found, generated new ID: 80881826-812a-4622-839f-e57d512447bc
+2025-04-24T14:33:07.814660+0300 WARNING Tool without ID found, generated new ID: e05816dc-ba60-4365-a8ce-61f9e194cdc5
+2025-04-24T14:33:07.815662+0300 WARNING Tool without ID found, generated new ID: d76f7073-f7b4-4e45-af9a-2f9a267a8cb9
+2025-04-24T14:33:07.815662+0300 WARNING Tool without ID found, generated new ID: bc689e7e-562e-4777-b365-08d37cc3ccbd
+2025-04-24T14:33:07.816661+0300 WARNING Tool without ID found, generated new ID: 857dc9ce-266e-44ed-a650-205ffbe914b6
+2025-04-24T14:33:07.816661+0300 WARNING Tool without ID found, generated new ID: fd3dde98-df06-478e-8179-b0e7532b865a
+2025-04-24T14:33:07.817664+0300 WARNING Tool without ID found, generated new ID: 896bc923-be77-41fd-b6d2-f88437b457d3
+2025-04-24T14:33:07.818664+0300 WARNING Tool without ID found, generated new ID: b1a79327-07e2-4acc-b83a-68abf937141c
+2025-04-24T14:33:07.818664+0300 WARNING Tool without ID found, generated new ID: 4886e2e6-a45e-460d-8329-f758c1c1ba84
+2025-04-24T14:33:07.819661+0300 WARNING Tool without ID found, generated new ID: 579ea925-8cb2-4073-a2b7-6314a2ed734d
+2025-04-24T14:33:07.819661+0300 WARNING Tool without ID found, generated new ID: 3a84b3b4-f506-4f20-9fce-6165507cc2ea
+2025-04-24T14:33:07.820663+0300 WARNING Tool without ID found, generated new ID: 04a6c5e5-8ac2-4026-bae6-009f9edb0627
+2025-04-24T14:33:07.820663+0300 WARNING Tool without ID found, generated new ID: da4d8376-f7a6-472e-929c-c8747453ae46
+2025-04-24T14:33:07.821661+0300 WARNING Tool without ID found, generated new ID: 4764e391-af6f-4c29-a457-669d395c0072
+2025-04-24T14:33:07.821661+0300 WARNING Tool without ID found, generated new ID: 4c8a3b4f-ebb2-475e-a1fa-340d7e5e19c7
+2025-04-24T14:33:07.821661+0300 WARNING Tool without ID found, generated new ID: 397865db-2abb-4ae3-b373-b6127230ae0d
+2025-04-24T14:33:07.822669+0300 WARNING Tool without ID found, generated new ID: 34713f73-ea44-4c70-a669-bc2cbebfbc4d
+2025-04-24T14:33:07.823665+0300 WARNING Tool without ID found, generated new ID: bbc9ce60-c973-4fe2-960d-6d65edb1611e
+2025-04-24T14:33:07.823665+0300 WARNING Tool without ID found, generated new ID: cb9c9da8-e324-4902-a9e2-eb9a64d0bb1e
+2025-04-24T14:33:07.824663+0300 WARNING Tool without ID found, generated new ID: 44b77cb9-c54f-4177-8485-684e996beee1
+2025-04-24T14:33:07.825663+0300 WARNING Tool without ID found, generated new ID: b3fbc228-fdaa-43dc-bc96-1639923694f6
+2025-04-24T14:33:07.826660+0300 WARNING Tool without ID found, generated new ID: d12192d8-f83f-408c-87c9-a7185d0d3e47
+2025-04-24T14:33:07.828663+0300 WARNING Tool without ID found, generated new ID: be740845-c9d1-4867-8257-34d9ae676f31
+2025-04-24T14:33:07.829664+0300 WARNING Tool without ID found, generated new ID: 34a5c897-97db-4e1c-9a4a-c817a1cf7b25
+2025-04-24T14:33:07.829664+0300 WARNING Tool without ID found, generated new ID: ff252b4b-ae4d-46ce-ae28-7e3cf58cb254
+2025-04-24T14:33:07.830660+0300 WARNING Tool without ID found, generated new ID: 21a63ca2-697c-4df6-a82e-2e1543245cb1
+2025-04-24T14:33:07.831658+0300 WARNING Tool without ID found, generated new ID: 9212308f-d506-49bc-842f-2fd9776a94d9
+2025-04-24T14:33:07.831658+0300 WARNING Tool without ID found, generated new ID: a565791e-269e-4484-9062-f34d7ad74f1f
+2025-04-24T14:35:41.278294+0300 INFO Shutting down application...
+2025-04-24T14:35:41.490637+0300 INFO Database connections closed
+2025-04-24T14:35:41.491628+0300 INFO Shutdown complete.
+2025-04-24T14:35:44.980150+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:35:44.982142+0300 INFO Algolia client initialized successfully
+2025-04-24T14:35:46.171932+0300 INFO Setting up database...
+2025-04-24T14:35:49.779533+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:35:49.988543+0300 INFO Database setup completed successfully
+2025-04-24T14:35:49.989538+0300 INFO Database setup completed
+2025-04-24T14:35:49.990541+0300 INFO Seeding glossary terms...
+2025-04-24T14:35:50.197617+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:35:50.198609+0300 INFO Glossary seeding completed
+2025-04-24T14:35:50.198609+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:35:50.746652+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:35:50.898708+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:35:50.899700+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:35:52.004881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.005883+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.006892+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.007881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.008881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.009882+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.010887+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.011879+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.011879+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.012880+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.013879+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.013879+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.014879+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.015881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.016880+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.017881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.017881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.018881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.019881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.019881+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.020879+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.021880+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.032459+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.033466+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.035475+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.036458+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.036458+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.037460+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.039461+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.041468+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.042480+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.044463+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.045464+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.046463+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.046463+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.047463+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.047463+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.048471+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.049023+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.049612+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.049612+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.050583+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.050583+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.051583+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.052583+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.053584+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.053584+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.054584+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.054584+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.055574+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.056576+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.057574+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.058578+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.059582+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.060586+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.061575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.061575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.061575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.062575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.062575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.063577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.063577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.064579+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.064579+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.065577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.065577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.066579+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.067585+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.067585+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.068581+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.068581+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.069574+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.069574+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.070575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.070575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.072583+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.074591+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.075600+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.077576+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.077576+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.078579+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.079576+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.080574+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.081578+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.082578+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.083575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.083575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.084577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.084577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.085590+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.086574+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.087587+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.088583+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.089575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.089575+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.090587+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.092596+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.093576+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.094577+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:35:52.095573+0300 ERROR Error creating ToolResponse: cannot access local variable 'logger' where it is not associated with a value
+2025-04-24T14:36:43.488256+0300 INFO Shutting down application...
+2025-04-24T14:36:44.014040+0300 INFO Database connections closed
+2025-04-24T14:36:44.015042+0300 INFO Shutdown complete.
+2025-04-24T14:36:47.337769+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:36:47.338764+0300 INFO Algolia client initialized successfully
+2025-04-24T14:36:48.287897+0300 INFO Setting up database...
+2025-04-24T14:36:50.591984+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:36:50.861651+0300 INFO Database setup completed successfully
+2025-04-24T14:36:50.862663+0300 INFO Database setup completed
+2025-04-24T14:36:50.862663+0300 INFO Seeding glossary terms...
+2025-04-24T14:36:51.057945+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:36:51.058944+0300 INFO Glossary seeding completed
+2025-04-24T14:36:51.058944+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:36:51.574443+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:36:51.715441+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:36:51.716438+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:36:59.612930+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1315b'), 'link': 'https://theresanaiforthat.com/ai/there-s-an-ai-for-that/', 'name': "There's An AI For That", 'price': '0', 'rating': '4.8', 'unique_id': 'taaft_001', 'saved numbers': 138, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.613922+0300 WARNING Tool without ID found, generated new ID: 7d652f08-83ec-4806-a4af-ed4e4bd287f8
+2025-04-24T14:36:59.614901+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1315c'), 'link': 'https://theresanaiforthat.com/ai/korbit/', 'name': 'Korbit', 'price': '9', 'rating': '4.7', 'unique_id': 'korbit_001', 'saved numbers': 508, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.614901+0300 WARNING Tool without ID found, generated new ID: 4f51785a-5e4f-47e9-a76d-27edf4de10bc
+2025-04-24T14:36:59.615912+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1315d'), 'link': 'https://theresanaiforthat.com/ai/lovestudy/', 'name': 'LoveStudy.ai', 'price': '7.9', 'rating': '4.5', 'unique_id': 'lovestudy_001', 'saved numbers': 49, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.616923+0300 WARNING Tool without ID found, generated new ID: f75e310f-5a5c-4f42-88a6-5d1c7c23990e
+2025-04-24T14:36:59.616923+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1315e'), 'link': 'https://theresanaiforthat.com/ai/phonepi-mcp/', 'name': 'PhonePi MCP', 'price': '0', 'rating': '5', 'unique_id': 'phonepi_001', 'saved numbers': 23, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.617922+0300 WARNING Tool without ID found, generated new ID: bdaf0d82-8039-4a3b-8030-aa6b2fcdaf5d
+2025-04-24T14:36:59.618926+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1315f'), 'link': 'https://theresanaiforthat.com/ai/optimyzee/', 'name': 'Optimyzee – AI-Powered Google Ads Optimization', 'price': '83', 'rating': '3.6', 'unique_id': 'optimyzee_001', 'saved numbers': 187, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.631913+0300 WARNING Tool without ID found, generated new ID: cbab8683-c32d-4b47-a158-610d9ae0a663
+2025-04-24T14:36:59.632909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13160'), 'link': 'https://theresanaiforthat.com/ai/thesify/', 'name': 'Thesify', 'price': '4.99', 'rating': '3.9', 'unique_id': 'thesify_001', 'saved numbers': 125, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.633906+0300 WARNING Tool without ID found, generated new ID: 06c417ee-4202-4290-a692-4296aa1c6078
+2025-04-24T14:36:59.634909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13161'), 'link': 'https://theresanaiforthat.com/ai/apply-ai/', 'name': 'Apply AI', 'price': '19', 'rating': '2.7', 'unique_id': 'applyai_001', 'saved numbers': 39, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.635907+0300 WARNING Tool without ID found, generated new ID: c8a276f5-c4bd-43c1-b830-7fbc8128c044
+2025-04-24T14:36:59.636905+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13162'), 'link': 'https://theresanaiforthat.com/ai/the-drive/', 'name': 'The Drive AI', 'price': '4.99', 'rating': '5', 'unique_id': 'thedrive_001', 'saved numbers': 109, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.637907+0300 WARNING Tool without ID found, generated new ID: 3af9d4ff-f2c3-4fdc-9bfc-8ff62508b722
+2025-04-24T14:36:59.638910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13163'), 'link': 'https://theresanaiforthat.com/ai/tenali-ai/', 'name': 'Tenali AI', 'price': '0', 'rating': '3', 'unique_id': 'tenali_001', 'saved numbers': 3, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.639906+0300 WARNING Tool without ID found, generated new ID: 41f5d1f5-3a6e-4dc7-9725-83af371ab324
+2025-04-24T14:36:59.640905+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13164'), 'link': 'https://theresanaiforthat.com/ai/automina/', 'name': 'Automina', 'price': '0', 'rating': '3.6', 'unique_id': 'automina_001', 'saved numbers': 52, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.641909+0300 WARNING Tool without ID found, generated new ID: 2036ca8d-8c08-4bd3-9be6-d9d5f4521638
+2025-04-24T14:36:59.642905+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13165'), 'link': 'https://theresanaiforthat.com/ai/seekmydomain/', 'name': 'SeekMyDomain', 'price': '0', 'rating': '4.4', 'unique_id': 'seekmydomain_001', 'saved numbers': 53, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.643904+0300 WARNING Tool without ID found, generated new ID: 6d3c69cf-d11a-43af-bfac-b9192319bbf2
+2025-04-24T14:36:59.644906+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13166'), 'link': 'https://theresanaiforthat.com/ai/web-gremlin/', 'name': 'Web Gremlin', 'price': '19', 'rating': '4.3', 'unique_id': 'webgremlin_001', 'saved numbers': 39, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.644906+0300 WARNING Tool without ID found, generated new ID: 267f04b7-9245-4eef-b986-c8de3f9378f0
+2025-04-24T14:36:59.645902+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13167'), 'link': 'https://theresanaiforthat.com/ai/bladerunner/', 'name': 'BladeRunner', 'price': '0', 'rating': '4', 'unique_id': 'bladerunner_001', 'saved numbers': 45, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.646907+0300 WARNING Tool without ID found, generated new ID: fdbcc860-4482-4ebd-b6f5-e468626b388c
+2025-04-24T14:36:59.646907+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13168'), 'link': 'https://theresanaiforthat.com/ai/nxtblog-ai/', 'name': 'nxtblog.ai', 'price': '5', 'rating': '4', 'unique_id': 'nxtblog_001', 'saved numbers': 11, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.647903+0300 WARNING Tool without ID found, generated new ID: 33ae73f3-e667-48a7-a233-5a4931515157
+2025-04-24T14:36:59.648912+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13169'), 'link': 'https://theresanaiforthat.com/ai/helpjuice/', 'name': 'Helpjuice', 'price': '120', 'rating': '0', 'unique_id': 'helpjuice_001', 'saved numbers': 8, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.649907+0300 WARNING Tool without ID found, generated new ID: 864132cc-aa17-4bd7-ba62-f6a32d8bf066
+2025-04-24T14:36:59.650908+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1316a'), 'link': 'https://theresanaiforthat.com/ai/ai-gpt-o1-gpt-4o-ai-assistant/', 'name': 'AI GPT o1 GPT-4o: AI Assistant', 'price': '0', 'rating': '4', 'unique_id': 'aigpt_001', 'saved numbers': 14, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.650908+0300 WARNING Tool without ID found, generated new ID: be66edf9-de88-4d84-904f-0bf8500c76e8
+2025-04-24T14:36:59.651907+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1316b'), 'link': 'https://theresanaiforthat.com/ai/roastlinkedin/', 'name': 'RoastLinkedIn', 'price': '0', 'rating': '4.6', 'unique_id': 'roastlinkedin_001', 'saved numbers': 65, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.652907+0300 WARNING Tool without ID found, generated new ID: bb7a7c5a-e720-468a-83b3-5623cd0a6326
+2025-04-24T14:36:59.652907+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1316c'), 'link': 'https://theresanaiforthat.com/@princechauhan-21157011-1712639297/document-resume-generator/', 'name': 'Document resume generator', 'price': '0', 'rating': '5', 'unique_id': 'docresume_001', 'saved numbers': 37, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.653907+0300 WARNING Tool without ID found, generated new ID: c31a03ea-2450-4674-97fb-c5c8c6a901c3
+2025-04-24T14:36:59.654903+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1316d'), 'link': 'https://theresanaiforthat.com/ai/gliastudio/', 'name': 'GliaStudio', 'price': '0', 'rating': '5', 'unique_id': 'gliastudio', 'saved numbers': 7671, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.654903+0300 WARNING Tool without ID found, generated new ID: 1927c9d6-97e8-415c-83de-566a4c6d2d00
+2025-04-24T14:36:59.655910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1316e'), 'link': 'https://theresanaiforthat.com/ai/fork-ai/', 'name': 'Fork.ai', 'price': '9.95', 'rating': '5', 'unique_id': 'fork-ai', 'saved numbers': 1070, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.657910+0300 WARNING Tool without ID found, generated new ID: caa84dd5-505a-4e3b-b873-80ea6913542c
+2025-04-24T14:36:59.658913+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1316f'), 'link': 'https://theresanaiforthat.com/ai/word-studio/', 'name': 'Word Studio', 'price': '7', 'rating': '5', 'unique_id': 'word-studio', 'saved numbers': 3119, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.659910+0300 WARNING Tool without ID found, generated new ID: 479519d4-a51f-4ad1-bedd-4838abd346b9
+2025-04-24T14:36:59.659910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13170'), 'link': 'https://theresanaiforthat.com/ai/screensnapai/', 'name': 'ScreenSnapAI', 'price': '14', 'rating': '5', 'unique_id': 'screensnapai', 'saved numbers': 5337, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.660915+0300 WARNING Tool without ID found, generated new ID: a7585554-90da-4350-881b-eb27ac0c3063
+2025-04-24T14:36:59.661910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13171'), 'link': 'https://theresanaiforthat.com/ai/storipress/', 'name': 'Storipress', 'price': '3', 'rating': '5', 'unique_id': 'storipress', 'saved numbers': 1005, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.661910+0300 WARNING Tool without ID found, generated new ID: 52420783-a41e-461a-adee-014727fdb2b5
+2025-04-24T14:36:59.662911+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13172'), 'link': 'https://theresanaiforthat.com/ai/paperclip/', 'name': 'PaperClip', 'price': '0', 'rating': '5', 'unique_id': 'paperclip', 'saved numbers': 1157, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.663911+0300 WARNING Tool without ID found, generated new ID: 8d60077c-ad14-4626-9293-0c6218691c8a
+2025-04-24T14:36:59.664918+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13173'), 'link': 'https://theresanaiforthat.com/ai/univer-se/', 'name': 'Univer.se', 'price': '2.8', 'rating': '5', 'unique_id': 'univer-se', 'saved numbers': 2143, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.664918+0300 WARNING Tool without ID found, generated new ID: 5e9420a5-6af7-43d0-91cd-dc6f7672d3dd
+2025-04-24T14:36:59.665910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13174'), 'link': 'https://theresanaiforthat.com/ai/saveday/', 'name': 'SaveDay', 'price': '0', 'rating': '4.9', 'unique_id': 'saveday', 'saved numbers': 6299, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.665910+0300 WARNING Tool without ID found, generated new ID: 3a863bad-8a68-47c0-9392-60b568e52b90
+2025-04-24T14:36:59.666910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13175'), 'link': 'https://theresanaiforthat.com/ai/manus/', 'name': 'Manus', 'price': '0', 'rating': '4.3', 'unique_id': 'manus', 'saved numbers': 31037, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.667910+0300 WARNING Tool without ID found, generated new ID: 97090d78-2f7b-4bb0-8bbd-2d0ffa48b7cd
+2025-04-24T14:36:59.667910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13176'), 'link': 'https://theresanaiforthat.com/@atulkumar-31/ai-fashion-model-generator-free/', 'name': 'Ai Fashion Model Generator Free', 'price': '0', 'rating': '4.2', 'unique_id': 'ai-fashion-model-generator-free', 'saved numbers': 420, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.668910+0300 WARNING Tool without ID found, generated new ID: 4564d399-b479-445c-8627-883d37c919cf
+2025-04-24T14:36:59.668910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13177'), 'link': 'https://theresanaiforthat.com/ai/taskade/', 'name': 'Taskade', 'price': '8', 'rating': '4.1', 'unique_id': 'taskade', 'saved numbers': 22109, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.669912+0300 WARNING Tool without ID found, generated new ID: 62040dd8-76cf-4154-be77-37cb531d0a69
+2025-04-24T14:36:59.670910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13178'), 'link': 'https://theresanaiforthat.com/ai/sellerpic/', 'name': 'SellerPic', 'price': '29', 'rating': '4.1', 'unique_id': 'sellerpic', 'saved numbers': 16245, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.670910+0300 WARNING Tool without ID found, generated new ID: d5fdb6fd-e419-4caa-86a6-5831e8123ae6
+2025-04-24T14:36:59.671907+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13179'), 'link': 'https://theresanaiforthat.com/ai/memfree/', 'name': 'MemFree', 'price': '8', 'rating': '4', 'unique_id': 'memfree', 'saved numbers': 11227, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.673919+0300 WARNING Tool without ID found, generated new ID: 338f21c0-78fb-4088-9033-fa34fbd2262a
+2025-04-24T14:36:59.674915+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1317a'), 'link': 'https://theresanaiforthat.com/ai/monai/', 'name': 'MonAI', 'price': '1.99', 'rating': '4', 'unique_id': 'monai', 'saved numbers': 1574, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.675915+0300 WARNING Tool without ID found, generated new ID: b1cec07b-582e-4e1f-bfff-9cb71d08d192
+2025-04-24T14:36:59.677910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1317b'), 'link': 'https://theresanaiforthat.com/ai/sus-technology/', 'name': 'SUS Technology', 'price': '1', 'rating': '4', 'unique_id': 'sus-technology', 'saved numbers': 1907, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.678913+0300 WARNING Tool without ID found, generated new ID: fb686623-f0f6-464c-b878-146cbf134790
+2025-04-24T14:36:59.679913+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1317c'), 'link': 'https://theresanaiforthat.com/ai/mitra/', 'name': 'Mitra', 'price': '25', 'rating': '3.6', 'unique_id': 'mitra', 'saved numbers': 4560, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.680911+0300 WARNING Tool without ID found, generated new ID: f2498a81-e8fa-4f0a-9501-472eb194e351
+2025-04-24T14:36:59.680911+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1317d'), 'link': 'https://theresanaiforthat.com/ai/mentor-ai/', 'name': 'Mentor AI', 'price': '2', 'rating': '3.5', 'unique_id': 'mentor-ai', 'saved numbers': 3149, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.681909+0300 WARNING Tool without ID found, generated new ID: 678b8a90-c813-4c46-85c9-7d8c056d2599
+2025-04-24T14:36:59.681909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1317e'), 'link': 'https://theresanaiforthat.com/ai/branchbob/', 'name': 'Branchbob', 'price': '0', 'rating': '3.5', 'unique_id': 'branchbob', 'saved numbers': 6501, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.682912+0300 WARNING Tool without ID found, generated new ID: 5cc19933-7f0f-49bc-bd09-3748293a4d46
+2025-04-24T14:36:59.683914+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1317f'), 'link': 'https://theresanaiforthat.com/ai/imagine-ai-art-generator/', 'name': 'Imagine : AI Art Generator', 'price': '0', 'rating': '3.3', 'unique_id': 'imagine-ai-art-generator', 'saved numbers': 9531, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.684907+0300 WARNING Tool without ID found, generated new ID: 1ea503b7-b299-4f9a-b3e8-12b28e390610
+2025-04-24T14:36:59.684907+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13180'), 'link': 'https://theresanaiforthat.com/ai/stud-ai/', 'name': 'Stud.AI', 'price': '0', 'rating': '3', 'unique_id': 'stud-ai', 'saved numbers': 2051, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.685909+0300 WARNING Tool without ID found, generated new ID: 912eb5e6-f8fe-4db6-9b0c-0776a4ced197
+2025-04-24T14:36:59.685909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13181'), 'link': 'https://theresanaiforthat.com/ai/knowbase/', 'name': 'Knowbase', 'price': '0', 'rating': '2.3', 'unique_id': 'knowbase', 'saved numbers': 9939, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.686910+0300 WARNING Tool without ID found, generated new ID: 889b56f4-52ae-4c73-9bf9-2b01461b46cd
+2025-04-24T14:36:59.686910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13182'), 'link': 'https://theresanaiforthat.com/ai/42signals/', 'name': '42Signals', 'price': '0', 'rating': '2', 'unique_id': '42signals', 'saved numbers': 4270, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.687911+0300 WARNING Tool without ID found, generated new ID: 2635392d-c317-4499-8f75-14afda9d16fb
+2025-04-24T14:36:59.688912+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13183'), 'link': 'https://theresanaiforthat.com/ai/examgenie-ai/', 'name': 'ExamGenie AI', 'price': '0', 'rating': '1', 'unique_id': 'examgenie-ai', 'saved numbers': 585, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.690909+0300 WARNING Tool without ID found, generated new ID: 65576024-05f1-4da3-82eb-b9b7eb1f238b
+2025-04-24T14:36:59.691909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13184'), 'link': 'https://theresanaiforthat.com/ai/ailancer/', 'name': 'AiLancer', 'price': '0', 'rating': '1', 'unique_id': 'ailancer', 'saved numbers': 446, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.693910+0300 WARNING Tool without ID found, generated new ID: 5f34a53b-72a8-4e9a-add6-6b4ebfaa1f0d
+2025-04-24T14:36:59.694904+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13185'), 'link': 'https://www.useoner.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Oner AI', 'price': '2', 'rating': '3.9', 'unique_id': 'oner-ai', 'saved numbers': 4574, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.696906+0300 WARNING Tool without ID found, generated new ID: 7d301881-2b1a-47f7-80aa-6ee6088d4605
+2025-04-24T14:36:59.697908+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13186'), 'link': 'https://www.d-id.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'D-ID', 'price': '4.7', 'rating': '4.5', 'unique_id': 'd-id', 'saved numbers': 1429, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.699912+0300 WARNING Tool without ID found, generated new ID: 99c44448-c05a-410b-af14-727561447832
+2025-04-24T14:36:59.700913+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13187'), 'link': 'https://kaiber.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Kaiber', 'price': '5', 'rating': '3.3', 'unique_id': 'kaiber', 'saved numbers': 1041, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.701907+0300 WARNING Tool without ID found, generated new ID: e8b26c10-bad8-4bb3-b275-0245585f0596
+2025-04-24T14:36:59.702908+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13188'), 'link': 'https://mangatv.shop/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Manga TV', 'price': '9.99', 'rating': '2.3', 'unique_id': 'manga-tv', 'saved numbers': 442, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.703911+0300 WARNING Tool without ID found, generated new ID: 3e27cc6f-65b8-4f05-b1ab-c5ece8152cf0
+2025-04-24T14:36:59.704906+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13189'), 'link': 'https://makeavideo.studio/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Make-A-Video', 'price': '0', 'rating': '2.3', 'unique_id': 'make-a-video', 'saved numbers': 685, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.706909+0300 WARNING Tool without ID found, generated new ID: 4ac8f7a5-1f0c-4759-acb5-eca9f7f5c7da
+2025-04-24T14:36:59.707913+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1318a'), 'link': 'https://studio.d-id.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'D-ID Creative Reality Studio', 'price': '0', 'rating': '3.9', 'unique_id': 'd-id-s-creative-reality-studio', 'saved numbers': 500, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.708910+0300 WARNING Tool without ID found, generated new ID: fafde5d4-3b26-4608-aac7-e4c67d94f73a
+2025-04-24T14:36:59.711921+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1318b'), 'link': 'https://sora.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Sora by OpenAI', 'price': '0', 'rating': '3.9', 'unique_id': 'sora-by-openai', 'saved numbers': 795, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.713908+0300 WARNING Tool without ID found, generated new ID: e65ab5cb-80f3-4497-9bef-477274511573
+2025-04-24T14:36:59.714913+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1318c'), 'link': 'https://www.deepbrain.io/aistudios?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'AI Studios', 'price': '24', 'rating': '3.1', 'unique_id': 'ai-studios', 'saved numbers': 659, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.716916+0300 WARNING Tool without ID found, generated new ID: 1af1793c-5a97-4427-8661-9b93c02703bd
+2025-04-24T14:36:59.717909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1318d'), 'link': 'https://videogen.io/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'VideoGen', 'price': '19', 'rating': '3.3', 'unique_id': 'videogen', 'saved numbers': 510, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.719920+0300 WARNING Tool without ID found, generated new ID: 9f886501-f239-4071-9dce-5de7b9814f59
+2025-04-24T14:36:59.722910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1318e'), 'link': 'https://www.heygen.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'HeyGen', 'price': '24', 'rating': '3.8', 'unique_id': 'heygen', 'saved numbers': 555, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.750911+0300 WARNING Tool without ID found, generated new ID: 0d6bb6cf-c532-4083-9e85-c7ae22fb1567
+2025-04-24T14:36:59.760910+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1318f'), 'link': 'https://www.supercreator.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Supercreator', 'price': '9.67', 'rating': '3', 'unique_id': 'supercreator-ai', 'saved numbers': 608, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.763913+0300 WARNING Tool without ID found, generated new ID: 5d601a53-e0aa-4d4e-b219-2b4bd8626801
+2025-04-24T14:36:59.765914+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13190'), 'link': 'https://kome.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Kome AI', 'price': 'Free + from $5.99/mo', 'rating': '4', 'unique_id': 'kome-ai', 'saved numbers': 1821, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.766937+0300 WARNING Tool without ID found, generated new ID: 1b347129-3acd-4a65-bfee-f74b1d898fcc
+2025-04-24T14:36:59.768911+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13191'), 'link': 'https://easy-peasy.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Easy-Peasy.AI', 'price': 'Free + from $4.99', 'rating': '3.4', 'unique_id': 'easy-peasy-ai', 'saved numbers': 28054, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.769916+0300 WARNING Tool without ID found, generated new ID: 593e4485-badb-438e-9036-c731fab8e3f2
+2025-04-24T14:36:59.772912+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13192'), 'link': 'https://chaibar.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'ChaiBar', 'price': 'From $5.41/mo', 'rating': '5', 'unique_id': 'chaibar', 'saved numbers': 25195, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.774918+0300 WARNING Tool without ID found, generated new ID: 75dfa580-9535-40ce-90e7-fa8c3d62e767
+2025-04-24T14:36:59.776909+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13193'), 'link': 'https://aiter.io/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Aiter – Marketing Content, Strategy and Ads Generator', 'price': 'Free + from $9.9/mo', 'rating': '4.9', 'unique_id': 'aiter-marketing-content-strategy-and-ads-generator', 'saved numbers': 18644, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.777910+0300 WARNING Tool without ID found, generated new ID: 97ea778b-02bb-4cf3-b95e-eda07d691dbc
+2025-04-24T14:36:59.780027+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13194'), 'link': 'https://hyperwriteai.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'HyperWrite | AI Writing Assistant', 'price': 'Free + from $19.99/mo', 'rating': '4', 'unique_id': 'hyperwrite', 'saved numbers': 17819, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.783303+0300 WARNING Tool without ID found, generated new ID: 4636d929-7d50-4161-9bb9-b50c1470f48f
+2025-04-24T14:36:59.785022+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13195'), 'link': 'https://www.copy.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Copy.ai', 'price': 'Free + from $36/mo', 'rating': '2', 'unique_id': 'copy-ai', 'saved numbers': 17769, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.786640+0300 WARNING Tool without ID found, generated new ID: fc0f0801-ffe3-4143-af6f-b4ed6b525a28
+2025-04-24T14:36:59.787939+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13196'), 'link': 'https://aigptfree.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'AIGPT', 'price': '100% Free', 'rating': '3.5', 'unique_id': 'aigpt', 'saved numbers': 15639, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.789827+0300 WARNING Tool without ID found, generated new ID: 8200c455-834e-4c47-a7af-1cd6408b8967
+2025-04-24T14:36:59.791631+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13197'), 'link': 'https://simplified.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Simplified', 'price': 'Free + from $12.00/mo', 'rating': '2', 'unique_id': 'simplified', 'saved numbers': 15568, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.792822+0300 WARNING Tool without ID found, generated new ID: 7dcb38ea-8f5f-4296-8d72-02a2e3d0c132
+2025-04-24T14:36:59.794689+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13198'), 'link': 'https://magickpen.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Magickpen', 'price': 'Free + from $6.9/mo', 'rating': '4', 'unique_id': 'magickpen', 'saved numbers': 15191, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.796366+0300 WARNING Tool without ID found, generated new ID: 03eb1af5-9c51-4fe6-a295-ad99266b2158
+2025-04-24T14:36:59.797670+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a13199'), 'link': 'https://aimagicx.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'AI Magicx', 'price': 'Free + from $9/mo', 'rating': '4.8', 'unique_id': 'ai-magicx', 'saved numbers': 12115, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.798775+0300 WARNING Tool without ID found, generated new ID: cccdd95d-ff25-4f2c-ae71-c3dd12b747ec
+2025-04-24T14:36:59.799801+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1319a'), 'link': 'https://designs.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Designs AI', 'price': 'Free + from $18.31/mo', 'rating': '3', 'unique_id': 'designs-ai', 'saved numbers': 12080, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.801077+0300 WARNING Tool without ID found, generated new ID: 9ee45eaa-e041-4f3e-97fd-e479fe9a0a35
+2025-04-24T14:36:59.802564+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1319b'), 'link': 'https://fashn.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'FASHN Virtual Try-On', 'price': '9', 'rating': '5', 'unique_id': 'fashnai', 'saved numbers': 7343, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.803718+0300 WARNING Tool without ID found, generated new ID: 2f80e2d0-54f8-4f17-b73a-6c3f4e5e50d9
+2025-04-24T14:36:59.805573+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1319c'), 'link': 'https://theresanaiforthat.com/ai/korbit/', 'name': 'Korbit', 'price': '9', 'rating': '4.7', 'unique_id': 'korbit', 'saved numbers': 57675, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.807210+0300 WARNING Tool without ID found, generated new ID: 6555e504-107b-4f7d-9edd-6b226b413235
+2025-04-24T14:36:59.810234+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1319d'), 'link': 'https://theresanaiforthat.com/ai/lovestudy/', 'name': 'LoveStudy.ai', 'price': '7.9', 'rating': '4.5', 'unique_id': 'lovestudy', 'saved numbers': 4468, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.811368+0300 WARNING Tool without ID found, generated new ID: 1e150531-2bde-4f73-9e8c-74e76a6ff024
+2025-04-24T14:36:59.813434+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1319e'), 'link': 'https://theresanaiforthat.com/ai/faishion/', 'name': 'fAIshion', 'price': '7', 'rating': '5', 'unique_id': 'faishion', 'saved numbers': 2380, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.814998+0300 WARNING Tool without ID found, generated new ID: 933fe381-a259-46e2-af58-44a1740fe6c2
+2025-04-24T14:36:59.815987+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a1319f'), 'link': 'https://theresanaiforthat.com/ai/photoflux-ai-virtual-try-on/', 'name': 'PhotoFlux AI: Virtual Try-On', 'price': '9.99', 'rating': '4', 'unique_id': 'photoflux-ai-virtual-try-on', 'saved numbers': 2254, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.818001+0300 WARNING Tool without ID found, generated new ID: 0a0a941e-5cab-4886-90b0-766aeedf5d9d
+2025-04-24T14:36:59.819139+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a0'), 'link': 'https://theresanaiforthat.com/ai/costumeplayai/', 'name': 'CostumePlay AI', 'price': '2.4', 'rating': '5', 'unique_id': 'costumeplayai', 'saved numbers': 2068, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.820268+0300 WARNING Tool without ID found, generated new ID: c26b994c-8cd4-48ac-b2d1-05ef6b1a7476
+2025-04-24T14:36:59.826714+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a1'), 'link': 'https://theresanaiforthat.com/ai/fitting-room-1715170512/', 'name': 'Fitting Room', 'price': '4.99', 'rating': '0', 'unique_id': 'fitting-room-1715170512', 'saved numbers': 1607, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.828618+0300 WARNING Tool without ID found, generated new ID: a55b422e-10ae-40ed-bea7-d2dad1a7c42c
+2025-04-24T14:36:59.830048+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a2'), 'link': 'https://theresanaiforthat.com/ai/heybeauty/', 'name': 'HeyBeauty', 'price': '19', 'rating': '4', 'unique_id': 'heybeauty', 'saved numbers': 1490, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.831197+0300 WARNING Tool without ID found, generated new ID: 5ed756bc-1a04-4d43-b2f2-c8dba5885b7b
+2025-04-24T14:36:59.832855+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a3'), 'link': 'https://theresanaiforthat.com/ai/avumi/', 'name': 'Avumi', 'price': '0', 'rating': '0', 'unique_id': 'avumi', 'saved numbers': 1305, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.834030+0300 WARNING Tool without ID found, generated new ID: 5bc65540-9787-4d51-b7aa-41a1a66bdfd5
+2025-04-24T14:36:59.835015+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a4'), 'link': 'https://theresanaiforthat.com/ai/dressme-ai-stylist/', 'name': 'DressMe - AI stylist', 'price': '2.99', 'rating': '2', 'unique_id': 'dressme-ai-stylist', 'saved numbers': 1263, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.836144+0300 WARNING Tool without ID found, generated new ID: f3e1e068-24dd-494d-bc82-205771602374
+2025-04-24T14:36:59.837294+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a5'), 'link': 'https://theresanaiforthat.com/ai/beautygence/', 'name': 'Beautygence', 'price': '0', 'rating': '0', 'unique_id': 'beautygence', 'saved numbers': 982, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.838922+0300 WARNING Tool without ID found, generated new ID: 314f4eb0-dfd6-4b6c-896d-988ce904e7de
+2025-04-24T14:36:59.840110+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a6'), 'link': 'https://theresanaiforthat.com/ai/outfit-anyone-ai-1714900409/', 'name': 'Outfit Anyone AI', 'price': '19', 'rating': '3', 'unique_id': 'outfit-anyone-ai-1714900409', 'saved numbers': 575, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.842588+0300 WARNING Tool without ID found, generated new ID: 31ad41cd-a190-4e7f-9af4-eb69105375e3
+2025-04-24T14:36:59.843180+0300 WARNING Tool: {'_id': ObjectId('68088b0da40b1de891a131a7'), 'link': 'https://www.loom.com/ai?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Loom AI', 'price': '4', 'rating': '0', 'unique_id': 'loom-ai', 'saved numbers': 1397, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.844309+0300 WARNING Tool without ID found, generated new ID: 62b4439c-961e-45e5-9020-8afc31773304
+2025-04-24T14:36:59.845509+0300 WARNING Tool: {'_id': ObjectId('680897ffa40b1de891a137bb'), 'link': 'https://paperswithcode.com/paper/tiaviz-a-browser-based-visualization-tool-for', 'name': 'TIAViz', 'price': None, 'rating': None, 'unique_id': 'fe86d1b8-fe6f-488d-8706-2450016844b7', 'saved numbers': 418, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:36:59.846688+0300 WARNING Tool without ID found, generated new ID: 567e4a48-01f1-46c4-805b-c8a0dd889c2b
+2025-04-24T14:36:59.847802+0300 WARNING Tool: {'_id': ObjectId('680897ffa40b1de891a137bc'), 'link': 'https://paperswithcode.com/paper/bio-eng-lmm-ai-assist-chatbot-a-comprehensive', 'name': 'Bio-Eng-LMM AI Assist chatbot', 'price': None, 'rating': None, 'unique_id': '41613ee1-4e40-420c-9af5-916b5aebebbb', 'saved numbers': 4, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:36:59.848916+0300 WARNING Tool without ID found, generated new ID: b44822a4-8edd-485c-99f5-183a6a715cb2
+2025-04-24T14:36:59.850048+0300 WARNING Tool: {'_id': ObjectId('68089a43a40b1de891a137c7'), 'link': 'https://paperswithcode.com/paper/allegro-open-the-black-box-of-commercial', 'name': 'Allegro', 'price': None, 'rating': None, 'unique_id': '0acc0129-b4dc-4aa4-b4b9-bbd9604e592f', 'saved numbers': 1074, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:36:59.850614+0300 WARNING Tool without ID found, generated new ID: def80081-4e34-46fe-8897-694c70439b25
+2025-04-24T14:36:59.851583+0300 WARNING Tool: {'_id': ObjectId('68089cbba40b1de891a137c8'), 'link': 'https://paperswithcode.com/paper/bio-eng-lmm-ai-assist-chatbot-a-comprehensive', 'name': 'Bio-Eng-LMM AI Assist chatbot', 'price': None, 'rating': None, 'unique_id': '3f1d2377-6c71-4f99-b16e-626aa68712c5', 'saved numbers': 4, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:36:59.853721+0300 WARNING Tool without ID found, generated new ID: 1468ef0d-3c66-4e50-ae5e-952dada4171d
+2025-04-24T14:36:59.854271+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137ca'), 'link': 'https://theresanaiforthat.com/@timmax/product-description-generator-from-amazon-aliexpress-url/', 'name': 'Product Description Generator From Amazon Aliexpress Url', 'price': 'N/A', 'rating': '5', 'unique_id': 'timmax-product-description-generator', 'saved numbers': 184, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.854814+0300 WARNING Tool without ID found, generated new ID: 288b1d83-0e98-4a82-b365-1a59f7ea5995
+2025-04-24T14:36:59.856823+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137cb'), 'link': 'https://theresanaiforthat.com/ai/descrb/', 'name': 'Descrb', 'price': 'Free + from €125/mo', 'rating': '5', 'unique_id': 'descrb', 'saved numbers': 907, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.858819+0300 WARNING Tool without ID found, generated new ID: dae0e2ad-ecc4-4f4c-a559-9d9665451441
+2025-04-24T14:36:59.859810+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137cc'), 'link': 'https://theresanaiforthat.com/ai/real-estate-listing/', 'name': 'Real Estate Listing', 'price': 'N/A', 'rating': '4', 'unique_id': 'real-estate-listing', 'saved numbers': 5042, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.860807+0300 WARNING Tool without ID found, generated new ID: 3b0b99e9-9980-4f6e-bd63-a47203c934c1
+2025-04-24T14:36:59.862809+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137cd'), 'link': 'https://theresanaiforthat.com/ai/shopgpt/', 'name': 'shopGPT', 'price': 'Free + from $19.99/mo', 'rating': '2', 'unique_id': 'shopgpt', 'saved numbers': 2375, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.863808+0300 WARNING Tool without ID found, generated new ID: 45ea2b0a-5550-4514-9130-a9cbda2aac3c
+2025-04-24T14:36:59.864807+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137ce'), 'link': 'https://theresanaiforthat.com/ai/ai-jd-by-pangea/', 'name': 'AI:JD by Pangea', 'price': 'N/A', 'rating': '8', 'unique_id': 'ai-jd-by-pangea', 'saved numbers': 2159, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.866256+0300 WARNING Tool without ID found, generated new ID: a2ee3d9c-a3b1-448c-9083-dcd17a0e7f99
+2025-04-24T14:36:59.867625+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137cf'), 'link': 'https://theresanaiforthat.com/ai/easylisting/', 'name': 'Easylisting', 'price': 'From $4.99/mo', 'rating': '37', 'unique_id': 'easylisting', 'saved numbers': 1943, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.869005+0300 WARNING Tool without ID found, generated new ID: d1789765-2b69-4f6c-b2d6-1e6fec92c24f
+2025-04-24T14:36:59.870020+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d0'), 'link': 'https://theresanaiforthat.com/ai/listingcopy/', 'name': 'Listingcopy', 'price': 'Free + from $19/mo', 'rating': '33', 'unique_id': 'listingcopy', 'saved numbers': 3203, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.872024+0300 WARNING Tool without ID found, generated new ID: 771c2869-0d93-4166-953d-60fdb7e27f24
+2025-04-24T14:36:59.874029+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d1'), 'link': 'https://theresanaiforthat.com/ai/jd-generator/', 'name': 'Free Job Description Generator', 'price': '100% Free', 'rating': '40', 'unique_id': 'jd-generator', 'saved numbers': 4756, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.875022+0300 WARNING Tool without ID found, generated new ID: cb0593ae-2990-4d43-b6f7-a3f81090421b
+2025-04-24T14:36:59.876030+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d2'), 'link': 'https://theresanaiforthat.com/ai/smartscout/', 'name': 'Smartscout', 'price': 'N/A', 'rating': '27', 'unique_id': 'smartscout', 'saved numbers': 998, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.878021+0300 WARNING Tool without ID found, generated new ID: dad4a92b-2944-486d-a5c7-2535b4e844ee
+2025-04-24T14:36:59.879027+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d3'), 'link': 'https://theresanaiforthat.com/ai/describely/', 'name': 'Describely', 'price': 'Free + from $28/mo', 'rating': '12', 'unique_id': 'describely', 'saved numbers': 1434, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.880027+0300 WARNING Tool without ID found, generated new ID: 9f5f8d8b-e0c4-42f1-958d-84703a37e46f
+2025-04-24T14:36:59.881031+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d4'), 'link': 'https://theresanaiforthat.com/ai/hyrable/', 'name': 'Hyrable', 'price': '100% Free', 'rating': '13', 'unique_id': 'hyrable', 'saved numbers': 2678, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.883022+0300 WARNING Tool without ID found, generated new ID: 8d181cd6-2fc8-474b-acad-042c03b1cf02
+2025-04-24T14:36:59.885048+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d5'), 'link': 'https://theresanaiforthat.com/ai/prodescription/', 'name': 'Prodescription', 'price': 'N/A', 'rating': '31', 'unique_id': 'prodescription', 'saved numbers': 1239, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.886026+0300 WARNING Tool without ID found, generated new ID: d22532cf-fec2-4460-8187-eaee7a1d8b3c
+2025-04-24T14:36:59.887027+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d6'), 'link': 'https://theresanaiforthat.com/ai/depikt/', 'name': 'depikt', 'price': 'From $0.1', 'rating': '11', 'unique_id': 'depikt', 'saved numbers': 1243, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.888027+0300 WARNING Tool without ID found, generated new ID: c47f4bb3-46ef-4de1-a357-d715f2dbc49e
+2025-04-24T14:36:59.890025+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d7'), 'link': 'https://theresanaiforthat.com/ai/easylist/', 'name': 'Easylist', 'price': 'Free + from $12.84', 'rating': '10', 'unique_id': 'easylist', 'saved numbers': 947, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.892025+0300 WARNING Tool without ID found, generated new ID: e97bc070-3331-4466-a99b-b00ec51d01a1
+2025-04-24T14:36:59.893399+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d8'), 'link': 'https://theresanaiforthat.com/ai/copymonkey/', 'name': 'CopyMonkey', 'price': 'Free + from $24/mo', 'rating': '50', 'unique_id': 'copymonkey', 'saved numbers': 5376, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.894396+0300 WARNING Tool without ID found, generated new ID: 415ee740-93dc-4178-a763-6911b3d600e4
+2025-04-24T14:36:59.895403+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137d9'), 'link': 'https://theresanaiforthat.com/ai/copysmith/', 'name': 'Copysmith', 'price': 'From $19/mo', 'rating': '22', 'unique_id': 'copysmith', 'saved numbers': 1961, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.896400+0300 WARNING Tool without ID found, generated new ID: fd91e3ff-ab28-47d1-a1c8-fc68859c3ba3
+2025-04-24T14:36:59.897405+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137da'), 'link': 'https://theresanaiforthat.com/ai/lista/', 'name': 'Lista', 'price': 'Free + from $29', 'rating': '10', 'unique_id': 'lista', 'saved numbers': 1094, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.899400+0300 WARNING Tool without ID found, generated new ID: 7d4af8a6-1902-4964-b850-d32ef3293964
+2025-04-24T14:36:59.900403+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137db'), 'link': 'https://theresanaiforthat.com/ai/leadscripts/', 'name': 'LeadScripts', 'price': 'From $9/mo', 'rating': '30', 'unique_id': 'leadscripts', 'saved numbers': 4450, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.901394+0300 WARNING Tool without ID found, generated new ID: d897ecdf-7824-445b-9849-5ab3686287ec
+2025-04-24T14:36:59.902400+0300 WARNING Tool: {'_id': ObjectId('68089dc4a40b1de891a137dc'), 'link': 'https://theresanaiforthat.com/gpt/listing-agent-for-ai-produced-artwork/', 'name': 'Listing Agent for AI Produced Artwork', 'price': '100% Free', 'rating': '100', 'unique_id': 'listing-agent-for-ai-produced-artwork', 'saved numbers': 186, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:36:59.903397+0300 WARNING Tool without ID found, generated new ID: 4639e448-bcd7-4504-8d5d-ddd82235f754
+2025-04-24T14:38:55.221887+0300 INFO Shutting down application...
+2025-04-24T14:38:55.563866+0300 INFO Database connections closed
+2025-04-24T14:38:55.564864+0300 INFO Shutdown complete.
+2025-04-24T14:38:58.853341+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:38:58.854342+0300 INFO Algolia client initialized successfully
+2025-04-24T14:38:59.869465+0300 INFO Setting up database...
+2025-04-24T14:39:02.726938+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:39:03.182856+0300 INFO Database setup completed successfully
+2025-04-24T14:39:03.183856+0300 INFO Database setup completed
+2025-04-24T14:39:03.183856+0300 INFO Seeding glossary terms...
+2025-04-24T14:39:03.390857+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:39:03.390857+0300 INFO Glossary seeding completed
+2025-04-24T14:39:03.391855+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:39:03.927007+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:39:04.082619+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:39:04.082619+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:39:21.734709+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1315b', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1315b'), 'link': 'https://theresanaiforthat.com/ai/there-s-an-ai-for-that/', 'name': "There's An AI For That", 'price': '0', 'rating': '4.8', 'unique_id': 'taaft_001', 'saved numbers': 138, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.735697+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1315c', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1315c'), 'link': 'https://theresanaiforthat.com/ai/korbit/', 'name': 'Korbit', 'price': '9', 'rating': '4.7', 'unique_id': 'korbit_001', 'saved numbers': 508, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.737706+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1315d', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1315d'), 'link': 'https://theresanaiforthat.com/ai/lovestudy/', 'name': 'LoveStudy.ai', 'price': '7.9', 'rating': '4.5', 'unique_id': 'lovestudy_001', 'saved numbers': 49, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.738700+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1315e', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1315e'), 'link': 'https://theresanaiforthat.com/ai/phonepi-mcp/', 'name': 'PhonePi MCP', 'price': '0', 'rating': '5', 'unique_id': 'phonepi_001', 'saved numbers': 23, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.740698+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1315f', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1315f'), 'link': 'https://theresanaiforthat.com/ai/optimyzee/', 'name': 'Optimyzee – AI-Powered Google Ads Optimization', 'price': '83', 'rating': '3.6', 'unique_id': 'optimyzee_001', 'saved numbers': 187, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.742699+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13160', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13160'), 'link': 'https://theresanaiforthat.com/ai/thesify/', 'name': 'Thesify', 'price': '4.99', 'rating': '3.9', 'unique_id': 'thesify_001', 'saved numbers': 125, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.743704+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13161', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13161'), 'link': 'https://theresanaiforthat.com/ai/apply-ai/', 'name': 'Apply AI', 'price': '19', 'rating': '2.7', 'unique_id': 'applyai_001', 'saved numbers': 39, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.745705+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13162', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13162'), 'link': 'https://theresanaiforthat.com/ai/the-drive/', 'name': 'The Drive AI', 'price': '4.99', 'rating': '5', 'unique_id': 'thedrive_001', 'saved numbers': 109, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.746698+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13163', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13163'), 'link': 'https://theresanaiforthat.com/ai/tenali-ai/', 'name': 'Tenali AI', 'price': '0', 'rating': '3', 'unique_id': 'tenali_001', 'saved numbers': 3, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.748714+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13164', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13164'), 'link': 'https://theresanaiforthat.com/ai/automina/', 'name': 'Automina', 'price': '0', 'rating': '3.6', 'unique_id': 'automina_001', 'saved numbers': 52, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.750707+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13165', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13165'), 'link': 'https://theresanaiforthat.com/ai/seekmydomain/', 'name': 'SeekMyDomain', 'price': '0', 'rating': '4.4', 'unique_id': 'seekmydomain_001', 'saved numbers': 53, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.752707+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13166', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13166'), 'link': 'https://theresanaiforthat.com/ai/web-gremlin/', 'name': 'Web Gremlin', 'price': '19', 'rating': '4.3', 'unique_id': 'webgremlin_001', 'saved numbers': 39, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.754703+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13167', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13167'), 'link': 'https://theresanaiforthat.com/ai/bladerunner/', 'name': 'BladeRunner', 'price': '0', 'rating': '4', 'unique_id': 'bladerunner_001', 'saved numbers': 45, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.755710+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13168', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13168'), 'link': 'https://theresanaiforthat.com/ai/nxtblog-ai/', 'name': 'nxtblog.ai', 'price': '5', 'rating': '4', 'unique_id': 'nxtblog_001', 'saved numbers': 11, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.756703+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13169', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13169'), 'link': 'https://theresanaiforthat.com/ai/helpjuice/', 'name': 'Helpjuice', 'price': '120', 'rating': '0', 'unique_id': 'helpjuice_001', 'saved numbers': 8, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.758704+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1316a', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1316a'), 'link': 'https://theresanaiforthat.com/ai/ai-gpt-o1-gpt-4o-ai-assistant/', 'name': 'AI GPT o1 GPT-4o: AI Assistant', 'price': '0', 'rating': '4', 'unique_id': 'aigpt_001', 'saved numbers': 14, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.759705+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1316b', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1316b'), 'link': 'https://theresanaiforthat.com/ai/roastlinkedin/', 'name': 'RoastLinkedIn', 'price': '0', 'rating': '4.6', 'unique_id': 'roastlinkedin_001', 'saved numbers': 65, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.760715+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1316c', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1316c'), 'link': 'https://theresanaiforthat.com/@princechauhan-21157011-1712639297/document-resume-generator/', 'name': 'Document resume generator', 'price': '0', 'rating': '5', 'unique_id': 'docresume_001', 'saved numbers': 37, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.762537+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1316d', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1316d'), 'link': 'https://theresanaiforthat.com/ai/gliastudio/', 'name': 'GliaStudio', 'price': '0', 'rating': '5', 'unique_id': 'gliastudio', 'saved numbers': 7671, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.763535+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1316e', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1316e'), 'link': 'https://theresanaiforthat.com/ai/fork-ai/', 'name': 'Fork.ai', 'price': '9.95', 'rating': '5', 'unique_id': 'fork-ai', 'saved numbers': 1070, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.765535+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1316f', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1316f'), 'link': 'https://theresanaiforthat.com/ai/word-studio/', 'name': 'Word Studio', 'price': '7', 'rating': '5', 'unique_id': 'word-studio', 'saved numbers': 3119, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.767531+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13170', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13170'), 'link': 'https://theresanaiforthat.com/ai/screensnapai/', 'name': 'ScreenSnapAI', 'price': '14', 'rating': '5', 'unique_id': 'screensnapai', 'saved numbers': 5337, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.769543+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13171', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13171'), 'link': 'https://theresanaiforthat.com/ai/storipress/', 'name': 'Storipress', 'price': '3', 'rating': '5', 'unique_id': 'storipress', 'saved numbers': 1005, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.772538+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13172', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13172'), 'link': 'https://theresanaiforthat.com/ai/paperclip/', 'name': 'PaperClip', 'price': '0', 'rating': '5', 'unique_id': 'paperclip', 'saved numbers': 1157, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.774524+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13173', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13173'), 'link': 'https://theresanaiforthat.com/ai/univer-se/', 'name': 'Univer.se', 'price': '2.8', 'rating': '5', 'unique_id': 'univer-se', 'saved numbers': 2143, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.775529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13174', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13174'), 'link': 'https://theresanaiforthat.com/ai/saveday/', 'name': 'SaveDay', 'price': '0', 'rating': '4.9', 'unique_id': 'saveday', 'saved numbers': 6299, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.777527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13175', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13175'), 'link': 'https://theresanaiforthat.com/ai/manus/', 'name': 'Manus', 'price': '0', 'rating': '4.3', 'unique_id': 'manus', 'saved numbers': 31037, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.778529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13176', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13176'), 'link': 'https://theresanaiforthat.com/@atulkumar-31/ai-fashion-model-generator-free/', 'name': 'Ai Fashion Model Generator Free', 'price': '0', 'rating': '4.2', 'unique_id': 'ai-fashion-model-generator-free', 'saved numbers': 420, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.779533+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13177', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13177'), 'link': 'https://theresanaiforthat.com/ai/taskade/', 'name': 'Taskade', 'price': '8', 'rating': '4.1', 'unique_id': 'taskade', 'saved numbers': 22109, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.781527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13178', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13178'), 'link': 'https://theresanaiforthat.com/ai/sellerpic/', 'name': 'SellerPic', 'price': '29', 'rating': '4.1', 'unique_id': 'sellerpic', 'saved numbers': 16245, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.783526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13179', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13179'), 'link': 'https://theresanaiforthat.com/ai/memfree/', 'name': 'MemFree', 'price': '8', 'rating': '4', 'unique_id': 'memfree', 'saved numbers': 11227, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.784526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1317a', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1317a'), 'link': 'https://theresanaiforthat.com/ai/monai/', 'name': 'MonAI', 'price': '1.99', 'rating': '4', 'unique_id': 'monai', 'saved numbers': 1574, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.786534+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1317b', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1317b'), 'link': 'https://theresanaiforthat.com/ai/sus-technology/', 'name': 'SUS Technology', 'price': '1', 'rating': '4', 'unique_id': 'sus-technology', 'saved numbers': 1907, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.787528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1317c', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1317c'), 'link': 'https://theresanaiforthat.com/ai/mitra/', 'name': 'Mitra', 'price': '25', 'rating': '3.6', 'unique_id': 'mitra', 'saved numbers': 4560, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.789530+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1317d', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1317d'), 'link': 'https://theresanaiforthat.com/ai/mentor-ai/', 'name': 'Mentor AI', 'price': '2', 'rating': '3.5', 'unique_id': 'mentor-ai', 'saved numbers': 3149, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.790528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1317e', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1317e'), 'link': 'https://theresanaiforthat.com/ai/branchbob/', 'name': 'Branchbob', 'price': '0', 'rating': '3.5', 'unique_id': 'branchbob', 'saved numbers': 6501, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.792523+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1317f', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1317f'), 'link': 'https://theresanaiforthat.com/ai/imagine-ai-art-generator/', 'name': 'Imagine : AI Art Generator', 'price': '0', 'rating': '3.3', 'unique_id': 'imagine-ai-art-generator', 'saved numbers': 9531, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.793530+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13180', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13180'), 'link': 'https://theresanaiforthat.com/ai/stud-ai/', 'name': 'Stud.AI', 'price': '0', 'rating': '3', 'unique_id': 'stud-ai', 'saved numbers': 2051, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.795529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13181', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13181'), 'link': 'https://theresanaiforthat.com/ai/knowbase/', 'name': 'Knowbase', 'price': '0', 'rating': '2.3', 'unique_id': 'knowbase', 'saved numbers': 9939, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.797522+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13182', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13182'), 'link': 'https://theresanaiforthat.com/ai/42signals/', 'name': '42Signals', 'price': '0', 'rating': '2', 'unique_id': '42signals', 'saved numbers': 4270, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.798526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13183', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13183'), 'link': 'https://theresanaiforthat.com/ai/examgenie-ai/', 'name': 'ExamGenie AI', 'price': '0', 'rating': '1', 'unique_id': 'examgenie-ai', 'saved numbers': 585, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.799523+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13184', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13184'), 'link': 'https://theresanaiforthat.com/ai/ailancer/', 'name': 'AiLancer', 'price': '0', 'rating': '1', 'unique_id': 'ailancer', 'saved numbers': 446, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.801524+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13185', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13185'), 'link': 'https://www.useoner.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Oner AI', 'price': '2', 'rating': '3.9', 'unique_id': 'oner-ai', 'saved numbers': 4574, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.803528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13186', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13186'), 'link': 'https://www.d-id.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'D-ID', 'price': '4.7', 'rating': '4.5', 'unique_id': 'd-id', 'saved numbers': 1429, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.804529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13187', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13187'), 'link': 'https://kaiber.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Kaiber', 'price': '5', 'rating': '3.3', 'unique_id': 'kaiber', 'saved numbers': 1041, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.806525+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13188', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13188'), 'link': 'https://mangatv.shop/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Manga TV', 'price': '9.99', 'rating': '2.3', 'unique_id': 'manga-tv', 'saved numbers': 442, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.808524+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13189', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13189'), 'link': 'https://makeavideo.studio/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Make-A-Video', 'price': '0', 'rating': '2.3', 'unique_id': 'make-a-video', 'saved numbers': 685, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.809526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1318a', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1318a'), 'link': 'https://studio.d-id.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'D-ID Creative Reality Studio', 'price': '0', 'rating': '3.9', 'unique_id': 'd-id-s-creative-reality-studio', 'saved numbers': 500, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.811527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1318b', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1318b'), 'link': 'https://sora.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Sora by OpenAI', 'price': '0', 'rating': '3.9', 'unique_id': 'sora-by-openai', 'saved numbers': 795, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.813529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1318c', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1318c'), 'link': 'https://www.deepbrain.io/aistudios?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'AI Studios', 'price': '24', 'rating': '3.1', 'unique_id': 'ai-studios', 'saved numbers': 659, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.814527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1318d', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1318d'), 'link': 'https://videogen.io/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'VideoGen', 'price': '19', 'rating': '3.3', 'unique_id': 'videogen', 'saved numbers': 510, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.815523+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1318e', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1318e'), 'link': 'https://www.heygen.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'HeyGen', 'price': '24', 'rating': '3.8', 'unique_id': 'heygen', 'saved numbers': 555, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.816524+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1318f', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1318f'), 'link': 'https://www.supercreator.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Supercreator', 'price': '9.67', 'rating': '3', 'unique_id': 'supercreator-ai', 'saved numbers': 608, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.817526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13190', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13190'), 'link': 'https://kome.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Kome AI', 'price': 'Free + from $5.99/mo', 'rating': '4', 'unique_id': 'kome-ai', 'saved numbers': 1821, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.819532+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13191', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13191'), 'link': 'https://easy-peasy.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Easy-Peasy.AI', 'price': 'Free + from $4.99', 'rating': '3.4', 'unique_id': 'easy-peasy-ai', 'saved numbers': 28054, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.820528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13192', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13192'), 'link': 'https://chaibar.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'ChaiBar', 'price': 'From $5.41/mo', 'rating': '5', 'unique_id': 'chaibar', 'saved numbers': 25195, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.822532+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13193', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13193'), 'link': 'https://aiter.io/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Aiter – Marketing Content, Strategy and Ads Generator', 'price': 'Free + from $9.9/mo', 'rating': '4.9', 'unique_id': 'aiter-marketing-content-strategy-and-ads-generator', 'saved numbers': 18644, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.823527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13194', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13194'), 'link': 'https://hyperwriteai.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'HyperWrite | AI Writing Assistant', 'price': 'Free + from $19.99/mo', 'rating': '4', 'unique_id': 'hyperwrite', 'saved numbers': 17819, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.825526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13195', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13195'), 'link': 'https://www.copy.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Copy.ai', 'price': 'Free + from $36/mo', 'rating': '2', 'unique_id': 'copy-ai', 'saved numbers': 17769, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.826527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13196', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13196'), 'link': 'https://aigptfree.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'AIGPT', 'price': '100% Free', 'rating': '3.5', 'unique_id': 'aigpt', 'saved numbers': 15639, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.827523+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13197', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13197'), 'link': 'https://simplified.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Simplified', 'price': 'Free + from $12.00/mo', 'rating': '2', 'unique_id': 'simplified', 'saved numbers': 15568, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.829534+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13198', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13198'), 'link': 'https://magickpen.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Magickpen', 'price': 'Free + from $6.9/mo', 'rating': '4', 'unique_id': 'magickpen', 'saved numbers': 15191, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.830535+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a13199', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a13199'), 'link': 'https://aimagicx.com/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'AI Magicx', 'price': 'Free + from $9/mo', 'rating': '4.8', 'unique_id': 'ai-magicx', 'saved numbers': 12115, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.832542+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1319a', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1319a'), 'link': 'https://designs.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Designs AI', 'price': 'Free + from $18.31/mo', 'rating': '3', 'unique_id': 'designs-ai', 'saved numbers': 12080, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.833526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1319b', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1319b'), 'link': 'https://fashn.ai/?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'FASHN Virtual Try-On', 'price': '9', 'rating': '5', 'unique_id': 'fashnai', 'saved numbers': 7343, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.835529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1319c', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1319c'), 'link': 'https://theresanaiforthat.com/ai/korbit/', 'name': 'Korbit', 'price': '9', 'rating': '4.7', 'unique_id': 'korbit', 'saved numbers': 57675, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.836527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1319d', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1319d'), 'link': 'https://theresanaiforthat.com/ai/lovestudy/', 'name': 'LoveStudy.ai', 'price': '7.9', 'rating': '4.5', 'unique_id': 'lovestudy', 'saved numbers': 4468, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.838536+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1319e', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1319e'), 'link': 'https://theresanaiforthat.com/ai/faishion/', 'name': 'fAIshion', 'price': '7', 'rating': '5', 'unique_id': 'faishion', 'saved numbers': 2380, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.840531+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a1319f', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a1319f'), 'link': 'https://theresanaiforthat.com/ai/photoflux-ai-virtual-try-on/', 'name': 'PhotoFlux AI: Virtual Try-On', 'price': '9.99', 'rating': '4', 'unique_id': 'photoflux-ai-virtual-try-on', 'saved numbers': 2254, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.841531+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a0'), 'link': 'https://theresanaiforthat.com/ai/costumeplayai/', 'name': 'CostumePlay AI', 'price': '2.4', 'rating': '5', 'unique_id': 'costumeplayai', 'saved numbers': 2068, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.843533+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a1'), 'link': 'https://theresanaiforthat.com/ai/fitting-room-1715170512/', 'name': 'Fitting Room', 'price': '4.99', 'rating': '0', 'unique_id': 'fitting-room-1715170512', 'saved numbers': 1607, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.844530+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a2', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a2'), 'link': 'https://theresanaiforthat.com/ai/heybeauty/', 'name': 'HeyBeauty', 'price': '19', 'rating': '4', 'unique_id': 'heybeauty', 'saved numbers': 1490, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.845529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a3', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a3'), 'link': 'https://theresanaiforthat.com/ai/avumi/', 'name': 'Avumi', 'price': '0', 'rating': '0', 'unique_id': 'avumi', 'saved numbers': 1305, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.846529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a4', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a4'), 'link': 'https://theresanaiforthat.com/ai/dressme-ai-stylist/', 'name': 'DressMe - AI stylist', 'price': '2.99', 'rating': '2', 'unique_id': 'dressme-ai-stylist', 'saved numbers': 1263, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.848533+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a5'), 'link': 'https://theresanaiforthat.com/ai/beautygence/', 'name': 'Beautygence', 'price': '0', 'rating': '0', 'unique_id': 'beautygence', 'saved numbers': 982, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.849528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a6'), 'link': 'https://theresanaiforthat.com/ai/outfit-anyone-ai-1714900409/', 'name': 'Outfit Anyone AI', 'price': '19', 'rating': '3', 'unique_id': 'outfit-anyone-ai-1714900409', 'saved numbers': 575, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.850526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68088b0da40b1de891a131a7', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68088b0da40b1de891a131a7'), 'link': 'https://www.loom.com/ai?ref=taaft&utm_source=taaft&utm_medium=referral', 'name': 'Loom AI', 'price': '4', 'rating': '0', 'unique_id': 'loom-ai', 'saved numbers': 1397, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.851530+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='680897ffa40b1de891a137bb', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('680897ffa40b1de891a137bb'), 'link': 'https://paperswithcode.com/paper/tiaviz-a-browser-based-visualization-tool-for', 'name': 'TIAViz', 'price': None, 'rating': None, 'unique_id': 'fe86d1b8-fe6f-488d-8706-2450016844b7', 'saved numbers': 418, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:39:21.853529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='680897ffa40b1de891a137bc', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('680897ffa40b1de891a137bc'), 'link': 'https://paperswithcode.com/paper/bio-eng-lmm-ai-assist-chatbot-a-comprehensive', 'name': 'Bio-Eng-LMM AI Assist chatbot', 'price': None, 'rating': None, 'unique_id': '41613ee1-4e40-420c-9af5-916b5aebebbb', 'saved numbers': 4, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:39:21.855535+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089a43a40b1de891a137c7', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089a43a40b1de891a137c7'), 'link': 'https://paperswithcode.com/paper/allegro-open-the-black-box-of-commercial', 'name': 'Allegro', 'price': None, 'rating': None, 'unique_id': '0acc0129-b4dc-4aa4-b4b9-bbd9604e592f', 'saved numbers': 1074, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:39:21.857529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089cbba40b1de891a137c8', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089cbba40b1de891a137c8'), 'link': 'https://paperswithcode.com/paper/bio-eng-lmm-ai-assist-chatbot-a-comprehensive', 'name': 'Bio-Eng-LMM AI Assist chatbot', 'price': None, 'rating': None, 'unique_id': '3f1d2377-6c71-4f99-b16e-626aa68712c5', 'saved numbers': 4, 'category_id': '6806415d856a3a9ff0979450'}
+2025-04-24T14:39:21.859549+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137ca', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137ca'), 'link': 'https://theresanaiforthat.com/@timmax/product-description-generator-from-amazon-aliexpress-url/', 'name': 'Product Description Generator From Amazon Aliexpress Url', 'price': 'N/A', 'rating': '5', 'unique_id': 'timmax-product-description-generator', 'saved numbers': 184, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.860528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137cb', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137cb'), 'link': 'https://theresanaiforthat.com/ai/descrb/', 'name': 'Descrb', 'price': 'Free + from €125/mo', 'rating': '5', 'unique_id': 'descrb', 'saved numbers': 907, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.862538+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137cc', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137cc'), 'link': 'https://theresanaiforthat.com/ai/real-estate-listing/', 'name': 'Real Estate Listing', 'price': 'N/A', 'rating': '4', 'unique_id': 'real-estate-listing', 'saved numbers': 5042, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.864533+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137cd', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137cd'), 'link': 'https://theresanaiforthat.com/ai/shopgpt/', 'name': 'shopGPT', 'price': 'Free + from $19.99/mo', 'rating': '2', 'unique_id': 'shopgpt', 'saved numbers': 2375, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.865526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137ce', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137ce'), 'link': 'https://theresanaiforthat.com/ai/ai-jd-by-pangea/', 'name': 'AI:JD by Pangea', 'price': 'N/A', 'rating': '8', 'unique_id': 'ai-jd-by-pangea', 'saved numbers': 2159, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.867534+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137cf', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137cf'), 'link': 'https://theresanaiforthat.com/ai/easylisting/', 'name': 'Easylisting', 'price': 'From $4.99/mo', 'rating': '37', 'unique_id': 'easylisting', 'saved numbers': 1943, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.868547+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d0', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d0'), 'link': 'https://theresanaiforthat.com/ai/listingcopy/', 'name': 'Listingcopy', 'price': 'Free + from $19/mo', 'rating': '33', 'unique_id': 'listingcopy', 'saved numbers': 3203, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.870528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d1', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d1'), 'link': 'https://theresanaiforthat.com/ai/jd-generator/', 'name': 'Free Job Description Generator', 'price': '100% Free', 'rating': '40', 'unique_id': 'jd-generator', 'saved numbers': 4756, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.872525+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d2', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d2'), 'link': 'https://theresanaiforthat.com/ai/smartscout/', 'name': 'Smartscout', 'price': 'N/A', 'rating': '27', 'unique_id': 'smartscout', 'saved numbers': 998, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.874528+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d3', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d3'), 'link': 'https://theresanaiforthat.com/ai/describely/', 'name': 'Describely', 'price': 'Free + from $28/mo', 'rating': '12', 'unique_id': 'describely', 'saved numbers': 1434, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.876526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d4', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d4'), 'link': 'https://theresanaiforthat.com/ai/hyrable/', 'name': 'Hyrable', 'price': '100% Free', 'rating': '13', 'unique_id': 'hyrable', 'saved numbers': 2678, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.877536+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d5', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d5'), 'link': 'https://theresanaiforthat.com/ai/prodescription/', 'name': 'Prodescription', 'price': 'N/A', 'rating': '31', 'unique_id': 'prodescription', 'saved numbers': 1239, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.879527+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d6', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d6'), 'link': 'https://theresanaiforthat.com/ai/depikt/', 'name': 'depikt', 'price': 'From $0.1', 'rating': '11', 'unique_id': 'depikt', 'saved numbers': 1243, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.880524+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d7', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d7'), 'link': 'https://theresanaiforthat.com/ai/easylist/', 'name': 'Easylist', 'price': 'Free + from $12.84', 'rating': '10', 'unique_id': 'easylist', 'saved numbers': 947, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.882529+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d8', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d8'), 'link': 'https://theresanaiforthat.com/ai/copymonkey/', 'name': 'CopyMonkey', 'price': 'Free + from $24/mo', 'rating': '50', 'unique_id': 'copymonkey', 'saved numbers': 5376, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.883523+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137d9', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137d9'), 'link': 'https://theresanaiforthat.com/ai/copysmith/', 'name': 'Copysmith', 'price': 'From $19/mo', 'rating': '22', 'unique_id': 'copysmith', 'saved numbers': 1961, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.885523+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137da', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137da'), 'link': 'https://theresanaiforthat.com/ai/lista/', 'name': 'Lista', 'price': 'Free + from $29', 'rating': '10', 'unique_id': 'lista', 'saved numbers': 1094, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.887526+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137db', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137db'), 'link': 'https://theresanaiforthat.com/ai/leadscripts/', 'name': 'LeadScripts', 'price': 'From $9/mo', 'rating': '30', 'unique_id': 'leadscripts', 'saved numbers': 4450, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:39:21.889524+0300 ERROR Error creating ToolResponse: 1 validation error for ToolResponse
+id
+  Input should be a valid UUID, invalid length: expected length 32 for simple format, found 24 [type=uuid_parsing, input_value='68089dc4a40b1de891a137dc', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/uuid_parsing. Input tool data: {'_id': ObjectId('68089dc4a40b1de891a137dc'), 'link': 'https://theresanaiforthat.com/gpt/listing-agent-for-ai-produced-artwork/', 'name': 'Listing Agent for AI Produced Artwork', 'price': '100% Free', 'rating': '100', 'unique_id': 'listing-agent-for-ai-produced-artwork', 'saved numbers': 186, 'category_id': '6806415d856a3a9ff0979444'}
+2025-04-24T14:43:06.357639+0300 INFO Shutting down application...
+2025-04-24T14:43:07.938498+0300 INFO Database connections closed
+2025-04-24T14:43:07.939008+0300 INFO Shutdown complete.
+2025-04-24T14:43:11.330371+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:43:11.332378+0300 INFO Algolia client initialized successfully
+2025-04-24T14:43:12.420011+0300 INFO Setting up database...
+2025-04-24T14:43:14.977079+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:43:15.239086+0300 INFO Database setup completed successfully
+2025-04-24T14:43:15.240087+0300 INFO Database setup completed
+2025-04-24T14:43:15.241095+0300 INFO Seeding glossary terms...
+2025-04-24T14:43:15.487346+0300 INFO Glossary already contains 9 terms. Skipping seeding.
+2025-04-24T14:43:15.488330+0300 INFO Glossary seeding completed
+2025-04-24T14:43:15.488330+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:43:16.137984+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:43:16.284133+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:43:16.284133+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:43:52.491591+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-24T14:43:52.493586+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-24T14:43:52.493586+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-24T14:43:52.494587+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-24T14:43:52.495584+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-24T14:43:52.495584+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-24T14:43:52.496585+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-24T14:43:52.496585+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-24T14:43:52.497586+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-24T14:43:52.498587+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-24T14:43:52.499589+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-24T14:43:52.500590+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-24T14:43:52.501588+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-24T14:43:52.502593+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-24T14:43:52.503592+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-24T14:43:52.504597+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-24T14:43:52.506586+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-24T14:43:52.506586+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-24T14:43:52.507585+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-24T14:43:52.508589+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-24T14:43:52.508589+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-24T14:43:52.509585+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-24T14:43:52.510587+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-24T14:43:52.510587+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-24T14:43:52.511586+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-24T14:43:52.512585+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-24T14:43:52.523519+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-24T14:43:52.524514+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-24T14:43:52.525515+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-24T14:43:52.526514+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-24T14:43:52.526514+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-24T14:43:52.527514+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-24T14:43:52.527514+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-24T14:43:52.528517+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-24T14:43:52.528517+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-24T14:43:52.529524+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-24T14:43:52.530516+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-24T14:43:52.531525+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-24T14:43:52.532519+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-24T14:43:52.533518+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-24T14:43:52.534517+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-24T14:43:52.535515+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-24T14:43:52.536513+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-24T14:43:52.536513+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-24T14:43:52.537516+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-24T14:43:52.538517+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-24T14:43:52.538517+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-24T14:43:52.539516+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-24T14:43:52.540522+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-24T14:43:52.541519+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-24T14:43:52.541519+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-24T14:43:52.542515+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-24T14:43:52.543514+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-24T14:43:52.543514+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-24T14:43:52.544513+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-24T14:43:52.544513+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-24T14:43:52.545517+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-24T14:43:52.545517+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-24T14:43:52.546514+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-24T14:43:52.546514+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-24T14:43:52.547517+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-24T14:43:52.548525+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-24T14:43:52.549515+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-24T14:43:52.550518+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-24T14:43:52.551520+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-24T14:43:52.552515+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-24T14:43:52.553520+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-24T14:43:52.554519+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-24T14:43:52.554519+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-24T14:43:52.555516+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-24T14:43:52.556515+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-24T14:43:52.557515+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-24T14:43:52.558520+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-24T14:43:52.559512+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-24T14:43:52.560519+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-24T14:43:52.560519+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-24T14:43:52.561514+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-24T14:43:52.562515+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-24T14:43:52.562515+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-24T14:43:52.563511+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-24T14:43:52.564515+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-24T14:43:52.565522+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-24T14:43:52.566518+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-24T14:43:52.567518+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-24T14:43:52.568516+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-24T14:43:52.569511+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-24T14:43:52.570512+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-24T14:43:52.571520+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-24T14:43:52.572521+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-24T14:43:52.572521+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-24T14:43:52.573517+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-24T14:43:52.573517+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-24T14:43:52.574519+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-24T14:43:52.575519+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-24T14:43:52.575519+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-24T14:43:52.576516+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-24T14:43:52.576516+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-24T14:43:52.577515+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-24T14:43:52.577515+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-24T14:43:52.578518+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-24T14:44:06.840697+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-24T14:44:06.841687+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-24T14:44:06.842698+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-24T14:44:06.843691+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-24T14:44:06.843691+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-24T14:44:06.844689+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-24T14:44:06.844689+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-24T14:44:06.845701+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-24T14:44:06.845701+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-24T14:44:06.846698+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-24T14:44:06.847690+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-24T14:44:06.848699+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-24T14:44:06.849699+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-24T14:44:06.850691+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-24T14:44:06.850691+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-24T14:44:06.851693+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-24T14:44:06.852688+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-24T14:44:06.852688+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-24T14:44:06.853693+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-24T14:44:06.853693+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-24T14:44:06.854691+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-24T14:44:06.855691+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-24T14:44:06.855691+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-24T14:44:06.856690+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-24T14:44:06.857693+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-24T14:44:06.857693+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-24T14:44:06.858692+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-24T14:44:06.858692+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-24T14:44:06.859692+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-24T14:44:06.859692+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-24T14:44:06.860693+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-24T14:44:06.860693+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-24T14:44:06.861693+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-24T14:44:06.862689+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-24T14:44:06.862689+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-24T14:44:06.863690+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-24T14:44:06.864691+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-24T14:44:06.865692+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-24T14:44:06.866690+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-24T14:44:06.867691+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-24T14:44:06.867691+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-24T14:44:06.868692+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-24T14:44:06.869690+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-24T14:44:06.869690+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-24T14:44:06.870687+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-24T14:44:06.871691+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-24T14:44:06.871691+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-24T14:44:06.872690+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-24T14:44:06.873692+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-24T14:44:06.873692+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-24T14:44:06.874689+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-24T14:44:06.874689+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-24T14:44:06.875690+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-24T14:44:06.875690+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-24T14:44:06.876689+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-24T14:44:06.876689+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-24T14:44:06.877690+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-24T14:44:06.877690+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-24T14:44:06.878691+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-24T14:44:06.879689+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-24T14:44:06.879689+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-24T14:44:06.880691+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-24T14:44:06.881693+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-24T14:44:06.882691+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-24T14:44:06.883689+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-24T14:44:06.883689+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-24T14:44:06.884687+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-24T14:44:06.885691+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-24T14:44:06.885691+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-24T14:44:06.886692+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-24T14:44:06.887694+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-24T14:44:06.887694+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-24T14:44:06.888692+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-24T14:44:06.889690+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-24T14:44:06.889690+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-24T14:44:06.890688+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-24T14:44:06.890688+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-24T14:44:06.891688+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-24T14:44:06.892690+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-24T14:44:06.892690+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-24T14:44:06.893692+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-24T14:44:06.894691+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-24T14:44:06.894691+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-24T14:44:06.895690+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-24T14:44:06.895690+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-24T14:44:06.895690+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-24T14:44:06.896692+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-24T14:44:06.897690+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-24T14:44:06.898692+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-24T14:44:06.899690+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-24T14:44:06.899690+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-24T14:44:06.900693+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-24T14:44:06.901691+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-24T14:44:06.901691+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-24T14:44:06.902690+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-24T14:44:06.903697+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-24T14:44:06.903697+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-24T14:44:06.904697+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-24T14:44:06.904697+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-24T14:44:06.905689+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-24T14:46:06.718208+0300 INFO Shutting down application...
+2025-04-24T14:46:06.938839+0300 INFO Database connections closed
+2025-04-24T14:46:06.939834+0300 INFO Shutdown complete.
+2025-04-24T14:46:10.677423+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:46:10.679425+0300 INFO Algolia client initialized successfully
+2025-04-24T14:46:11.966816+0300 INFO Setting up database...
+2025-04-24T14:46:15.323007+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:46:15.545586+0300 INFO Database setup completed successfully
+2025-04-24T14:46:15.545586+0300 INFO Database setup completed
+2025-04-24T14:46:15.546578+0300 INFO Seeding glossary terms...
+2025-04-24T14:46:15.778591+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T14:46:15.779585+0300 INFO Glossary seeding completed
+2025-04-24T14:46:15.780583+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:46:16.352044+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:46:16.486124+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:46:16.487122+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:46:24.974905+0300 INFO Found tool via derived UUID: 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId: 68088b0da40b1de891a1315b
+2025-04-24T14:46:24.975897+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-24T14:48:22.221894+0300 INFO Shutting down application...
+2025-04-24T14:48:22.443905+0300 INFO Database connections closed
+2025-04-24T14:48:22.444908+0300 INFO Shutdown complete.
+2025-04-24T14:48:25.756455+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:48:25.757448+0300 INFO Algolia client initialized successfully
+2025-04-24T14:48:26.982374+0300 INFO Setting up database...
+2025-04-24T14:48:30.877338+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:48:31.148551+0300 INFO Database setup completed successfully
+2025-04-24T14:48:31.149546+0300 INFO Database setup completed
+2025-04-24T14:48:31.150546+0300 INFO Seeding glossary terms...
+2025-04-24T14:48:31.384550+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T14:48:31.385549+0300 INFO Glossary seeding completed
+2025-04-24T14:48:31.385549+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:48:31.961907+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:48:32.104919+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:48:32.105930+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:48:35.586674+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:48:35.587655+0300 INFO Algolia client initialized successfully
+2025-04-24T14:48:36.595213+0300 INFO Setting up database...
+2025-04-24T14:48:38.907977+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:48:39.145953+0300 INFO Database setup completed successfully
+2025-04-24T14:48:39.145953+0300 INFO Database setup completed
+2025-04-24T14:48:39.146954+0300 INFO Seeding glossary terms...
+2025-04-24T14:48:39.378232+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T14:48:39.379240+0300 INFO Glossary seeding completed
+2025-04-24T14:48:39.379240+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:48:39.825041+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:48:40.003039+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:48:40.003039+0300 INFO Algolia indexes configured successfully
+2025-04-24T14:51:16.302202+0300 INFO Shutting down application...
+2025-04-24T14:51:16.516780+0300 INFO Database connections closed
+2025-04-24T14:51:16.517787+0300 INFO Shutdown complete.
+2025-04-24T14:51:19.918112+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T14:51:19.919111+0300 INFO Algolia client initialized successfully
+2025-04-24T14:51:20.942868+0300 INFO Setting up database...
+2025-04-24T14:51:26.249883+0300 INFO Connected to MongoDB for setup
+2025-04-24T14:51:26.463140+0300 INFO Database setup completed successfully
+2025-04-24T14:51:26.463140+0300 INFO Database setup completed
+2025-04-24T14:51:26.464143+0300 INFO Seeding glossary terms...
+2025-04-24T14:51:26.710778+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T14:51:26.711778+0300 INFO Glossary seeding completed
+2025-04-24T14:51:26.712773+0300 INFO Configuring Algolia indexes...
+2025-04-24T14:51:27.503170+0300 INFO Algolia tools index configured successfully
+2025-04-24T14:51:27.631330+0300 INFO Algolia glossary index configured successfully
+2025-04-24T14:51:27.631330+0300 INFO Algolia indexes configured successfully

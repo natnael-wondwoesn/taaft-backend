@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from uuid import UUID, uuid4
+from uuid import UUID, uuid4, uuid5, NAMESPACE_OID
 from datetime import datetime
 from typing import List, Optional, Union, Dict, Any
 
@@ -8,23 +8,52 @@ from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
 from ..categories.service import categories_service
 
+from ..logger import logger
+
+
+def objectid_to_uuid(objectid_str: str) -> UUID:
+    """
+    Converts an ObjectId string to a deterministic UUID.
+    Uses UUID v5 with the ObjectId as the name and NAMESPACE_OID as namespace.
+    """
+    try:
+        # Create a UUID5 (name-based) using the ObjectId string
+        return uuid5(NAMESPACE_OID, objectid_str)
+    except Exception as e:
+        # Fall back to a random UUID if conversion fails
+        logger.error(f"Failed to convert ObjectId to UUID: {e}")
+        return uuid4()
+
 
 def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
     """
     Helper function to create a ToolResponse with default values for missing fields.
+    Uses the string representation of _id if the primary 'id' field is missing.
     """
     try:
-        # Ensure we always have a valid ID
+        # Prioritize the primary 'id' field (string UUID)
         tool_id = tool.get("id")
-        if not tool_id:
-            tool_id = str(uuid4())
-            # Log this occurrence as it shouldn't normally happen
-            from ..logger import logger
 
-            logger.warning(f"Tool without ID found, generated new ID: {tool_id}")
+        # If 'id' is missing, use a UUID derived from '_id'
+        if not tool_id and "_id" in tool:
+            objectid_str = str(tool.get("_id"))
+            # Convert ObjectId string to a UUID
+            derived_uuid = objectid_to_uuid(objectid_str)
+            tool_id = str(derived_uuid)
+            # Optionally log that we're deriving a UUID from _id
+            logger.info(
+                f"Derived UUID {tool_id} from ObjectId {objectid_str} for tool '{tool.get('name')}'"
+            )
+
+        # If both 'id' and '_id' are missing, generate a new UUID (should ideally not happen)
+        elif not tool_id:
+            tool_id = str(uuid4())
+            logger.error(
+                f"Tool missing both 'id' and '_id' fields. Generated new ID: {tool_id}. Tool data: {tool}"
+            )
 
         return ToolResponse(
-            id=tool_id,
+            id=tool_id,  # Use the determined ID (valid UUID string)
             price=tool.get("price") or "",
             name=tool.get("name") or "",
             description=tool.get("description") or "",
@@ -41,9 +70,7 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
         )
     except Exception as e:
         # Log the error
-        from ..logger import logger
-
-        logger.error(f"Error creating ToolResponse: {str(e)}")
+        logger.error(f"Error creating ToolResponse: {str(e)}. Input tool data: {tool}")
         return None
 
 
@@ -118,13 +145,35 @@ async def get_tools(
 async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
     """
     Retrieve a tool by its UUID.
+
+    First tries to find a document where id=tool_id.
+    If that fails, checks if the tool_id might be a UUID derived from an ObjectId,
+    and attempts to find the document by its _id.
     """
+    # First try: Query by string representation of UUID in 'id' field
     tool = await tools.find_one({"id": str(tool_id)})
 
-    if not tool:
-        return None
+    if tool:
+        return create_tool_response(tool)
 
-    return create_tool_response(tool)
+    # Second try: Check if this could be a UUID derived from an ObjectId
+    # We'll try to find all tools and check if any have a derived UUID matching the requested one
+    all_tools = await tools.find({}).to_list(length=None)
+
+    for db_tool in all_tools:
+        if "_id" in db_tool:
+            object_id_str = str(db_tool.get("_id"))
+            derived_uuid = objectid_to_uuid(object_id_str)
+
+            # If the derived UUID matches the requested one, we found our tool
+            if str(derived_uuid) == str(tool_id):
+                logger.info(
+                    f"Found tool via derived UUID: {tool_id} from ObjectId: {object_id_str}"
+                )
+                return create_tool_response(db_tool)
+
+    # If we get here, the tool wasn't found by either method
+    return None
 
 
 async def get_tool_by_unique_id(unique_id: str) -> Optional[ToolResponse]:
@@ -227,7 +276,6 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
         return tool_response
     except Exception as e:
         # Log the error for debugging
-        from ..logger import logger
 
         logger.error(f"Tool creation error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to create tool: {str(e)}")
@@ -423,7 +471,6 @@ async def search_tools(
             return tools_list
         except Exception as e:
             # Log the error and fall back to MongoDB
-            from ..logger import logger
 
             logger.error(
                 f"Error searching with Algolia, falling back to MongoDB: {str(e)}"

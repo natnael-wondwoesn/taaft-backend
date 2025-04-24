@@ -133,62 +133,62 @@ async def get_popular_terms(
         )
 
 
-@router.post("/glossary-term", response_model=TermDefinitionResponse)
-async def get_glossary_term(
-    request: GlossaryTermRequest, terms_db: TermsDB = Depends(get_terms_db)
-):
-    """Retrieve a specific term from the glossary, or generate it if it doesn't exist"""
-    # First, check if we already have this term defined (case-insensitive match)
-    existing_term = await terms_db.get_term_by_exact_match(request.term)
+# @router.post("/glossary-term", response_model=TermDefinitionResponse)
+# async def get_glossary_term(
+#     request: GlossaryTermRequest, terms_db: TermsDB = Depends(get_terms_db)
+# ):
+#     """Retrieve a specific term from the glossary, or generate it if it doesn't exist"""
+#     # First, check if we already have this term defined (case-insensitive match)
+#     existing_term = await terms_db.get_term_by_exact_match(request.term)
 
-    if existing_term:
-        logger.info(f"Found existing glossary term: {request.term}")
+#     if existing_term:
+#         logger.info(f"Found existing glossary term: {request.term}")
 
-        # Update the popular terms count
-        await terms_db._update_popular_term(request.term)
+#         # Update the popular terms count
+#         await terms_db._update_popular_term(request.term)
 
-        return {
-            "term": existing_term["term"],
-            "description": existing_term["description"],
-            "examples": existing_term["examples"],
-            "id": str(existing_term["_id"]),
-            "timestamp": existing_term["timestamp"],
-            "model": existing_term.get("model", TermModelType.DEFAULT),
-        }
+#         return {
+#             "term": existing_term["term"],
+#             "description": existing_term["description"],
+#             "examples": existing_term["examples"],
+#             "id": str(existing_term["_id"]),
+#             "timestamp": existing_term["timestamp"],
+#             "model": existing_term.get("model", TermModelType.DEFAULT),
+#         }
 
-    # If term doesn't exist in the glossary, generate it using the LLM service
-    model_type = request.model or TermModelType.DEFAULT
+#     # If term doesn't exist in the glossary, generate it using the LLM service
+#     model_type = request.model or TermModelType.DEFAULT
 
-    try:
-        # Get definition from LLM
-        description, examples = await terms_llm_service.get_term_definition(
-            request.term, model_type
-        )
+#     try:
+#         # Get definition from LLM
+#         description, examples = await terms_llm_service.get_term_definition(
+#             request.term, model_type
+#         )
 
-        # Save to database
-        term_data = {
-            "term": request.term,
-            "description": description,
-            "examples": examples,
-            "user_id": request.user_id,
-            "model": model_type,
-        }
+#         # Save to database
+#         term_data = {
+#             "term": request.term,
+#             "description": description,
+#             "examples": examples,
+#             "user_id": request.user_id,
+#             "model": model_type,
+#         }
 
-        created_term = await terms_db.create_term_definition(term_data)
+#         created_term = await terms_db.create_term_definition(term_data)
 
-        # Return response
-        return {
-            "term": request.term,
-            "description": description,
-            "examples": examples,
-            "id": str(created_term["_id"]),
-            "timestamp": created_term["timestamp"],
-            "model": model_type,
-        }
+#         # Return response
+#         return {
+#             "term": request.term,
+#             "description": description,
+#             "examples": examples,
+#             "id": str(created_term["_id"]),
+#             "timestamp": created_term["timestamp"],
+#             "model": model_type,
+#         }
 
-    except Exception as e:
-        logger.error(f"Error retrieving glossary term '{request.term}': {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error retrieving glossary term: {str(e)}",
-        )
+#     except Exception as e:
+#         logger.error(f"Error retrieving glossary term '{request.term}': {str(e)}")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=f"Error retrieving glossary term: {str(e)}",
+#         )

@@ -115,60 +115,60 @@ async def get_tool_by_unique_identifier(
     return tool
 
 
-@router.post("/", response_model=ToolResponse, status_code=201)
-async def create_new_tool(
-    tool_data: ToolCreate,
-    current_user: UserResponse = Depends(get_current_active_user),
-):
-    """
-    Create a new tool.
-    """
-    try:
-        return await create_tool(tool_data)
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        # Log the error for debugging
-        from ..logger import logger
+# @router.post("/", response_model=ToolResponse, status_code=201)
+# async def create_new_tool(
+#     tool_data: ToolCreate,
+#     current_user: UserResponse = Depends(get_current_active_user),
+# ):
+#     """
+#     Create a new tool.
+#     """
+#     try:
+#         return await create_tool(tool_data)
+#     except HTTPException as e:
+#         raise e
+#     except Exception as e:
+#         # Log the error for debugging
+#         from ..logger import logger
 
-        logger.error(f"Tool creation error in route: {str(e)}")
+#         logger.error(f"Tool creation error in route: {str(e)}")
 
-        # Provide a more helpful error message
-        if "validation error" in str(e).lower():
-            raise HTTPException(
-                status_code=400,
-                detail=f"Validation error: Please check that all required fields are provided correctly. Error: {str(e)}",
-            )
-        else:
-            raise HTTPException(
-                status_code=500, detail=f"Failed to create tool: {str(e)}"
-            )
-
-
-@router.put("/{tool_id}", response_model=ToolResponse)
-async def update_existing_tool(
-    tool_id: UUID,
-    tool_update: ToolUpdate,
-    current_user: UserResponse = Depends(get_current_active_user),
-):
-    """
-    Update an existing tool.
-    """
-    updated_tool = await update_tool(tool_id, tool_update)
-    if not updated_tool:
-        raise HTTPException(status_code=404, detail="Tool not found")
-    return updated_tool
+#         # Provide a more helpful error message
+#         if "validation error" in str(e).lower():
+#             raise HTTPException(
+#                 status_code=400,
+#                 detail=f"Validation error: Please check that all required fields are provided correctly. Error: {str(e)}",
+#             )
+#         else:
+#             raise HTTPException(
+#                 status_code=500, detail=f"Failed to create tool: {str(e)}"
+#             )
 
 
-@router.delete("/{tool_id}", status_code=204)
-async def delete_existing_tool(
-    tool_id: UUID,
-    current_user: UserResponse = Depends(get_current_active_user),
-):
-    """
-    Delete a tool.
-    """
-    success = await delete_tool(tool_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Tool not found")
-    return None
+# @router.put("/{tool_id}", response_model=ToolResponse)
+# async def update_existing_tool(
+#     tool_id: UUID,
+#     tool_update: ToolUpdate,
+#     current_user: UserResponse = Depends(get_current_active_user),
+# ):
+#     """
+#     Update an existing tool.
+#     """
+#     updated_tool = await update_tool(tool_id, tool_update)
+#     if not updated_tool:
+#         raise HTTPException(status_code=404, detail="Tool not found")
+#     return updated_tool
+
+
+# @router.delete("/{tool_id}", status_code=204)
+# async def delete_existing_tool(
+#     tool_id: UUID,
+#     current_user: UserResponse = Depends(get_current_active_user),
+# ):
+#     """
+#     Delete a tool.
+#     """
+#     success = await delete_tool(tool_id)
+#     if not success:
+#         raise HTTPException(status_code=404, detail="Tool not found")
+#     return None
