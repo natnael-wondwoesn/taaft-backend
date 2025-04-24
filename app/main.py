@@ -33,7 +33,7 @@ from .algolia import router as algolia_router, algolia_config
 
 # Import the auth router
 from .auth import router as auth_router
-from .auth.dependencies import RateLimitMiddleware
+from .auth.dependencies import RateLimitMiddleware, AdminControlMiddleware
 
 # Import the tools router
 from .tools import router as tools_router
@@ -84,6 +84,18 @@ async def lifespan(app: FastAPI):
                 logger.warning(
                     "Algolia not configured. Search functionality will be limited."
                 )
+
+            # Check for admin users
+            from .models.user import ServiceTier
+
+            admin_count = await database.users.count_documents(
+                {"service_tier": ServiceTier.ENTERPRISE}
+            )
+            if admin_count == 0:
+                logger.warning(
+                    "No admin users found. Use the /admin/init-admin endpoint to create the first admin user."
+                )
+
         except Exception as e:
             logger.error(f"Error during startup: {str(e)}")
             if TEST_MODE:
@@ -115,10 +127,13 @@ app.add_middleware(
 # Add rate limit middleware
 app.add_middleware(RateLimitMiddleware)
 
+# Add admin control middleware to restrict access to certain endpoints
+app.add_middleware(AdminControlMiddleware)
+
 # Include routers
 app.include_router(chat_router)
 app.include_router(algolia_router)
-app.include_router(auth_router)  # Include auth router
+app.include_router(auth_router)  # Include auth router with prefix
 app.include_router(tools_router)  # Include tools router
 app.include_router(site_queue_router)  # Include site queue router
 app.include_router(site_dashboard_router)  # Include site dashboard router

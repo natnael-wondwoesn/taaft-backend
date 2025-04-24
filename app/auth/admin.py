@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, status, Depends, Query, Path
-from typing import List, Optional
+from fastapi import APIRouter, HTTPException, status, Depends, Query, Path, Body
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 from bson import ObjectId
 
@@ -7,15 +7,16 @@ from ..models.user import UserInDB, UserResponse, UserUpdate, ServiceTier
 from ..database.database import database
 from .dependencies import get_current_user, check_tier_access
 from ..logger import logger
+from .utils import get_password_hash
 
-router = APIRouter(prefix="/admin/users", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["admin"])
 
 
 # Only allow enterprise users to access admin endpoints
 get_admin_user = check_tier_access(ServiceTier.ENTERPRISE)
 
 
-@router.get("/", response_model=List[UserResponse])
+@router.get("/users", response_model=List[UserResponse])
 async def list_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
@@ -60,7 +61,7 @@ async def list_users(
     return user_responses
 
 
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get("/users/{user_id}", response_model=UserResponse)
 async def get_user(
     user_id: str = Path(...), current_user: UserInDB = Depends(get_admin_user)
 ):
@@ -92,7 +93,7 @@ async def get_user(
     )
 
 
-@router.patch("/{user_id}", response_model=UserResponse)
+@router.patch("/users/{user_id}", response_model=UserResponse)
 async def update_user(
     user_id: str,
     user_update: UserUpdate,
@@ -152,7 +153,7 @@ async def update_user(
     )
 
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: str, current_user: UserInDB = Depends(get_admin_user)):
     """Delete a user."""
 
@@ -200,3 +201,238 @@ async def get_tier_statistics(current_user: UserInDB = Depends(get_admin_user)):
         tier_stats[item["_id"]] = item["count"]
 
     return {"tier_counts": tier_stats, "total_users": sum(tier_stats.values())}
+
+
+@router.post("/promote-admin", response_model=UserResponse)
+async def promote_to_admin(
+    email: str = Body(..., embed=True),
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """Promote a user to admin (ENTERPRISE tier) by email."""
+
+    # Find user by email
+    user = await database.users.find_one({"email": email})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    # Update user's service tier to ENTERPRISE
+    result = await database.users.update_one(
+        {"email": email},
+        {
+            "$set": {
+                "service_tier": ServiceTier.ENTERPRISE,
+                "updated_at": datetime.utcnow(),
+            }
+        },
+    )
+
+    if result.modified_count == 0:
+        # Check if already an admin
+        if user.get("service_tier") == ServiceTier.ENTERPRISE:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User is already an admin (ENTERPRISE tier)",
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to promote user",
+            )
+
+    # Get updated user
+    updated_user = await database.users.find_one({"email": email})
+
+    logger.info(f"User {email} promoted to admin by {current_user.email}")
+
+    # Convert to response model
+    return UserResponse(
+        id=str(updated_user["_id"]),
+        email=updated_user["email"],
+        full_name=updated_user.get("full_name"),
+        service_tier=updated_user["service_tier"],
+        is_active=updated_user["is_active"],
+        is_verified=updated_user["is_verified"],
+        created_at=updated_user["created_at"],
+        usage=updated_user["usage"],
+    )
+
+
+@router.post("/create-admin", response_model=UserResponse)
+async def create_admin_user(
+    email: str = Body(...),
+    password: str = Body(...),
+    full_name: Optional[str] = Body(None),
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """Create a new admin user with ENTERPRISE tier."""
+
+    # Check if user already exists
+    existing_user = await database.users.find_one({"email": email})
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this email already exists",
+        )
+
+    # Hash the password
+    hashed_password = get_password_hash(password)
+
+    # Create new user with ENTERPRISE tier
+    new_user = {
+        "email": email,
+        "hashed_password": hashed_password,
+        "full_name": full_name,
+        "service_tier": ServiceTier.ENTERPRISE,
+        "is_active": True,
+        "is_verified": True,  # Auto-verify admin users
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow(),
+        "usage": {
+            "requests_today": 0,
+            "requests_reset_date": datetime.utcnow(),
+            "total_requests": 0,
+            "storage_used_bytes": 0,
+        },
+    }
+
+    result = await database.users.insert_one(new_user)
+
+    # Get created user
+    created_user = await database.users.find_one({"_id": result.inserted_id})
+
+    logger.info(f"New admin user created: {email} by {current_user.email}")
+
+    # Convert to response model
+    return UserResponse(
+        id=str(created_user["_id"]),
+        email=created_user["email"],
+        full_name=created_user.get("full_name"),
+        service_tier=created_user["service_tier"],
+        is_active=created_user["is_active"],
+        is_verified=created_user["is_verified"],
+        created_at=created_user["created_at"],
+        usage=created_user["usage"],
+    )
+
+
+@router.post("/init-admin", status_code=status.HTTP_201_CREATED)
+async def initialize_first_admin(
+    email: str = Body(...),
+    password: str = Body(...),
+    full_name: Optional[str] = Body(None),
+):
+    """
+    Initialize the first admin user. This endpoint should be disabled after initial setup.
+    Can only be used when no admin users exist in the system.
+    """
+
+    try:
+        # Check if any ENTERPRISE tier users exist
+        admin_count = await database.users.count_documents(
+            {"service_tier": ServiceTier.ENTERPRISE}
+        )
+
+        if admin_count > 0:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admin users already exist. This endpoint is disabled.",
+            )
+
+        # Check if user already exists
+        existing_user = await database.users.find_one({"email": email})
+        if existing_user:
+            # If user exists, promote to admin
+            result = await database.users.update_one(
+                {"email": email},
+                {
+                    "$set": {
+                        "service_tier": ServiceTier.ENTERPRISE,
+                        "updated_at": datetime.utcnow(),
+                        "is_verified": True,
+                        "is_active": True,
+                    }
+                },
+            )
+            logger.info(f"Existing user {email} promoted to first admin")
+            return {
+                "detail": "Existing user promoted to admin successfully",
+                "email": email,
+            }
+        else:
+            # Create new admin user
+            hashed_password = get_password_hash(password)
+
+            new_user = {
+                "email": email,
+                "hashed_password": hashed_password,
+                "full_name": full_name,
+                "service_tier": ServiceTier.ENTERPRISE,
+                "is_active": True,
+                "is_verified": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow(),
+                "usage": {
+                    "requests_today": 0,
+                    "requests_reset_date": datetime.utcnow(),
+                    "total_requests": 0,
+                    "storage_used_bytes": 0,
+                },
+            }
+
+            result = await database.users.insert_one(new_user)
+            logger.info(f"First admin user created: {email}")
+            return {
+                "detail": "First admin user created successfully",
+                "email": email,
+                "user_id": str(result.inserted_id),
+            }
+    except Exception as e:
+        logger.error(f"Error creating admin user: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating admin user: {str(e)}",
+        )
+
+
+@router.get("/system/info", response_model=Dict[str, Any])
+async def get_system_info(current_user: UserInDB = Depends(get_admin_user)):
+    """Get system information and statistics."""
+
+    # Get user counts
+    total_users = await database.users.count_documents({})
+    active_users = await database.users.count_documents({"is_active": True})
+    verified_users = await database.users.count_documents({"is_verified": True})
+
+    # Get tier counts
+    tier_counts = {}
+    for tier in ServiceTier:
+        count = await database.users.count_documents({"service_tier": tier})
+        tier_counts[tier] = count
+
+    # Get OAuth provider statistics
+    google_users = await database.users.count_documents(
+        {"oauth_providers.google": {"$exists": True}}
+    )
+    github_users = await database.users.count_documents(
+        {"oauth_providers.github": {"$exists": True}}
+    )
+
+    # Get other collection stats
+    collections_stats = {}
+    for collection_name in await database.db.list_collection_names():
+        count = await database.db[collection_name].count_documents({})
+        collections_stats[collection_name] = count
+
+    return {
+        "users": {
+            "total": total_users,
+            "active": active_users,
+            "verified": verified_users,
+            "by_tier": tier_counts,
+            "oauth": {"google": google_users, "github": github_users},
+        },
+        "collections": collections_stats,
+        "server_time": datetime.utcnow(),
+    }
