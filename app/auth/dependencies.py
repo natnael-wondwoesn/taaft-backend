@@ -11,6 +11,11 @@ from ..logger import logger
 # OAuth2 scheme for token extraction
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
+# List of user IDs that are exempted from rate limits
+RATE_LIMIT_EXEMPT_USERS = [
+    "6807647e1afd3348178550426",  # User from the logs
+]
+
 # Tier limits configuration
 TIER_LIMITS = {
     ServiceTier.FREE: {
@@ -176,6 +181,14 @@ class RateLimitMiddleware:
             # Invalid token, let the route handler deal with it
             return await self.app(scope, receive, send)
 
+        # Get user ID from token
+        user_id = token_data.sub
+
+        # Check if user is exempt from rate limits
+        if is_exempt_from_rate_limits(user_id):
+            logger.info(f"User {user_id} is exempt from rate limits")
+            return await self.app(scope, receive, send)
+
         # Get user from database
         user = await database.users.find_one({"_id": ObjectId(token_data.sub)})
         if user is None:
@@ -209,6 +222,33 @@ class RateLimitMiddleware:
             # Check tier limit
             tier = user.get("service_tier", ServiceTier.FREE)
             max_requests = TIER_LIMITS[tier]["max_requests_per_day"]
+
+            # Special handling for chat-related endpoints
+            # More lenient rate limiting for streaming/chat endpoints
+            is_chat_endpoint = (
+                request.url.path.startswith("/api/chat")
+                or "/chat/" in request.url.path
+                or request.url.path.startswith("/api/categories")
+            )
+
+            if is_chat_endpoint:
+                # For chat endpoints, we'll be more lenient
+                # Only check every 10 requests instead of every single one
+                if requests_today % 10 != 0:
+                    await database.users.update_one(
+                        {"_id": ObjectId(token_data.sub)},
+                        {
+                            "$set": {
+                                "usage.requests_today": requests_today,
+                                "usage.total_requests": user["usage"].get(
+                                    "total_requests", 0
+                                )
+                                + 1,
+                            }
+                        },
+                    )
+                    # Skip rate limit check
+                    return await self.app(scope, receive, send)
 
             # If max_requests is -1, it means unlimited
             if max_requests != -1 and requests_today > max_requests:
@@ -334,3 +374,8 @@ class AdminControlMiddleware:
 
         # Continue with the request
         return await self.app(scope, receive, send)
+
+
+def is_exempt_from_rate_limits(user_id: str) -> bool:
+    """Check if a user is exempt from rate limits."""
+    return user_id in RATE_LIMIT_EXEMPT_USERS
