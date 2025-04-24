@@ -5,7 +5,12 @@ from bson import ObjectId
 
 from ..models.user import UserInDB, UserResponse, UserUpdate, ServiceTier
 from ..database.database import database
-from .dependencies import get_current_user, check_tier_access
+from .dependencies import (
+    get_current_user,
+    check_tier_access,
+    RATE_LIMIT_EXEMPT_USERS,
+    is_exempt_from_rate_limits,
+)
 from ..logger import logger
 from .utils import get_password_hash
 
@@ -436,3 +441,144 @@ async def get_system_info(current_user: UserInDB = Depends(get_admin_user)):
         "collections": collections_stats,
         "server_time": datetime.utcnow(),
     }
+
+
+@router.patch("/users/{user_id}/tier", response_model=UserResponse)
+async def update_user_tier(
+    user_id: str,
+    tier: ServiceTier = Body(..., embed=True),
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """Update a user's service tier."""
+
+    # Check if valid ObjectId
+    if not ObjectId.is_valid(user_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user ID format"
+        )
+
+    # Check if user exists
+    user = await database.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    # Update user's tier
+    result = await database.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"service_tier": tier, "updated_at": datetime.utcnow()}},
+    )
+
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user tier",
+        )
+
+    # If changing to a higher tier, also reset the rate limit counter
+    if tier != user.get("service_tier"):
+        await database.users.update_one(
+            {"_id": ObjectId(user_id)}, {"$set": {"usage.requests_today": 0}}
+        )
+
+    # Get updated user
+    updated_user = await database.users.find_one({"_id": ObjectId(user_id)})
+
+    logger.info(f"User {user_id} tier changed to {tier} by admin {current_user.email}")
+
+    # Convert to response model
+    return UserResponse(
+        id=str(updated_user["_id"]),
+        email=updated_user["email"],
+        full_name=updated_user.get("full_name"),
+        service_tier=updated_user["service_tier"],
+        is_active=updated_user["is_active"],
+        is_verified=updated_user["is_verified"],
+        created_at=updated_user["created_at"],
+        usage=updated_user["usage"],
+    )
+
+
+@router.post("/users/{user_id}/exempt-from-rate-limits", status_code=status.HTTP_200_OK)
+async def exempt_user_from_rate_limits(
+    user_id: str,
+    exempt: bool = Body(..., embed=True),
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """Add or remove a user from the rate limit exemption list."""
+
+    # Check if valid ObjectId
+    if not ObjectId.is_valid(user_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user ID format"
+        )
+
+    # Check if user exists
+    user = await database.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    # Check current exemption status
+    currently_exempt = is_exempt_from_rate_limits(user_id)
+
+    # Update exemption status if needed
+    if exempt and not currently_exempt:
+        # Add to exemption list
+        RATE_LIMIT_EXEMPT_USERS.append(user_id)
+        logger.info(
+            f"User {user_id} exempted from rate limits by admin {current_user.email}"
+        )
+        return {
+            "message": f"User {user_id} is now exempt from rate limits",
+            "exempt": True,
+        }
+    elif not exempt and currently_exempt:
+        # Remove from exemption list
+        RATE_LIMIT_EXEMPT_USERS.remove(user_id)
+        logger.info(
+            f"User {user_id} exemption from rate limits removed by admin {current_user.email}"
+        )
+        return {
+            "message": f"User {user_id} is no longer exempt from rate limits",
+            "exempt": False,
+        }
+    else:
+        # No change needed
+        status_msg = "already exempt" if exempt else "already not exempt"
+        return {
+            "message": f"User {user_id} is {status_msg} from rate limits",
+            "exempt": exempt,
+        }
+
+
+@router.get("/rate-limits/exempt-users", status_code=status.HTTP_200_OK)
+async def get_rate_limit_exempt_users(
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """Get the list of users exempted from rate limits."""
+    from .dependencies import RATE_LIMIT_EXEMPT_USERS
+
+    # Get user details for each exempt user ID
+    exempt_users = []
+    for user_id in RATE_LIMIT_EXEMPT_USERS:
+        # Only get valid ObjectIds
+        if ObjectId.is_valid(user_id):
+            user = await database.users.find_one({"_id": ObjectId(user_id)})
+            if user:
+                exempt_users.append(
+                    {
+                        "id": str(user["_id"]),
+                        "email": user["email"],
+                        "service_tier": user["service_tier"],
+                    }
+                )
+            else:
+                # User ID is in the exempt list but doesn't exist in the database
+                exempt_users.append(
+                    {"id": user_id, "email": "Unknown user", "service_tier": "UNKNOWN"}
+                )
+
+    return {"exempt_users": exempt_users, "count": len(exempt_users)}
