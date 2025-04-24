@@ -148,6 +148,16 @@ async def setup_database():
         await database.categories.create_index([("name", TEXT)])
         logger.info("Created indexes for categories collection")
 
+    # Initialize keywords collection
+    if "keywords" not in collections:
+        await database.create_collection("keywords")
+        logger.info("Created keywords collection")
+
+        # Create indexes for keywords collection
+        await database.keywords.create_index("id", unique=True)
+        await database.keywords.create_index("word", unique=True)
+        logger.info("Created indexes for keywords collection")
+
     logger.info("Database setup completed successfully")
 
 

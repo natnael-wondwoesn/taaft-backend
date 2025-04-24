@@ -236,7 +236,7 @@ async def update_tool_keywords(tool_id: str, tool_name: str, keywords: List[str]
         )
 
 
-def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
+async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
     """
     Helper function to create a ToolResponse with default values for missing fields.
     Uses the string representation of _id if the primary 'id' field is missing.
@@ -270,8 +270,9 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
 
             # Update in background to avoid blocking the response
             if "_id" in tool:
-                asyncio.create_task(
-                    tools.update_one(
+                # Update the tool with keywords
+                async def update_tool_task():
+                    await tools.update_one(
                         {"_id": tool["_id"]},
                         {
                             "$set": {
@@ -280,13 +281,16 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
                             }
                         },
                     )
-                )
+
+                asyncio.create_task(update_tool_task())
+
                 # Update keywords collection in background
-                asyncio.create_task(
-                    update_tool_keywords(
+                async def update_keywords_task():
+                    await update_tool_keywords(
                         str(tool["_id"]), tool.get("name", "Unknown"), keywords
                     )
-                )
+
+                asyncio.create_task(update_keywords_task())
 
             # Add the keywords to the response
             tool["keywords"] = keywords
@@ -374,7 +378,28 @@ async def get_tools(
     # Process results
     tools_list = []
     async for tool in cursor:
-        tool_response = create_tool_response(tool)
+        # Extract keywords
+        keywords = tool.get("keywords", [])
+        if keywords:
+            for keyword in keywords:
+                try:
+                    # Use update_one with upsert=True instead of insert_one
+                    await keywords_collection.update_one(
+                        {"word": keyword},
+                        {
+                            "$set": {"updated_at": datetime.utcnow()},
+                            "$setOnInsert": {"created_at": datetime.utcnow()},
+                            "$inc": {"frequency": 1},
+                        },
+                        upsert=True,
+                    )
+                except Exception as e:
+                    # Just log the error and continue, don't let it break the flow
+                    logger.warning(f"Error updating keyword '{keyword}': {str(e)}")
+
+        # tool["keywords"] = keywords
+        tool_response = await create_tool_response(tool)
+
         if tool_response:
             tools_list.append(tool_response)
 
@@ -393,7 +418,7 @@ async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
     tool = await tools.find_one({"id": str(tool_id)})
 
     if tool:
-        return create_tool_response(tool)
+        return await create_tool_response(tool)
 
     # Second try: Check if this could be a UUID derived from an ObjectId
     # We'll try to find all tools and check if any have a derived UUID matching the requested one
@@ -409,7 +434,7 @@ async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
                 logger.info(
                     f"Found tool via derived UUID: {tool_id} from ObjectId: {object_id_str}"
                 )
-                return create_tool_response(db_tool)
+                return await create_tool_response(db_tool)
 
     # If we get here, the tool wasn't found by either method
     return None
@@ -424,7 +449,7 @@ async def get_tool_by_unique_id(unique_id: str) -> Optional[ToolResponse]:
     if not tool:
         return None
 
-    return create_tool_response(tool)
+    return await create_tool_response(tool)
 
 
 async def create_tool(tool_data: ToolCreate) -> ToolResponse:
@@ -505,11 +530,12 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
         result = await tools.insert_one(tool_dict)
 
         # Update keywords collection in background
-        asyncio.create_task(
-            update_tool_keywords(
+        async def update_keywords_task():
+            await update_tool_keywords(
                 str(result.inserted_id), tool_dict.get("name", "Unknown"), keywords
             )
-        )
+
+        asyncio.create_task(update_keywords_task())
 
         # Return the created tool
         created_tool = await tools.find_one({"_id": result.inserted_id})
@@ -518,7 +544,7 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
         await algolia_indexer.index_tool(created_tool)
 
         # Create and return the response
-        tool_response = create_tool_response(created_tool)
+        tool_response = await create_tool_response(created_tool)
         if not tool_response:
             raise HTTPException(
                 status_code=500, detail="Failed to create tool response"
@@ -635,11 +661,13 @@ async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolRe
 
             # Update keywords collection in background after updating the tool
             tool_id_str = str(existing_tool.get("_id", tool_id))
-            asyncio.create_task(
-                update_tool_keywords(
+
+            async def update_keywords_task():
+                await update_tool_keywords(
                     tool_id_str, updated_tool.get("name", "Unknown"), keywords
                 )
-            )
+
+            asyncio.create_task(update_keywords_task())
 
         # Update the tool
         await tools.update_one({"id": str(tool_id)}, {"$set": update_data})
@@ -651,7 +679,7 @@ async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolRe
     await algolia_indexer.index_tool(updated_tool)
 
     # Create and return the response
-    return create_tool_response(updated_tool)
+    return await create_tool_response(updated_tool)
 
 
 async def delete_tool(tool_id: UUID) -> bool:
@@ -738,7 +766,7 @@ async def search_tools(
                     ),
                 }
 
-                tool_response = create_tool_response(tool_dict)
+                tool_response = await create_tool_response(tool_dict)
                 if tool_response:
                     tools_list.append(tool_response)
             return tools_list
@@ -757,7 +785,7 @@ async def search_tools(
 
     tools_list = []
     async for tool in cursor:
-        tool_response = create_tool_response(tool)
+        tool_response = await create_tool_response(tool)
         if tool_response:
             tools_list.append(tool_response)
 

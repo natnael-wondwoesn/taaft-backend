@@ -234,3 +234,146 @@ async def nlp_search(
 
     # Return the search result along with the processed query
     return result
+
+
+# @router.post("/match-keywords")
+# async def match_keywords(
+#     keywords: List[str] = Body(..., description="List of keywords to match"),
+#     max_matches: int = Query(3, ge=1, le=10, description="Maximum matches per keyword"),
+# ):
+#     """
+#     Match input keywords with semantically similar keywords from our database
+
+#     This endpoint uses an LLM to find the closest matching keywords in our database
+#     for each of the input keywords. This is useful for query expansion and
+#     finding relevant terms.
+
+#     Args:
+#         keywords: List of keywords to match
+#         max_matches: Maximum number of matches to return per keyword
+
+#     Returns:
+#         Dictionary mapping input keywords to their closest matches
+#     """
+#     # Validate Algolia configuration
+#     if not algolia_config.is_configured():
+#         raise HTTPException(
+#             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+#             detail="Search service is not configured",
+#         )
+
+#     if not keywords:
+#         return {}
+
+#     # Limit number of input keywords to prevent abuse
+#     if len(keywords) > 20:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Maximum of 20 keywords allowed per request",
+#         )
+
+#     # Call the matching function
+#     try:
+#         matches = await algolia_search.match_keywords_with_database(
+#             input_keywords=keywords,
+#             max_matches=max_matches,
+#         )
+#         return matches
+#     except Exception as e:
+#         logger.error(f"Error matching keywords: {str(e)}")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=f"Error matching keywords: {str(e)}",
+#         )
+
+
+@router.post("/search-with-matched-keywords")
+async def search_with_matched_keywords(
+    keywords: List[str] = Body(..., description="List of keywords to match and search"),
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(20, ge=1, le=100, description="Results per page"),
+):
+    """
+    Search using input keywords after matching them with database keywords
+
+    This endpoint first matches the input keywords with semantically similar keywords
+    in our database, then uses the expanded keyword set to search the tools index.
+
+    Args:
+        keywords: Original keywords to match and search with
+        page: Page number (0-based)
+        per_page: Number of results per page
+
+    Returns:
+        Search results from Algolia with expanded keywords information
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    if not keywords:
+        return {
+            "hits": [],
+            "nbHits": 0,
+            "page": page,
+            "nbPages": 0,
+            "processingTimeMS": 0,
+            "original_keywords": [],
+            "expanded_keywords": [],
+            "keyword_matches": {},
+        }
+
+    # Limit number of input keywords to prevent abuse
+    if len(keywords) > 20:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Maximum of 20 keywords allowed per request",
+        )
+
+    # Perform the search with matched keywords
+    try:
+        results = await algolia_search.search_with_matched_keywords(
+            input_keywords=keywords,
+            page=page,
+            per_page=per_page,
+        )
+        return results
+    except Exception as e:
+        logger.error(f"Error searching with matched keywords: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching with matched keywords: {str(e)}",
+        )
+
+
+@router.get("/keywords")
+async def get_all_keywords():
+    """
+    Get all known keywords from the database
+
+    This endpoint returns a list of all keywords extracted from the indexed tools.
+    This is useful for understanding what keywords are available for matching.
+
+    Returns:
+        List of all known keywords from the database
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    try:
+        # Get all keywords from the database
+        keywords = await algolia_search.get_known_keywords_from_database()
+        return {"keywords": keywords, "count": len(keywords)}
+    except Exception as e:
+        logger.error(f"Error getting keywords: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting keywords: {str(e)}",
+        )

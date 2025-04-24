@@ -39,3 +39,6 @@ sites = database.get_collection("sites")
 
 # Glossary terms collection
 glossary_terms = database.get_collection("glossary_terms")
+
+# Keywords collection
+keywords = database.get_collection("keywords")

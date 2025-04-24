@@ -4044,3 +4044,725 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T00:41:14.074734+0300 INFO Algolia tools index configured successfully
 2025-04-25T00:41:14.317475+0300 INFO Algolia glossary index configured successfully
 2025-04-25T00:41:14.317475+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:47:55.414028+0300 INFO Shutting down application...
+2025-04-25T00:48:02.152017+0300 INFO Database connections closed
+2025-04-25T00:48:02.153028+0300 INFO Shutdown complete.
+2025-04-25T00:48:06.520714+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:48:06.521710+0300 INFO Algolia client initialized successfully
+2025-04-25T00:48:07.707181+0300 INFO Setting up database...
+2025-04-25T00:48:10.355491+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:48:10.557239+0300 INFO Database setup completed successfully
+2025-04-25T00:48:10.558239+0300 INFO Database setup completed
+2025-04-25T00:48:10.558239+0300 INFO Seeding glossary terms...
+2025-04-25T00:48:10.757440+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:48:10.758441+0300 INFO Glossary seeding completed
+2025-04-25T00:48:10.759424+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:48:11.355545+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:48:11.491148+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:48:11.492159+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:48:14.869472+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:48:14.870484+0300 INFO Algolia client initialized successfully
+2025-04-25T00:48:15.884732+0300 INFO Setting up database...
+2025-04-25T00:48:18.193530+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:48:18.429103+0300 INFO Database setup completed successfully
+2025-04-25T00:48:18.430094+0300 INFO Database setup completed
+2025-04-25T00:48:18.430094+0300 INFO Seeding glossary terms...
+2025-04-25T00:48:18.653827+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:48:18.653827+0300 INFO Glossary seeding completed
+2025-04-25T00:48:18.654829+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:48:19.122850+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:48:19.273507+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:48:19.274506+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:48:32.977679+0300 INFO Shutting down application...
+2025-04-25T00:48:33.312557+0300 INFO Database connections closed
+2025-04-25T00:48:33.313561+0300 INFO Shutdown complete.
+2025-04-25T00:48:36.338369+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:48:36.339363+0300 INFO Algolia client initialized successfully
+2025-04-25T00:48:37.360406+0300 INFO Setting up database...
+2025-04-25T00:48:39.330378+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:48:39.565492+0300 INFO Database setup completed successfully
+2025-04-25T00:48:39.566488+0300 INFO Database setup completed
+2025-04-25T00:48:39.566488+0300 INFO Seeding glossary terms...
+2025-04-25T00:48:40.114786+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:48:40.115788+0300 INFO Glossary seeding completed
+2025-04-25T00:48:40.116788+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:48:41.391317+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:48:41.555609+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:48:41.556605+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:49:00.671683+0300 INFO Shutting down application...
+2025-04-25T00:49:00.861741+0300 INFO Database connections closed
+2025-04-25T00:49:00.862737+0300 INFO Shutdown complete.
+2025-04-25T00:49:04.236022+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:49:04.237026+0300 INFO Algolia client initialized successfully
+2025-04-25T00:49:05.550714+0300 INFO Setting up database...
+2025-04-25T00:49:07.724497+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:49:07.931551+0300 INFO Database setup completed successfully
+2025-04-25T00:49:07.932564+0300 INFO Database setup completed
+2025-04-25T00:49:07.933554+0300 INFO Seeding glossary terms...
+2025-04-25T00:49:08.141910+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:49:08.141910+0300 INFO Glossary seeding completed
+2025-04-25T00:49:08.142910+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:49:09.652563+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:49:09.808812+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:49:09.808812+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:49:12.515758+0300 INFO Shutting down application...
+2025-04-25T00:49:12.722941+0300 INFO Database connections closed
+2025-04-25T00:49:12.723946+0300 INFO Shutdown complete.
+2025-04-25T00:49:16.172047+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:49:16.173049+0300 INFO Algolia client initialized successfully
+2025-04-25T00:49:17.232561+0300 INFO Setting up database...
+2025-04-25T00:49:19.680640+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:49:19.859315+0300 INFO Database setup completed successfully
+2025-04-25T00:49:19.860314+0300 INFO Database setup completed
+2025-04-25T00:49:19.860314+0300 INFO Seeding glossary terms...
+2025-04-25T00:49:20.050354+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:49:20.051361+0300 INFO Glossary seeding completed
+2025-04-25T00:49:20.052354+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:49:21.546853+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:49:21.688857+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:49:21.689854+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:49:25.088656+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:49:25.089655+0300 INFO Algolia client initialized successfully
+2025-04-25T00:49:26.121380+0300 INFO Setting up database...
+2025-04-25T00:49:29.514043+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:49:29.797556+0300 INFO Database setup completed successfully
+2025-04-25T00:49:29.798549+0300 INFO Database setup completed
+2025-04-25T00:49:29.799549+0300 INFO Seeding glossary terms...
+2025-04-25T00:49:30.003298+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:49:30.004307+0300 INFO Glossary seeding completed
+2025-04-25T00:49:30.004307+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:49:30.592542+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:49:30.740998+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:49:30.741999+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:49:34.020345+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:49:34.021355+0300 INFO Algolia client initialized successfully
+2025-04-25T00:49:35.059209+0300 INFO Setting up database...
+2025-04-25T00:49:37.342557+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:49:37.592336+0300 INFO Database setup completed successfully
+2025-04-25T00:49:37.593339+0300 INFO Database setup completed
+2025-04-25T00:49:37.593339+0300 INFO Seeding glossary terms...
+2025-04-25T00:49:37.806544+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:49:37.807546+0300 INFO Glossary seeding completed
+2025-04-25T00:49:37.807546+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:49:38.233898+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:49:38.394273+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:49:38.394273+0300 INFO Algolia indexes configured successfully
+2025-04-25T00:53:15.205481+0300 ERROR Error fetching keywords from database: 'SearchClientSync' object has no attribute 'init_index'
+2025-04-25T00:59:27.281089+0300 INFO Shutting down application...
+2025-04-25T00:59:27.625795+0300 INFO Database connections closed
+2025-04-25T00:59:27.626794+0300 INFO Shutdown complete.
+2025-04-25T00:59:30.936010+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T00:59:30.937007+0300 INFO Algolia client initialized successfully
+2025-04-25T00:59:31.997570+0300 INFO Setting up database...
+2025-04-25T00:59:35.688405+0300 INFO Connected to MongoDB for setup
+2025-04-25T00:59:35.917411+0300 INFO Database setup completed successfully
+2025-04-25T00:59:35.917411+0300 INFO Database setup completed
+2025-04-25T00:59:35.918411+0300 INFO Seeding glossary terms...
+2025-04-25T00:59:36.142730+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T00:59:36.143729+0300 INFO Glossary seeding completed
+2025-04-25T00:59:36.144734+0300 INFO Configuring Algolia indexes...
+2025-04-25T00:59:36.778432+0300 INFO Algolia tools index configured successfully
+2025-04-25T00:59:36.938742+0300 INFO Algolia glossary index configured successfully
+2025-04-25T00:59:36.939817+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:09:33.923300+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:09:33.924982+0300 INFO Algolia client initialized successfully
+2025-04-25T01:09:36.026565+0300 INFO Setting up database...
+2025-04-25T01:09:56.933821+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:09:57.471597+0300 INFO Database setup completed successfully
+2025-04-25T01:09:57.477522+0300 INFO Database setup completed
+2025-04-25T01:09:57.478524+0300 INFO Seeding glossary terms...
+2025-04-25T01:09:57.888137+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:09:57.891994+0300 INFO Glossary seeding completed
+2025-04-25T01:09:57.892997+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:09:59.788102+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:10:00.387708+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:10:00.396710+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:14:44.537331+0300 INFO Shutting down application...
+2025-04-25T01:14:44.733714+0300 INFO Database connections closed
+2025-04-25T01:14:44.734714+0300 INFO Shutdown complete.
+2025-04-25T01:14:48.449653+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:14:48.450655+0300 INFO Algolia client initialized successfully
+2025-04-25T01:14:49.594374+0300 INFO Setting up database...
+2025-04-25T01:14:52.220540+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:14:52.768509+0300 INFO Created keywords collection
+2025-04-25T01:14:54.014082+0300 INFO Created indexes for keywords collection
+2025-04-25T01:14:54.014082+0300 INFO Database setup completed successfully
+2025-04-25T01:14:54.015081+0300 INFO Database setup completed
+2025-04-25T01:14:54.015081+0300 INFO Seeding glossary terms...
+2025-04-25T01:14:54.193092+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:14:54.193092+0300 INFO Glossary seeding completed
+2025-04-25T01:14:54.194079+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:14:54.794233+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:14:54.931514+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:14:54.932085+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:14:58.444040+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:14:58.445046+0300 INFO Algolia client initialized successfully
+2025-04-25T01:14:59.350719+0300 INFO Setting up database...
+2025-04-25T01:15:01.139171+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:15:01.304148+0300 INFO Database setup completed successfully
+2025-04-25T01:15:01.305148+0300 INFO Database setup completed
+2025-04-25T01:15:01.306149+0300 INFO Seeding glossary terms...
+2025-04-25T01:15:01.470271+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:15:01.470818+0300 INFO Glossary seeding completed
+2025-04-25T01:15:01.471349+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:15:01.929567+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:15:02.074500+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:15:02.075007+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:15:21.207476+0300 INFO Shutting down application...
+2025-04-25T01:15:21.396952+0300 INFO Database connections closed
+2025-04-25T01:15:21.397500+0300 INFO Shutdown complete.
+2025-04-25T01:15:24.338377+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:15:24.339386+0300 INFO Algolia client initialized successfully
+2025-04-25T01:15:25.218117+0300 INFO Setting up database...
+2025-04-25T01:15:27.140508+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:15:27.306771+0300 INFO Database setup completed successfully
+2025-04-25T01:15:27.307774+0300 INFO Database setup completed
+2025-04-25T01:15:27.308772+0300 INFO Seeding glossary terms...
+2025-04-25T01:15:27.501388+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:15:27.502467+0300 INFO Glossary seeding completed
+2025-04-25T01:15:27.503394+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:15:27.929973+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:15:28.054678+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:15:28.055674+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:15:37.054467+0300 INFO Shutting down application...
+2025-04-25T01:15:37.244048+0300 INFO Database connections closed
+2025-04-25T01:15:37.245050+0300 INFO Shutdown complete.
+2025-04-25T01:15:40.047991+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:15:40.049992+0300 INFO Algolia client initialized successfully
+2025-04-25T01:15:40.968093+0300 INFO Setting up database...
+2025-04-25T01:15:42.878852+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:15:43.058851+0300 INFO Database setup completed successfully
+2025-04-25T01:15:43.059852+0300 INFO Database setup completed
+2025-04-25T01:15:43.060859+0300 INFO Seeding glossary terms...
+2025-04-25T01:15:43.239877+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:15:43.240856+0300 INFO Glossary seeding completed
+2025-04-25T01:15:43.240856+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:15:43.666036+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:15:43.805851+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:15:43.806853+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:19:16.072963+0300 INFO Shutting down application...
+2025-04-25T01:19:16.244275+0300 INFO Database connections closed
+2025-04-25T01:19:16.245254+0300 INFO Shutdown complete.
+2025-04-25T01:19:20.730187+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:19:20.731329+0300 INFO Algolia client initialized successfully
+2025-04-25T01:19:22.022974+0300 INFO Setting up database...
+2025-04-25T01:19:25.878356+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:19:26.080485+0300 INFO Database setup completed successfully
+2025-04-25T01:19:26.081214+0300 INFO Database setup completed
+2025-04-25T01:19:26.081214+0300 INFO Seeding glossary terms...
+2025-04-25T01:19:26.291704+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:19:26.292360+0300 INFO Glossary seeding completed
+2025-04-25T01:19:26.292910+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:19:26.841504+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:19:26.977504+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:19:26.977504+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:19:36.240945+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-25T01:21:12.587800+0300 INFO Shutting down application...
+2025-04-25T01:21:12.784000+0300 INFO Database connections closed
+2025-04-25T01:21:12.784000+0300 INFO Shutdown complete.
+2025-04-25T01:21:16.010463+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:21:16.011462+0300 INFO Algolia client initialized successfully
+2025-04-25T01:21:16.910277+0300 INFO Setting up database...
+2025-04-25T01:21:19.870997+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:21:20.068109+0300 INFO Database setup completed successfully
+2025-04-25T01:21:20.069093+0300 INFO Database setup completed
+2025-04-25T01:21:20.069093+0300 INFO Seeding glossary terms...
+2025-04-25T01:21:20.292112+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:21:20.293111+0300 INFO Glossary seeding completed
+2025-04-25T01:21:20.294112+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:21:21.125616+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:21:21.280639+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:21:21.281620+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:21:25.997607+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T01:21:25.999586+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.000649+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-25T01:21:26.001588+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.002991+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-25T01:21:26.004585+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.005584+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-25T01:21:26.006584+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.007585+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-25T01:21:26.021125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.022128+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-25T01:21:26.023129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.024130+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-25T01:21:26.026127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.027130+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-25T01:21:26.028137+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.028137+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-25T01:21:26.030131+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.031211+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-25T01:21:26.032127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.033125+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-25T01:21:26.035129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.036136+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-25T01:21:26.038131+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.039126+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-25T01:21:26.041127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.041127+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-25T01:21:26.043129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.043129+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-25T01:21:26.044129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.045129+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-25T01:21:26.046129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.047132+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-25T01:21:26.048133+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.049129+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-25T01:21:26.050130+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.051128+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-25T01:21:26.053133+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.055130+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-25T01:21:26.057127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.058133+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-25T01:21:26.059131+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.060127+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-25T01:21:26.061129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.062126+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-25T01:21:26.063130+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.064128+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-25T01:21:26.065127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.065127+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T01:21:26.066129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.067128+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-25T01:21:26.068131+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.069128+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-25T01:21:26.071135+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.072675+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-25T01:21:26.074125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.075127+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-25T01:21:26.076126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.077125+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-25T01:21:26.077125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.078127+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-25T01:21:26.079126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.080129+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-25T01:21:26.081125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.082125+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-25T01:21:26.083126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.083126+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-25T01:21:26.084127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.085127+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-25T01:21:26.086127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.087586+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-25T01:21:26.089397+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.090128+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-25T01:21:26.091130+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.092126+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-25T01:21:26.093127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.093127+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-25T01:21:26.095128+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.095128+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-25T01:21:26.097127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.097127+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-25T01:21:26.098127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.099126+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-25T01:21:26.100129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.101130+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-25T01:21:26.102127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.103130+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-25T01:21:26.105125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.106129+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-25T01:21:26.107127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.108126+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-25T01:21:26.109127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.109127+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-25T01:21:26.110884+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.111394+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-25T01:21:26.112129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.113128+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-25T01:21:26.114125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.115128+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-25T01:21:26.116127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.116127+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-25T01:21:26.118127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.118127+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-25T01:21:26.119792+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.120744+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-25T01:21:26.122126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.123244+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-25T01:21:26.124126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.125123+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-25T01:21:26.126126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.127126+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-25T01:21:26.128127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.129127+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-25T01:21:26.130126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.130126+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-25T01:21:26.131125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.132126+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-25T01:21:26.133125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.133125+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-25T01:21:26.134128+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.136131+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-25T01:21:26.137132+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.138126+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-25T01:21:26.139251+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.140130+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-25T01:21:26.140130+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.141128+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-25T01:21:26.142127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.142127+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-25T01:21:26.143128+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.143128+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-25T01:21:26.144129+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.146124+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-25T01:21:26.147126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.147126+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-25T01:21:26.148126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.148126+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-25T01:21:26.149127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.150132+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-25T01:21:26.150132+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.151127+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-25T01:21:26.151127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.152127+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-25T01:21:26.152127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.154130+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-25T01:21:26.155362+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.155944+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-25T01:21:26.156124+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.157127+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-25T01:21:26.157127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.158203+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-25T01:21:26.159130+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.160128+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-25T01:21:26.161130+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.161130+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-25T01:21:26.162126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.162126+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T01:21:26.163126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.164127+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-25T01:21:26.164127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.165126+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T01:21:26.166126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.167126+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-25T01:21:26.167126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.168124+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-25T01:21:26.168124+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.169431+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-25T01:21:26.170157+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.171438+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-25T01:21:26.172194+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.172194+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-25T01:21:26.173126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.174474+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-25T01:21:26.175126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.175126+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-25T01:21:26.176126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.177125+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-25T01:21:26.177125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.178126+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-25T01:21:26.178126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.179124+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-25T01:21:26.179124+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.180126+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-25T01:21:26.180126+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.181125+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-25T01:21:26.181125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.182124+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-25T01:21:26.182124+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.183125+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T01:21:26.183125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.183125+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-25T01:21:26.184125+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.184125+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-25T01:21:26.185127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.186471+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-25T01:21:26.187472+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.188250+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-25T01:21:26.189263+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:21:26.190127+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T01:21:26.190127+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:22:55.631557+0300 INFO Shutting down application...
+2025-04-25T01:22:55.860486+0300 INFO Database connections closed
+2025-04-25T01:22:55.861464+0300 INFO Shutdown complete.
+2025-04-25T01:22:59.063937+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:22:59.064937+0300 INFO Algolia client initialized successfully
+2025-04-25T01:23:00.156748+0300 INFO Setting up database...
+2025-04-25T01:23:02.995421+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:23:03.181970+0300 INFO Database setup completed successfully
+2025-04-25T01:23:03.182972+0300 INFO Database setup completed
+2025-04-25T01:23:03.182972+0300 INFO Seeding glossary terms...
+2025-04-25T01:23:03.371112+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:23:03.372111+0300 INFO Glossary seeding completed
+2025-04-25T01:23:03.372719+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:23:03.941680+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:23:04.069505+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:23:04.069505+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:23:05.884020+0300 INFO Shutting down application...
+2025-04-25T01:23:06.066742+0300 INFO Database connections closed
+2025-04-25T01:23:06.068387+0300 INFO Shutdown complete.
+2025-04-25T01:23:09.137819+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:23:09.138819+0300 INFO Algolia client initialized successfully
+2025-04-25T01:23:10.382709+0300 INFO Setting up database...
+2025-04-25T01:23:12.394698+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:23:12.649691+0300 INFO Database setup completed successfully
+2025-04-25T01:23:12.650694+0300 INFO Database setup completed
+2025-04-25T01:23:12.651692+0300 INFO Seeding glossary terms...
+2025-04-25T01:23:12.842686+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:23:12.842686+0300 INFO Glossary seeding completed
+2025-04-25T01:23:12.843688+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:23:13.272035+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:23:13.428012+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:23:13.429014+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:23:54.018956+0300 INFO Shutting down application...
+2025-04-25T01:23:54.221671+0300 INFO Database connections closed
+2025-04-25T01:23:54.223236+0300 INFO Shutdown complete.
+2025-04-25T01:23:57.347929+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:23:57.349104+0300 INFO Algolia client initialized successfully
+2025-04-25T01:23:58.437819+0300 INFO Setting up database...
+2025-04-25T01:24:00.439817+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:24:00.650537+0300 INFO Database setup completed successfully
+2025-04-25T01:24:00.651531+0300 INFO Database setup completed
+2025-04-25T01:24:00.651531+0300 INFO Seeding glossary terms...
+2025-04-25T01:24:00.857056+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:24:00.857056+0300 INFO Glossary seeding completed
+2025-04-25T01:24:00.858030+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:24:01.306711+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:24:01.436400+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:24:01.437404+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:24:05.011372+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:24:05.012465+0300 INFO Algolia client initialized successfully
+2025-04-25T01:24:06.094440+0300 INFO Setting up database...
+2025-04-25T01:24:08.201914+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:24:08.402384+0300 INFO Database setup completed successfully
+2025-04-25T01:24:08.403375+0300 INFO Database setup completed
+2025-04-25T01:24:08.403375+0300 INFO Seeding glossary terms...
+2025-04-25T01:24:08.618361+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:24:08.619362+0300 INFO Glossary seeding completed
+2025-04-25T01:24:08.620365+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:24:09.121920+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:24:09.256919+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:24:09.258010+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:24:12.640502+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:24:12.640502+0300 INFO Algolia client initialized successfully
+2025-04-25T01:24:13.762917+0300 INFO Setting up database...
+2025-04-25T01:24:15.836880+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:24:16.034287+0300 INFO Database setup completed successfully
+2025-04-25T01:24:16.034972+0300 INFO Database setup completed
+2025-04-25T01:24:16.035561+0300 INFO Seeding glossary terms...
+2025-04-25T01:24:16.252791+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:24:16.252791+0300 INFO Glossary seeding completed
+2025-04-25T01:24:16.253789+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:24:16.754922+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:24:16.886530+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:24:16.887527+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:24:22.101140+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T01:24:22.112743+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-25T01:24:22.113756+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-25T01:24:22.115762+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.116767+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-25T01:24:22.117768+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-25T01:24:22.118763+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-25T01:24:22.119760+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-25T01:24:22.119760+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-25T01:24:22.120763+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-25T01:24:22.121763+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-25T01:24:22.122763+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-25T01:24:22.123765+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-25T01:24:22.123765+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-25T01:24:22.124764+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-25T01:24:22.125763+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.126759+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-25T01:24:22.126759+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-25T01:24:22.127761+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-25T01:24:22.127761+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-25T01:24:22.128763+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-25T01:24:22.128763+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-25T01:24:22.130762+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.131966+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-25T01:24:22.132759+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-25T01:24:22.133764+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-25T01:24:22.134778+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-25T01:24:22.135854+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T01:24:22.136763+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.137983+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-25T01:24:22.138762+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-25T01:24:22.139768+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-25T01:24:22.140761+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-25T01:24:22.140761+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-25T01:24:22.141758+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-25T01:24:22.141758+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-25T01:24:22.142763+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-25T01:24:22.142763+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-25T01:24:22.143762+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-25T01:24:22.143762+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-25T01:24:22.144760+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-25T01:24:22.145762+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-25T01:24:22.146758+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.146758+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-25T01:24:22.147757+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-25T01:24:22.147757+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-25T01:24:22.148757+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-25T01:24:22.149762+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-25T01:24:22.150768+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-25T01:24:22.152756+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.153764+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-25T01:24:22.153764+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-25T01:24:22.154758+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-25T01:24:22.155756+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.156755+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-25T01:24:22.157762+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-25T01:24:22.157762+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-25T01:24:22.158765+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-25T01:24:22.159757+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-25T01:24:22.159757+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-25T01:24:22.160757+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-25T01:24:22.160757+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-25T01:24:22.161755+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.162771+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-25T01:24:22.162771+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-25T01:24:22.163780+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-25T01:24:22.163780+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-25T01:24:22.164766+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.165769+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-25T01:24:22.166760+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-25T01:24:22.167767+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-25T01:24:22.168755+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-25T01:24:22.169760+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-25T01:24:22.170761+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-25T01:24:22.171763+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-25T01:24:22.172762+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-25T01:24:22.173757+0300 ERROR Error creating tool response: a coroutine was expected, got <Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Home\.pyenv\pyenv-win\versions\3.12.3\Lib\asyncio\futures.py:387]>
+2025-04-25T01:24:22.173757+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-25T01:24:22.174761+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-25T01:24:22.175759+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-25T01:24:22.175759+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-25T01:24:22.176758+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-25T01:24:22.176758+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-25T01:24:22.177759+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-25T01:24:22.177759+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-25T01:24:22.178759+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-25T01:24:22.178759+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-25T01:24:22.179758+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-25T01:24:22.179758+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T01:24:22.180758+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-25T01:24:22.181756+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T01:24:22.182762+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-25T01:24:22.184992+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-25T01:24:22.185758+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-25T01:24:22.186759+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-25T01:24:22.187755+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-25T01:24:22.187755+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-25T01:24:22.188755+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-25T01:24:22.188755+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-25T01:24:22.189755+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-25T01:24:22.190756+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-25T01:24:22.191761+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-25T01:24:22.191761+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-25T01:24:22.192755+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-25T01:24:22.192755+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T01:24:22.193756+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-25T01:24:22.194757+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-25T01:24:22.194757+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-25T01:24:22.195755+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-25T01:24:22.196760+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T01:24:26.739970+0300 INFO Shutting down application...
+2025-04-25T01:24:26.944478+0300 INFO Database connections closed
+2025-04-25T01:24:26.944924+0300 INFO Shutdown complete.
+2025-04-25T01:24:30.287989+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:24:30.289984+0300 INFO Algolia client initialized successfully
+2025-04-25T01:24:31.264598+0300 INFO Setting up database...
+2025-04-25T01:24:33.978041+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:24:34.205584+0300 INFO Database setup completed successfully
+2025-04-25T01:24:34.206595+0300 INFO Database setup completed
+2025-04-25T01:24:34.206595+0300 INFO Seeding glossary terms...
+2025-04-25T01:24:34.436488+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:24:34.436762+0300 INFO Glossary seeding completed
+2025-04-25T01:24:34.437793+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:24:35.839312+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:24:35.982026+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:24:35.982571+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:24:39.425468+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:24:39.426475+0300 INFO Algolia client initialized successfully
+2025-04-25T01:24:40.350362+0300 INFO Setting up database...
+2025-04-25T01:24:42.454031+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:24:42.642445+0300 INFO Database setup completed successfully
+2025-04-25T01:24:42.643446+0300 INFO Database setup completed
+2025-04-25T01:24:42.644444+0300 INFO Seeding glossary terms...
+2025-04-25T01:24:42.834126+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:24:42.834656+0300 INFO Glossary seeding completed
+2025-04-25T01:24:42.834656+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:24:43.270927+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:24:43.428833+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:24:43.428833+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:25:11.612143+0300 INFO Shutting down application...
+2025-04-25T01:25:11.811327+0300 INFO Database connections closed
+2025-04-25T01:25:11.811854+0300 INFO Shutdown complete.
+2025-04-25T01:25:14.915677+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:25:14.916970+0300 INFO Algolia client initialized successfully
+2025-04-25T01:25:15.794020+0300 INFO Setting up database...
+2025-04-25T01:25:17.877070+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:25:18.080600+0300 INFO Database setup completed successfully
+2025-04-25T01:25:18.081583+0300 INFO Database setup completed
+2025-04-25T01:25:18.082154+0300 INFO Seeding glossary terms...
+2025-04-25T01:25:18.280587+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:25:18.282213+0300 INFO Glossary seeding completed
+2025-04-25T01:25:18.282613+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:25:18.706736+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:25:18.913125+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:25:18.914107+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:27:23.302017+0300 INFO Shutting down application...
+2025-04-25T01:27:23.496429+0300 INFO Database connections closed
+2025-04-25T01:27:23.497427+0300 INFO Shutdown complete.
+2025-04-25T01:27:26.778182+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:27:26.780169+0300 INFO Algolia client initialized successfully
+2025-04-25T01:27:27.772046+0300 INFO Setting up database...
+2025-04-25T01:27:31.420665+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:27:31.641666+0300 INFO Database setup completed successfully
+2025-04-25T01:27:31.643669+0300 INFO Database setup completed
+2025-04-25T01:27:31.643669+0300 INFO Seeding glossary terms...
+2025-04-25T01:27:31.848819+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:27:31.848819+0300 INFO Glossary seeding completed
+2025-04-25T01:27:31.849809+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:27:32.443871+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:27:32.574044+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:27:32.574644+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:27:37.738264+0300 INFO Shutting down application...
+2025-04-25T01:27:37.938258+0300 INFO Database connections closed
+2025-04-25T01:27:37.939254+0300 INFO Shutdown complete.
+2025-04-25T01:27:40.916404+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:27:40.917409+0300 INFO Algolia client initialized successfully
+2025-04-25T01:27:41.937258+0300 INFO Setting up database...
+2025-04-25T01:27:44.037646+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:27:44.231321+0300 INFO Database setup completed successfully
+2025-04-25T01:27:44.231321+0300 INFO Database setup completed
+2025-04-25T01:27:44.232324+0300 INFO Seeding glossary terms...
+2025-04-25T01:27:44.428323+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:27:44.428323+0300 INFO Glossary seeding completed
+2025-04-25T01:27:44.429335+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:27:44.845328+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:27:44.983008+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:27:44.984393+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:27:49.781020+0300 INFO Shutting down application...
+2025-04-25T01:27:49.967700+0300 INFO Database connections closed
+2025-04-25T01:27:49.968702+0300 INFO Shutdown complete.
+2025-04-25T01:27:53.144091+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:27:53.146103+0300 INFO Algolia client initialized successfully
+2025-04-25T01:27:54.171988+0300 INFO Setting up database...
+2025-04-25T01:27:56.212281+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:27:56.418892+0300 INFO Database setup completed successfully
+2025-04-25T01:27:56.419890+0300 INFO Database setup completed
+2025-04-25T01:27:56.420892+0300 INFO Seeding glossary terms...
+2025-04-25T01:27:56.612538+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:27:56.613534+0300 INFO Glossary seeding completed
+2025-04-25T01:27:56.613534+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:27:57.041949+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:27:57.199070+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:27:57.199633+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:28:00.352670+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T01:28:00.353670+0300 INFO Algolia client initialized successfully
+2025-04-25T01:28:01.496697+0300 INFO Setting up database...
+2025-04-25T01:28:03.396810+0300 INFO Connected to MongoDB for setup
+2025-04-25T01:28:03.566103+0300 INFO Database setup completed successfully
+2025-04-25T01:28:03.566103+0300 INFO Database setup completed
+2025-04-25T01:28:03.567108+0300 INFO Seeding glossary terms...
+2025-04-25T01:28:03.738523+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T01:28:03.738523+0300 INFO Glossary seeding completed
+2025-04-25T01:28:03.739508+0300 INFO Configuring Algolia indexes...
+2025-04-25T01:28:04.158720+0300 INFO Algolia tools index configured successfully
+2025-04-25T01:28:04.301520+0300 INFO Algolia glossary index configured successfully
+2025-04-25T01:28:04.302514+0300 INFO Algolia indexes configured successfully
+2025-04-25T01:28:12.634913+0300 INFO Shutting down application...
+2025-04-25T01:28:12.819772+0300 INFO Database connections closed
+2025-04-25T01:28:12.820911+0300 INFO Shutdown complete.
