@@ -1115,3 +1115,17 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-24T12:24:07.627187+0300 INFO Algolia tools index configured successfully
 2025-04-24T12:24:07.869757+0300 INFO Algolia glossary index configured successfully
 2025-04-24T12:24:07.869757+0300 INFO Algolia indexes configured successfully
+2025-04-24T12:24:11.425404+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T12:24:11.426404+0300 INFO Algolia client initialized successfully
+2025-04-24T12:24:12.584556+0300 INFO Setting up database...
+2025-04-24T12:24:15.026653+0300 INFO Connected to MongoDB for setup
+2025-04-24T12:24:15.267688+0300 INFO Database setup completed successfully
+2025-04-24T12:24:15.267688+0300 INFO Database setup completed
+2025-04-24T12:24:15.268686+0300 INFO Seeding glossary terms...
+2025-04-24T12:24:15.479754+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T12:24:15.480753+0300 INFO Glossary seeding completed
+2025-04-24T12:24:15.481753+0300 INFO Configuring Algolia indexes...
+2025-04-24T12:24:16.013878+0300 INFO Algolia tools index configured successfully
+2025-04-24T12:24:16.195883+0300 INFO Algolia glossary index configured successfully
+2025-04-24T12:24:16.196885+0300 INFO Algolia indexes configured successfully
+2025-04-24T12:24:29.239520+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
