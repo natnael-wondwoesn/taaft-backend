@@ -1,7 +1,7 @@
 # app/algolia/search.py
 """
 Enhanced search service for Algolia integration
-Handles tool search and natural language query processing
+Handles natural language query processing for AI tool search
 """
 from typing import Dict, List, Optional, Any, Union
 import datetime
@@ -25,7 +25,7 @@ from ..logger import logger
 
 
 class AlgoliaSearch:
-    """Service for searching with Algolia"""
+    """Service for NLP-based searching with Algolia"""
 
     def __init__(self):
         """Initialize the search service with Algolia config"""
@@ -37,7 +37,7 @@ class AlgoliaSearch:
 
         # Cache of known categories and pricing types
         self.known_categories = {}
-        self.category_synonyms = {
+        self.keyword_synonyms = {
             "writing": ["content creation", "text generation", "copywriting"],
             "image": ["image generation", "design", "graphic", "visual"],
             "audio": ["sound", "voice", "speech", "music"],
@@ -64,351 +64,64 @@ class AlgoliaSearch:
             "contact sales": PricingType.CONTACT,
         }
 
-    async def search_tools(self, params: SearchParams) -> SearchResult:
+    # Utility methods for extracting JSON from OpenAI responses
+    def _extract_json_from_text(self, text: str) -> str:
+        """Extract JSON data from text response"""
+        # Check if the entire text is JSON
+        if text.strip().startswith("{") and text.strip().endswith("}"):
+            return text.strip()
+
+        # Look for JSON-like structure with regex
+        pattern = r"\{(?:[^{}]|(?:\{[^{}]*\}))*\}"
+        matches = re.findall(pattern, text)
+        if matches:
+            # Return the largest match as it's more likely to be the complete JSON
+            return max(matches, key=len)
+
+        return ""
+
+    async def _normalize_categories(
+        self, categories: Union[List[str], str]
+    ) -> List[str]:
         """
-        Search for tools using Algolia
+        Normalize category names to category IDs
 
         Args:
-            params: Search parameters
+            categories: List of category names or single category name
 
         Returns:
-            SearchResult object with tools and metadata
+            List of normalized category IDs
         """
-        if not self.config.is_configured():
-            logger.warning("Algolia not configured. Returning empty search results.")
-            return SearchResult(
-                tools=[], total=0, page=params.page, per_page=params.per_page, pages=0
-            )
+        # Placeholder implementation - ideally would map to actual category IDs
+        if isinstance(categories, str):
+            categories = [categories]
+        return categories
 
-        try:
-            # Build search parameters
-            search_args = {
-                "query": params.query,
-                "page": params.page - 1,  # Algolia uses 0-based pagination
-                "hitsPerPage": params.per_page,
-            }
-
-            # Add facet filters if provided
-            facet_filters = []
-
-            if params.categories:
-                category_filters = [
-                    f"categories.id:{cat_id}" for cat_id in params.categories
-                ]
-                facet_filters.append(category_filters)
-
-            if params.pricing_types:
-                pricing_filters = [
-                    f"pricing.type:{pricing}" for pricing in params.pricing_types
-                ]
-                facet_filters.append(pricing_filters)
-
-            if params.min_rating:
-                # For numeric filters like ratings
-                search_args["numericFilters"] = [
-                    f"ratings.average>={params.min_rating}"
-                ]
-
-            # Add custom filters if provided
-            if params.filters:
-                search_args["filters"] = params.filters
-
-            # Add facet filters to search args if any
-            if facet_filters:
-                search_args["facetFilters"] = facet_filters
-
-            # Add sort if provided
-            if params.sort_by:
-                if params.sort_by == "newest":
-                    search_args["sortBy"] = "created_at:desc"
-                elif params.sort_by == "trending":
-                    search_args["sortBy"] = "trending_score:desc"
-                # Default is relevance, which doesn't need a sort parameter
-
-            # Request facets for filtering options
-            search_args["facets"] = ["categories.name", "pricing.type", "features"]
-
-            # Execute search using v4 client syntax
-            result = self.config.client.search_single_index(
-                self.config.tools_index_name, search_args
-            )
-
-            # Log the search parameters and result summary
-            logger.info(f"Algolia search with params: {search_args}")
-
-            # Extract data from the search response - try different access patterns
-            try:
-                # Try accessing as object attributes first
-                hits = result.hits if hasattr(result, "hits") else []
-                nb_hits = result.nbHits if hasattr(result, "nbHits") else 0
-                processing_time_ms = (
-                    result.processingTimeMS
-                    if hasattr(result, "processingTimeMS")
-                    else 0
-                )
-                facets = result.facets if hasattr(result, "facets") else {}
-
-                logger.info(f"Search found {nb_hits} results")
-
-                # Cache category information from facets
-                categories_dict = {}
-                if hasattr(facets, "categories_name"):
-                    categories_dict = facets.categories_name
-                elif isinstance(facets, dict) and "categories.name" in facets:
-                    categories_dict = facets["categories.name"]
-
-                # Extract pricing types
-                pricing_dict = {}
-                if hasattr(facets, "pricing_type"):
-                    pricing_dict = facets.pricing_type
-                elif isinstance(facets, dict) and "pricing.type" in facets:
-                    pricing_dict = facets["pricing.type"]
-
-                # Update known categories
-                for category_name, count in categories_dict.items():
-                    self.known_categories[category_name.lower()] = {
-                        "name": category_name,
-                        "count": count,
-                    }
-
-                # Create facets objects
-                facets_obj = SearchFacets(
-                    categories=[
-                        SearchFacet(name=name, count=count)
-                        for name, count in categories_dict.items()
-                    ],
-                    pricing_types=[
-                        SearchFacet(name=name, count=count)
-                        for name, count in pricing_dict.items()
-                    ],
-                )
-
-                # Calculate total pages
-                total_pages = (
-                    (nb_hits + params.per_page - 1) // params.per_page
-                    if params.per_page > 0
-                    else 0
-                )
-
-                # Prepare the search result
-                search_result = SearchResult(
-                    tools=hits,
-                    total=nb_hits,
-                    page=params.page,
-                    per_page=params.per_page,
-                    pages=total_pages,
-                    facets=facets_obj,
-                    processing_time_ms=processing_time_ms,
-                )
-
-                return search_result
-
-            except Exception as e:
-                logger.warning(
-                    f"Error accessing response properties as attributes: {str(e)}. Falling back to dictionary access."
-                )
-
-                # Fall back to dictionary access
-                hits = result.get("hits", []) if hasattr(result, "get") else []
-                if not hits and isinstance(result, dict):
-                    hits = result.get("hits", [])
-
-                nb_hits = 0
-                if hasattr(result, "get"):
-                    nb_hits = result.get("nbHits", 0)
-                elif isinstance(result, dict):
-                    nb_hits = result.get("nbHits", 0)
-
-                processing_time_ms = 0
-                if hasattr(result, "get"):
-                    processing_time_ms = result.get("processingTimeMS", 0)
-                elif isinstance(result, dict):
-                    processing_time_ms = result.get("processingTimeMS", 0)
-
-                # Extract facets from result
-                facets_dict = {}
-                if hasattr(result, "get"):
-                    facets_dict = result.get("facets", {})
-                elif isinstance(result, dict):
-                    facets_dict = result.get("facets", {})
-
-                # Process facets dictionary
-                categories_dict = {}
-                if isinstance(facets_dict, dict) and "categories.name" in facets_dict:
-                    categories_dict = facets_dict.get("categories.name", {})
-
-                pricing_dict = {}
-                if isinstance(facets_dict, dict) and "pricing.type" in facets_dict:
-                    pricing_dict = facets_dict.get("pricing.type", {})
-
-                # Update known categories
-                for category_name, count in categories_dict.items():
-                    self.known_categories[category_name.lower()] = {
-                        "name": category_name,
-                        "count": count,
-                    }
-
-                # Create facets objects
-                facets = SearchFacets(
-                    categories=[
-                        SearchFacet(name=name, count=count)
-                        for name, count in categories_dict.items()
-                    ],
-                    pricing_types=[
-                        SearchFacet(name=name, count=count)
-                        for name, count in pricing_dict.items()
-                    ],
-                )
-
-                # Calculate total pages
-                total_pages = (
-                    (nb_hits + params.per_page - 1) // params.per_page
-                    if params.per_page > 0
-                    else 0
-                )
-
-                # Prepare the search result
-                search_result = SearchResult(
-                    tools=hits,
-                    total=nb_hits,
-                    page=params.page,
-                    per_page=params.per_page,
-                    pages=total_pages,
-                    facets=facets,
-                    processing_time_ms=processing_time_ms,
-                )
-
-                return search_result
-
-        except Exception as e:
-            logger.error(f"Error searching tools with Algolia: {str(e)}")
-            # Return empty result on error
-            return SearchResult(
-                tools=[], total=0, page=params.page, per_page=params.per_page, pages=0
-            )
-
-    async def search_glossary(
-        self, query: str, page: int = 1, per_page: int = 20
-    ) -> Dict[str, Any]:
+    async def _normalize_pricing_types(
+        self, pricing_types: Union[List[str], str]
+    ) -> List[str]:
         """
-        Search glossary terms using Algolia
+        Normalize pricing type names to enum values
 
         Args:
-            query: Search query
-            page: Page number (1-based)
-            per_page: Number of results per page
+            pricing_types: List of pricing type names or single pricing type name
 
         Returns:
-            Dictionary with search results
+            List of normalized pricing type enum values
         """
-        if not self.config.is_configured():
-            logger.warning("Algolia not configured. Returning empty glossary results.")
-            return {
-                "hits": [],
-                "total": 0,
-                "page": page,
-                "pages": 0,
-                "processing_time_ms": 0,
-            }
+        if isinstance(pricing_types, str):
+            pricing_types = [pricing_types]
 
-        try:
-            # Build search parameters
-            search_args = {
-                "query": query,
-                "page": page - 1,  # Algolia uses 0-based pagination
-                "hitsPerPage": per_page,
-                "attributesToRetrieve": [
-                    "term",
-                    "definition",
-                    "related_terms",
-                    "categories",
-                    "letter_group",
-                ],
-                "attributesToHighlight": ["term", "definition"],
-                "highlightPreTag": "<mark>",
-                "highlightPostTag": "</mark>",
-            }
+        normalized = []
+        for pt in pricing_types:
+            pt_lower = pt.lower()
+            if pt_lower in self.price_type_mapping:
+                normalized.append(self.price_type_mapping[pt_lower])
+            else:
+                # Default to the original value if not found
+                normalized.append(pt)
 
-            # Execute search using v4 client syntax
-            result = self.config.client.search_single_index(
-                self.config.glossary_index_name, search_args
-            )
-
-            # Try accessing response properties (handling both object attributes and dictionary access)
-            try:
-                # Try accessing as object attributes first
-                hits = result.hits if hasattr(result, "hits") else []
-                nb_hits = result.nbHits if hasattr(result, "nbHits") else 0
-                processing_time_ms = (
-                    result.processingTimeMS
-                    if hasattr(result, "processingTimeMS")
-                    else 0
-                )
-
-                # Calculate total pages
-                total_pages = (
-                    (nb_hits + per_page - 1) // per_page if per_page > 0 else 0
-                )
-
-                # Prepare the search result
-                search_result = {
-                    "hits": hits,
-                    "total": nb_hits,
-                    "page": page,
-                    "pages": total_pages,
-                    "processing_time_ms": processing_time_ms,
-                }
-
-                return search_result
-
-            except Exception as e:
-                logger.warning(
-                    f"Error accessing response properties as attributes: {str(e)}. Falling back to dictionary access."
-                )
-
-                # Fall back to dictionary access
-                hits = result.get("hits", []) if hasattr(result, "get") else []
-                if not hits and isinstance(result, dict):
-                    hits = result.get("hits", [])
-
-                nb_hits = 0
-                if hasattr(result, "get"):
-                    nb_hits = result.get("nbHits", 0)
-                elif isinstance(result, dict):
-                    nb_hits = result.get("nbHits", 0)
-
-                processing_time_ms = 0
-                if hasattr(result, "get"):
-                    processing_time_ms = result.get("processingTimeMS", 0)
-                elif isinstance(result, dict):
-                    processing_time_ms = result.get("processingTimeMS", 0)
-
-                # Calculate total pages
-                total_pages = (
-                    (nb_hits + per_page - 1) // per_page if per_page > 0 else 0
-                )
-
-                # Prepare the search result
-                search_result = {
-                    "hits": hits,
-                    "total": nb_hits,
-                    "page": page,
-                    "pages": total_pages,
-                    "processing_time_ms": processing_time_ms,
-                }
-
-                return search_result
-
-        except Exception as e:
-            logger.error(f"Error searching glossary with Algolia: {str(e)}")
-            # Return empty result on error
-            return {
-                "hits": [],
-                "total": 0,
-                "page": page,
-                "pages": 0,
-                "processing_time_ms": 0,
-            }
+        return normalized
 
     async def process_natural_language_query(
         self, nlq: NaturalLanguageQuery
@@ -435,380 +148,315 @@ class AlgoliaSearch:
             optimized search parameters for an AI tool directory. Our database contains AI tools with the following structure:
 
             {
-                "objectID": "68088b0da40b1de891a1316e",
-                "name": "Fork.ai",
-                "description": "AI-powered task automation tool",
-                "summary": "Automate your workflow with natural language commands",
-                "url": "https://fork.ai",
-                "logo_url": "https://fork.ai/logo.png",
-                "category": "Productivity",
-                "features": ["Workflow automation", "Natural language interface"],
-                "pricing_type": "Freemium",
-                "pricing_url": "https://fork.ai/pricing",
-                "is_featured": true,
-                "tags": ["automation", "productivity", "workflow"],
-                "price": "9.95",
-                "rating": "4.8",
-                "saved_numbers": 1070,
-                "created_at": "2023-05-12T10:30:45Z",
-                "updated_at": "2023-09-18T14:22:31Z"
+              "link": "https://replicate.com/playgroundai/playground-v2-1024px-aesthetic",
+              "name": "playgroundai/playground-v2-1024px-aesthetic",
+              "price": "Public",
+              "rating": null,
+              "unique_id": "playgroundai/playground-v2-1024px-aesthetic",
+              "saved numbers": 447600,
+              "category_id": "\"6806415d856a3a9ff0979444\"",
+              "image_url": "https://tjzk.replicate.delivery/models_models_featured_image/e61adb01-bb73-448f-b2d5-3e8827577128/out-0.png",
+              "logo_url": "",
+              "description": "Playground v2 is a diffusion-based text-to-image generative model trained from scratch by the research team at Playground",
+              "keywords": [
+                "playground",
+                "text-to-image",
+                "generative model",
+                "diffusion"
+              ]
             }
+            
+            IMPORTANT: Our search focuses ONLY on the "keywords" and "description" fields. 
+            Searching is restricted to these fields only.
             
             Follow these steps carefully:
             
             1. Understand the user's intent and identify what type of AI tool they are looking for.
-            2. Extract key search terms based on the tool name, functionality, and features.
-            3. Identify any filters related to category, price, rating, or other specific attributes.
+            2. Extract key search terms that would match tool keywords or description.
+            3. Identify any filters related to category or price if mentioned.
             4. Prepare a concise search query focusing on the most relevant keywords.
             
             Search parameters should include:
             
-            1. search_query: The optimized keywords for the search (3-7 words max)
-            2. price_filter: Price range or type (Free, Freemium, Paid, Enterprise, Contact, specific amount like "under $10")
-            3. rating_filter: Minimum rating if mentioned (on a 1-5 scale)
-            4. categories: Relevant tool categories based on user's request
-            5. interpreted_intent: A brief description of what the user is looking for
+            1. search_query: The optimized keywords for the search (3-7 words max) that would match tool keywords or description
+            2. price_filter: Price range or type if mentioned (Free, Paid, Public, etc.)
+            3. keywords: Relevant tool keywords based on user's request
+            4. interpreted_intent: A brief description of what the user is looking for
             
             Examples:
             
-            Question: "I need an AI marketing tool under $10 with high ratings"
+            Question: "I need an AI image generation tool"
             {
-                "search_query": "AI marketing tool",
-                "price_filter": "under $10",
-                "rating_filter": 4.5,
-                "categories": ["Marketing"],
-                "interpreted_intent": "Looking for affordable, highly-rated AI marketing tools"
-            }
-            
-            Question: "Find me the most popular AI writing assistants"
-            {
-                "search_query": "popular AI writing assistant",
+                "search_query": "text-to-image generative model",
                 "price_filter": null,
-                "rating_filter": null,
-                "categories": ["Writing"],
-                "interpreted_intent": "Seeking popular AI tools for writing assistance"
+                "keywords": ["AI", "Image Generation"],
+                "interpreted_intent": "Looking for tools that can generate images from text"
             }
             
-            Question: "Show me free AI image generators"
+            Question: "Find me free diffusion models"
             {
-                "search_query": "free AI image generator",
+                "search_query": "diffusion generative model",
                 "price_filter": "Free",
-                "rating_filter": null,
-                "categories": ["Image Generation"],
-                "interpreted_intent": "Looking for free tools to generate images with AI"
+                "keywords": ["image generation", "diffusion"],
+                "interpreted_intent": "Seeking free diffusion-based image generation tools"
             }
             
-            Question: "I need a highly rated AI code assistant for Python"
+            Question: "Show me playground AI tools"
             {
-                "search_query": "Python code assistant",
+                "search_query": "playground AI",
                 "price_filter": null,
-                "rating_filter": 4.0,
-                "categories": ["Development", "Coding"],
-                "interpreted_intent": "Seeking highly rated AI tools for Python coding assistance"
+                "keywords": ["playground", "AI"],
+                "interpreted_intent": "Looking for AI tools from Playground"
             }
-            
-            Available categories in our system include:
-            - Writing
-            - Image Generation
-            - Audio
-            - Video
-            - Code Generation
-            - Development
-            - Marketing
-            - Data Analysis
-            - Productivity
-            - Research
-            - Chat
-            - E-commerce
-            - Analytics
-            
-            Available pricing types:
-            - Free
-            - Freemium
-            - Paid
-            - Enterprise
-            - Contact
-            
-            Respond with a JSON object containing the parameters above.
-            Keep search_query concise and focused on keywords (3-7 words max).
-            Only include filters that are clearly implied in the query.
-            Use null (not empty arrays) when a field is not applicable.
             """
 
-            # Create the chat messages
+            # Include the user's context info if available
+            context_info = ""
+            if nlq.context and hasattr(nlq.context, "items"):
+                context_info = "User context information:\n"
+                for k, v in nlq.context.items():
+                    if v and str(v).strip():
+                        context_info += f"- {k}: {str(v).strip()}\n"
+
+            # Create the user prompt
+            user_prompt = f"Question: {nlq.question}"
+            if context_info:
+                user_prompt += f"\n\n{context_info}"
+
+            # Set up the messages for the chat completion
             messages = [
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": nlq.question},
+                {"role": "user", "content": user_prompt},
             ]
 
-            # Add context if provided
-            if nlq.context:
-                context_str = (
-                    "Additional context about the user or their needs: "
-                    + json.dumps(nlq.context)
-                )
-                messages.append({"role": "user", "content": context_str})
-
-            # Call OpenAI API - handle both sync and async clients
+            # Try to use the new OpenAI client format (v1.0+)
             try:
-                # For the new OpenAI client (v1.0+)
-                try:
-                    from openai import AsyncOpenAI
+                import openai
 
-                    client = AsyncOpenAI(api_key=self.openai_api_key)
-                    response = await client.chat.completions.create(
-                        model="gpt-3.5-turbo",
-                        messages=messages,
-                        temperature=0.3,
-                        max_tokens=300,
-                    )
-                    response_text = response.choices[0].message.content
-                except (ImportError, AttributeError):
-                    # If AsyncOpenAI is not available, use the synchronous client
+                # Check if we're using the new OpenAI client (v1.0+)
+                if hasattr(openai, "OpenAI"):
+                    # New OpenAI client (v1.0+)
                     client = openai.OpenAI(api_key=self.openai_api_key)
                     response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=messages,
-                        temperature=0.3,
-                        max_tokens=300,
+                        temperature=0.1,
+                        max_tokens=500,
                     )
                     response_text = response.choices[0].message.content
-            except Exception as api_error:
-                # Last resort - fall back to legacy OpenAI API format
-                try:
-                    response = await openai.ChatCompletion.acreate(
+                else:
+                    # Fall back to legacy client (<v1.0)
+                    response = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
                         messages=messages,
-                        temperature=0.3,
-                        max_tokens=300,
+                        temperature=0.1,
+                        max_tokens=500,
                     )
                     response_text = response.choices[0].message.content
-                except Exception as legacy_error:
-                    logger.error(f"OpenAI API error (modern): {str(api_error)}")
-                    logger.error(f"OpenAI API error (legacy): {str(legacy_error)}")
-                    raise RuntimeError(f"Failed to call OpenAI API: {str(api_error)}")
 
-            # Try to extract JSON from response
+                logger.info(f"OpenAI response: {response_text}")
+
+            except (ImportError, AttributeError) as e:
+                logger.error(f"Error with OpenAI API: {e}")
+                # Use basic keyword extraction as fallback
+                return await self._basic_keyword_extraction(nlq.question)
+
+            # Extract JSON from the response
+            json_str = self._extract_json_from_text(response_text)
+            if not json_str:
+                logger.warning("No valid JSON found in OpenAI response.")
+                return ProcessedQuery(
+                    original_question=nlq.question,
+                    search_query=nlq.question,
+                    interpreted_intent="Failed to extract structured query from natural language",
+                )
+
             try:
-                # Handle potential markdown code blocks or extract JSON
-                json_str = self._extract_json_from_text(response_text)
-                processed_data = json.loads(json_str)
+                query_data = json.loads(json_str)
+                logger.info(f"Extracted query data: {query_data}")
 
-                # Normalize and validate pricing types - handle both old and new format
-                pricing_types = await self._normalize_pricing_types(
-                    processed_data.get("pricing_types")
-                )
+                # Extract query parameters from the parsed JSON
+                search_query = query_data.get("search_query", nlq.question)
+                price_filter = query_data.get("price_filter")
+                rating_filter = query_data.get("rating_filter")
+                categories = query_data.get("categories")
+                interpreted_intent = query_data.get("interpreted_intent")
 
-                # Normalize and validate categories
-                categories = await self._normalize_categories(
-                    processed_data.get("categories")
-                )
+                # Convert pricing type names to enum values
+                pricing_types = None
+                if price_filter:
+                    if isinstance(price_filter, list):
+                        pricing_types = await self._normalize_pricing_types(
+                            price_filter
+                        )
+                    else:
+                        pricing_types = await self._normalize_pricing_types(
+                            [price_filter]
+                        )
 
-                # Build filter string if needed
-                filters = processed_data.get("filters")
+                # Normalize categories if present
+                if categories:
+                    categories = await self._normalize_categories(categories)
 
-                # Get new fields from updated prompt
-                price_filter = processed_data.get("price_filter")
-                rating_filter = processed_data.get("rating_filter")
-
-                # Convert rating_filter to min_rating for backward compatibility
-                min_rating = rating_filter
-
-                # Build advanced filters if needed
-                if price_filter or rating_filter:
-                    filter_parts = []
-
-                    # Handle price filter
-                    if price_filter:
-                        if price_filter.lower() == "free":
-                            filter_parts.append("price:0 OR price:Free OR price:free")
-                        elif price_filter.lower() in ["paid", "premium"]:
-                            filter_parts.append("price:>0")
-                        elif "under" in price_filter.lower():
-                            # Extract numeric value from "under $X"
-                            try:
-                                price_value = float(
-                                    "".join(
-                                        c
-                                        for c in price_filter
-                                        if c.isdigit() or c == "."
-                                    )
-                                )
-                                filter_parts.append(f"price:<{price_value}")
-                            except:
-                                pass
-
-                    # Handle rating filter
-                    if rating_filter:
-                        filter_parts.append(f"rating:>={rating_filter}")
-
-                    # Combine filter parts
-                    if filter_parts:
-                        filters = " AND ".join(filter_parts)
-
-                # Create the processed query object with new fields
+                # Create the processed query object
                 processed_query = ProcessedQuery(
                     original_question=nlq.question,
-                    search_query=processed_data.get("search_query", nlq.question),
-                    filters=filters,
+                    search_query=search_query,
+                    filters=None,  # We'll build this from individual filters
                     categories=categories,
                     pricing_types=pricing_types,
-                    interpreted_intent=processed_data.get("interpreted_intent"),
+                    interpreted_intent=interpreted_intent,
                     price_filter=price_filter,
                     rating_filter=rating_filter,
-                    min_rating=min_rating,
+                    min_rating=rating_filter,  # Alias for backward compatibility
                 )
 
-                logger.info(
-                    f"Processed natural language query: '{nlq.question}' -> '{processed_query.search_query}'"
-                )
                 return processed_query
 
-            except (json.JSONDecodeError, ValueError, IndexError) as e:
-                logger.error(f"Error parsing NLP response: {str(e)}")
-                # Perform basic keyword extraction as fallback
-                return await self._basic_keyword_extraction(nlq.question)
+            except ValidationError as e:
+                logger.error(f"Validation error processing query data: {str(e)}")
+                # Fall back to using the original query on validation error
+                return ProcessedQuery(
+                    original_question=nlq.question,
+                    search_query=nlq.question,
+                    interpreted_intent="Error validating structured query",
+                )
 
         except Exception as e:
             logger.error(f"Error processing natural language query: {str(e)}")
-            # Fallback to using the original query
+            # Fall back to using the original query on error
             return ProcessedQuery(
-                original_question=nlq.question, search_query=nlq.question
+                original_question=nlq.question,
+                search_query=nlq.question,
+                interpreted_intent=f"Error processing with NLP: {str(e)}",
             )
-
-    def _extract_json_from_text(self, text: str) -> str:
-        """Extract JSON from text that may contain markdown or other formatting"""
-        # Check for code blocks with JSON
-        if "```json" in text:
-            match = re.search(r"```json\s*(.*?)\s*```", text, re.DOTALL)
-            if match:
-                return match.group(1)
-
-        # Check for any code blocks
-        if "```" in text:
-            match = re.search(r"```\s*(.*?)\s*```", text, re.DOTALL)
-            if match:
-                return match.group(1)
-
-        # Look for JSON-like structure with curly braces
-        match = re.search(r"({.*})", text, re.DOTALL)
-        if match:
-            return match.group(1)
-
-        # If no JSON structure found, return the original text
-        return text.strip()
-
-    async def _normalize_pricing_types(
-        self, pricing_types: Optional[List[str]]
-    ) -> Optional[List[PricingType]]:
-        """Normalize and validate pricing types"""
-        if not pricing_types:
-            return None
-
-        normalized = []
-        for pt in pricing_types:
-            pt_lower = pt.lower()
-            if pt_lower in self.price_type_mapping:
-                normalized.append(self.price_type_mapping[pt_lower])
-
-        return normalized if normalized else None
-
-    async def _normalize_categories(
-        self, categories: Optional[List[str]]
-    ) -> Optional[List[str]]:
-        """Normalize and validate categories against known categories"""
-        if not categories:
-            return None
-
-        # First check exact matches in known categories
-        normalized = []
-        for cat in categories:
-            cat_lower = cat.lower()
-
-            # Direct match in known categories
-            if cat_lower in self.known_categories:
-                normalized.append(self.known_categories[cat_lower]["name"])
-                continue
-
-            # Check synonyms
-            matched = False
-            for main_cat, synonyms in self.category_synonyms.items():
-                if cat_lower == main_cat or any(
-                    syn.lower() in cat_lower for syn in synonyms
-                ):
-                    # Find a known category that matches this synonym
-                    for known_cat in self.known_categories:
-                        if main_cat in known_cat.lower():
-                            normalized.append(
-                                self.known_categories[known_cat.lower()]["name"]
-                            )
-                            matched = True
-                            break
-                    if matched:
-                        break
-
-            # If no match found, use the original category
-            if not matched:
-                normalized.append(cat)
-
-        return normalized if normalized else None
 
     async def _basic_keyword_extraction(self, question: str) -> ProcessedQuery:
         """
-        Basic keyword extraction as a fallback when NLP processing fails
+        Basic keyword extraction fallback when OpenAI is not available
+        Extracts meaningful keywords from a natural language question
+
+        Args:
+            question: The natural language question
+
+        Returns:
+            ProcessedQuery object with extracted search parameters
         """
-        # Remove common stop words and extract key terms
-        stop_words = {
+        # Basic stopwords to filter out
+        stopwords = {
             "a",
             "an",
             "the",
             "and",
             "or",
             "but",
+            "if",
+            "because",
+            "as",
+            "what",
+            "which",
+            "who",
+            "whom",
+            "this",
+            "that",
+            "these",
+            "those",
             "is",
             "are",
+            "was",
+            "were",
+            "be",
+            "been",
+            "being",
+            "have",
+            "has",
+            "had",
+            "do",
+            "does",
+            "did",
+            "i",
+            "me",
+            "my",
+            "mine",
+            "you",
+            "your",
+            "yours",
+            "he",
+            "him",
+            "his",
+            "she",
+            "her",
+            "hers",
+            "it",
+            "its",
+            "we",
+            "us",
+            "our",
+            "ours",
+            "they",
+            "them",
+            "their",
+            "theirs",
+            "want",
+            "need",
+            "looking",
             "for",
-            "with",
             "to",
+            "of",
             "in",
             "on",
             "at",
             "by",
-            "of",
+            "with",
+            "about",
+            "tool",
+            "tools",
+            "ai",
         }
-        words = question.lower().split()
-        keywords = [word for word in words if word not in stop_words and len(word) > 2]
 
-        # Create a simple search query from the keywords
-        search_query = " ".join(keywords[:6])  # Limit to 6 keywords
+        # Convert to lowercase and tokenize by splitting on spaces and punctuation
+        words = re.findall(r"\b\w+\b", question.lower())
 
-        # Try to detect pricing intent
+        # Filter out stopwords and short words
+        keywords = [word for word in words if word not in stopwords and len(word) > 2]
+
+        # Extract pricing information
         pricing_types = None
-        if any(
-            word in question.lower()
-            for word in ["free", "freemium", "open source", "opensource"]
-        ):
-            pricing_types = [PricingType.FREE, PricingType.FREEMIUM]
+        if "free" in words:
+            pricing_types = ["FREE"]
+        elif "paid" in words or "premium" in words:
+            pricing_types = ["PAID"]
 
-        # Try to detect categories
-        categories = []
-        for keyword in keywords:
-            # Check for category keywords
-            for main_cat, synonyms in self.category_synonyms.items():
-                if keyword == main_cat or any(
-                    syn.lower() == keyword for syn in synonyms
-                ):
-                    categories.append(main_cat.capitalize())
+        # Extract categories based on common keywords
+        categories = None
+        category_keywords = {
+            "image": ["image", "photo", "picture", "art", "design", "graphic"],
+            "writing": ["writing", "write", "text", "content", "article", "blog"],
+            "video": ["video", "movie", "film", "animation"],
+            "audio": ["audio", "sound", "music", "voice", "speech"],
+            "code": ["code", "coding", "programming", "development", "software"],
+        }
 
-        categories = categories if categories else None
+        # Check if any category keywords are in the question
+        matched_categories = []
+        for category, cat_keywords in category_keywords.items():
+            if any(kw in words for kw in cat_keywords):
+                matched_categories.append(category)
 
+        if matched_categories:
+            categories = matched_categories
+
+        # Create a space-separated search query from keywords (limit to first 7)
+        search_query = " ".join(keywords[:7])
+
+        # Create the processed query
         return ProcessedQuery(
             original_question=question,
             search_query=search_query,
             filters=None,
             categories=categories,
             pricing_types=pricing_types,
-            interpreted_intent=f"Extracted keywords from: {question}",
+            interpreted_intent=f"Basic keyword extraction from: {question}",
         )
 
     async def execute_nlp_search(
@@ -816,6 +464,7 @@ class AlgoliaSearch:
     ) -> SearchResult:
         """
         Process natural language query and execute search
+        Search is restricted to only the keywords and description fields.
 
         Args:
             nlq: Natural language query object
@@ -831,36 +480,140 @@ class AlgoliaSearch:
             # Process the query to extract search parameters
             processed_query = await self.process_natural_language_query(nlq)
 
-            # Create search parameters
-            params = SearchParams(
-                query=processed_query.search_query,  # Use search_query instead of query
-                page=page,
-                per_page=per_page,
-                categories=processed_query.categories,
-                pricing_types=processed_query.pricing_types,
-                min_rating=getattr(
-                    processed_query, "min_rating", None
-                ),  # Use getattr for optional attributes
-                sort_by=getattr(processed_query, "sort_by", None),
-                filters=processed_query.filters,
+            logger.info(
+                f"NLP search query: '{processed_query.search_query}' - Search restricted to keywords and description"
             )
 
-            # Execute the search with the extracted parameters
-            search_result = await self.search_tools(params)
+            # If Algolia is not configured, return empty results
+            if not self.config.is_configured():
+                logger.warning(
+                    "Algolia not configured. Returning empty search results."
+                )
+                return SearchResult(
+                    tools=[],
+                    total=0,
+                    page=page,
+                    per_page=per_page,
+                    pages=0,
+                    processing_time_ms=0,
+                    processed_query=processed_query,
+                )
 
-            # Create a new search result with the processed query to avoid field not found errors
-            result = SearchResult(
-                tools=search_result.tools,
-                total=search_result.total,
-                page=search_result.page,
-                per_page=search_result.per_page,
-                pages=search_result.pages,
-                facets=search_result.facets,
-                processing_time_ms=search_result.processing_time_ms,
-                processed_query=processed_query,  # Add processed query
+            # Build search parameters for Algolia
+            search_args = {
+                "query": processed_query.search_query,
+                "page": page - 1,  # Algolia uses 0-based pagination
+                "hitsPerPage": per_page,
+                # Restrict search to only keywords and description fields
+                "restrictSearchableAttributes": ["keywords", "description"],
+            }
+
+            # Add facet filters if provided
+            facet_filters = []
+
+            if processed_query.categories:
+                category_filters = [
+                    f"categories.id:{cat_id}" for cat_id in processed_query.categories
+                ]
+                facet_filters.append(category_filters)
+
+            if processed_query.pricing_types:
+                pricing_filters = [
+                    f"pricing.type:{pricing}"
+                    for pricing in processed_query.pricing_types
+                ]
+                facet_filters.append(pricing_filters)
+
+            if processed_query.min_rating:
+                # For numeric filters like ratings
+                search_args["numericFilters"] = [
+                    f"ratings.average>={processed_query.min_rating}"
+                ]
+
+            # Add custom filters if provided
+            if processed_query.filters:
+                search_args["filters"] = processed_query.filters
+
+            # Add facet filters to search args if any
+            if facet_filters:
+                search_args["facetFilters"] = facet_filters
+
+            # Request facets for filtering options
+            search_args["facets"] = ["categories.name", "pricing.type", "features"]
+
+            # Execute direct search using Algolia config client
+            result = self.config.client.search_single_index(
+                self.config.tools_index_name, search_args
             )
 
-            return result
+            # Extract data from the search response
+            try:
+                # Try accessing as object attributes first
+                hits = result.hits if hasattr(result, "hits") else []
+                nb_hits = result.nbHits if hasattr(result, "nbHits") else 0
+                processing_time_ms = (
+                    result.processingTimeMS
+                    if hasattr(result, "processingTimeMS")
+                    else 0
+                )
+                facets = result.facets if hasattr(result, "facets") else {}
+
+                # Extract categories and pricing info for facets
+                categories_dict = {}
+                if hasattr(facets, "categories_name"):
+                    categories_dict = facets.categories_name
+                elif isinstance(facets, dict) and "categories.name" in facets:
+                    categories_dict = facets["categories.name"]
+
+                pricing_dict = {}
+                if hasattr(facets, "pricing_type"):
+                    pricing_dict = facets.pricing_type
+                elif isinstance(facets, dict) and "pricing.type" in facets:
+                    pricing_dict = facets["pricing.type"]
+
+                # Create facets objects
+                search_facets = SearchFacets(
+                    categories=[
+                        SearchFacet(name=name, count=count)
+                        for name, count in categories_dict.items()
+                    ],
+                    pricing_types=[
+                        SearchFacet(name=name, count=count)
+                        for name, count in pricing_dict.items()
+                    ],
+                )
+
+                # Calculate total pages
+                total_pages = (
+                    (nb_hits + per_page - 1) // per_page if per_page > 0 else 0
+                )
+
+                # Create the search result
+                search_result = SearchResult(
+                    tools=hits,
+                    total=nb_hits,
+                    page=page,
+                    per_page=per_page,
+                    pages=total_pages,
+                    facets=search_facets,
+                    processing_time_ms=processing_time_ms,
+                    processed_query=processed_query,
+                )
+
+                return search_result
+
+            except Exception as e:
+                logger.error(f"Error processing Algolia search results: {str(e)}")
+                # Return empty result with the processed query on error
+                return SearchResult(
+                    tools=[],
+                    total=0,
+                    page=page,
+                    per_page=per_page,
+                    pages=0,
+                    processing_time_ms=0,
+                    processed_query=processed_query,
+                )
 
         except Exception as e:
             logger.error(f"Error executing NLP search: {str(e)}")
@@ -885,39 +638,6 @@ class AlgoliaSearch:
                 pages=0,
                 processing_time_ms=0,
                 processed_query=processed_query,
-            )
-
-    async def search_by_category(
-        self, category: str, page: int = 1, per_page: int = 20
-    ) -> SearchResult:
-        """
-        Search tools by category
-
-        Args:
-            category: Category to search for
-            page: Page number (1-based)
-            per_page: Number of results per page
-
-        Returns:
-            SearchResult object with tools and metadata
-        """
-        try:
-            # Create search parameters with category filter
-            params = SearchParams(
-                query="",  # Empty query for category browsing
-                page=page,
-                per_page=per_page,
-                filters=f"categories.id:{category}",  # Filter by category ID
-                sort_by="trending",  # Sort by trending score for browsing
-            )
-
-            # Execute the search with the category filter
-            return await self.search_tools(params)
-        except Exception as e:
-            logger.error(f"Error searching by category: {str(e)}")
-            # Return empty result on error
-            return SearchResult(
-                tools=[], total=0, page=page, per_page=per_page, pages=0
             )
 
 

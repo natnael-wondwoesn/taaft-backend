@@ -65,12 +65,21 @@ class AlgoliaToolRecord(BaseModel):
     slug: str
     long_description: Optional[str] = None
     logo_url: Optional[str] = None
+    image_url: Optional[str] = None
     website: Optional[str] = None
+    link: Optional[str] = None
+    unique_id: Optional[str] = None
     categories: Optional[List[ToolCategory]] = None
+    category_id: Optional[str] = None
     features: Optional[List[str]] = None
     use_cases: Optional[List[str]] = None
+    keywords: Optional[List[str]] = None  # Keywords for searching
     pricing: Optional[ToolPricing] = None
+    price: Optional[str] = None  # String representation of price
+    pricing_url: Optional[str] = None
     ratings: Optional[ToolRatings] = None
+    rating: Optional[float] = None  # Direct rating value
+    saved_numbers: Optional[int] = None  # Number of times saved
     trending_score: Optional[float] = None
     created_at: Optional[datetime.datetime] = None
     updated_at: Optional[datetime.datetime] = None

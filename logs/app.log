@@ -2811,3 +2811,1031 @@ id
 2025-04-24T19:10:12.091956+0300 INFO User logged in: natnael.wondwoesn@gmail.com
 2025-04-24T19:11:25.778189+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
 2025-04-24T19:12:06.954866+0300 INFO Getting streaming LLM response with model: ChatModelType.GPT_4
+2025-04-24T19:41:53.391283+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:41:53.392281+0300 INFO Algolia client initialized successfully
+2025-04-24T19:42:07.525631+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:42:07.526630+0300 INFO Algolia client initialized successfully
+2025-04-24T19:42:26.411966+0300 INFO Shutting down application...
+2025-04-24T19:42:28.411794+0300 INFO Database connections closed
+2025-04-24T19:42:28.413784+0300 INFO Shutdown complete.
+2025-04-24T19:42:32.816399+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:42:32.817994+0300 INFO Algolia client initialized successfully
+2025-04-24T19:42:33.916891+0300 INFO Setting up database...
+2025-04-24T19:42:37.048184+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:42:37.231947+0300 INFO Database setup completed successfully
+2025-04-24T19:42:37.232947+0300 INFO Database setup completed
+2025-04-24T19:42:37.233947+0300 INFO Seeding glossary terms...
+2025-04-24T19:42:37.409544+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:42:37.410475+0300 INFO Glossary seeding completed
+2025-04-24T19:42:37.410475+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:42:37.843587+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:42:37.980040+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:42:37.982042+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:42:38.482879+0300 INFO Shutting down application...
+2025-04-24T19:42:38.691475+0300 INFO Database connections closed
+2025-04-24T19:42:38.692620+0300 INFO Shutdown complete.
+2025-04-24T19:42:42.993659+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:42:42.994655+0300 INFO Algolia client initialized successfully
+2025-04-24T19:42:44.256305+0300 INFO Setting up database...
+2025-04-24T19:42:46.426797+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:42:46.644443+0300 INFO Database setup completed successfully
+2025-04-24T19:42:46.656621+0300 INFO Database setup completed
+2025-04-24T19:42:46.657497+0300 INFO Seeding glossary terms...
+2025-04-24T19:42:46.860419+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:42:46.861408+0300 INFO Glossary seeding completed
+2025-04-24T19:42:46.861408+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:42:47.281373+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:42:47.431266+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:42:47.432267+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:42:51.790287+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:42:51.791290+0300 INFO Algolia client initialized successfully
+2025-04-24T19:42:52.996418+0300 INFO Setting up database...
+2025-04-24T19:42:55.088517+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:42:55.293584+0300 INFO Database setup completed successfully
+2025-04-24T19:42:55.294584+0300 INFO Database setup completed
+2025-04-24T19:42:55.295756+0300 INFO Seeding glossary terms...
+2025-04-24T19:42:55.511831+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:42:55.512875+0300 INFO Glossary seeding completed
+2025-04-24T19:42:55.524713+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:42:55.944370+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:42:56.088000+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:42:56.088896+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:43:17.335076+0300 INFO Shutting down application...
+2025-04-24T19:43:17.547510+0300 INFO Database connections closed
+2025-04-24T19:43:17.547510+0300 INFO Shutdown complete.
+2025-04-24T19:43:21.215772+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:43:21.217276+0300 INFO Algolia client initialized successfully
+2025-04-24T19:43:22.353732+0300 INFO Setting up database...
+2025-04-24T19:43:24.416916+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:43:24.646139+0300 INFO Database setup completed successfully
+2025-04-24T19:43:24.646924+0300 INFO Database setup completed
+2025-04-24T19:43:24.647139+0300 INFO Seeding glossary terms...
+2025-04-24T19:43:24.885714+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:43:24.887029+0300 INFO Glossary seeding completed
+2025-04-24T19:43:24.887893+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:43:25.493422+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:43:25.626766+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:43:25.627772+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:43:29.431204+0300 INFO Shutting down application...
+2025-04-24T19:43:29.634151+0300 INFO Database connections closed
+2025-04-24T19:43:29.634665+0300 INFO Shutdown complete.
+2025-04-24T19:43:33.722297+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:43:33.724265+0300 INFO Algolia client initialized successfully
+2025-04-24T19:43:34.939136+0300 INFO Setting up database...
+2025-04-24T19:43:37.264297+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:43:37.502988+0300 INFO Database setup completed successfully
+2025-04-24T19:43:37.504997+0300 INFO Database setup completed
+2025-04-24T19:43:37.506998+0300 INFO Seeding glossary terms...
+2025-04-24T19:43:37.755270+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:43:37.756511+0300 INFO Glossary seeding completed
+2025-04-24T19:43:37.756964+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:43:38.163379+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:43:38.313427+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:43:38.314423+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:43:43.342892+0300 INFO Shutting down application...
+2025-04-24T19:43:43.579850+0300 INFO Database connections closed
+2025-04-24T19:43:43.580851+0300 INFO Shutdown complete.
+2025-04-24T19:43:47.666640+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:43:47.667903+0300 INFO Algolia client initialized successfully
+2025-04-24T19:43:48.781554+0300 INFO Setting up database...
+2025-04-24T19:43:51.709560+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:43:51.906775+0300 INFO Database setup completed successfully
+2025-04-24T19:43:51.907766+0300 INFO Database setup completed
+2025-04-24T19:43:51.907766+0300 INFO Seeding glossary terms...
+2025-04-24T19:43:52.099511+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:43:52.100515+0300 INFO Glossary seeding completed
+2025-04-24T19:43:52.101524+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:43:52.556150+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:43:52.692659+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:43:52.694058+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:44:02.241447+0300 INFO Shutting down application...
+2025-04-24T19:44:02.437174+0300 INFO Database connections closed
+2025-04-24T19:44:02.438153+0300 INFO Shutdown complete.
+2025-04-24T19:44:06.943956+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:44:06.945956+0300 INFO Algolia client initialized successfully
+2025-04-24T19:44:08.295044+0300 INFO Setting up database...
+2025-04-24T19:44:10.691130+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:44:10.882783+0300 INFO Database setup completed successfully
+2025-04-24T19:44:10.883709+0300 INFO Database setup completed
+2025-04-24T19:44:10.883709+0300 INFO Seeding glossary terms...
+2025-04-24T19:44:11.079903+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:44:11.080903+0300 INFO Glossary seeding completed
+2025-04-24T19:44:11.080903+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:44:11.499856+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:44:11.623271+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:44:11.625273+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:44:20.154567+0300 INFO Shutting down application...
+2025-04-24T19:44:20.335434+0300 INFO Database connections closed
+2025-04-24T19:44:20.336437+0300 INFO Shutdown complete.
+2025-04-24T19:44:24.235840+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:44:24.237368+0300 INFO Algolia client initialized successfully
+2025-04-24T19:44:25.511470+0300 INFO Setting up database...
+2025-04-24T19:44:27.392463+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:44:27.569409+0300 INFO Database setup completed successfully
+2025-04-24T19:44:27.570414+0300 INFO Database setup completed
+2025-04-24T19:44:27.570414+0300 INFO Seeding glossary terms...
+2025-04-24T19:44:27.758128+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:44:27.759131+0300 INFO Glossary seeding completed
+2025-04-24T19:44:27.760127+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:44:28.147416+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:44:28.268450+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:44:28.269440+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:45:11.504450+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:45:11.505450+0300 INFO Algolia client initialized successfully
+2025-04-24T19:45:43.131432+0300 INFO Shutting down application...
+2025-04-24T19:45:43.333612+0300 INFO Database connections closed
+2025-04-24T19:45:43.334694+0300 INFO Shutdown complete.
+2025-04-24T19:45:46.560949+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:45:46.561948+0300 INFO Algolia client initialized successfully
+2025-04-24T19:45:46.993716+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:45:46.994720+0300 INFO Algolia client initialized successfully
+2025-04-24T19:45:48.026831+0300 INFO Setting up database...
+2025-04-24T19:45:50.673273+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:45:50.873949+0300 INFO Database setup completed successfully
+2025-04-24T19:45:50.874824+0300 INFO Database setup completed
+2025-04-24T19:45:50.875828+0300 INFO Seeding glossary terms...
+2025-04-24T19:45:51.085638+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:45:51.086642+0300 INFO Glossary seeding completed
+2025-04-24T19:45:51.087643+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:45:51.487875+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:45:51.641831+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:45:51.642831+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:46:17.144376+0300 INFO Shutting down application...
+2025-04-24T19:46:17.391527+0300 INFO Database connections closed
+2025-04-24T19:46:17.392527+0300 INFO Shutdown complete.
+2025-04-24T19:46:20.036858+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:46:20.037860+0300 INFO Algolia client initialized successfully
+2025-04-24T19:46:21.064926+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:46:21.065914+0300 INFO Algolia client initialized successfully
+2025-04-24T19:46:22.122810+0300 INFO Setting up database...
+2025-04-24T19:46:24.041071+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:46:24.234151+0300 INFO Database setup completed successfully
+2025-04-24T19:46:24.234151+0300 INFO Database setup completed
+2025-04-24T19:46:24.235151+0300 INFO Seeding glossary terms...
+2025-04-24T19:46:24.410040+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:46:24.411046+0300 INFO Glossary seeding completed
+2025-04-24T19:46:24.412045+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:46:24.805259+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:46:24.939092+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:46:24.940098+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:48:04.235178+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:48:04.236182+0300 INFO Algolia client initialized successfully
+2025-04-24T19:48:05.499658+0300 ERROR Error processing natural language query: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2025-04-24T19:48:05.503219+0300 ERROR Error processing natural language query: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2025-04-24T19:48:05.505531+0300 INFO NLP search query: 'text-to-image diffusion' - Search restricted to keywords and description
+2025-04-24T19:48:05.506219+0300 INFO Algolia search with params: {'query': 'text-to-image diffusion', 'page': 0, 'hitsPerPage': 10, 'restrictSearchableAttributes': ['keywords', 'description'], 'facetFilters': [['categories.id:Image Generation', 'categories.id:Visual']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-24T19:48:06.059778+0300 ERROR Error searching tools with Algolia: invalid setting for restrictSearchableAttributes, attribute keywords is not in searchableAttributes setting
+2025-04-24T19:49:30.371404+0300 INFO Shutting down application...
+2025-04-24T19:49:30.563869+0300 INFO Database connections closed
+2025-04-24T19:49:30.564832+0300 INFO Shutdown complete.
+2025-04-24T19:49:34.686304+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:49:34.687256+0300 INFO Algolia client initialized successfully
+2025-04-24T19:49:35.785744+0300 INFO Setting up database...
+2025-04-24T19:49:38.554855+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:49:38.743391+0300 INFO Database setup completed successfully
+2025-04-24T19:49:38.744391+0300 INFO Database setup completed
+2025-04-24T19:49:38.744391+0300 INFO Seeding glossary terms...
+2025-04-24T19:49:38.927364+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:49:38.928364+0300 INFO Glossary seeding completed
+2025-04-24T19:49:38.929363+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:49:39.458596+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:49:39.600542+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:49:39.601543+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:49:52.252875+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:49:52.253869+0300 INFO Algolia client initialized successfully
+2025-04-24T19:50:08.385866+0300 INFO Shutting down application...
+2025-04-24T19:50:08.586400+0300 INFO Database connections closed
+2025-04-24T19:50:08.587404+0300 INFO Shutdown complete.
+2025-04-24T19:50:12.264698+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:50:12.265701+0300 INFO Algolia client initialized successfully
+2025-04-24T19:50:12.749735+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:50:12.750736+0300 INFO Algolia client initialized successfully
+2025-04-24T19:50:13.278660+0300 INFO Setting up database...
+2025-04-24T19:50:15.385373+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:50:15.590310+0300 INFO Database setup completed successfully
+2025-04-24T19:50:15.591310+0300 INFO Database setup completed
+2025-04-24T19:50:15.591310+0300 INFO Seeding glossary terms...
+2025-04-24T19:50:15.812958+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:50:15.813905+0300 INFO Glossary seeding completed
+2025-04-24T19:50:15.813905+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:50:16.242989+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:50:16.381175+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:50:16.382176+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:50:55.321100+0300 INFO Shutting down application...
+2025-04-24T19:50:55.529664+0300 INFO Database connections closed
+2025-04-24T19:50:55.530663+0300 INFO Shutdown complete.
+2025-04-24T19:50:59.179844+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:50:59.180844+0300 INFO Algolia client initialized successfully
+2025-04-24T19:51:00.120343+0300 INFO Setting up database...
+2025-04-24T19:51:03.202397+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:51:03.386351+0300 INFO Database setup completed successfully
+2025-04-24T19:51:03.387352+0300 INFO Database setup completed
+2025-04-24T19:51:03.387352+0300 INFO Seeding glossary terms...
+2025-04-24T19:51:03.562752+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:51:03.562752+0300 INFO Glossary seeding completed
+2025-04-24T19:51:03.563762+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:51:04.101332+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:51:04.238420+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:51:04.239420+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:51:09.540298+0300 INFO Shutting down application...
+2025-04-24T19:51:09.715567+0300 INFO Database connections closed
+2025-04-24T19:51:09.716568+0300 INFO Shutdown complete.
+2025-04-24T19:51:12.391578+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:51:12.392983+0300 INFO Algolia client initialized successfully
+2025-04-24T19:51:13.473357+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:51:13.474306+0300 INFO Algolia client initialized successfully
+2025-04-24T19:51:14.458595+0300 INFO Setting up database...
+2025-04-24T19:51:16.351681+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:51:16.552161+0300 INFO Database setup completed successfully
+2025-04-24T19:51:16.553161+0300 INFO Database setup completed
+2025-04-24T19:51:16.553161+0300 INFO Seeding glossary terms...
+2025-04-24T19:51:16.741385+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:51:16.742387+0300 INFO Glossary seeding completed
+2025-04-24T19:51:16.742387+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:51:17.160141+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:51:17.302520+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:51:17.303530+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:52:13.247915+0300 INFO Shutting down application...
+2025-04-24T19:52:13.442812+0300 INFO Database connections closed
+2025-04-24T19:52:13.443204+0300 INFO Shutdown complete.
+2025-04-24T19:52:16.577829+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:52:16.578821+0300 INFO Algolia client initialized successfully
+2025-04-24T19:52:17.143987+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:52:17.145004+0300 INFO Algolia client initialized successfully
+2025-04-24T19:52:18.206092+0300 INFO Setting up database...
+2025-04-24T19:52:21.776336+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:52:21.975210+0300 INFO Database setup completed successfully
+2025-04-24T19:52:21.976190+0300 INFO Database setup completed
+2025-04-24T19:52:21.976190+0300 INFO Seeding glossary terms...
+2025-04-24T19:52:22.175456+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:52:22.176380+0300 INFO Glossary seeding completed
+2025-04-24T19:52:22.176380+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:52:22.751055+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:52:22.881266+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:52:22.882271+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:53:40.819734+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:53:40.820733+0300 INFO Algolia client initialized successfully
+2025-04-24T19:53:41.885822+0300 ERROR Error processing natural language query: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2025-04-24T19:53:41.889824+0300 ERROR Error processing natural language query: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2025-04-24T19:53:41.890819+0300 INFO NLP search query: 'text-to-image diffusion' - Search restricted to keywords and description
+2025-04-24T19:53:41.891827+0300 INFO Algolia search with params: {'query': 'text-to-image diffusion', 'page': 0, 'hitsPerPage': 10, 'restrictSearchableAttributes': ['keywords', 'description'], 'facetFilters': [['categories.id:Image Generation', 'categories.id:Visual']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-24T19:53:42.463775+0300 ERROR Error searching tools with Algolia: invalid setting for restrictSearchableAttributes, attribute keywords is not in searchableAttributes setting
+2025-04-24T19:54:25.388759+0300 INFO Shutting down application...
+2025-04-24T19:54:25.607887+0300 INFO Database connections closed
+2025-04-24T19:54:25.608886+0300 INFO Shutdown complete.
+2025-04-24T19:54:29.159762+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:54:29.160764+0300 INFO Algolia client initialized successfully
+2025-04-24T19:54:30.255899+0300 INFO Setting up database...
+2025-04-24T19:54:33.679842+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:54:33.872676+0300 INFO Database setup completed successfully
+2025-04-24T19:54:33.873674+0300 INFO Database setup completed
+2025-04-24T19:54:33.873674+0300 INFO Seeding glossary terms...
+2025-04-24T19:54:34.056512+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:54:34.057516+0300 INFO Glossary seeding completed
+2025-04-24T19:54:34.057516+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:54:34.494786+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:54:34.621896+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:54:34.622894+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:54:38.318621+0300 INFO Shutting down application...
+2025-04-24T19:54:38.553168+0300 INFO Database connections closed
+2025-04-24T19:54:38.553168+0300 INFO Shutdown complete.
+2025-04-24T19:54:41.968850+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:54:41.969850+0300 INFO Algolia client initialized successfully
+2025-04-24T19:54:43.157106+0300 INFO Setting up database...
+2025-04-24T19:54:45.302014+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:54:45.527140+0300 INFO Database setup completed successfully
+2025-04-24T19:54:45.528143+0300 INFO Database setup completed
+2025-04-24T19:54:45.528525+0300 INFO Seeding glossary terms...
+2025-04-24T19:54:45.771584+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:54:45.772587+0300 INFO Glossary seeding completed
+2025-04-24T19:54:45.773170+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:54:46.166266+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:54:46.311037+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:54:46.312025+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:54:50.257941+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:54:50.258943+0300 INFO Algolia client initialized successfully
+2025-04-24T19:54:51.465314+0300 INFO Setting up database...
+2025-04-24T19:54:53.559004+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:54:53.751581+0300 INFO Database setup completed successfully
+2025-04-24T19:54:53.752588+0300 INFO Database setup completed
+2025-04-24T19:54:53.752588+0300 INFO Seeding glossary terms...
+2025-04-24T19:54:53.959207+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:54:53.960132+0300 INFO Glossary seeding completed
+2025-04-24T19:54:53.961130+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:54:54.367501+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:54:54.537224+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:54:54.537224+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:54:55.822491+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:54:55.823493+0300 INFO Algolia client initialized successfully
+2025-04-24T19:57:29.061330+0300 INFO Shutting down application...
+2025-04-24T19:57:29.245079+0300 INFO Database connections closed
+2025-04-24T19:57:29.245980+0300 INFO Shutdown complete.
+2025-04-24T19:57:33.978148+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:57:33.979354+0300 INFO Algolia client initialized successfully
+2025-04-24T19:57:35.442752+0300 INFO Setting up database...
+2025-04-24T19:57:38.490768+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:57:38.706121+0300 INFO Database setup completed successfully
+2025-04-24T19:57:38.707116+0300 INFO Database setup completed
+2025-04-24T19:57:38.707116+0300 INFO Seeding glossary terms...
+2025-04-24T19:57:38.886809+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:57:38.887793+0300 INFO Glossary seeding completed
+2025-04-24T19:57:38.887793+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:57:39.436862+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:57:39.573625+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:57:39.574530+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:57:43.614759+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:57:43.616738+0300 INFO Algolia client initialized successfully
+2025-04-24T19:57:44.630266+0300 INFO Setting up database...
+2025-04-24T19:57:46.789655+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:57:47.007045+0300 INFO Database setup completed successfully
+2025-04-24T19:57:47.007045+0300 INFO Database setup completed
+2025-04-24T19:57:47.008044+0300 INFO Seeding glossary terms...
+2025-04-24T19:57:47.219674+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:57:47.221213+0300 INFO Glossary seeding completed
+2025-04-24T19:57:47.221213+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:57:47.665524+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:57:47.799811+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:57:47.800811+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:57:59.291072+0300 INFO Shutting down application...
+2025-04-24T19:57:59.519098+0300 INFO Database connections closed
+2025-04-24T19:57:59.519098+0300 INFO Shutdown complete.
+2025-04-24T19:58:03.444576+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:58:03.445584+0300 INFO Algolia client initialized successfully
+2025-04-24T19:58:04.634038+0300 INFO Setting up database...
+2025-04-24T19:58:06.643883+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:58:06.840801+0300 INFO Database setup completed successfully
+2025-04-24T19:58:06.841805+0300 INFO Database setup completed
+2025-04-24T19:58:06.842813+0300 INFO Seeding glossary terms...
+2025-04-24T19:58:07.025715+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:58:07.026711+0300 INFO Glossary seeding completed
+2025-04-24T19:58:07.026711+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:58:07.425669+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:58:07.578576+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:58:07.579574+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:58:11.592915+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:58:11.593963+0300 INFO Algolia client initialized successfully
+2025-04-24T19:58:12.624067+0300 INFO Setting up database...
+2025-04-24T19:58:14.583334+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:58:14.774331+0300 INFO Database setup completed successfully
+2025-04-24T19:58:14.775322+0300 INFO Database setup completed
+2025-04-24T19:58:14.775322+0300 INFO Seeding glossary terms...
+2025-04-24T19:58:14.952536+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:58:14.953630+0300 INFO Glossary seeding completed
+2025-04-24T19:58:14.953630+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:58:15.398386+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:58:15.531979+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:58:15.532979+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:58:43.265278+0300 INFO Shutting down application...
+2025-04-24T19:58:43.445836+0300 INFO Database connections closed
+2025-04-24T19:58:43.446852+0300 INFO Shutdown complete.
+2025-04-24T19:58:47.426886+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:58:47.427889+0300 INFO Algolia client initialized successfully
+2025-04-24T19:58:48.636239+0300 INFO Setting up database...
+2025-04-24T19:58:50.771548+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:58:51.011979+0300 INFO Database setup completed successfully
+2025-04-24T19:58:51.011979+0300 INFO Database setup completed
+2025-04-24T19:58:51.012978+0300 INFO Seeding glossary terms...
+2025-04-24T19:58:51.259968+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:58:51.260971+0300 INFO Glossary seeding completed
+2025-04-24T19:58:51.261971+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:58:51.654519+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:58:51.802742+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:58:51.803246+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:58:56.009986+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:58:56.011554+0300 INFO Algolia client initialized successfully
+2025-04-24T19:58:57.145263+0300 INFO Setting up database...
+2025-04-24T19:59:00.607823+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:59:00.808715+0300 INFO Database setup completed successfully
+2025-04-24T19:59:00.809718+0300 INFO Database setup completed
+2025-04-24T19:59:00.809718+0300 INFO Seeding glossary terms...
+2025-04-24T19:59:01.033148+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:59:01.034145+0300 INFO Glossary seeding completed
+2025-04-24T19:59:01.034145+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:59:01.591967+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:59:01.743623+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:59:01.745237+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:59:05.870293+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:59:05.871302+0300 INFO Algolia client initialized successfully
+2025-04-24T19:59:07.124903+0300 INFO Setting up database...
+2025-04-24T19:59:09.177510+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:59:09.383641+0300 INFO Database setup completed successfully
+2025-04-24T19:59:09.383641+0300 INFO Database setup completed
+2025-04-24T19:59:09.384643+0300 INFO Seeding glossary terms...
+2025-04-24T19:59:09.565247+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:59:09.566250+0300 INFO Glossary seeding completed
+2025-04-24T19:59:09.566250+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:59:09.971077+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:59:10.122519+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:59:10.123513+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:59:14.548028+0300 INFO Shutting down application...
+2025-04-24T19:59:14.734701+0300 INFO Database connections closed
+2025-04-24T19:59:14.736214+0300 INFO Shutdown complete.
+2025-04-24T19:59:18.345735+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:59:18.346621+0300 INFO Algolia client initialized successfully
+2025-04-24T19:59:19.425776+0300 INFO Setting up database...
+2025-04-24T19:59:21.531976+0300 INFO Connected to MongoDB for setup
+2025-04-24T19:59:21.765240+0300 INFO Database setup completed successfully
+2025-04-24T19:59:21.766240+0300 INFO Database setup completed
+2025-04-24T19:59:21.766240+0300 INFO Seeding glossary terms...
+2025-04-24T19:59:21.984516+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T19:59:21.985519+0300 INFO Glossary seeding completed
+2025-04-24T19:59:21.986518+0300 INFO Configuring Algolia indexes...
+2025-04-24T19:59:22.460380+0300 INFO Algolia tools index configured successfully
+2025-04-24T19:59:22.606892+0300 INFO Algolia glossary index configured successfully
+2025-04-24T19:59:22.607895+0300 INFO Algolia indexes configured successfully
+2025-04-24T19:59:25.920131+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T19:59:25.921188+0300 INFO Algolia client initialized successfully
+2025-04-24T19:59:29.223192+0300 INFO OpenAI response: {
+    "search_query": "text-to-image diffusion model",
+    "price_filter": null,
+    "categories": ["Image Generation"],
+    "interpreted_intent": "Searching for AI tools that can generate images from text using diffusion models"
+}
+2025-04-24T19:59:29.225409+0300 INFO Extracted query data: {'search_query': 'text-to-image diffusion model', 'price_filter': None, 'categories': ['Image Generation'], 'interpreted_intent': 'Searching for AI tools that can generate images from text using diffusion models'}
+2025-04-24T19:59:31.106986+0300 INFO OpenAI response: {
+    "search_query": "text-to-image diffusion model",
+    "price_filter": null,
+    "categories": ["Image Generation"],
+    "interpreted_intent": "Searching for AI tools that can generate images from text using diffusion models"
+}
+2025-04-24T19:59:31.107956+0300 INFO Extracted query data: {'search_query': 'text-to-image diffusion model', 'price_filter': None, 'categories': ['Image Generation'], 'interpreted_intent': 'Searching for AI tools that can generate images from text using diffusion models'}
+2025-04-24T19:59:31.109964+0300 INFO NLP search query: 'text-to-image diffusion model' - Search restricted to keywords and description
+2025-04-24T19:59:31.110959+0300 INFO Algolia search with params: {'query': 'text-to-image diffusion model', 'page': 0, 'hitsPerPage': 10, 'restrictSearchableAttributes': ['keywords', 'description'], 'facetFilters': [['categories.id:Image Generation']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-24T19:59:31.693221+0300 ERROR Error searching tools with Algolia: invalid setting for restrictSearchableAttributes, attribute keywords is not in searchableAttributes setting
+2025-04-24T20:01:04.289104+0300 INFO Shutting down application...
+2025-04-24T20:01:04.492333+0300 INFO Database connections closed
+2025-04-24T20:01:04.493333+0300 INFO Shutdown complete.
+2025-04-24T20:01:07.576531+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T20:01:07.577639+0300 INFO Algolia client initialized successfully
+2025-04-24T20:01:08.175124+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T20:01:08.176124+0300 INFO Algolia client initialized successfully
+2025-04-24T20:01:09.230901+0300 INFO Setting up database...
+2025-04-24T20:01:11.104689+0300 INFO OpenAI response: {
+    "search_query": "text-to-image diffusion model",
+    "price_filter": null,
+    "keywords": ["text-to-image", "diffusion", "generative model"],
+    "interpreted_intent": "Looking for a text-to-image generative model based on diffusion"
+}
+2025-04-24T20:01:11.105682+0300 INFO Extracted query data: {'search_query': 'text-to-image diffusion model', 'price_filter': None, 'keywords': ['text-to-image', 'diffusion', 'generative model'], 'interpreted_intent': 'Looking for a text-to-image generative model based on diffusion'}
+2025-04-24T20:01:12.620879+0300 INFO Connected to MongoDB for setup
+2025-04-24T20:01:12.733357+0300 INFO OpenAI response: {
+    "search_query": "text-to-image diffusion model",
+    "price_filter": null,
+    "keywords": ["text-to-image", "generative model", "diffusion"],
+    "interpreted_intent": "Searching for a text-to-image generative model based on diffusion"
+}
+2025-04-24T20:01:12.735359+0300 INFO Extracted query data: {'search_query': 'text-to-image diffusion model', 'price_filter': None, 'keywords': ['text-to-image', 'generative model', 'diffusion'], 'interpreted_intent': 'Searching for a text-to-image generative model based on diffusion'}
+2025-04-24T20:01:12.736431+0300 INFO NLP search query: 'text-to-image diffusion model' - Search restricted to keywords and description
+2025-04-24T20:01:12.736431+0300 INFO Algolia search with params: {'query': 'text-to-image diffusion model', 'page': 0, 'hitsPerPage': 10, 'restrictSearchableAttributes': ['keywords', 'description'], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-24T20:01:12.874517+0300 INFO Database setup completed successfully
+2025-04-24T20:01:12.875609+0300 INFO Database setup completed
+2025-04-24T20:01:12.876519+0300 INFO Seeding glossary terms...
+2025-04-24T20:01:13.125482+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T20:01:13.126475+0300 INFO Glossary seeding completed
+2025-04-24T20:01:13.127474+0300 INFO Configuring Algolia indexes...
+2025-04-24T20:01:13.306356+0300 ERROR Error searching tools with Algolia: invalid setting for restrictSearchableAttributes, attribute keywords is not in searchableAttributes setting
+2025-04-24T20:01:13.725799+0300 INFO Algolia tools index configured successfully
+2025-04-24T20:01:13.869648+0300 INFO Algolia glossary index configured successfully
+2025-04-24T20:01:13.870204+0300 INFO Algolia indexes configured successfully
+2025-04-24T20:02:06.641883+0300 INFO Shutting down application...
+2025-04-24T20:02:06.879852+0300 INFO Database connections closed
+2025-04-24T20:02:06.880859+0300 INFO Shutdown complete.
+2025-04-24T20:02:10.464994+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T20:02:10.465997+0300 INFO Algolia client initialized successfully
+2025-04-24T20:02:11.748290+0300 INFO Setting up database...
+2025-04-24T20:02:13.616360+0300 INFO Connected to MongoDB for setup
+2025-04-24T20:02:13.810653+0300 INFO Database setup completed successfully
+2025-04-24T20:02:13.811652+0300 INFO Database setup completed
+2025-04-24T20:02:13.811652+0300 INFO Seeding glossary terms...
+2025-04-24T20:02:13.993370+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T20:02:13.994131+0300 INFO Glossary seeding completed
+2025-04-24T20:02:13.994131+0300 INFO Configuring Algolia indexes...
+2025-04-24T20:02:14.424968+0300 INFO Algolia tools index configured successfully
+2025-04-24T20:02:14.567345+0300 INFO Algolia glossary index configured successfully
+2025-04-24T20:02:14.568342+0300 INFO Algolia indexes configured successfully
+2025-04-24T20:02:18.031929+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T20:02:18.032729+0300 INFO Algolia client initialized successfully
+2025-04-24T20:02:18.547158+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T20:02:18.547919+0300 INFO Algolia client initialized successfully
+2025-04-24T20:02:19.526964+0300 INFO Setting up database...
+2025-04-24T20:02:21.147221+0300 INFO OpenAI response: {
+    "search_query": "text-to-image diffusion model",
+    "price_filter": null,
+    "keywords": ["text-to-image", "diffusion", "generative model"],
+    "interpreted_intent": "Searching for a text-to-image generative model based on diffusion"
+}
+2025-04-24T20:02:21.148221+0300 INFO Extracted query data: {'search_query': 'text-to-image diffusion model', 'price_filter': None, 'keywords': ['text-to-image', 'diffusion', 'generative model'], 'interpreted_intent': 'Searching for a text-to-image generative model based on diffusion'}
+2025-04-24T20:02:21.548668+0300 INFO Connected to MongoDB for setup
+2025-04-24T20:02:21.744158+0300 INFO Database setup completed successfully
+2025-04-24T20:02:21.745162+0300 INFO Database setup completed
+2025-04-24T20:02:21.746160+0300 INFO Seeding glossary terms...
+2025-04-24T20:02:21.932602+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T20:02:21.933217+0300 INFO Glossary seeding completed
+2025-04-24T20:02:21.933810+0300 INFO Configuring Algolia indexes...
+2025-04-24T20:02:22.319904+0300 INFO Algolia tools index configured successfully
+2025-04-24T20:02:22.470290+0300 INFO Algolia glossary index configured successfully
+2025-04-24T20:02:22.471292+0300 INFO Algolia indexes configured successfully
+2025-04-24T20:02:22.811260+0300 INFO OpenAI response: {
+    "search_query": "text-to-image diffusion model",
+    "price_filter": null,
+    "keywords": ["text-to-image", "diffusion", "generative model"],
+    "interpreted_intent": "Searching for a text-to-image generative model based on diffusion"
+}
+2025-04-24T20:02:22.812832+0300 INFO Extracted query data: {'search_query': 'text-to-image diffusion model', 'price_filter': None, 'keywords': ['text-to-image', 'diffusion', 'generative model'], 'interpreted_intent': 'Searching for a text-to-image generative model based on diffusion'}
+2025-04-24T20:02:22.813255+0300 INFO NLP search query: 'text-to-image diffusion model' - Search restricted to keywords and description
+2025-04-24T20:02:22.813255+0300 INFO Algolia search with params: {'query': 'text-to-image diffusion model', 'page': 0, 'hitsPerPage': 10, 'restrictSearchableAttributes': ['keywords', 'description'], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-24T20:02:23.244419+0300 INFO Search found 0 results
+2025-04-24T22:51:15.123121+0300 INFO Shutting down application...
+2025-04-24T22:51:18.068434+0300 INFO Database connections closed
+2025-04-24T22:51:18.069433+0300 INFO Shutdown complete.
+2025-04-24T22:51:23.666935+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:51:23.667933+0300 INFO Algolia client initialized successfully
+2025-04-24T22:51:25.585601+0300 INFO Setting up database...
+2025-04-24T22:51:35.253410+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:51:35.600944+0300 INFO Database setup completed successfully
+2025-04-24T22:51:35.601955+0300 INFO Database setup completed
+2025-04-24T22:51:35.602946+0300 INFO Seeding glossary terms...
+2025-04-24T22:51:36.032117+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:51:36.032117+0300 INFO Glossary seeding completed
+2025-04-24T22:51:36.033128+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:51:37.851787+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:51:38.390136+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:51:38.391141+0300 INFO Algolia indexes configured successfully
+2025-04-24T22:51:43.812386+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:51:43.813386+0300 INFO Algolia client initialized successfully
+2025-04-24T22:51:45.073276+0300 INFO Setting up database...
+2025-04-24T22:51:52.331880+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:51:52.551913+0300 INFO Database setup completed successfully
+2025-04-24T22:51:52.552902+0300 INFO Database setup completed
+2025-04-24T22:51:52.553902+0300 INFO Seeding glossary terms...
+2025-04-24T22:51:52.927712+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:51:52.928724+0300 INFO Glossary seeding completed
+2025-04-24T22:51:52.929719+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:51:53.864872+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:51:54.090529+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:51:54.091528+0300 INFO Algolia indexes configured successfully
+2025-04-24T22:51:57.857717+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:51:57.858721+0300 INFO Algolia client initialized successfully
+2025-04-24T22:51:58.964560+0300 INFO Setting up database...
+2025-04-24T22:52:01.421495+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:52:01.661592+0300 INFO Database setup completed successfully
+2025-04-24T22:52:01.662732+0300 INFO Database setup completed
+2025-04-24T22:52:01.663299+0300 INFO Seeding glossary terms...
+2025-04-24T22:52:01.944039+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:52:01.945032+0300 INFO Glossary seeding completed
+2025-04-24T22:52:01.945032+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:52:02.525530+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:52:02.901761+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:52:02.902765+0300 INFO Algolia indexes configured successfully
+2025-04-24T22:52:12.090437+0300 INFO Shutting down application...
+2025-04-24T22:52:12.373098+0300 INFO Database connections closed
+2025-04-24T22:52:12.373098+0300 INFO Shutdown complete.
+2025-04-24T22:52:15.819868+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:52:15.820868+0300 INFO Algolia client initialized successfully
+2025-04-24T22:52:16.945023+0300 INFO Setting up database...
+2025-04-24T22:52:19.460919+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:52:19.663845+0300 INFO Database setup completed successfully
+2025-04-24T22:52:19.664843+0300 INFO Database setup completed
+2025-04-24T22:52:19.665844+0300 INFO Seeding glossary terms...
+2025-04-24T22:52:19.884562+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:52:19.885560+0300 INFO Glossary seeding completed
+2025-04-24T22:52:19.886565+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:52:20.551050+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:52:20.948069+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:52:20.949065+0300 INFO Algolia indexes configured successfully
+2025-04-24T22:52:22.117833+0300 INFO Shutting down application...
+2025-04-24T22:52:22.380735+0300 INFO Database connections closed
+2025-04-24T22:52:22.381738+0300 INFO Shutdown complete.
+2025-04-24T22:52:26.020321+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:52:26.022315+0300 INFO Algolia client initialized successfully
+2025-04-24T22:52:27.441208+0300 INFO Setting up database...
+2025-04-24T22:52:31.046299+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:52:31.277955+0300 INFO Database setup completed successfully
+2025-04-24T22:52:31.278956+0300 INFO Database setup completed
+2025-04-24T22:52:31.279956+0300 INFO Seeding glossary terms...
+2025-04-24T22:52:31.543435+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:52:31.544455+0300 INFO Glossary seeding completed
+2025-04-24T22:52:31.544455+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:52:32.180385+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:52:32.314309+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:52:32.315318+0300 INFO Algolia indexes configured successfully
+2025-04-24T22:52:35.838854+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:52:35.840854+0300 INFO Algolia client initialized successfully
+2025-04-24T22:52:36.961239+0300 INFO Setting up database...
+2025-04-24T22:52:40.260651+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:52:40.516723+0300 INFO Database setup completed successfully
+2025-04-24T22:52:40.517731+0300 INFO Database setup completed
+2025-04-24T22:52:40.518726+0300 INFO Seeding glossary terms...
+2025-04-24T22:52:40.781604+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:52:40.782610+0300 INFO Glossary seeding completed
+2025-04-24T22:52:40.782610+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:52:41.394597+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:52:41.538939+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:52:41.539937+0300 INFO Algolia indexes configured successfully
+2025-04-24T22:52:45.189821+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T22:52:45.190821+0300 INFO Algolia client initialized successfully
+2025-04-24T22:52:46.278088+0300 INFO Setting up database...
+2025-04-24T22:52:55.419556+0300 INFO Connected to MongoDB for setup
+2025-04-24T22:52:55.683149+0300 INFO Database setup completed successfully
+2025-04-24T22:52:55.683149+0300 INFO Database setup completed
+2025-04-24T22:52:55.684150+0300 INFO Seeding glossary terms...
+2025-04-24T22:52:56.003044+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T22:52:56.004048+0300 INFO Glossary seeding completed
+2025-04-24T22:52:56.004048+0300 INFO Configuring Algolia indexes...
+2025-04-24T22:52:56.792677+0300 INFO Algolia tools index configured successfully
+2025-04-24T22:52:56.942944+0300 INFO Algolia glossary index configured successfully
+2025-04-24T22:52:56.944038+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:05:56.786916+0300 INFO Shutting down application...
+2025-04-24T23:06:26.911282+0300 INFO Database connections closed
+2025-04-24T23:06:26.911282+0300 INFO Shutdown complete.
+2025-04-24T23:06:36.586289+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:06:36.587288+0300 INFO Algolia client initialized successfully
+2025-04-24T23:06:37.993232+0300 INFO Setting up database...
+2025-04-24T23:07:09.159397+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a99ced90294caa0c76edb, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:07:09.163392+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a99ced90294caa0c76edb, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:08:27.260468+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:08:27.261470+0300 INFO Algolia client initialized successfully
+2025-04-24T23:08:28.792047+0300 INFO Setting up database...
+2025-04-24T23:09:04.028345+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9a410ff093ab696f0946, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:09:04.032349+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9a410ff093ab696f0946, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:09:24.585313+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:09:24.587315+0300 INFO Algolia client initialized successfully
+2025-04-24T23:09:26.009077+0300 INFO Setting up database...
+2025-04-24T23:09:57.463310+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9a775be1d2cf205ff3e2, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:09:57.466301+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9a775be1d2cf205ff3e2, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: _ssl.c:983: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:10:03.658675+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:10:03.659675+0300 INFO Algolia client initialized successfully
+2025-04-24T23:10:04.672253+0300 INFO Setting up database...
+2025-04-24T23:10:35.702412+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9a9d051fe3ba6a2c2ae0, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:10:35.705420+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9a9d051fe3ba6a2c2ae0, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:11:21.840823+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:11:21.841361+0300 INFO Algolia client initialized successfully
+2025-04-24T23:11:23.156908+0300 INFO Setting up database...
+2025-04-24T23:11:54.557246+0300 ERROR Could not connect to MongoDB: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9aec80de44b03fb62d25, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:11:54.559247+0300 ERROR Error during startup: SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 680a9aec80de44b03fb62d25, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-06qrvn1-shard-00-00.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-00.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-01.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-01.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-06qrvn1-shard-00-02.0gsof12.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-06qrvn1-shard-00-02.0gsof12.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-24T23:12:00.501281+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:12:00.502278+0300 INFO Algolia client initialized successfully
+2025-04-24T23:12:01.635529+0300 INFO Setting up database...
+2025-04-24T23:12:10.866120+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:12:11.083807+0300 INFO Database setup completed successfully
+2025-04-24T23:12:11.084809+0300 INFO Database setup completed
+2025-04-24T23:12:11.085810+0300 INFO Seeding glossary terms...
+2025-04-24T23:12:11.298926+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:12:11.299926+0300 INFO Glossary seeding completed
+2025-04-24T23:12:11.299926+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:12:11.921529+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:12:12.051497+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:12:12.052494+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:13:18.010476+0300 INFO Shutting down application...
+2025-04-24T23:13:18.231216+0300 INFO Database connections closed
+2025-04-24T23:13:18.232218+0300 INFO Shutdown complete.
+2025-04-24T23:13:21.710986+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:13:21.711993+0300 INFO Algolia client initialized successfully
+2025-04-24T23:13:39.971976+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:13:39.972972+0300 INFO Algolia client initialized successfully
+2025-04-24T23:13:53.738801+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:13:53.739805+0300 INFO Algolia client initialized successfully
+2025-04-24T23:14:01.397764+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:14:01.398761+0300 INFO Algolia client initialized successfully
+2025-04-24T23:17:01.528782+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:17:01.529782+0300 INFO Algolia client initialized successfully
+2025-04-24T23:17:06.939035+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:17:06.940039+0300 INFO Algolia client initialized successfully
+2025-04-24T23:17:24.866691+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:17:24.867692+0300 INFO Algolia client initialized successfully
+2025-04-24T23:18:03.894871+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:18:03.895869+0300 INFO Algolia client initialized successfully
+2025-04-24T23:18:55.120243+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:18:55.121251+0300 INFO Algolia client initialized successfully
+2025-04-24T23:18:55.545497+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:18:55.546496+0300 INFO Algolia client initialized successfully
+2025-04-24T23:18:55.555503+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:18:55.556501+0300 INFO Algolia client initialized successfully
+2025-04-24T23:18:57.083779+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:18:57.085772+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:18:57.313844+0300 INFO Setting up database...
+2025-04-24T23:18:57.583081+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:18:57.586078+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:18:57.926631+0300 INFO Setting up database...
+2025-04-24T23:19:01.594497+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:01.836271+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:01.863790+0300 INFO Database setup completed successfully
+2025-04-24T23:19:01.864335+0300 INFO Database setup completed
+2025-04-24T23:19:01.864335+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:02.039532+0300 INFO Database setup completed successfully
+2025-04-24T23:19:02.040535+0300 INFO Database setup completed
+2025-04-24T23:19:02.040535+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:02.103007+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:02.104018+0300 INFO Glossary seeding completed
+2025-04-24T23:19:02.105005+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:02.385088+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:02.385088+0300 INFO Glossary seeding completed
+2025-04-24T23:19:02.386090+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:03.021750+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:03.021750+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:03.166259+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:03.166259+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:03.167259+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:03.167259+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:07.979279+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:19:07.983283+0300 INFO Algolia client initialized successfully
+2025-04-24T23:19:08.117915+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:19:08.119926+0300 INFO Algolia client initialized successfully
+2025-04-24T23:19:09.608863+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:19:09.611871+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:19:09.686858+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:19:09.688860+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:19:09.861265+0300 INFO Setting up database...
+2025-04-24T23:19:09.965822+0300 INFO Setting up database...
+2025-04-24T23:19:12.106935+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:12.293125+0300 INFO Database setup completed successfully
+2025-04-24T23:19:12.294125+0300 INFO Database setup completed
+2025-04-24T23:19:12.295117+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:12.451384+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:12.509387+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:12.510394+0300 INFO Glossary seeding completed
+2025-04-24T23:19:12.510394+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:12.685489+0300 INFO Database setup completed successfully
+2025-04-24T23:19:12.686487+0300 INFO Database setup completed
+2025-04-24T23:19:12.686487+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:12.960107+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:12.961106+0300 INFO Glossary seeding completed
+2025-04-24T23:19:12.961106+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:13.034144+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:13.193183+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:13.194182+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:13.416913+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:13.575535+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:13.576536+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:17.283636+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:19:17.284637+0300 INFO Algolia client initialized successfully
+2025-04-24T23:19:17.772261+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:19:17.773263+0300 INFO Algolia client initialized successfully
+2025-04-24T23:19:18.838935+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:19:18.841932+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:19:19.099567+0300 INFO Setting up database...
+2025-04-24T23:19:19.300217+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:19:19.302218+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:19:19.501773+0300 INFO Setting up database...
+2025-04-24T23:19:21.454430+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:21.755513+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:21.878623+0300 INFO Database setup completed successfully
+2025-04-24T23:19:21.879629+0300 INFO Database setup completed
+2025-04-24T23:19:21.880632+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:21.939170+0300 INFO Database setup completed successfully
+2025-04-24T23:19:21.940166+0300 INFO Database setup completed
+2025-04-24T23:19:21.941177+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:22.112414+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:22.113411+0300 INFO Glossary seeding completed
+2025-04-24T23:19:22.113411+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:22.137694+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:22.138697+0300 INFO Glossary seeding completed
+2025-04-24T23:19:22.139701+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:23.184637+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:23.283342+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:23.319920+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:23.320924+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:23.423611+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:23.424605+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:26.004032+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:19:26.004032+0300 INFO Algolia client initialized successfully
+2025-04-24T23:19:27.545867+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:19:27.547868+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:19:27.776605+0300 INFO Setting up database...
+2025-04-24T23:19:30.046021+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:19:30.272395+0300 INFO Database setup completed successfully
+2025-04-24T23:19:30.272395+0300 INFO Database setup completed
+2025-04-24T23:19:30.273391+0300 INFO Seeding glossary terms...
+2025-04-24T23:19:30.510181+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:19:30.510181+0300 INFO Glossary seeding completed
+2025-04-24T23:19:30.510181+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:19:30.983885+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:19:31.118308+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:19:31.118308+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:19:55.254664+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T23:26:16.622051+0300 INFO Shutting down application...
+2025-04-24T23:26:16.778689+0300 INFO Shutting down application...
+2025-04-24T23:26:16.891350+0300 INFO Database connections closed
+2025-04-24T23:26:16.891350+0300 INFO Shutdown complete.
+2025-04-24T23:26:17.059832+0300 INFO Database connections closed
+2025-04-24T23:26:17.060832+0300 INFO Shutdown complete.
+2025-04-24T23:26:21.339076+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:26:21.340082+0300 INFO Algolia client initialized successfully
+2025-04-24T23:26:21.342081+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:26:21.343081+0300 INFO Algolia client initialized successfully
+2025-04-24T23:26:23.320943+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:26:23.321947+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:26:23.324949+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:26:23.324949+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:26:23.529134+0300 INFO Setting up database...
+2025-04-24T23:26:23.536140+0300 INFO Setting up database...
+2025-04-24T23:26:30.179151+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:26:30.339023+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:26:30.383103+0300 INFO Database setup completed successfully
+2025-04-24T23:26:30.384112+0300 INFO Database setup completed
+2025-04-24T23:26:30.385104+0300 INFO Seeding glossary terms...
+2025-04-24T23:26:30.650591+0300 INFO Database setup completed successfully
+2025-04-24T23:26:30.650591+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:26:30.651585+0300 INFO Database setup completed
+2025-04-24T23:26:30.651585+0300 INFO Glossary seeding completed
+2025-04-24T23:26:30.651585+0300 INFO Seeding glossary terms...
+2025-04-24T23:26:30.651585+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:26:30.827563+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:26:30.829571+0300 INFO Glossary seeding completed
+2025-04-24T23:26:30.829571+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:26:31.253074+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:26:31.312612+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:26:31.399136+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:26:31.400146+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:26:31.467765+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:26:31.468757+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:26:35.147068+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:26:35.147068+0300 INFO Algolia client initialized successfully
+2025-04-24T23:26:36.459577+0300 INFO NLTK resource 'stopwords' already downloaded
+2025-04-24T23:26:36.461576+0300 ERROR Error initializing NLTK: File is not a zip file
+2025-04-24T23:26:36.648399+0300 INFO Setting up database...
+2025-04-24T23:26:38.841243+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:26:39.071796+0300 INFO Database setup completed successfully
+2025-04-24T23:26:39.072794+0300 INFO Database setup completed
+2025-04-24T23:26:39.072794+0300 INFO Seeding glossary terms...
+2025-04-24T23:26:39.306394+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:26:39.307401+0300 INFO Glossary seeding completed
+2025-04-24T23:26:39.307401+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:26:39.940181+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:26:40.393482+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:26:40.394481+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:26:45.150718+0300 INFO Shutting down application...
+2025-04-24T23:26:45.355578+0300 INFO Database connections closed
+2025-04-24T23:26:45.356576+0300 INFO Shutdown complete.
+2025-04-24T23:26:45.418115+0300 INFO Shutting down application...
+2025-04-24T23:26:45.613916+0300 INFO Database connections closed
+2025-04-24T23:26:45.614920+0300 INFO Shutdown complete.
+2025-04-24T23:26:49.296395+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:26:49.298393+0300 INFO Algolia client initialized successfully
+2025-04-24T23:26:49.489770+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:26:49.490766+0300 INFO Algolia client initialized successfully
+2025-04-24T23:26:50.598296+0300 INFO Setting up database...
+2025-04-24T23:26:50.841104+0300 INFO Setting up database...
+2025-04-24T23:26:53.322855+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:26:53.533605+0300 INFO Database setup completed successfully
+2025-04-24T23:26:53.534607+0300 INFO Database setup completed
+2025-04-24T23:26:53.535605+0300 INFO Seeding glossary terms...
+2025-04-24T23:26:53.905937+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:26:53.906943+0300 INFO Glossary seeding completed
+2025-04-24T23:26:53.907942+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:26:53.943482+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:26:54.145478+0300 INFO Database setup completed successfully
+2025-04-24T23:26:54.146478+0300 INFO Database setup completed
+2025-04-24T23:26:54.146478+0300 INFO Seeding glossary terms...
+2025-04-24T23:26:54.447477+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:26:54.467464+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:26:54.468459+0300 INFO Glossary seeding completed
+2025-04-24T23:26:54.469452+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:26:54.606248+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:26:54.607248+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:26:55.110747+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:26:55.433662+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:26:55.436671+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:26:58.928704+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:26:58.929703+0300 INFO Algolia client initialized successfully
+2025-04-24T23:27:00.038255+0300 INFO Setting up database...
+2025-04-24T23:27:00.435633+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:27:00.436640+0300 INFO Algolia client initialized successfully
+2025-04-24T23:27:01.570194+0300 INFO Setting up database...
+2025-04-24T23:27:03.365929+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:27:03.579420+0300 INFO Database setup completed successfully
+2025-04-24T23:27:03.580420+0300 INFO Database setup completed
+2025-04-24T23:27:03.580420+0300 INFO Seeding glossary terms...
+2025-04-24T23:27:03.799614+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:27:03.800625+0300 INFO Glossary seeding completed
+2025-04-24T23:27:03.801606+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:27:05.359389+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:27:05.619735+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:27:05.712777+0300 INFO Database setup completed successfully
+2025-04-24T23:27:05.713781+0300 INFO Database setup completed
+2025-04-24T23:27:05.713781+0300 INFO Seeding glossary terms...
+2025-04-24T23:27:05.773783+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:27:05.786361+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:27:05.959421+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:27:05.959421+0300 INFO Glossary seeding completed
+2025-04-24T23:27:05.960425+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:27:06.589841+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:27:06.746747+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:27:06.747738+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:27:09.291816+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:27:09.292816+0300 INFO Algolia client initialized successfully
+2025-04-24T23:27:10.423724+0300 INFO Setting up database...
+2025-04-24T23:27:13.137745+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:27:13.347656+0300 INFO Database setup completed successfully
+2025-04-24T23:27:13.348655+0300 INFO Database setup completed
+2025-04-24T23:27:13.349658+0300 INFO Seeding glossary terms...
+2025-04-24T23:27:13.556817+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:27:13.557808+0300 INFO Glossary seeding completed
+2025-04-24T23:27:13.569954+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:27:14.012023+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:27:14.194029+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:27:14.194029+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:28:35.952941+0300 INFO Shutting down application...
+2025-04-24T23:28:36.178539+0300 INFO Database connections closed
+2025-04-24T23:28:36.179531+0300 INFO Shutdown complete.
+2025-04-24T23:28:36.302719+0300 INFO Shutting down application...
+2025-04-24T23:28:36.531349+0300 INFO Database connections closed
+2025-04-24T23:28:36.531349+0300 INFO Shutdown complete.
+2025-04-24T23:28:40.621039+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:28:40.622023+0300 INFO Algolia client initialized successfully
+2025-04-24T23:28:40.622023+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:28:40.624024+0300 INFO Algolia client initialized successfully
+2025-04-24T23:28:42.393596+0300 INFO Setting up database...
+2025-04-24T23:28:42.398595+0300 INFO Setting up database...
+2025-04-24T23:28:47.933033+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:28:47.967046+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:28:48.161275+0300 INFO Database setup completed successfully
+2025-04-24T23:28:48.162278+0300 INFO Database setup completed
+2025-04-24T23:28:48.163277+0300 INFO Seeding glossary terms...
+2025-04-24T23:28:48.194279+0300 INFO Database setup completed successfully
+2025-04-24T23:28:48.195281+0300 INFO Database setup completed
+2025-04-24T23:28:48.195281+0300 INFO Seeding glossary terms...
+2025-04-24T23:28:48.402096+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:28:48.402096+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:28:48.403182+0300 INFO Glossary seeding completed
+2025-04-24T23:28:48.403182+0300 INFO Glossary seeding completed
+2025-04-24T23:28:48.403752+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:28:48.403752+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:28:48.872455+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:28:49.023126+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:28:49.023126+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:28:49.024124+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:28:49.172215+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:28:49.173217+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:31:24.216980+0300 INFO Shutting down application...
+2025-04-24T23:31:24.450169+0300 INFO Database connections closed
+2025-04-24T23:31:24.451169+0300 INFO Shutdown complete.
+2025-04-24T23:31:24.605376+0300 INFO Shutting down application...
+2025-04-24T23:31:24.833380+0300 INFO Database connections closed
+2025-04-24T23:31:24.834380+0300 INFO Shutdown complete.
+2025-04-24T23:31:28.444289+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:31:28.445285+0300 INFO Algolia client initialized successfully
+2025-04-24T23:31:28.831631+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T23:31:28.832624+0300 INFO Algolia client initialized successfully
+2025-04-24T23:31:29.724036+0300 INFO Setting up database...
+2025-04-24T23:31:30.117681+0300 INFO Setting up database...
+2025-04-24T23:31:33.236498+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:31:33.272030+0300 INFO Connected to MongoDB for setup
+2025-04-24T23:31:33.458482+0300 INFO Database setup completed successfully
+2025-04-24T23:31:33.459478+0300 INFO Database setup completed
+2025-04-24T23:31:33.459478+0300 INFO Seeding glossary terms...
+2025-04-24T23:31:33.472479+0300 INFO Database setup completed successfully
+2025-04-24T23:31:33.473479+0300 INFO Database setup completed
+2025-04-24T23:31:33.473479+0300 INFO Seeding glossary terms...
+2025-04-24T23:31:33.663459+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:31:33.674675+0300 INFO Glossary seeding completed
+2025-04-24T23:31:33.675680+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:31:33.680791+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-24T23:31:33.681785+0300 INFO Glossary seeding completed
+2025-04-24T23:31:33.682788+0300 INFO Configuring Algolia indexes...
+2025-04-24T23:31:34.434128+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:31:34.518804+0300 INFO Algolia tools index configured successfully
+2025-04-24T23:31:34.575350+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:31:34.575350+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:31:34.652541+0300 INFO Algolia glossary index configured successfully
+2025-04-24T23:31:34.653542+0300 INFO Algolia indexes configured successfully
+2025-04-24T23:32:38.623694+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T23:33:03.949230+0300 INFO Shutting down application...
+2025-04-24T23:33:04.173971+0300 INFO Database connections closed
+2025-04-24T23:33:04.174560+0300 INFO Shutdown complete.

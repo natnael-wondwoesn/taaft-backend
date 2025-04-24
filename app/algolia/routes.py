@@ -41,180 +41,6 @@ def get_glossary_collection() -> AsyncIOMotorCollection:
     return database.client.get_database("taaft_db").get_collection("glossary")
 
 
-@router.get("/search-by-category", response_model=SearchResult)
-async def search_by_category(
-    category: str = Query(..., description="Category ID or name to search for"),
-    page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1, le=100),
-):
-    """
-    Search for tools by category
-
-    Args:
-        category: Category ID or name to search for
-        page: Page number (1-based)
-        per_page: Number of results per page
-
-    Returns:
-        SearchResult with tools in the specified category
-    """
-    # Validate Algolia configuration
-    if not algolia_config.is_configured():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Search service is not configured",
-        )
-
-    # Execute search by category
-    result = await algolia_search.search_by_category(category, page, per_page)
-    return result
-
-
-@router.get("/tools", response_model=SearchResult)
-async def search_tools(
-    query: str = "",
-    categories: Optional[List[str]] = Query(None),
-    pricing_types: Optional[List[str]] = Query(None),
-    min_rating: Optional[float] = Query(None, ge=0, le=5),
-    page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1, le=100),
-    sort_by: Optional[str] = Query(None, regex="^(relevance|newest|trending)$"),
-    filters: Optional[str] = Query(None),
-):
-    """
-    Search for tools using Algolia
-
-    Args:
-        query: Search query
-        categories: List of category IDs to filter by
-        pricing_types: List of pricing types to filter by
-        min_rating: Minimum rating to filter by
-        page: Page number (1-based)
-        per_page: Number of results per page
-        sort_by: Sort order (relevance, newest, trending)
-        filters: Custom Algolia filter query
-
-    Returns:
-        SearchResult object with tools and metadata
-    """
-    # Validate Algolia configuration
-    if not algolia_config.is_configured():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Search service is not configured",
-        )
-
-    # Create search parameters
-    params = SearchParams(
-        query=query,
-        categories=categories,
-        pricing_types=pricing_types,
-        min_rating=min_rating,
-        page=page,
-        per_page=per_page,
-        sort_by=sort_by,
-        filters=filters,
-    )
-
-    # Execute search
-    result = await algolia_search.search_tools(params)
-    return result
-
-
-@router.get("/glossary")
-async def search_glossary(
-    query: str = "",
-    page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1, le=100),
-):
-    """
-    Search glossary terms using Algolia
-
-    Args:
-        query: Search query
-        page: Page number (1-based)
-        per_page: Number of results per page
-
-    Returns:
-        Dictionary with search results
-    """
-    # Validate Algolia configuration
-    if not algolia_config.is_configured():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Search service is not configured",
-        )
-
-    # Execute search
-    result = await algolia_search.search_glossary(query, page, per_page)
-    return result
-
-
-# @router.post("/nlp", response_model=ProcessedQuery)
-# async def process_nlp_query(
-#     nlq: NaturalLanguageQuery,
-# ):
-#     """
-#     Process a natural language query into structured search parameters
-
-#     Args:
-#         nlq: Natural language query object
-
-#     Returns:
-#         ProcessedQuery object with structured search parameters
-#     """
-#     # Process the query
-#     processed_query = await algolia_search.process_natural_language_query(nlq)
-#     return processed_query
-
-
-# @router.post("/nlp-search", response_model=SearchResult)
-# async def nlp_search(
-#     nlq: NaturalLanguageQuery,
-#     page: int = Query(1, ge=1),
-#     per_page: int = Query(20, ge=1, le=100),
-# ):
-#     """
-#     Perform a natural language search in one step
-
-#     Args:
-#         nlq: Natural language query object
-#         page: Page number (1-based)
-#         per_page: Number of results per page
-
-#     Returns:
-#         SearchResult object with tools and metadata
-#     """
-#     # Validate Algolia configuration
-#     if not algolia_config.is_configured():
-#         raise HTTPException(
-#             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-#             detail="Search service is not configured",
-#         )
-
-#     # Process the query
-#     processed_query = await algolia_search.process_natural_language_query(nlq)
-
-#     # Create search parameters
-#     params = SearchParams(
-#         query=processed_query.search_query,
-#         categories=processed_query.categories,
-#         pricing_types=processed_query.pricing_types,
-#         page=page,
-#         per_page=per_page,
-#         filters=processed_query.filters,
-#     )
-
-#     # Execute search
-#     result = await algolia_search.search_tools(params)
-
-#     # Add the interpreted query to the result
-#     result_dict = result.dict()
-#     result_dict["processed_query"] = processed_query
-
-#     return result_dict
-
-
 @router.post("/index/tools", status_code=status.HTTP_202_ACCEPTED)
 async def index_tools(
     background_tasks: BackgroundTasks,
@@ -274,12 +100,12 @@ async def index_glossary(
 
     # Schedule the indexing task in the background
     background_tasks.add_task(
-        algolia_indexer.index_glossary_terms, glossary_collection, batch_size
+        algolia_indexer.index_glossary, glossary_collection, batch_size
     )
 
     return {
         "status": "processing",
-        "message": "Indexing glossary terms to Algolia in the background",
+        "message": "Indexing glossary to Algolia in the background",
     }
 
 
@@ -289,10 +115,10 @@ async def index_single_tool(
     tools_collection: AsyncIOMotorCollection = Depends(get_tools_collection),
 ):
     """
-    Index a single tool in Algolia
+    Index a single tool in MongoDB to Algolia
 
     Args:
-        tool_id: MongoDB _id of the tool
+        tool_id: ID of the tool to index
         tools_collection: MongoDB collection containing tools
 
     Returns:
@@ -308,29 +134,19 @@ async def index_single_tool(
     # Get the tool from MongoDB
     from bson import ObjectId
 
-    try:
-        tool = await tools_collection.find_one({"_id": ObjectId(tool_id)})
-    except:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid tool ID format"
-        )
-
+    tool = await tools_collection.find_one({"_id": ObjectId(tool_id)})
     if not tool:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Tool with ID {tool_id} not found",
+            status_code=status.HTTP_404_NOT_FOUND, detail="Tool not found"
         )
 
     # Index the tool
-    success = await algolia_indexer.index_tool(tool)
+    await algolia_indexer.index_single_tool(tool)
 
-    if not success:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to index tool",
-        )
-
-    return {"status": "success", "message": f"Tool {tool_id} indexed successfully"}
+    return {
+        "status": "success",
+        "message": f"Indexed tool {tool_id}",
+    }
 
 
 @router.delete("/index/tool/{tool_id}")
@@ -341,7 +157,7 @@ async def delete_tool_from_index(
     Delete a tool from Algolia index
 
     Args:
-        tool_id: MongoDB _id of the tool
+        tool_id: ID of the tool to delete
 
     Returns:
         Status message
@@ -354,17 +170,11 @@ async def delete_tool_from_index(
         )
 
     # Delete the tool from Algolia
-    success = await algolia_indexer.delete_tool(tool_id)
-
-    if not success:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete tool from index",
-        )
+    await algolia_indexer.delete_tool(tool_id)
 
     return {
         "status": "success",
-        "message": f"Tool {tool_id} deleted from index successfully",
+        "message": f"Deleted tool {tool_id} from index",
     }
 
 
@@ -385,28 +195,6 @@ async def get_search_config():
     }
 
 
-@router.post("/nlp", response_model=ProcessedQuery)
-async def process_nlp_query(
-    nlq: NaturalLanguageQuery,
-):
-    """
-    Process a natural language query into structured search parameters
-
-    This endpoint analyzes user questions in natural language and converts them
-    into optimized search parameters for the AI tool directory.
-
-    Args:
-        nlq: Natural language query object with question and optional context
-
-    Returns:
-        ProcessedQuery object with structured search parameters including
-        optimized search terms, categories, pricing types, and filters
-    """
-    # Process the query
-    processed_query = await algolia_search.process_natural_language_query(nlq)
-    return processed_query
-
-
 @router.post("/nlp-search", response_model=SearchResult)
 async def nlp_search(
     nlq: NaturalLanguageQuery,
@@ -414,10 +202,10 @@ async def nlp_search(
     per_page: int = Query(20, ge=1, le=100),
 ):
     """
-    Perform a natural language search in one step
+    Perform a natural language search
 
-    This endpoint handles both NLP query processing and search execution in a
-    single API call. It's the most direct way to search for AI tools using
+    This endpoint handles NLP query processing and search execution in a
+    single API call. It's the only way to search for AI tools using
     natural language questions.
 
     Examples:
@@ -446,71 +234,3 @@ async def nlp_search(
 
     # Return the search result along with the processed query
     return result
-
-
-@router.get("/suggest", response_model=List[str])
-async def search_suggestions(
-    query: str = Query(..., min_length=2),
-    limit: int = Query(5, ge=1, le=20),
-):
-    """
-    Get search suggestions based on a partial query
-
-    This endpoint provides autocomplete suggestions for search queries,
-    making it easier for users to discover relevant search terms.
-
-    Args:
-        query: Partial search query to get suggestions for
-        limit: Maximum number of suggestions to return
-
-    Returns:
-        List of suggested search queries
-    """
-    # Validate Algolia configuration
-    if not algolia_config.is_configured():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Search service is not configured",
-        )
-
-    try:
-        # Use Algolia query suggestions if available
-        # If not, fall back to basic prefix matching
-        # For this implementation, we'll use a simple array of suggestions as a mockup
-
-        # In a production environment, this would be connected to a proper Algolia Query Suggestions index
-        # or another source of query suggestions
-
-        suggestions = []
-
-        # Simple mock suggestions based on query prefix for now
-        common_queries = [
-            "AI writing tools",
-            "AI image generation",
-            "AI code assistant",
-            "AI video creation",
-            "AI marketing tools",
-            "AI data analysis",
-            "AI chat applications",
-            "AI personal assistant",
-            "AI productivity tools",
-            "AI for social media",
-            "AI audio processing",
-            "AI translation tools",
-            "AI research assistant",
-            "AI presentation maker",
-            "AI for email management",
-        ]
-
-        query_lower = query.lower()
-        for q in common_queries:
-            if q.lower().startswith(query_lower) or query_lower in q.lower():
-                suggestions.append(q)
-            if len(suggestions) >= limit:
-                break
-
-        return suggestions
-
-    except Exception as e:
-        logger.error(f"Error getting search suggestions: {str(e)}")
-        return []

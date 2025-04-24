@@ -41,6 +41,8 @@ class ToolBase(BaseModel):
     features: Optional[List[str]] = None
     is_featured: bool = False
     saved_by_user: bool = False
+    # Keyword support
+    keywords: Optional[List[str]] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -83,6 +85,7 @@ class ToolUpdate(BaseModel):
     category: Optional[str] = None
     features: Optional[List[str]] = None
     is_featured: Optional[bool] = None
+    keywords: Optional[List[str]] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

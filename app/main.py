@@ -1,5 +1,14 @@
 # app/main.py
-from fastapi import FastAPI, WebSocket, Depends, WebSocketDisconnect, Body
+from fastapi import (
+    FastAPI,
+    WebSocket,
+    Depends,
+    WebSocketDisconnect,
+    Body,
+    Request,
+    HTTPException,
+    status,
+)
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -141,8 +150,15 @@ app.include_router(glossary_router)  # Include glossary router
 app.include_router(categories_router)  # Include categories router
 app.include_router(terms_router)  # Include terms router
 
-# Add StaticFiles mount
+# Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+
+# Serve the index.html file for the root route
+@app.get("/", include_in_schema=False)
+async def serve_frontend():
+    return FileResponse("frontend/index.html")
 
 
 @app.websocket("/ws")
@@ -343,17 +359,6 @@ async def stream_llm_response(
         }
         for conn in manager.get_connections_by_chat(chat_id):
             await manager.send_personal_json(error_data, conn["websocket"])
-
-
-@app.get("/")
-async def read_root():
-    return {"message": "TAAFT API Server"}
-
-
-# @app.get("/health")
-# async def health_check():
-#     """Health check endpoint"""
-#     return {"status": "ok", "timestamp": datetime.datetime.utcnow().isoformat()}
 
 
 @app.get("/test-nlp-search")

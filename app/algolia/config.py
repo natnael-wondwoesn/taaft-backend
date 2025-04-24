@@ -107,6 +107,8 @@ class AlgoliaConfig:
                     "features",
                     "use_cases",
                     "categories.name",
+                    "keywords",
+                    "tags",
                 ],
                 # Configure custom ranking
                 "customRanking": [
@@ -123,6 +125,7 @@ class AlgoliaConfig:
                     "is_featured",
                     "is_sponsored",
                     "searchable(features)",
+                    "keywords",
                 ],
                 # Configure highlighting
                 "attributesToHighlight": ["name", "description", "features"],

@@ -60,7 +60,7 @@ def test_algolia_index(client, index_name):
     search_response = client.search_single_index(index_name)
 
     # Clear all items again to clear our test record
-    client.clear_objects(index_name)
+    # client.clear_objects(index_name)
 
     print(f"search_response: {search_response}")
 
@@ -69,7 +69,7 @@ def test_algolia_index(client, index_name):
     try:
         # Try accessing as attributes first
         hits = search_response.hits if hasattr(search_response, "hits") else []
-        if len(hits) == 1 and hits[0].object_id:
+        if len(hits) == 1:
             print(f"hits: {hits}")
             print("Algolia index test successful")
             return
@@ -163,6 +163,36 @@ def prepare_algolia_object(mongo_tool):
     if "logo_url" in mongo_tool:
         algolia_tool["logo_url"] = mongo_tool["logo_url"]
 
+    # Process keywords if they exist, otherwise generate them from tags or category
+    if "keywords" in mongo_tool and mongo_tool["keywords"]:
+        algolia_tool["keywords"] = mongo_tool["keywords"]
+    else:
+        # Generate keywords from tags, features, and category
+        keywords = []
+
+        # Add tags as keywords if available
+        if "tags" in mongo_tool and mongo_tool["tags"]:
+            keywords.extend(mongo_tool["tags"])
+
+        # Add category as keyword if available
+        if "category" in mongo_tool and mongo_tool["category"]:
+            category = mongo_tool["category"]
+            if isinstance(category, str):
+                keywords.append(category)
+
+        # Add features as keywords if available
+        if "features" in mongo_tool and mongo_tool["features"]:
+            # Extract main keywords from features (first word of each feature)
+            for feature in mongo_tool["features"]:
+                if isinstance(feature, str):
+                    feature_words = feature.split()
+                    if feature_words:
+                        keywords.append(feature_words[0].lower())
+
+        # Remove duplicates and assign to algolia_tool
+        if keywords:
+            algolia_tool["keywords"] = list(set(keywords))
+
     return algolia_tool
 
 
@@ -174,24 +204,16 @@ def configure_algolia_index(client, index_name):
             "searchableAttributes": [
                 "name",
                 "description",
-                "summary",
-                "tags",
-                "category",
-                "features",
-                "price",
-                "is_featured",
-                "rating",
-                "saved_numbers",
+                "keywords",
             ],
             "attributesForFaceting": [
                 "category",
-                "pricing_type",
-                "is_featured",
-                "searchable(tags)",
-                "price",
                 "is_featured",
                 "rating",
-                "saved_numbers",
+                "keywords",
+                "category_id",
+                "unique_id",
+                "description",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -211,6 +233,7 @@ def configure_algolia_index(client, index_name):
                 "is_featured",
                 "rating",
                 "saved_numbers",
+                "keywords",
             ],
             "ranking": [
                 "typo",

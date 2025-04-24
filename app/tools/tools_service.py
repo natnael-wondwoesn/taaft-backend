@@ -1,14 +1,19 @@
 from fastapi import HTTPException
 from uuid import UUID, uuid4, uuid5, NAMESPACE_OID
 from datetime import datetime
+import asyncio
 from typing import List, Optional, Union, Dict, Any
 
-from ..database.database import tools
+from ..database.database import tools, database
 from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
 from ..categories.service import categories_service
+from collections import Counter
 
 from ..logger import logger
+
+# Keywords collection
+keywords_collection = database.get_collection("keywords")
 
 
 def objectid_to_uuid(objectid_str: str) -> UUID:
@@ -23,6 +28,212 @@ def objectid_to_uuid(objectid_str: str) -> UUID:
         # Fall back to a random UUID if conversion fails
         logger.error(f"Failed to convert ObjectId to UUID: {e}")
         return uuid4()
+
+
+def extract_keywords_from_text(text: str) -> List[str]:
+    """
+    Extract meaningful keywords from text using basic techniques.
+    Simplified implementation that doesn't use NLTK.
+
+    Args:
+        text: The text to extract keywords from
+
+    Returns:
+        List of keywords extracted from the text
+    """
+    if not text:
+        return []
+
+    try:
+        # Basic stopwords list
+        common_stopwords = {
+            "a",
+            "an",
+            "the",
+            "and",
+            "or",
+            "but",
+            "if",
+            "then",
+            "else",
+            "when",
+            "at",
+            "from",
+            "by",
+            "for",
+            "with",
+            "about",
+            "against",
+            "between",
+            "into",
+            "through",
+            "during",
+            "before",
+            "after",
+            "above",
+            "below",
+            "to",
+            "of",
+            "in",
+            "on",
+            "off",
+            "over",
+            "under",
+            "again",
+            "further",
+            "then",
+            "once",
+            "here",
+            "there",
+            "where",
+            "why",
+            "how",
+            "all",
+            "any",
+            "both",
+            "each",
+            "few",
+            "more",
+            "most",
+            "other",
+            "some",
+            "such",
+            "no",
+            "nor",
+            "not",
+            "only",
+            "own",
+            "same",
+            "so",
+            "than",
+            "too",
+            "very",
+            "can",
+            "will",
+            "just",
+            "should",
+            "now",
+            "tool",
+            "tools",
+            "ai",
+            "intelligence",
+            "artificial",
+            "model",
+            "models",
+            "system",
+            "platform",
+            "app",
+            "application",
+            "software",
+            "service",
+            "solution",
+            "technology",
+        }
+
+        # Simple tokenization by splitting on whitespace
+        tokens = text.lower().split()
+
+        # Filter out stopwords, short words, and non-alphanumeric tokens
+        filtered_tokens = [
+            token
+            for token in tokens
+            if token not in common_stopwords and len(token) > 2 and token.isalnum()
+        ]
+
+        # Count term frequency
+        token_counts = Counter(filtered_tokens)
+
+        # Get the most common terms (limit to 10)
+        keywords = [token for token, count in token_counts.most_common(10)]
+
+        return keywords
+    except Exception as e:
+        logger.error(f"Keyword extraction failed: {str(e)}")
+        # Ultra-basic fallback
+        if not text:
+            return []
+        words = text.lower().split()
+        basic_keywords = list(set([w for w in words if len(w) > 3]))[:10]
+        return basic_keywords
+
+
+def extract_keywords(tool: Dict[str, Any]) -> List[str]:
+    """
+    Extract keywords from a tool document.
+
+    Args:
+        tool: The tool document from MongoDB
+
+    Returns:
+        List of keywords extracted from the tool
+    """
+    all_keywords = set()
+
+    # Use existing keywords if available
+    if "keywords" in tool and tool["keywords"]:
+        all_keywords.update(tool["keywords"])
+        return list(all_keywords)
+
+    # Extract keywords from name
+    if "name" in tool and tool["name"]:
+        name_keywords = extract_keywords_from_text(tool["name"])
+        all_keywords.update(name_keywords)
+
+    # Extract keywords from description
+    if "description" in tool and tool["description"]:
+        desc_keywords = extract_keywords_from_text(tool["description"])
+        all_keywords.update(desc_keywords)
+
+    # Include category as a keyword
+    if "category" in tool and tool["category"]:
+        if isinstance(tool["category"], str):
+            category_words = extract_keywords_from_text(tool["category"])
+            all_keywords.update(category_words)
+
+    # Include features as keywords
+    if "features" in tool and tool["features"]:
+        for feature in tool["features"]:
+            if isinstance(feature, str):
+                feature_keywords = extract_keywords_from_text(feature)
+                all_keywords.update(feature_keywords)
+
+    # Include tags as keywords
+    if "tags" in tool and tool["tags"]:
+        for tag in tool["tags"]:
+            if isinstance(tag, str):
+                all_keywords.add(tag.lower())
+
+    # For pricing_type specifically, include it as a keyword
+    if "pricing_type" in tool and tool["pricing_type"]:
+        pricing_type = tool["pricing_type"].lower()
+        all_keywords.add(pricing_type)
+
+    return list(all_keywords)
+
+
+async def update_tool_keywords(tool_id: str, tool_name: str, keywords: List[str]):
+    """
+    Update the keywords collection with tool keywords.
+
+    Args:
+        tool_id: The tool ID
+        tool_name: The tool name
+        keywords: List of keywords
+    """
+    # Store each keyword in keywords collection
+    for keyword in keywords:
+        await keywords_collection.update_one(
+            {"keyword": keyword},
+            {
+                "$set": {"updated_at": datetime.utcnow()},
+                "$setOnInsert": {"created_at": datetime.utcnow()},
+                "$inc": {"frequency": 1},
+                "$addToSet": {
+                    "tools": {"tool_id": str(tool_id), "tool_name": tool_name}
+                },
+            },
+            upsert=True,
+        )
 
 
 def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
@@ -52,6 +263,34 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
                 f"Tool missing both 'id' and '_id' fields. Generated new ID: {tool_id}. Tool data: {tool}"
             )
 
+        # Extract keywords if not already present and update in the background
+        if not tool.get("keywords"):
+            # Extract keywords
+            keywords = extract_keywords(tool)
+
+            # Update in background to avoid blocking the response
+            if "_id" in tool:
+                asyncio.create_task(
+                    tools.update_one(
+                        {"_id": tool["_id"]},
+                        {
+                            "$set": {
+                                "keywords": keywords,
+                                "updated_at": datetime.utcnow(),
+                            }
+                        },
+                    )
+                )
+                # Update keywords collection in background
+                asyncio.create_task(
+                    update_tool_keywords(
+                        str(tool["_id"]), tool.get("name", "Unknown"), keywords
+                    )
+                )
+
+            # Add the keywords to the response
+            tool["keywords"] = keywords
+
         return ToolResponse(
             id=tool_id,  # Use the determined ID (valid UUID string)
             price=tool.get("price") or "",
@@ -67,10 +306,10 @@ def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             features=tool.get("features"),
             is_featured=tool.get("is_featured", False),
             saved_by_user=False,  # Default value, will be set per-user when implemented
+            keywords=tool.get("keywords", []),  # Include keywords in the response
         )
     except Exception as e:
-        # Log the error
-        logger.error(f"Error creating ToolResponse: {str(e)}. Input tool data: {tool}")
+        logger.error(f"Error creating tool response: {str(e)}")
         return None
 
 
@@ -258,8 +497,19 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
         if categories_list:
             tool_dict["categories"] = categories_list
 
+        # Extract keywords
+        keywords = extract_keywords(tool_dict)
+        tool_dict["keywords"] = keywords
+
         # Insert into MongoDB
         result = await tools.insert_one(tool_dict)
+
+        # Update keywords collection in background
+        asyncio.create_task(
+            update_tool_keywords(
+                str(result.inserted_id), tool_dict.get("name", "Unknown"), keywords
+            )
+        )
 
         # Return the created tool
         created_tool = await tools.find_one({"_id": result.inserted_id})
@@ -367,6 +617,29 @@ async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolRe
         # Add updated categories to update data if changed
         if has_category_changes:
             update_data["categories"] = categories_list
+
+        # Extract keywords if name, description, features or category changed
+        keyword_fields = [
+            "name",
+            "description",
+            "features",
+            "category",
+            "tags",
+            "pricing_type",
+        ]
+        if any(field in update_data for field in keyword_fields):
+            # Merge existing tool with updates for keyword extraction
+            updated_tool = {**existing_tool, **update_data}
+            keywords = extract_keywords(updated_tool)
+            update_data["keywords"] = keywords
+
+            # Update keywords collection in background after updating the tool
+            tool_id_str = str(existing_tool.get("_id", tool_id))
+            asyncio.create_task(
+                update_tool_keywords(
+                    tool_id_str, updated_tool.get("name", "Unknown"), keywords
+                )
+            )
 
         # Update the tool
         await tools.update_one({"id": str(tool_id)}, {"$set": update_data})
