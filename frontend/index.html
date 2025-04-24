@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Chat Application</h1>
+            <div class="chat-controls">
+                <button id="new-chat-btn">New Chat</button>
+                <select id="model-select">
+                    <option value="gpt4">GPT-4</option>
+                    <option value="gpt3">GPT-3</option>
+                </select>
+                <div class="toggle-container">
+                    <label for="stream-toggle">Stream responses</label>
+                    <input type="checkbox" id="stream-toggle" checked>
+                </div>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <textarea id="message-input" placeholder="Type your message here..."></textarea>
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
