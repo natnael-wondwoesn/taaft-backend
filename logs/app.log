@@ -1006,3 +1006,112 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-23T15:00:01.732092+0300 INFO Algolia tools index configured successfully
 2025-04-23T15:00:01.862096+0300 INFO Algolia glossary index configured successfully
 2025-04-23T15:00:01.863099+0300 INFO Algolia indexes configured successfully
+2025-04-23T17:34:29.085071+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:34:29.087064+0300 INFO Algolia client initialized successfully
+2025-04-23T17:34:33.090526+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'blog post writing tool free'
+2025-04-23T17:34:34.870946+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'blog post writing tool free'
+2025-04-23T17:34:35.616551+0300 INFO Algolia search with params: {'query': 'blog post writing tool free', 'page': 0, 'hitsPerPage': 10, 'facetFilters': [['categories.id:Writing', 'categories.id:Content Creation'], ['pricing.type:PricingType.FREE']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-23T17:34:35.617527+0300 INFO Search found 0 results
+2025-04-23T17:35:38.800156+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:35:38.801155+0300 INFO Algolia client initialized successfully
+2025-04-23T17:35:41.783285+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'blog post writing tool free'
+2025-04-23T17:35:43.980595+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'blog post writing tool free'
+2025-04-23T17:35:44.397607+0300 INFO Algolia search with params: {'query': 'blog post writing tool free', 'page': 0, 'hitsPerPage': 10, 'facetFilters': [['categories.id:Writing', 'categories.id:Content Creation'], ['pricing.type:PricingType.FREE']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-23T17:35:44.398596+0300 INFO Search found 0 results
+2025-04-23T17:40:10.780153+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:40:10.781153+0300 INFO Algolia client initialized successfully
+2025-04-23T17:41:50.193128+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:41:50.194132+0300 INFO Algolia client initialized successfully
+2025-04-23T17:42:17.078389+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:42:17.079391+0300 INFO Algolia client initialized successfully
+2025-04-23T17:42:37.540521+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:42:37.541514+0300 INFO Algolia client initialized successfully
+2025-04-23T17:42:41.456893+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'blog post writing tool free'
+2025-04-23T17:42:43.090714+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'blog post writing tool free'
+2025-04-23T17:42:43.626903+0300 INFO Algolia search with params: {'query': 'blog post writing tool free', 'page': 0, 'hitsPerPage': 10, 'facetFilters': [['categories.id:Writing', 'categories.id:Content Creation'], ['pricing.type:PricingType.FREE']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-23T17:42:43.627893+0300 INFO Search found 0 results
+2025-04-23T17:48:32.024911+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-23T17:48:32.025890+0300 INFO Algolia client initialized successfully
+2025-04-23T17:48:35.991092+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'free writing blog tool'
+2025-04-23T17:48:37.790108+0300 INFO Processed natural language query: 'I need a free tool for writing blog posts' -> 'free writing blog tool'
+2025-04-23T17:48:38.425501+0300 INFO Algolia search with params: {'query': 'free writing blog tool', 'page': 0, 'hitsPerPage': 10, 'filters': 'price:0 OR price:Free OR price:free', 'facetFilters': [['categories.id:Writing']], 'facets': ['categories.name', 'pricing.type', 'features']}
+2025-04-23T17:48:38.427492+0300 INFO Search found 0 results
+2025-04-24T11:21:15.959567+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T11:21:15.961567+0300 INFO Algolia client initialized successfully
+2025-04-24T11:21:17.221686+0300 INFO Setting up database...
+2025-04-24T11:21:20.296305+0300 INFO Connected to MongoDB for setup
+2025-04-24T11:21:20.487605+0300 INFO Database setup completed successfully
+2025-04-24T11:21:20.488604+0300 INFO Database setup completed
+2025-04-24T11:21:20.488604+0300 INFO Seeding glossary terms...
+2025-04-24T11:21:20.755850+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T11:21:20.756853+0300 INFO Glossary seeding completed
+2025-04-24T11:21:20.756853+0300 INFO Configuring Algolia indexes...
+2025-04-24T11:21:21.444424+0300 INFO Algolia tools index configured successfully
+2025-04-24T11:21:21.625415+0300 INFO Algolia glossary index configured successfully
+2025-04-24T11:21:21.626426+0300 INFO Algolia indexes configured successfully
+2025-04-24T11:21:58.616552+0300 INFO Shutting down application...
+2025-04-24T11:21:58.825292+0300 INFO Database connections closed
+2025-04-24T11:21:58.826282+0300 INFO Shutdown complete.
+2025-04-24T11:22:02.392814+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T11:22:02.393808+0300 INFO Algolia client initialized successfully
+2025-04-24T11:22:03.408411+0300 INFO Setting up database...
+2025-04-24T11:22:05.482885+0300 INFO Connected to MongoDB for setup
+2025-04-24T11:22:05.682878+0300 INFO Database setup completed successfully
+2025-04-24T11:22:05.683885+0300 INFO Database setup completed
+2025-04-24T11:22:05.684886+0300 INFO Seeding glossary terms...
+2025-04-24T11:22:05.883566+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T11:22:05.884568+0300 INFO Glossary seeding completed
+2025-04-24T11:22:05.885571+0300 INFO Configuring Algolia indexes...
+2025-04-24T11:22:06.374241+0300 INFO Algolia tools index configured successfully
+2025-04-24T11:22:06.536537+0300 INFO Algolia glossary index configured successfully
+2025-04-24T11:22:06.537609+0300 INFO Algolia indexes configured successfully
+2025-04-24T12:02:24.665208+0300 INFO Shutting down application...
+2025-04-24T12:02:24.943789+0300 INFO Database connections closed
+2025-04-24T12:02:24.945790+0300 INFO Shutdown complete.
+2025-04-24T12:02:29.197758+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T12:02:29.199398+0300 INFO Algolia client initialized successfully
+2025-04-24T12:02:30.731570+0300 INFO Setting up database...
+2025-04-24T12:02:33.970529+0300 INFO Connected to MongoDB for setup
+2025-04-24T12:02:34.237934+0300 INFO Database setup completed successfully
+2025-04-24T12:02:34.238945+0300 INFO Database setup completed
+2025-04-24T12:02:34.239941+0300 INFO Seeding glossary terms...
+2025-04-24T12:02:34.452957+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T12:02:34.453936+0300 INFO Glossary seeding completed
+2025-04-24T12:02:34.454937+0300 INFO Configuring Algolia indexes...
+2025-04-24T12:02:35.121881+0300 INFO Algolia tools index configured successfully
+2025-04-24T12:02:35.263872+0300 INFO Algolia glossary index configured successfully
+2025-04-24T12:02:35.275396+0300 INFO Algolia indexes configured successfully
+2025-04-24T12:02:45.760707+0300 INFO Shutting down application...
+2025-04-24T12:02:46.140838+0300 INFO Database connections closed
+2025-04-24T12:02:46.142129+0300 INFO Shutdown complete.
+2025-04-24T12:16:45.534209+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T12:16:45.536202+0300 INFO Algolia client initialized successfully
+2025-04-24T12:16:46.751430+0300 INFO Setting up database...
+2025-04-24T12:16:49.758535+0300 INFO Connected to MongoDB for setup
+2025-04-24T12:16:50.004123+0300 INFO Database setup completed successfully
+2025-04-24T12:16:50.004123+0300 INFO Database setup completed
+2025-04-24T12:16:50.005125+0300 INFO Seeding glossary terms...
+2025-04-24T12:16:50.211971+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T12:16:50.212966+0300 INFO Glossary seeding completed
+2025-04-24T12:16:50.213969+0300 INFO Configuring Algolia indexes...
+2025-04-24T12:16:50.839667+0300 INFO Algolia tools index configured successfully
+2025-04-24T12:16:50.982781+0300 INFO Algolia glossary index configured successfully
+2025-04-24T12:16:50.983773+0300 INFO Algolia indexes configured successfully
+2025-04-24T12:17:30.620709+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T12:20:43.694368+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-24T12:23:57.912802+0300 INFO Shutting down application...
+2025-04-24T12:23:58.120855+0300 INFO Database connections closed
+2025-04-24T12:23:58.122857+0300 INFO Shutdown complete.
+2025-04-24T12:24:02.143871+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-24T12:24:02.144863+0300 INFO Algolia client initialized successfully
+2025-04-24T12:24:03.305050+0300 INFO Setting up database...
+2025-04-24T12:24:06.487946+0300 INFO Connected to MongoDB for setup
+2025-04-24T12:24:06.736538+0300 INFO Database setup completed successfully
+2025-04-24T12:24:06.737539+0300 INFO Database setup completed
+2025-04-24T12:24:06.737539+0300 INFO Seeding glossary terms...
+2025-04-24T12:24:06.990625+0300 INFO Glossary already contains 8 terms. Skipping seeding.
+2025-04-24T12:24:06.991607+0300 INFO Glossary seeding completed
+2025-04-24T12:24:06.991607+0300 INFO Configuring Algolia indexes...
+2025-04-24T12:24:07.627187+0300 INFO Algolia tools index configured successfully
+2025-04-24T12:24:07.869757+0300 INFO Algolia glossary index configured successfully
+2025-04-24T12:24:07.869757+0300 INFO Algolia indexes configured successfully

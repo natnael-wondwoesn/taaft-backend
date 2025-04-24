@@ -145,3 +145,10 @@ class ProcessedQuery(BaseModel):
     categories: Optional[List[str]] = None
     pricing_types: Optional[List[PricingType]] = None
     interpreted_intent: Optional[str] = None
+
+    # New fields based on updated prompt
+    price_filter: Optional[str] = None
+    rating_filter: Optional[float] = None
+    min_rating: Optional[float] = (
+        None  # Alias for rating_filter for backward compatibility
+    )

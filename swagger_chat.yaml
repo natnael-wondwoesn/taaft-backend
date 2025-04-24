@@ -228,6 +228,37 @@ paths:
         '500':
           description: Error getting response from language model
 
+  /api/chat/sessions/{session_id}/messages/stream:
+    post:
+      tags:
+        - Chat
+      summary: Stream chat message
+      description: Send a message to the chat and get a streaming response from the LLM using Server-Sent Events
+      operationId: streamChatMessage
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Stream of chat responses
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '404':
+          description: Chat session not found
+        '500':
+          description: Error streaming response from language model
+
   /api/chat/search:
     get:
       tags:
@@ -286,17 +317,6 @@ paths:
                 $ref: '#/components/schemas/ChatMessageResponse'
         '500':
           description: Error getting response from language model
-
-  /ws:
-    get:
-      tags:
-        - Chat
-      summary: WebSocket connection
-      description: Establish a WebSocket connection for real-time chat
-      operationId: websocketEndpoint
-      responses:
-        '101':
-          description: WebSocket connection established
 
 components:
   schemas:

@@ -432,61 +432,106 @@ class AlgoliaSearch:
             # Define the enhanced system prompt for query processing
             system_prompt = """
             You are an AI tools search expert tasked with analyzing natural language questions to convert them into 
-            optimized search parameters for an AI tool directory. 
+            optimized search parameters for an AI tool directory. Our database contains AI tools with the following structure:
+
+            {
+                "objectID": "68088b0da40b1de891a1316e",
+                "name": "Fork.ai",
+                "description": "AI-powered task automation tool",
+                "summary": "Automate your workflow with natural language commands",
+                "url": "https://fork.ai",
+                "logo_url": "https://fork.ai/logo.png",
+                "category": "Productivity",
+                "features": ["Workflow automation", "Natural language interface"],
+                "pricing_type": "Freemium",
+                "pricing_url": "https://fork.ai/pricing",
+                "is_featured": true,
+                "tags": ["automation", "productivity", "workflow"],
+                "price": "9.95",
+                "rating": "4.8",
+                "saved_numbers": 1070,
+                "created_at": "2023-05-12T10:30:45Z",
+                "updated_at": "2023-09-18T14:22:31Z"
+            }
             
             Follow these steps carefully:
             
             1. Understand the user's intent and identify what type of AI tool they are looking for.
-            2. Extract key search terms and relevant filters.
-            3. Map to appropriate categories and pricing preferences.
+            2. Extract key search terms based on the tool name, functionality, and features.
+            3. Identify any filters related to category, price, rating, or other specific attributes.
             4. Prepare a concise search query focusing on the most relevant keywords.
             
-            Categories available include: Content Creation, Writing, Image Generation, Video Generation, Audio Processing, 
-            Chat, Code Generation, Data Analysis, Marketing, SEO, Social Media, Productivity, Research, Education, and more.
+            Search parameters should include:
             
-            Price types include: Free, Freemium, Paid, Enterprise, Contact.
+            1. search_query: The optimized keywords for the search (3-7 words max)
+            2. price_filter: Price range or type (Free, Freemium, Paid, Enterprise, Contact, specific amount like "under $10")
+            3. rating_filter: Minimum rating if mentioned (on a 1-5 scale)
+            4. categories: Relevant tool categories based on user's request
+            5. interpreted_intent: A brief description of what the user is looking for
             
             Examples:
             
-            Question: "How can AI help my marketing team?"
+            Question: "I need an AI marketing tool under $10 with high ratings"
             {
-                "search_query": "marketing AI tools",
-                "categories": ["Marketing", "Content Creation", "Social Media"],
-                "pricing_types": null,
-                "filters": null,
-                "interpreted_intent": "Looking for AI tools that can assist marketing teams with various tasks"
+                "search_query": "AI marketing tool",
+                "price_filter": "under $10",
+                "rating_filter": 4.5,
+                "categories": ["Marketing"],
+                "interpreted_intent": "Looking for affordable, highly-rated AI marketing tools"
             }
             
-            Question: "I need a free tool for writing blog posts"
+            Question: "Find me the most popular AI writing assistants"
             {
-                "search_query": "blog post writing generator",
-                "categories": ["Writing", "Content Creation"],
-                "pricing_types": ["Free", "Freemium"],
-                "filters": null,
-                "interpreted_intent": "Seeking free or freemium AI writing tools specifically for blog content"
+                "search_query": "popular AI writing assistant",
+                "price_filter": null,
+                "rating_filter": null,
+                "categories": ["Writing"],
+                "interpreted_intent": "Seeking popular AI tools for writing assistance"
             }
             
-            Question: "Show me AI code generators for Python with good documentation"
+            Question: "Show me free AI image generators"
             {
-                "search_query": "Python code generator documentation",
-                "categories": ["Code Generation", "Development"],
-                "pricing_types": null,
-                "filters": null,
-                "interpreted_intent": "Looking for AI tools that generate Python code and have good documentation"
+                "search_query": "free AI image generator",
+                "price_filter": "Free",
+                "rating_filter": null,
+                "categories": ["Image Generation"],
+                "interpreted_intent": "Looking for free tools to generate images with AI"
             }
             
-            Question: "I need a tool for creating marketing videos quickly"
+            Question: "I need a highly rated AI code assistant for Python"
             {
-                "search_query": "AI marketing video creator fast",
-                "categories": ["Video Generation", "Marketing"],
-                "pricing_types": null,
-                "filters": null,
-                "interpreted_intent": "Seeking tools that can quickly generate marketing videos using AI"
+                "search_query": "Python code assistant",
+                "price_filter": null,
+                "rating_filter": 4.0,
+                "categories": ["Development", "Coding"],
+                "interpreted_intent": "Seeking highly rated AI tools for Python coding assistance"
             }
             
-            Respond with a JSON object containing search_query, categories, pricing_types, filters, and interpreted_intent.
-            Keep search_query concise and focused on keywords (5-7 words max).
-            Only include categories and pricing_types that are clearly implied.
+            Available categories in our system include:
+            - Writing
+            - Image Generation
+            - Audio
+            - Video
+            - Code Generation
+            - Development
+            - Marketing
+            - Data Analysis
+            - Productivity
+            - Research
+            - Chat
+            - E-commerce
+            - Analytics
+            
+            Available pricing types:
+            - Free
+            - Freemium
+            - Paid
+            - Enterprise
+            - Contact
+            
+            Respond with a JSON object containing the parameters above.
+            Keep search_query concise and focused on keywords (3-7 words max).
+            Only include filters that are clearly implied in the query.
             Use null (not empty arrays) when a field is not applicable.
             """
 
@@ -549,7 +594,7 @@ class AlgoliaSearch:
                 json_str = self._extract_json_from_text(response_text)
                 processed_data = json.loads(json_str)
 
-                # Normalize and validate pricing types
+                # Normalize and validate pricing types - handle both old and new format
                 pricing_types = await self._normalize_pricing_types(
                     processed_data.get("pricing_types")
                 )
@@ -562,10 +607,46 @@ class AlgoliaSearch:
                 # Build filter string if needed
                 filters = processed_data.get("filters")
 
-                # If no explicit filters were provided but we have categories or pricing,
-                # we'll let the search API build the filters
+                # Get new fields from updated prompt
+                price_filter = processed_data.get("price_filter")
+                rating_filter = processed_data.get("rating_filter")
 
-                # Create the processed query object
+                # Convert rating_filter to min_rating for backward compatibility
+                min_rating = rating_filter
+
+                # Build advanced filters if needed
+                if price_filter or rating_filter:
+                    filter_parts = []
+
+                    # Handle price filter
+                    if price_filter:
+                        if price_filter.lower() == "free":
+                            filter_parts.append("price:0 OR price:Free OR price:free")
+                        elif price_filter.lower() in ["paid", "premium"]:
+                            filter_parts.append("price:>0")
+                        elif "under" in price_filter.lower():
+                            # Extract numeric value from "under $X"
+                            try:
+                                price_value = float(
+                                    "".join(
+                                        c
+                                        for c in price_filter
+                                        if c.isdigit() or c == "."
+                                    )
+                                )
+                                filter_parts.append(f"price:<{price_value}")
+                            except:
+                                pass
+
+                    # Handle rating filter
+                    if rating_filter:
+                        filter_parts.append(f"rating:>={rating_filter}")
+
+                    # Combine filter parts
+                    if filter_parts:
+                        filters = " AND ".join(filter_parts)
+
+                # Create the processed query object with new fields
                 processed_query = ProcessedQuery(
                     original_question=nlq.question,
                     search_query=processed_data.get("search_query", nlq.question),
@@ -573,6 +654,9 @@ class AlgoliaSearch:
                     categories=categories,
                     pricing_types=pricing_types,
                     interpreted_intent=processed_data.get("interpreted_intent"),
+                    price_filter=price_filter,
+                    rating_filter=rating_filter,
+                    min_rating=min_rating,
                 )
 
                 logger.info(

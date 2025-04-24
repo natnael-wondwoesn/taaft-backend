@@ -7,8 +7,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from typing import Dict, List, Optional, Any
 from bson import ObjectId
 import datetime
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 import json
+import asyncio
 
 from .models import (
     ChatSessionCreate,
@@ -155,136 +156,142 @@ async def get_chat_messages(
     return messages
 
 
-@router.post("/sessions/{session_id}/messages", response_model=ChatMessageResponse)
-async def send_chat_message(
-    session_id: str,
-    message_request: ChatMessageRequest,
-    chat_db: ChatDB = Depends(get_chat_db),
+@router.post("/sessions/{session_id}/messages/stream")
+async def stream_chat_message(
+    session_id: str, request: ChatMessageRequest, chat_db: ChatDB = Depends(get_chat_db)
 ):
-    """Send a message to the chat and get a response from the LLM"""
-    # Verify the session exists
-    session = await chat_db.get_session(session_id)
-    if not session:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Chat session with ID {session_id} not found",
+    """Send a message to the chat and get a streaming response from the LLM using SSE"""
+    try:
+        # Verify the session exists
+        session = await chat_db.get_session(session_id)
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Chat session with ID {session_id} not found",
+            )
+
+        # Save user message to database
+        user_message_data = {
+            "role": MessageRole.USER,
+            "content": request.message,
+            "chat_id": ObjectId(session_id),
+            "timestamp": datetime.datetime.utcnow(),
+            "metadata": request.metadata or {},
+        }
+        user_message = await chat_db.add_message(user_message_data)
+
+        # Get system prompt from session
+        system_prompt = session.get("system_prompt")
+
+        # Get previous messages for context
+        previous_messages = await chat_db.get_messages(session_id, limit=20)
+
+        # Format messages for the LLM
+        formatted_messages = [
+            {"role": msg["role"], "content": msg["content"]}
+            for msg in previous_messages
+            if msg["role"]
+            != MessageRole.SYSTEM  # System messages are handled separately
+        ]
+
+        # Use model from request or session
+        model_type = request.model or session.get("model") or ChatModelType.DEFAULT
+
+        # Create streaming response
+        async def event_generator():
+            # Variables to collect the full response
+            full_response = ""
+            message_id = str(ObjectId())
+
+            # Initial event with message ID
+            yield f"data: {json.dumps({'event': 'start', 'message_id': message_id})}\n\n"
+
+            # Stream the LLM response
+            async for chunk in llm_service.get_streaming_llm_response(
+                messages=formatted_messages,
+                model_type=model_type,
+                system_prompt=system_prompt,
+            ):
+                full_response += chunk
+                yield f"data: {json.dumps({'event': 'chunk', 'content': chunk})}\n\n"
+                await asyncio.sleep(0.01)  # Small delay to control flow
+
+            # Final event
+            yield f"data: {json.dumps({'event': 'end', 'message_id': message_id})}\n\n"
+
+            # Save the complete response to the database
+            assistant_message = {
+                "role": MessageRole.ASSISTANT,
+                "content": full_response,
+                "chat_id": ObjectId(session_id),
+                "timestamp": datetime.datetime.utcnow(),
+                "metadata": {
+                    "model": model_type,
+                    "tokens": llm_service.estimate_tokens(full_response),
+                },
+                "_id": ObjectId(message_id),
+            }
+            await chat_db.add_message(assistant_message)
+
+        return StreamingResponse(
+            event_generator(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+            },
         )
 
-    # Use model from request or session
-    model_type = message_request.model or session.get("model", ChatModelType.DEFAULT)
+    except Exception as e:
+        logger.error(f"Error in stream_chat_message: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error streaming response: {str(e)}",
+        )
 
-    # Get system prompt from request, session, or use default
-    system_prompt = message_request.system_prompt or session.get("system_prompt")
 
-    # Save user message to database
-    user_message_data = {
-        "role": MessageRole.USER,
-        "content": message_request.message,
-        "chat_id": ObjectId(session_id),
-        "timestamp": datetime.datetime.utcnow(),
-        "metadata": message_request.metadata,
-    }
-    user_message = await chat_db.add_message(user_message_data)
-
-    # Get previous messages from this session for context
-    previous_messages = await chat_db.get_messages(session_id, limit=20)
-
-    # Format messages for the LLM
-    formatted_messages = [
-        {"role": msg["role"], "content": msg["content"]}
-        for msg in previous_messages
-        if msg["role"] != MessageRole.SYSTEM  # System messages are handled separately
-    ]
-
-    # Analyze if the user is asking about tools
-    search_analysis = await llm_service.analyze_for_tool_search(
-        formatted_messages, system_prompt=system_prompt
-    )
-
-    # Check if we should perform a tool search
-    if search_analysis.get("search_intent", False):
-        try:
-            # Import required modules
-            from ..algolia.search import algolia_search
-
-            # Get the NLP query
-            nlp_query = search_analysis.get("nlp_query")
-
-            # Add user ID to the query if available
-            if "user_id" in session:
-                nlp_query.user_id = session["user_id"]
-
-            # Execute NLP search
-            search_result = await algolia_search.execute_nlp_search(
-                nlp_query, page=1, per_page=5
-            )
-
-            # Format top tools for the response
-            top_tools = []
-            for tool in search_result.tools[:5]:  # Limit to top 5 tools
-                top_tools.append(
-                    {
-                        "name": tool.name,
-                        "description": tool.description,
-                        "website": tool.website,
-                        "pricing_type": tool.pricing.type if tool.pricing else None,
-                        "categories": (
-                            [cat.name for cat in tool.categories]
-                            if tool.categories
-                            else []
-                        ),
-                        "logo_url": tool.logo_url,
-                    }
-                )
-
-            # Format the interpreted query
-            search_info = {
-                "search_query": search_result.processed_query.search_query,
-                "interpreted_intent": search_result.processed_query.interpreted_intent,
-                "total_results": search_result.total,
-                "top_tools": top_tools,
-            }
-
-            # Create the prompt for the LLM with search results
-            search_results_prompt = f"""
-            The user is asking about AI tools. I've performed a search and found {search_result.total} relevant tools.
-            
-            Search query: "{search_result.processed_query.search_query}"
-            Interpretation: {search_result.processed_query.interpreted_intent or "N/A"}
-            
-            Top results:
-            {json.dumps(top_tools, indent=2)}
-            
-            Please provide a helpful response about these tools. Mention that these are just a few recommendations,
-            and the user can ask for more specific tools if needed.
-            """
-
-            # Add the search results as a system message for context
-            formatted_messages.append(
-                {"role": "system", "content": search_results_prompt}
-            )
-
-            # Save the search info as metadata
-            search_metadata = {
-                "type": "tool_search",
-                "query": search_result.processed_query.search_query,
-                "total_results": search_result.total,
-            }
-
-            # Save tool recommendations for the response
-            tool_recommendations = top_tools
-
-        except Exception as e:
-            logger.error(f"Error performing tool search: {str(e)}")
-            # Continue with normal LLM response if search fails
-            search_metadata = None
-            tool_recommendations = None
-    else:
-        search_metadata = None
-        tool_recommendations = None
-
-    # Get response from LLM
+@router.post("/sessions/{session_id}/messages", response_model=ChatMessageResponse)
+async def send_chat_message(
+    session_id: str, request: ChatMessageRequest, chat_db: ChatDB = Depends(get_chat_db)
+):
+    """Send a message to the chat and get a response from the LLM (non-streaming)"""
     try:
+        # Verify the session exists
+        session = await chat_db.get_session(session_id)
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Chat session with ID {session_id} not found",
+            )
+
+        # Save user message to database
+        user_message_data = {
+            "role": MessageRole.USER,
+            "content": request.message,
+            "chat_id": ObjectId(session_id),
+            "timestamp": datetime.datetime.utcnow(),
+            "metadata": request.metadata or {},
+        }
+        user_message = await chat_db.add_message(user_message_data)
+
+        # Get system prompt from session
+        system_prompt = session.get("system_prompt")
+
+        # Get previous messages for context
+        previous_messages = await chat_db.get_messages(session_id, limit=20)
+
+        # Format messages for the LLM
+        formatted_messages = [
+            {"role": msg["role"], "content": msg["content"]}
+            for msg in previous_messages
+            if msg["role"]
+            != MessageRole.SYSTEM  # System messages are handled separately
+        ]
+
+        # Use model from request or session
+        model_type = request.model or session.get("model") or ChatModelType.DEFAULT
+
+        # Get response from LLM
         llm_response = await llm_service.get_llm_response(
             messages=formatted_messages,
             model_type=model_type,
@@ -292,45 +299,34 @@ async def send_chat_message(
         )
 
         # Save assistant response to database
-        assistant_message_data = {
+        message_id = str(ObjectId())
+        assistant_message = {
             "role": MessageRole.ASSISTANT,
             "content": llm_response,
             "chat_id": ObjectId(session_id),
             "timestamp": datetime.datetime.utcnow(),
             "metadata": {
                 "model": model_type,
-                "source": "llm_service",
-                **(search_metadata or {}),
+                "tokens": llm_service.estimate_tokens(llm_response),
             },
+            "_id": ObjectId(message_id),
         }
-        assistant_message = await chat_db.add_message(assistant_message_data)
+        await chat_db.add_message(assistant_message)
 
-        # Update the session title if this is the first user message
-        if len(previous_messages) <= 1:  # 0 or just the system message
-            # Generate a title based on the first message
-            title = (
-                message_request.message[:50] + "..."
-                if len(message_request.message) > 50
-                else message_request.message
-            )
-            await chat_db.update_session(session_id, {"title": title})
-
-        # Format the response
-        return ChatMessageResponse(
-            message=llm_response,
-            chat_id=str(session_id),
-            message_id=str(assistant_message["_id"]),
-            timestamp=assistant_message["timestamp"],
-            model=model_type,
-            metadata=assistant_message.get("metadata"),
-            tool_recommendations=tool_recommendations,
-        )
+        # Return response
+        return {
+            "message": llm_response,
+            "chat_id": session_id,
+            "message_id": message_id,
+            "timestamp": datetime.datetime.utcnow(),
+            "model": model_type,
+        }
 
     except Exception as e:
-        logger.error(f"Error getting LLM response: {str(e)}")
+        logger.error(f"Error in send_chat_message: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting response from language model: {str(e)}",
+            detail=f"Error getting response: {str(e)}",
         )
 
 

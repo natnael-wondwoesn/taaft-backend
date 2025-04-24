@@ -181,6 +181,7 @@ def configure_algolia_index(client, index_name):
                 "price",
                 "is_featured",
                 "rating",
+                "saved_numbers",
             ],
             "attributesForFaceting": [
                 "category",
@@ -190,6 +191,7 @@ def configure_algolia_index(client, index_name):
                 "price",
                 "is_featured",
                 "rating",
+                "saved_numbers",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -208,6 +210,7 @@ def configure_algolia_index(client, index_name):
                 "price",
                 "is_featured",
                 "rating",
+                "saved_numbers",
             ],
             "ranking": [
                 "typo",

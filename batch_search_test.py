@@ -44,6 +44,8 @@ async def process_queries(queries, output_file=None, mock=False):
                     ),
                     "filters": processed_query.filters,
                     "interpreted_intent": processed_query.interpreted_intent,
+                    "price_filter": processed_query.price_filter,
+                    "rating_filter": processed_query.rating_filter,
                 },
                 "timestamp": datetime.now().isoformat(),
             }
@@ -63,6 +65,8 @@ async def process_queries(queries, output_file=None, mock=False):
                     "pricing_types": None,
                     "filters": None,
                     "interpreted_intent": f"Used fallback keyword extraction: {search_query}",
+                    "price_filter": None,
+                    "rating_filter": None,
                 },
                 "fallback_used": True,
                 "error": str(e),
@@ -77,6 +81,8 @@ async def process_queries(queries, output_file=None, mock=False):
                 categories=None,
                 pricing_types=None,
                 interpreted_intent=f"Used fallback keyword extraction: {search_query}",
+                price_filter=None,
+                rating_filter=None,
             )
 
         # Print results
@@ -85,6 +91,8 @@ async def process_queries(queries, output_file=None, mock=False):
         print(f"  Categories: {processed_query.categories}")
         print(f"  Pricing types: {processed_query.pricing_types}")
         print(f"  Filters: {processed_query.filters}")
+        print(f"  Price Filter: {processed_query.price_filter}")
+        print(f"  Rating Filter: {processed_query.rating_filter}")
         print(f"  Interpreted intent: {processed_query.interpreted_intent}")
 
         # If mock mode, add mock search results

@@ -478,7 +478,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:8000/api/chat';
+        const API_URL = 'https://taaft-backend.onrender.com/api/chat';
         console.log(API_URL);
         const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
         let currentChatId = null;
@@ -1028,7 +1028,7 @@
         });
 
         // Auth variables
-        const AUTH_API_URL = 'http://localhost:8000/auth';
+        const AUTH_API_URL = 'https://taaft-backend.onrender.com/auth';
         let accessToken = localStorage.getItem('access_token');
         let refreshToken = localStorage.getItem('refresh_token');
         let isAuthenticated = !!accessToken;

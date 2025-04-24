@@ -335,10 +335,10 @@ async def read_root():
     return {"message": "TAAFT API Server"}
 
 
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {"status": "ok", "timestamp": datetime.datetime.utcnow().isoformat()}
+# @app.get("/health")
+# async def health_check():
+#     """Health check endpoint"""
+#     return {"status": "ok", "timestamp": datetime.datetime.utcnow().isoformat()}
 
 
 @app.get("/test-nlp-search")
@@ -359,6 +359,16 @@ async def test_nlp_search_api(request_data: dict):
     return {
         "received": request_data,
         "message": "This is a test endpoint to debug the NLP search API request format",
+    }
+
+
+@app.get("/health")
+async def health_check():
+    return {
+        "status": "ok",
+        "time": datetime.datetime.now().isoformat(),
+        "websocket_status": "available",
+        "active_connections": len(manager.active_connections),
     }
 
 
@@ -490,7 +500,6 @@ async def mock_nlp_search_api(nlq: NaturalLanguageQuery = Body(...)):
         pages=1,
         processing_time_ms=123,
     )
-
     # Add the processed query to the result
     result.processed_query = processed_query
 
