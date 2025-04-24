@@ -2761,3 +2761,5 @@ id
 2025-04-24T15:15:44.790412+0300 INFO Algolia indexes configured successfully
 2025-04-24T15:15:44.998917+0300 WARNING No admin users found. Use the /admin/init-admin endpoint to create the first admin user.
 2025-04-24T15:15:49.842440+0300 INFO Existing user natnael.wondwoesn@gmail.com promoted to first admin
+2025-04-24T15:20:59.467306+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-24T15:23:20.932593+0300 ERROR Error creating admin user: 403: Admin users already exist. This endpoint is disabled.

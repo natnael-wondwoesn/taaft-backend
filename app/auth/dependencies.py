@@ -14,13 +14,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 # Tier limits configuration
 TIER_LIMITS = {
     ServiceTier.FREE: {
-        "max_requests_per_day": 100,
+        "max_requests_per_day": 1000,
         "max_tokens_per_request": 4000,
         "max_storage_mb": 10,
         "features": ["basic_search", "basic_chat"],
     },
     ServiceTier.BASIC: {
-        "max_requests_per_day": 1000,
+        "max_requests_per_day": 5000,
         "max_tokens_per_request": 8000,
         "max_storage_mb": 100,
         "features": ["basic_search", "basic_chat", "advanced_search"],
