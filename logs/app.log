@@ -5284,3 +5284,16 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T07:37:50.015675+0300 INFO Shutting down application...
 2025-04-25T07:37:50.260398+0300 INFO Database connections closed
 2025-04-25T07:37:50.261402+0300 INFO Shutdown complete.
+2025-04-25T07:37:53.176499+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T07:37:53.177491+0300 INFO Algolia client initialized successfully
+2025-04-25T07:37:54.079921+0300 INFO Setting up database...
+2025-04-25T07:37:57.394266+0300 INFO Connected to MongoDB for setup
+2025-04-25T07:37:57.639255+0300 INFO Database setup completed successfully
+2025-04-25T07:37:57.640267+0300 INFO Database setup completed
+2025-04-25T07:37:57.641260+0300 INFO Seeding glossary terms...
+2025-04-25T07:37:57.895927+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T07:37:57.896927+0300 INFO Glossary seeding completed
+2025-04-25T07:37:57.896927+0300 INFO Configuring Algolia indexes...
+2025-04-25T07:37:58.807444+0300 INFO Algolia tools index configured successfully
+2025-04-25T07:37:58.999444+0300 INFO Algolia glossary index configured successfully
+2025-04-25T07:37:59.000436+0300 INFO Algolia indexes configured successfully
