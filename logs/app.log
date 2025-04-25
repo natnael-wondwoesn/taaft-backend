@@ -6057,3 +6057,55 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T08:42:30.145146+0300 INFO Shutting down application...
 2025-04-25T08:42:30.362145+0300 INFO Database connections closed
 2025-04-25T08:42:30.363148+0300 INFO Shutdown complete.
+2025-04-25T08:42:33.533444+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T08:42:33.534449+0300 INFO Algolia client initialized successfully
+2025-04-25T08:42:34.650013+0300 INFO Setting up database...
+2025-04-25T08:42:37.042404+0300 INFO Connected to MongoDB for setup
+2025-04-25T08:42:37.276259+0300 INFO Database setup completed successfully
+2025-04-25T08:42:37.277249+0300 INFO Database setup completed
+2025-04-25T08:42:37.278348+0300 INFO Seeding glossary terms...
+2025-04-25T08:42:37.556997+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T08:42:37.559010+0300 INFO Glossary seeding completed
+2025-04-25T08:42:37.559010+0300 INFO Configuring Algolia indexes...
+2025-04-25T08:42:38.249107+0300 INFO Algolia tools index configured successfully
+2025-04-25T08:42:38.398101+0300 INFO Algolia glossary index configured successfully
+2025-04-25T08:42:38.399098+0300 INFO Algolia indexes configured successfully
+2025-04-25T08:43:52.400420+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-25T08:44:46.376918+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:45:27.187882+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:46:07.499957+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:47:32.576974+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:47:49.800531+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:48:20.989329+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:48:46.291402+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T08:48:51.940962+0300 INFO Detected keywords in LLM response: ['AI Chatbots', 'Customer Service Automation', 'Predictive Customer Behavior', 'CRM AI Integration']
+2025-04-25T08:48:51.941538+0300 INFO Performing keyword search: 'AI Chatbots, Customer Service Automation, Predictive Customer Behavior, CRM AI Integration' on index 'taaft_tools'
+2025-04-25T09:00:05.356124+0300 INFO Shutting down application...
+2025-04-25T09:00:05.615466+0300 INFO Database connections closed
+2025-04-25T09:00:05.616465+0300 INFO Shutdown complete.
+2025-04-25T09:00:09.168712+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:00:09.169725+0300 INFO Algolia client initialized successfully
+2025-04-25T09:00:10.355698+0300 INFO Setting up database...
+2025-04-25T09:00:13.972317+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:00:14.170308+0300 INFO Database setup completed successfully
+2025-04-25T09:00:14.171310+0300 INFO Database setup completed
+2025-04-25T09:00:14.172309+0300 INFO Seeding glossary terms...
+2025-04-25T09:00:14.374314+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:00:14.375315+0300 INFO Glossary seeding completed
+2025-04-25T09:00:14.375315+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:00:15.004926+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:00:15.165364+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:00:15.166359+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:00:48.919927+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:01:32.970545+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:01:50.999735+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:02:14.911702+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:02:33.799440+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:03:03.019920+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:03:22.881005+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:03:28.344783+0300 INFO Detected keywords in LLM response: ['AI for Financial Services', 'Predictive Analytics', 'Personalized Financial Advice', 'Small Business AI Tools', 'Financial Forecasting AI']
+2025-04-25T09:03:28.345760+0300 INFO Performing keyword search: 'AI for Financial Services, Predictive Analytics, Personalized Financial Advice, Small Business AI Tools, Financial Forecasting AI' on index 'taaft_tools'
+2025-04-25T09:03:29.029966+0300 ERROR Error in send_chat_message: object of type 'coroutine' has no len()
+2025-04-25T09:04:29.918258+0300 INFO Shutting down application...
+2025-04-25T09:04:30.131243+0300 INFO Database connections closed
+2025-04-25T09:04:30.132252+0300 INFO Shutdown complete.

@@ -15,7 +15,7 @@ from app.tools.tools_service import get_keywords as tools_get_keywords
 from .models import ChatModelType, MessageRole
 from ..logger import logger
 import aiohttp
-from app.algolia.search import algolia_search
+from app.algolia.search import algolia_search, format_search_results_summary
 
 
 async def get_keywords():
@@ -271,7 +271,10 @@ class LLMService:
             )
 
         # Check if the response contains keywords and trigger Algolia search
-        await self.detect_and_extract_keywords(response)
+        res = await self.detect_and_extract_keywords(response)
+        if res:
+            result = await format_search_results_summary(res)
+            return result
 
         return response
 
