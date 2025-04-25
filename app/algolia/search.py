@@ -378,3 +378,76 @@ class AlgoliaSearch:
 
 # Create a singleton instance of AlgoliaSearch
 algolia_search = AlgoliaSearch()
+
+
+async def format_search_results_summary(search_results: Dict[str, Any]) -> str:
+    """
+    Format the results from perform_keyword_search into a structured summary.
+
+    Args:
+        search_results: Dictionary or object containing search results from Algolia
+
+    Returns:
+        A formatted string with a summary of the search results
+    """
+    # Extract key information from search results - handle both dict and object formats
+    if hasattr(search_results, "nb_hits"):
+        num_hits = search_results.nb_hits
+        hits = search_results.hits
+    else:
+        num_hits = search_results.get("nbHits", 0)
+        hits = search_results.get("hits", [])
+
+    # Create the initial greeting message
+    summary = f"Hey! Great News! I have found {num_hits} tools to help you from our directory.\n\n"
+
+    # If no results were found, provide a message
+    if num_hits == 0:
+        summary += "Unfortunately, I couldn't find any matching tools. Try broadening your search terms."
+        return summary
+
+    # Add a structured list of the top tools found
+    summary += "Here are the top tools I found for you:\n\n"
+
+    # Process each hit/tool into a structured format
+    for i, hit in enumerate(hits, 1):
+        if i > 10:  # Limit to top 10 for readability
+            break
+
+        # Get properties with fallbacks for missing data - handle both dict and object formats
+        if isinstance(hit, dict):
+            name = hit.get("name", "Unnamed Tool")
+            description = hit.get("description", "No description available.")
+            pricing = hit.get("pricing_type", "")
+            categories = hit.get("categories", [])
+            url = hit.get("url", "")
+        else:
+            name = getattr(hit, "name", "Unnamed Tool")
+            description = getattr(hit, "description", "No description available.")
+            pricing = getattr(hit, "pricing_type", "")
+            categories = getattr(hit, "categories", [])
+            url = getattr(hit, "url", "")
+
+        if pricing:
+            pricing = pricing.capitalize()
+
+        # Format each tool entry
+        summary += f"📌 {name}\n"
+        summary += f"   {description}\n"
+        if pricing:
+            summary += f"   💰 {pricing}\n"
+        if categories and isinstance(categories, list):
+            cat_text = ", ".join(categories)
+            summary += f"   🏷️ {cat_text}\n"
+        if url:
+            summary += f"   🔗 {url}\n"
+        summary += "\n"
+
+    # Add a footer if there are more results than shown
+    if num_hits > 10:
+        remaining = num_hits - 10
+        summary += (
+            f"...and {remaining} more tool{'s' if remaining > 1 else ''} available."
+        )
+
+    return summary
