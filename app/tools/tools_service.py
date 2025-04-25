@@ -790,3 +790,55 @@ async def search_tools(
             tools_list.append(tool_response)
 
     return tools_list
+
+
+async def get_keywords(
+    skip: int = 0,
+    limit: int = 100,
+    min_frequency: int = 0,
+    sort_by_frequency: bool = True,
+) -> List[Dict[str, Any]]:
+    """
+    Retrieve keywords from the keywords collection.
+
+    Args:
+        skip: Number of items to skip for pagination
+        limit: Maximum number of items to return
+        min_frequency: Minimum frequency threshold for keywords
+        sort_by_frequency: Whether to sort by frequency (descending)
+
+    Returns:
+        List of keyword documents with their associated tools and frequency
+    """
+    query = {}
+
+    # Apply minimum frequency filter if specified
+    if min_frequency > 0:
+        query["frequency"] = {"$gte": min_frequency}
+
+    # Create cursor
+    cursor = keywords_collection.find(query).skip(skip).limit(limit)
+
+    # Apply sorting if requested
+    if sort_by_frequency:
+        cursor = cursor.sort("frequency", -1)  # Sort by frequency descending
+
+    # Process results
+    keywords_list = []
+    async for keyword in cursor:
+        # Check the field name - could be either 'keyword' or 'word' depending on
+        # which function created it. The update_tool_keywords uses 'keyword',
+        # while the get_tools function uses 'word'
+        keyword_value = keyword.get("keyword") or keyword.get("word")
+
+        keywords_list.append(
+            {
+                "keyword": keyword_value,
+                "frequency": keyword.get("frequency", 0),
+                "tools": keyword.get("tools", []),
+                "created_at": keyword.get("created_at"),
+                "updated_at": keyword.get("updated_at"),
+            }
+        )
+
+    return keywords_list

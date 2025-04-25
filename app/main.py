@@ -152,13 +152,13 @@ app.include_router(terms_router)  # Include terms router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+app.mount("/frontend", StaticFiles(directory="static/frontend"), name="frontend")
 
 
 # Serve the index.html file for the root route
 @app.get("/", include_in_schema=False)
 async def serve_frontend():
-    return FileResponse("frontend/index.html")
+    return FileResponse("static/frontend/index.html")
 
 
 @app.websocket("/ws")

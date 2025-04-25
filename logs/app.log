@@ -5110,3 +5110,25 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T01:29:56.637615+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
 2025-04-25T01:29:56.927598+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
 2025-04-25T01:29:57.751582+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T07:06:09.404308+0300 INFO Shutting down application...
+2025-04-25T07:06:11.032615+0300 INFO Database connections closed
+2025-04-25T07:06:11.033614+0300 INFO Shutdown complete.
+2025-04-25T07:06:14.645911+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T07:06:14.647917+0300 INFO Algolia client initialized successfully
+2025-04-25T07:06:30.196557+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T07:06:30.197556+0300 INFO Algolia client initialized successfully
+2025-04-25T07:06:37.441667+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T07:06:37.442660+0300 INFO Algolia client initialized successfully
+2025-04-25T07:07:08.496011+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T07:07:08.497005+0300 INFO Algolia client initialized successfully
+2025-04-25T07:07:09.675438+0300 INFO Setting up database...
+2025-04-25T07:07:12.312502+0300 INFO Connected to MongoDB for setup
+2025-04-25T07:07:12.575490+0300 INFO Database setup completed successfully
+2025-04-25T07:07:12.576594+0300 INFO Database setup completed
+2025-04-25T07:07:12.577122+0300 INFO Seeding glossary terms...
+2025-04-25T07:07:12.786791+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T07:07:12.787796+0300 INFO Glossary seeding completed
+2025-04-25T07:07:12.788799+0300 INFO Configuring Algolia indexes...
+2025-04-25T07:07:13.500040+0300 INFO Algolia tools index configured successfully
+2025-04-25T07:07:13.776040+0300 INFO Algolia glossary index configured successfully
+2025-04-25T07:07:13.777036+0300 INFO Algolia indexes configured successfully
