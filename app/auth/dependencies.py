@@ -168,6 +168,7 @@ class RateLimitMiddleware:
             request.url.path.startswith("/auth/")
             or request.url.path.startswith("/public/")
             or request.url.path.startswith("/tools/featured")
+            or request.url.path.startswith("/tools/sponsored")
         ):
             return await self.app(scope, receive, send)
 
@@ -319,6 +320,7 @@ class AdminControlMiddleware:
             "/health",  # Health check endpoint
             "/public/",  # Public endpoints
             "/tools/featured",  # Featured tools endpoint
+            "/tools/sponsored",  # Sponsored tools endpoint
         ]
 
         # If it's a public endpoint, skip auth checks

@@ -404,7 +404,7 @@ async def get_tools(
     if sort_order.lower() == "desc":
         tools_list.reverse()
 
-    return tools_list
+    return tools_list.reverse()
 
 
 async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
