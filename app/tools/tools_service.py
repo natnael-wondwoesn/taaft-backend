@@ -370,10 +370,8 @@ async def get_tools(
 
     # Apply sorting if requested
     if sort_by:
-        # Map the field names
-        sort_field = sort_by
-        sort_direction = 1 if sort_order.lower() == "asc" else -1
-        cursor = cursor.sort(sort_field, sort_direction)
+        # Apply ascending sort first
+        cursor = cursor.sort(sort_by, 1)
 
     # Process results
     tools_list = []
@@ -397,11 +395,14 @@ async def get_tools(
                     # Just log the error and continue, don't let it break the flow
                     logger.warning(f"Error updating keyword '{keyword}': {str(e)}")
 
-        # tool["keywords"] = keywords
         tool_response = await create_tool_response(tool)
 
         if tool_response:
             tools_list.append(tool_response)
+
+    # Simply reverse the list for descending order
+    if sort_order.lower() == "desc":
+        tools_list.reverse()
 
     return tools_list
 
@@ -834,3 +835,113 @@ async def get_keywords(
         keywords_list.append(keyword_value)
 
     return keywords_list
+
+
+async def toggle_tool_featured_status(
+    tool_id: UUID, is_featured: bool
+) -> Optional[ToolResponse]:
+    """
+    Toggle the featured status of a tool.
+
+    Args:
+        tool_id: The UUID of the tool
+        is_featured: Boolean indicating whether the tool should be featured
+
+    Returns:
+        Updated tool response or None if tool not found
+    """
+    logger.info(f"Setting tool {tool_id} featured status to {is_featured}")
+
+    # Update the tool in the database
+    result = await tools.update_one(
+        {"id": str(tool_id)},
+        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
+    )
+
+    if result.matched_count == 0:
+        logger.warning(f"Tool {tool_id} not found for featured status update")
+        return None
+
+    # Get the updated tool
+    updated_tool = await tools.find_one({"id": str(tool_id)})
+    if not updated_tool:
+        logger.error(f"Tool {tool_id} was updated but could not be retrieved")
+        return None
+
+    # Update the tool in Algolia
+    try:
+        if algolia_indexer.is_configured():
+            # Create a dictionary with the tool data for Algolia
+            algolia_data = {
+                "objectID": str(updated_tool["id"]),
+                "is_featured": is_featured,
+            }
+            # Update the record in Algolia
+            await algolia_indexer.update_record(algolia_data)
+            logger.info(f"Updated featured status in Algolia for tool {tool_id}")
+    except Exception as e:
+        # Log the error but don't fail the request
+        logger.error(f"Failed to update Algolia index: {str(e)}")
+
+    # Return the updated tool as a ToolResponse
+    return await create_tool_response(updated_tool)
+
+
+async def toggle_tool_featured_status_by_unique_id(
+    unique_id: str, is_featured: bool
+) -> Optional[ToolResponse]:
+    """
+    Toggle the featured status of a tool by its unique_id.
+
+    Args:
+        unique_id: The unique_id of the tool
+        is_featured: Boolean indicating whether the tool should be featured
+
+    Returns:
+        Updated tool response or None if tool not found
+    """
+    logger.info(
+        f"Setting tool with unique_id={unique_id} featured status to {is_featured}"
+    )
+
+    # Update the tool in the database
+    result = await tools.update_one(
+        {"unique_id": unique_id},
+        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
+    )
+
+    if result.matched_count == 0:
+        logger.warning(
+            f"Tool with unique_id={unique_id} not found for featured status update"
+        )
+        return None
+
+    # Get the updated tool
+    updated_tool = await tools.find_one({"unique_id": unique_id})
+    if not updated_tool:
+        logger.error(
+            f"Tool with unique_id={unique_id} was updated but could not be retrieved"
+        )
+        return None
+
+    # Update the tool in Algolia
+    try:
+        from ..algolia.config import algolia_config
+
+        if algolia_config.is_configured():
+            # Create a dictionary with the tool data for Algolia
+            algolia_data = {
+                "objectID": str(updated_tool["id"]),
+                "is_featured": is_featured,
+            }
+            # Update the record in Algolia
+            await algolia_indexer.update_record(algolia_data)
+            logger.info(
+                f"Updated featured status in Algolia for tool with unique_id={unique_id}"
+            )
+    except Exception as e:
+        # Log the error but don't fail the request
+        logger.error(f"Failed to update Algolia index: {str(e)}")
+
+    # Return the updated tool as a ToolResponse
+    return await create_tool_response(updated_tool)

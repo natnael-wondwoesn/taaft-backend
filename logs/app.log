@@ -7988,3 +7988,1059 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T14:16:13.955445+0300 INFO Algolia indexes configured successfully
 2025-04-25T14:16:32.392272+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
 2025-04-25T14:16:32.885345+0300 INFO Algolia client initialized successfully
+2025-04-25T14:16:35.508212+0300 INFO Shutting down application...
+2025-04-25T14:16:35.708216+0300 INFO Database connections closed
+2025-04-25T14:16:35.709208+0300 INFO Shutdown complete.
+2025-04-25T14:16:39.297615+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:16:39.764620+0300 INFO Algolia client initialized successfully
+2025-04-25T14:16:41.125691+0300 INFO Setting up database...
+2025-04-25T14:16:43.148175+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:16:43.346171+0300 INFO Database setup completed successfully
+2025-04-25T14:16:43.347175+0300 INFO Database setup completed
+2025-04-25T14:16:43.348185+0300 INFO Seeding glossary terms...
+2025-04-25T14:16:43.553173+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:16:43.554174+0300 INFO Glossary seeding completed
+2025-04-25T14:16:43.554174+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:16:43.555179+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:16:43.723704+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:16:43.724707+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:17:01.274524+0300 INFO Shutting down application...
+2025-04-25T14:17:01.470541+0300 INFO Database connections closed
+2025-04-25T14:17:01.471534+0300 INFO Shutdown complete.
+2025-04-25T14:17:04.671183+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:17:05.156780+0300 INFO Algolia client initialized successfully
+2025-04-25T14:17:06.203245+0300 INFO Setting up database...
+2025-04-25T14:17:08.450955+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:17:08.627224+0300 INFO Database setup completed successfully
+2025-04-25T14:17:08.628238+0300 INFO Database setup completed
+2025-04-25T14:17:08.628238+0300 INFO Seeding glossary terms...
+2025-04-25T14:17:08.836484+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:17:08.837461+0300 INFO Glossary seeding completed
+2025-04-25T14:17:08.838456+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:17:08.838456+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:17:08.992465+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:17:08.992465+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:17:11.729259+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:17:12.192399+0300 INFO Algolia client initialized successfully
+2025-04-25T14:18:05.380589+0300 INFO Shutting down application...
+2025-04-25T14:18:05.586532+0300 INFO Database connections closed
+2025-04-25T14:18:05.587532+0300 INFO Shutdown complete.
+2025-04-25T14:18:09.172208+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:18:10.004518+0300 INFO Algolia client initialized successfully
+2025-04-25T14:18:11.357373+0300 INFO Setting up database...
+2025-04-25T14:18:14.524419+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:18:14.728422+0300 INFO Database setup completed successfully
+2025-04-25T14:18:14.729423+0300 INFO Database setup completed
+2025-04-25T14:18:14.730422+0300 INFO Seeding glossary terms...
+2025-04-25T14:18:14.947094+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:18:14.949100+0300 INFO Glossary seeding completed
+2025-04-25T14:18:14.950096+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:18:14.951096+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:18:15.173087+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:18:15.174086+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:18:54.683849+0300 INFO Shutting down application...
+2025-04-25T14:18:54.885891+0300 INFO Database connections closed
+2025-04-25T14:18:54.886887+0300 INFO Shutdown complete.
+2025-04-25T14:18:58.252792+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:18:58.749768+0300 INFO Algolia client initialized successfully
+2025-04-25T14:18:59.712665+0300 INFO Setting up database...
+2025-04-25T14:19:01.675631+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:19:01.889673+0300 INFO Database setup completed successfully
+2025-04-25T14:19:01.890673+0300 INFO Database setup completed
+2025-04-25T14:19:01.891674+0300 INFO Seeding glossary terms...
+2025-04-25T14:19:02.075570+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:19:02.076589+0300 INFO Glossary seeding completed
+2025-04-25T14:19:02.076589+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:19:02.077595+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:19:02.223814+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:19:02.224815+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:19:16.878843+0300 INFO Shutting down application...
+2025-04-25T14:19:17.117211+0300 INFO Database connections closed
+2025-04-25T14:19:17.118203+0300 INFO Shutdown complete.
+2025-04-25T14:19:20.017731+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:19:20.476731+0300 INFO Algolia client initialized successfully
+2025-04-25T14:19:31.727129+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:19:32.351322+0300 INFO Algolia client initialized successfully
+2025-04-25T14:19:33.998535+0300 INFO Setting up database...
+2025-04-25T14:19:36.783349+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:19:36.987651+0300 INFO Database setup completed successfully
+2025-04-25T14:19:36.988646+0300 INFO Database setup completed
+2025-04-25T14:19:36.989648+0300 INFO Seeding glossary terms...
+2025-04-25T14:19:37.192645+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:19:37.193646+0300 INFO Glossary seeding completed
+2025-04-25T14:19:37.193646+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:19:37.194646+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:19:37.359671+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:19:37.360672+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:19:41.037107+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:19:41.564694+0300 INFO Algolia client initialized successfully
+2025-04-25T14:19:42.662571+0300 INFO Setting up database...
+2025-04-25T14:19:44.634284+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:19:44.835281+0300 INFO Database setup completed successfully
+2025-04-25T14:19:44.836284+0300 INFO Database setup completed
+2025-04-25T14:19:44.836858+0300 INFO Seeding glossary terms...
+2025-04-25T14:19:45.032931+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:19:45.033934+0300 INFO Glossary seeding completed
+2025-04-25T14:19:45.034929+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:19:45.034929+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:19:45.199934+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:19:45.200935+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:19:57.089139+0300 INFO Shutting down application...
+2025-04-25T14:19:57.266847+0300 INFO Database connections closed
+2025-04-25T14:19:57.266847+0300 INFO Shutdown complete.
+2025-04-25T14:20:00.614800+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:20:01.048246+0300 INFO Algolia client initialized successfully
+2025-04-25T14:20:02.205464+0300 INFO Setting up database...
+2025-04-25T14:20:04.116436+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:20:04.303934+0300 INFO Database setup completed successfully
+2025-04-25T14:20:04.303934+0300 INFO Database setup completed
+2025-04-25T14:20:04.304928+0300 INFO Seeding glossary terms...
+2025-04-25T14:20:04.474083+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:20:04.476066+0300 INFO Glossary seeding completed
+2025-04-25T14:20:04.476066+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:20:04.477079+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:20:04.608073+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:20:04.609068+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:20:08.755509+0300 INFO Shutting down application...
+2025-04-25T14:20:08.940364+0300 INFO Database connections closed
+2025-04-25T14:20:08.941367+0300 INFO Shutdown complete.
+2025-04-25T14:20:12.402501+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:20:12.824495+0300 INFO Algolia client initialized successfully
+2025-04-25T14:20:14.298149+0300 INFO Setting up database...
+2025-04-25T14:20:16.205571+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:20:16.423782+0300 INFO Database setup completed successfully
+2025-04-25T14:20:16.424790+0300 INFO Database setup completed
+2025-04-25T14:20:16.424790+0300 INFO Seeding glossary terms...
+2025-04-25T14:20:16.633716+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:20:16.635740+0300 INFO Glossary seeding completed
+2025-04-25T14:20:16.636750+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:20:16.637771+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:20:16.791392+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:20:16.792389+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:20:37.492285+0300 INFO Shutting down application...
+2025-04-25T14:20:37.705597+0300 INFO Database connections closed
+2025-04-25T14:20:37.706590+0300 INFO Shutdown complete.
+2025-04-25T14:20:41.413270+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:20:41.868802+0300 INFO Algolia client initialized successfully
+2025-04-25T14:20:42.939519+0300 INFO Setting up database...
+2025-04-25T14:20:44.966988+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:20:45.176122+0300 INFO Database setup completed successfully
+2025-04-25T14:20:45.177086+0300 INFO Database setup completed
+2025-04-25T14:20:45.178088+0300 INFO Seeding glossary terms...
+2025-04-25T14:20:45.417543+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:20:45.418569+0300 INFO Glossary seeding completed
+2025-04-25T14:20:45.419627+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:20:45.420147+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:20:45.565609+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:20:45.566608+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:20:49.624401+0300 INFO Shutting down application...
+2025-04-25T14:20:49.827397+0300 INFO Database connections closed
+2025-04-25T14:20:49.828387+0300 INFO Shutdown complete.
+2025-04-25T14:20:53.162821+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:20:53.864918+0300 INFO Algolia client initialized successfully
+2025-04-25T14:20:54.906297+0300 INFO Setting up database...
+2025-04-25T14:20:58.008760+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:20:58.188898+0300 INFO Database setup completed successfully
+2025-04-25T14:20:58.189884+0300 INFO Database setup completed
+2025-04-25T14:20:58.190888+0300 INFO Seeding glossary terms...
+2025-04-25T14:20:58.386983+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:20:58.387991+0300 INFO Glossary seeding completed
+2025-04-25T14:20:58.388985+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:20:58.388985+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:20:58.557990+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:20:58.558993+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:20:59.992082+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T14:21:00.193828+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-25T14:21:00.194840+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-25T14:21:00.603644+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-25T14:21:01.399591+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-25T14:21:01.592612+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-25T14:21:01.800808+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-25T14:21:02.003060+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-25T14:21:02.198054+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-25T14:21:02.394651+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-25T14:21:02.592001+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-25T14:21:02.995649+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-25T14:21:03.191310+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-25T14:21:03.192340+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-25T14:21:03.403986+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-25T14:21:03.792178+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-25T14:21:03.997539+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-25T14:21:04.606149+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-25T14:21:04.804167+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-25T14:21:04.805140+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-25T14:21:05.203501+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-25T14:21:05.391530+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-25T14:21:05.609862+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-25T14:21:05.812857+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-25T14:21:05.813860+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T14:21:06.012850+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-25T14:21:06.199130+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-25T14:21:06.792447+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-25T14:21:07.008450+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-25T14:21:07.198465+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-25T14:21:07.392465+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-25T14:21:07.594070+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-25T14:21:07.798787+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-25T14:21:07.997783+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-25T14:21:08.194217+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-25T14:21:08.391493+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-25T14:21:08.994152+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-25T14:21:08.995148+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-25T14:21:09.201611+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-25T14:21:09.400396+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-25T14:21:09.601389+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-25T14:21:09.790072+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-25T14:21:10.002508+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-25T14:21:10.003520+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-25T14:21:10.195504+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-25T14:21:10.405227+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-25T14:21:10.406227+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-25T14:21:11.008023+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-25T14:21:11.400678+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-25T14:21:11.599738+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-25T14:21:11.800702+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-25T14:21:11.994341+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-25T14:21:12.192551+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-25T14:21:12.402550+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-25T14:21:12.403553+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-25T14:21:12.594545+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-25T14:21:13.600491+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-25T14:21:14.204778+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-25T14:21:14.205969+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-25T14:21:14.399341+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-25T14:21:14.618049+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-25T14:21:14.806051+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-25T14:21:15.020103+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-25T14:21:15.252636+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-25T14:21:15.646380+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-25T14:21:15.846389+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-25T14:21:15.848393+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-25T14:21:16.055077+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-25T14:21:16.429103+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-25T14:21:16.631298+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-25T14:21:17.035477+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-25T14:21:17.231124+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-25T14:21:17.447323+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-25T14:21:17.840431+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-25T14:21:18.030402+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-25T14:21:18.391412+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-25T14:21:18.612632+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-25T14:21:18.803591+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-25T14:21:19.200589+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:21:19.392011+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-25T14:21:19.799259+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:21:21.012750+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-25T14:21:21.207003+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-25T14:21:21.819857+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-25T14:21:22.028389+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-25T14:21:22.229403+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-25T14:21:22.438684+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-25T14:21:22.639687+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-25T14:21:23.407404+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-25T14:21:23.606397+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-25T14:21:23.805352+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-25T14:21:24.007134+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-25T14:21:24.213472+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-25T14:21:24.413491+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-25T14:21:24.613465+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T14:21:24.795471+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-25T14:21:25.003331+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-25T14:21:25.199220+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-25T14:21:25.410847+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-25T14:21:26.211812+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T14:21:26.458508+0300 INFO Shutting down application...
+2025-04-25T14:21:26.672770+0300 INFO Database connections closed
+2025-04-25T14:21:26.673770+0300 INFO Shutdown complete.
+2025-04-25T14:21:30.564860+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:21:30.718474+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:21:31.076832+0300 INFO Algolia client initialized successfully
+2025-04-25T14:21:31.233635+0300 INFO Algolia client initialized successfully
+2025-04-25T14:21:32.157635+0300 INFO Setting up database...
+2025-04-25T14:21:34.300294+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:21:34.518157+0300 INFO Database setup completed successfully
+2025-04-25T14:21:34.519157+0300 INFO Database setup completed
+2025-04-25T14:21:34.520138+0300 INFO Seeding glossary terms...
+2025-04-25T14:21:34.726141+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:21:34.727141+0300 INFO Glossary seeding completed
+2025-04-25T14:21:34.727141+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:21:34.728142+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:21:34.882433+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:21:34.883072+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:21:51.722190+0300 INFO Found tool via derived UUID: 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId: 68088b0da40b1de891a1315b
+2025-04-25T14:21:51.722190+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T14:21:52.927843+0300 INFO Shutting down application...
+2025-04-25T14:21:53.148847+0300 INFO Database connections closed
+2025-04-25T14:21:53.149856+0300 INFO Shutdown complete.
+2025-04-25T14:21:56.239000+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:21:56.763876+0300 INFO Algolia client initialized successfully
+2025-04-25T14:21:57.727036+0300 INFO Setting up database...
+2025-04-25T14:21:59.862473+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:22:00.101685+0300 INFO Database setup completed successfully
+2025-04-25T14:22:00.102689+0300 INFO Database setup completed
+2025-04-25T14:22:00.103675+0300 INFO Seeding glossary terms...
+2025-04-25T14:22:00.343674+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:22:00.344680+0300 INFO Glossary seeding completed
+2025-04-25T14:22:00.345677+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:22:00.347684+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:22:00.497708+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:22:00.499689+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:22:08.793271+0300 INFO Shutting down application...
+2025-04-25T14:22:09.011261+0300 INFO Database connections closed
+2025-04-25T14:22:09.012286+0300 INFO Shutdown complete.
+2025-04-25T14:22:12.159397+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:22:12.741028+0300 INFO Algolia client initialized successfully
+2025-04-25T14:22:13.824655+0300 INFO Setting up database...
+2025-04-25T14:22:16.958241+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:22:17.137144+0300 INFO Database setup completed successfully
+2025-04-25T14:22:17.138152+0300 INFO Database setup completed
+2025-04-25T14:22:17.139142+0300 INFO Seeding glossary terms...
+2025-04-25T14:22:17.348141+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:22:17.349141+0300 INFO Glossary seeding completed
+2025-04-25T14:22:17.349141+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:22:17.350142+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:22:17.521163+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:22:17.522171+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:22:24.512002+0300 INFO Shutting down application...
+2025-04-25T14:22:24.889030+0300 INFO Database connections closed
+2025-04-25T14:22:24.889790+0300 INFO Shutdown complete.
+2025-04-25T14:22:28.576123+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:22:29.230957+0300 INFO Algolia client initialized successfully
+2025-04-25T14:22:30.319809+0300 INFO Setting up database...
+2025-04-25T14:22:32.366434+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:22:32.567952+0300 INFO Database setup completed successfully
+2025-04-25T14:22:32.568941+0300 INFO Database setup completed
+2025-04-25T14:22:32.569943+0300 INFO Seeding glossary terms...
+2025-04-25T14:22:32.771026+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:22:32.772028+0300 INFO Glossary seeding completed
+2025-04-25T14:22:32.773024+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:22:32.774032+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:22:32.979066+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:22:32.981065+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:22:34.100512+0300 INFO Shutting down application...
+2025-04-25T14:22:34.314182+0300 INFO Database connections closed
+2025-04-25T14:22:34.315183+0300 INFO Shutdown complete.
+2025-04-25T14:22:37.549049+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:22:37.970709+0300 INFO Algolia client initialized successfully
+2025-04-25T14:22:39.098175+0300 INFO Setting up database...
+2025-04-25T14:22:41.026610+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:22:41.203491+0300 INFO Database setup completed successfully
+2025-04-25T14:22:41.204497+0300 INFO Database setup completed
+2025-04-25T14:22:41.204497+0300 INFO Seeding glossary terms...
+2025-04-25T14:22:41.386285+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:22:41.387286+0300 INFO Glossary seeding completed
+2025-04-25T14:22:41.388288+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:22:41.388288+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:22:41.550883+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:22:41.551887+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:22:49.962730+0300 INFO Shutting down application...
+2025-04-25T14:22:50.157458+0300 INFO Database connections closed
+2025-04-25T14:22:50.158474+0300 INFO Shutdown complete.
+2025-04-25T14:22:53.169439+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:22:53.793429+0300 INFO Algolia client initialized successfully
+2025-04-25T14:22:54.853150+0300 INFO Setting up database...
+2025-04-25T14:22:56.732684+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:22:56.916568+0300 INFO Database setup completed successfully
+2025-04-25T14:22:56.916568+0300 INFO Database setup completed
+2025-04-25T14:22:56.917568+0300 INFO Seeding glossary terms...
+2025-04-25T14:22:57.108936+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:22:57.109930+0300 INFO Glossary seeding completed
+2025-04-25T14:22:57.110922+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:22:57.111923+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:22:57.326982+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:22:57.327997+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:23:00.054151+0300 INFO Shutting down application...
+2025-04-25T14:23:00.250078+0300 INFO Database connections closed
+2025-04-25T14:23:00.250078+0300 INFO Shutdown complete.
+2025-04-25T14:23:04.080013+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:23:04.494975+0300 INFO Algolia client initialized successfully
+2025-04-25T14:23:05.651145+0300 INFO Setting up database...
+2025-04-25T14:23:07.622801+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:23:07.827293+0300 INFO Database setup completed successfully
+2025-04-25T14:23:07.827293+0300 INFO Database setup completed
+2025-04-25T14:23:07.828297+0300 INFO Seeding glossary terms...
+2025-04-25T14:23:08.018309+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:23:08.019306+0300 INFO Glossary seeding completed
+2025-04-25T14:23:08.019306+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:23:08.020300+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:23:08.146619+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:23:08.147617+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:23:11.764871+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:23:12.163283+0300 INFO Algolia client initialized successfully
+2025-04-25T14:23:13.294873+0300 INFO Setting up database...
+2025-04-25T14:23:15.436295+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:23:15.626587+0300 INFO Database setup completed successfully
+2025-04-25T14:23:15.627576+0300 INFO Database setup completed
+2025-04-25T14:23:15.628577+0300 INFO Seeding glossary terms...
+2025-04-25T14:23:15.862527+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:23:15.863531+0300 INFO Glossary seeding completed
+2025-04-25T14:23:15.863531+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:23:15.864529+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:23:16.027664+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:23:16.028245+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:23:18.464328+0300 INFO Shutting down application...
+2025-04-25T14:23:18.656462+0300 INFO Database connections closed
+2025-04-25T14:23:18.657464+0300 INFO Shutdown complete.
+2025-04-25T14:23:22.383687+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:23:22.870027+0300 INFO Algolia client initialized successfully
+2025-04-25T14:23:24.098339+0300 INFO Setting up database...
+2025-04-25T14:23:26.291965+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:23:26.529962+0300 INFO Database setup completed successfully
+2025-04-25T14:23:26.529962+0300 INFO Database setup completed
+2025-04-25T14:23:26.530955+0300 INFO Seeding glossary terms...
+2025-04-25T14:23:26.731592+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:23:26.732579+0300 INFO Glossary seeding completed
+2025-04-25T14:23:26.733583+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:23:26.733583+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:23:26.907127+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:23:26.909119+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:23:30.993469+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:23:31.589089+0300 INFO Algolia client initialized successfully
+2025-04-25T14:23:32.792099+0300 INFO Setting up database...
+2025-04-25T14:23:35.831987+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:23:36.040634+0300 INFO Database setup completed successfully
+2025-04-25T14:23:36.041163+0300 INFO Database setup completed
+2025-04-25T14:23:36.041723+0300 INFO Seeding glossary terms...
+2025-04-25T14:23:36.237485+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:23:36.238489+0300 INFO Glossary seeding completed
+2025-04-25T14:23:36.239495+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:23:36.239495+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:23:36.395582+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:23:36.395582+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:23:39.947788+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:23:40.397437+0300 INFO Algolia client initialized successfully
+2025-04-25T14:23:41.511476+0300 INFO Setting up database...
+2025-04-25T14:23:43.303866+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:23:43.473130+0300 INFO Database setup completed successfully
+2025-04-25T14:23:43.473665+0300 INFO Database setup completed
+2025-04-25T14:23:43.474189+0300 INFO Seeding glossary terms...
+2025-04-25T14:23:43.685102+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:23:43.686089+0300 INFO Glossary seeding completed
+2025-04-25T14:23:43.687099+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:23:43.687099+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:23:43.838092+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:23:43.840099+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:23:50.454322+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:23:51.303058+0300 INFO Algolia client initialized successfully
+2025-04-25T14:25:26.111324+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-25T14:25:57.492403+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T14:25:57.681599+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-25T14:25:57.682605+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-25T14:25:58.091831+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-25T14:25:58.878164+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-25T14:25:59.070681+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-25T14:25:59.274213+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-25T14:25:59.457459+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-25T14:25:59.628735+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-25T14:25:59.829946+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-25T14:26:00.037311+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-25T14:26:00.429776+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-25T14:26:00.638793+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-25T14:26:00.639781+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-25T14:26:00.845967+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-25T14:26:01.240546+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-25T14:26:01.430598+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-25T14:26:02.031334+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-25T14:26:02.242561+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-25T14:26:02.243556+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-25T14:26:02.628742+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-25T14:26:02.842324+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-25T14:26:03.032324+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-25T14:26:03.231765+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-25T14:26:03.232767+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T14:26:03.446915+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-25T14:26:03.635257+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-25T14:26:04.239472+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-25T14:26:04.435270+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-25T14:26:04.643423+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-25T14:26:04.830197+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-25T14:26:05.033494+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-25T14:26:05.232495+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-25T14:26:05.441214+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-25T14:26:05.640656+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-25T14:26:05.838427+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-25T14:26:06.442256+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-25T14:26:06.443253+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-25T14:26:06.642850+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-25T14:26:06.843568+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-25T14:26:07.034494+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-25T14:26:07.229495+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-25T14:26:07.440273+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-25T14:26:07.441271+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-25T14:26:07.644469+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-25T14:26:07.836924+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-25T14:26:07.837924+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-25T14:26:08.429362+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-25T14:26:08.840671+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-25T14:26:09.032713+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-25T14:26:09.250968+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-25T14:26:09.439946+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-25T14:26:09.642107+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-25T14:26:09.842056+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-25T14:26:09.843055+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-25T14:26:10.036917+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-25T14:26:10.990499+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-25T14:26:11.599533+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-25T14:26:11.600533+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-25T14:26:11.803531+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-25T14:26:11.992089+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-25T14:26:12.192457+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-25T14:26:12.397322+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-25T14:26:12.596328+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-25T14:26:13.005526+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-25T14:26:13.201942+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-25T14:26:13.201942+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-25T14:26:13.408674+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-25T14:26:13.807139+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-25T14:26:14.007133+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-25T14:26:14.392620+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-25T14:26:14.606600+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-25T14:26:14.807592+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-25T14:26:15.229935+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-25T14:26:15.453567+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-25T14:26:15.833736+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-25T14:26:16.038754+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-25T14:26:16.212740+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-25T14:26:16.607376+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:26:16.805235+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-25T14:26:17.203462+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:26:18.402623+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-25T14:26:18.606916+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-25T14:26:19.244474+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-25T14:26:19.431609+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-25T14:26:19.632190+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-25T14:26:19.841026+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-25T14:26:20.053336+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-25T14:26:20.843560+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-25T14:26:21.050245+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-25T14:26:21.256950+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-25T14:26:21.473473+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-25T14:26:21.672466+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-25T14:26:21.880436+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-25T14:26:22.073244+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T14:26:22.282238+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-25T14:26:22.480230+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-25T14:26:22.681241+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-25T14:26:22.878357+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-25T14:26:23.686919+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T14:28:48.386202+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T14:28:48.585879+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-25T14:28:48.586880+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-25T14:28:48.948417+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-25T14:28:49.665513+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-25T14:28:49.857393+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-25T14:28:50.044397+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-25T14:28:50.229400+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-25T14:28:50.400409+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-25T14:28:50.585401+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-25T14:28:50.774409+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-25T14:28:51.142181+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-25T14:28:51.325183+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-25T14:28:51.326181+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-25T14:28:51.497122+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-25T14:28:51.862948+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-25T14:28:52.047260+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-25T14:28:52.587554+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-25T14:28:52.757564+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-25T14:28:52.758562+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-25T14:28:53.144368+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-25T14:28:53.333756+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-25T14:28:53.522753+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-25T14:28:53.707706+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-25T14:28:53.708717+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T14:28:53.888710+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-25T14:28:54.061403+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-25T14:28:54.602823+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-25T14:28:54.791822+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-25T14:28:54.985821+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-25T14:28:55.170832+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-25T14:28:55.355990+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-25T14:28:55.537849+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-25T14:28:55.721846+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-25T14:28:55.906458+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-25T14:28:56.097461+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-25T14:28:56.670204+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-25T14:28:56.671212+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-25T14:28:56.855216+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-25T14:28:57.038220+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-25T14:28:57.226941+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-25T14:28:57.401940+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-25T14:28:57.592940+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-25T14:28:57.593939+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-25T14:28:57.780766+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-25T14:28:57.970762+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-25T14:28:57.972770+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-25T14:28:58.514957+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-25T14:28:58.876706+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-25T14:28:59.074706+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-25T14:28:59.256703+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-25T14:28:59.444011+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-25T14:28:59.614026+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-25T14:28:59.793995+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-25T14:28:59.794985+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-25T14:28:59.987787+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-25T14:29:00.904937+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-25T14:29:01.459623+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-25T14:29:01.460628+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-25T14:29:01.663691+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-25T14:29:01.838687+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-25T14:29:02.022017+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-25T14:29:02.228153+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-25T14:29:02.402147+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-25T14:29:02.761349+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-25T14:29:02.937387+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-25T14:29:02.938386+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-25T14:29:03.109235+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-25T14:29:03.471790+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-25T14:29:03.646791+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-25T14:29:04.028817+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-25T14:29:04.215899+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-25T14:29:04.393558+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-25T14:29:04.765125+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-25T14:29:04.951780+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-25T14:29:05.333580+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-25T14:29:05.512601+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-25T14:29:05.685130+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-25T14:29:06.051135+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:29:06.236858+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-25T14:29:06.607801+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:29:07.737680+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-25T14:29:07.920785+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-25T14:29:08.475940+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-25T14:29:08.652823+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-25T14:29:08.831338+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-25T14:29:09.008863+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-25T14:29:09.189431+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-25T14:29:09.907112+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-25T14:29:10.090123+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-25T14:29:10.266123+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-25T14:29:10.456300+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-25T14:29:10.630295+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-25T14:29:10.817589+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-25T14:29:11.006817+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T14:29:11.196819+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-25T14:29:11.373480+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-25T14:29:11.556612+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-25T14:29:11.734924+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-25T14:29:12.464579+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T14:30:33.275706+0300 INFO Setting tool 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc featured status to True
+2025-04-25T14:30:33.475801+0300 WARNING Tool 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc not found for featured status update
+2025-04-25T14:30:58.055199+0300 INFO Found tool via derived UUID: 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId: 68088b0da40b1de891a13173
+2025-04-25T14:30:58.056186+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T14:31:58.328013+0300 INFO Shutting down application...
+2025-04-25T14:31:58.533496+0300 INFO Database connections closed
+2025-04-25T14:31:58.534496+0300 INFO Shutdown complete.
+2025-04-25T14:32:02.116840+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:32:02.791127+0300 INFO Algolia client initialized successfully
+2025-04-25T14:32:03.997478+0300 INFO Setting up database...
+2025-04-25T14:32:06.766380+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:32:06.967374+0300 INFO Database setup completed successfully
+2025-04-25T14:32:06.968381+0300 INFO Database setup completed
+2025-04-25T14:32:06.968381+0300 INFO Seeding glossary terms...
+2025-04-25T14:32:07.204343+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:32:07.205341+0300 INFO Glossary seeding completed
+2025-04-25T14:32:07.206348+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:32:07.206348+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:32:07.368871+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:32:07.369972+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:32:10.992781+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:32:11.448572+0300 INFO Algolia client initialized successfully
+2025-04-25T14:32:12.629186+0300 INFO Setting up database...
+2025-04-25T14:32:15.076912+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:32:15.264550+0300 INFO Database setup completed successfully
+2025-04-25T14:32:15.265527+0300 INFO Database setup completed
+2025-04-25T14:32:15.266525+0300 INFO Seeding glossary terms...
+2025-04-25T14:32:15.478518+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:32:15.479523+0300 INFO Glossary seeding completed
+2025-04-25T14:32:15.480524+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:32:15.481526+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:32:15.630521+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:32:15.631531+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:32:19.171959+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:32:19.626390+0300 INFO Algolia client initialized successfully
+2025-04-25T14:32:20.708646+0300 INFO Setting up database...
+2025-04-25T14:32:22.796350+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:32:23.031424+0300 INFO Database setup completed successfully
+2025-04-25T14:32:23.032425+0300 INFO Database setup completed
+2025-04-25T14:32:23.033426+0300 INFO Seeding glossary terms...
+2025-04-25T14:32:23.257609+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:32:23.258610+0300 INFO Glossary seeding completed
+2025-04-25T14:32:23.258610+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:32:23.259615+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:32:23.408950+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:32:23.409943+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:32:30.583858+0300 INFO Shutting down application...
+2025-04-25T14:32:30.828964+0300 INFO Database connections closed
+2025-04-25T14:32:30.829975+0300 INFO Shutdown complete.
+2025-04-25T14:32:33.930499+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:32:34.434389+0300 INFO Algolia client initialized successfully
+2025-04-25T14:32:35.542673+0300 INFO Setting up database...
+2025-04-25T14:32:37.556703+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:32:37.745689+0300 INFO Database setup completed successfully
+2025-04-25T14:32:37.746683+0300 INFO Database setup completed
+2025-04-25T14:32:37.746683+0300 INFO Seeding glossary terms...
+2025-04-25T14:32:37.953978+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:32:37.954987+0300 INFO Glossary seeding completed
+2025-04-25T14:32:37.954987+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:32:37.955983+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:32:38.122986+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:32:38.123981+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:33:09.476149+0300 INFO Shutting down application...
+2025-04-25T14:33:09.668289+0300 INFO Database connections closed
+2025-04-25T14:33:09.669283+0300 INFO Shutdown complete.
+2025-04-25T14:33:12.957794+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:33:13.427794+0300 INFO Algolia client initialized successfully
+2025-04-25T14:33:14.456655+0300 INFO Setting up database...
+2025-04-25T14:33:16.488362+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:33:16.687439+0300 INFO Database setup completed successfully
+2025-04-25T14:33:16.688440+0300 INFO Database setup completed
+2025-04-25T14:33:16.689443+0300 INFO Seeding glossary terms...
+2025-04-25T14:33:16.911081+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:33:16.912083+0300 INFO Glossary seeding completed
+2025-04-25T14:33:16.912083+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:33:16.913085+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:33:17.071745+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:33:17.071745+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:33:21.284961+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:33:21.892559+0300 INFO Algolia client initialized successfully
+2025-04-25T14:33:28.985666+0300 INFO Shutting down application...
+2025-04-25T14:33:29.167915+0300 INFO Database connections closed
+2025-04-25T14:33:29.167915+0300 INFO Shutdown complete.
+2025-04-25T14:33:32.660786+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:33:33.134915+0300 INFO Algolia client initialized successfully
+2025-04-25T14:33:34.211084+0300 INFO Setting up database...
+2025-04-25T14:33:36.294041+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:33:36.492286+0300 INFO Database setup completed successfully
+2025-04-25T14:33:36.493286+0300 INFO Database setup completed
+2025-04-25T14:33:36.493286+0300 INFO Seeding glossary terms...
+2025-04-25T14:33:36.709779+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:33:36.710786+0300 INFO Glossary seeding completed
+2025-04-25T14:33:36.711790+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:33:36.711790+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:33:36.859451+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:33:36.860440+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:34:14.055751+0300 INFO Shutting down application...
+2025-04-25T14:34:14.250244+0300 INFO Database connections closed
+2025-04-25T14:34:14.251242+0300 INFO Shutdown complete.
+2025-04-25T14:34:17.364373+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:34:17.830242+0300 INFO Algolia client initialized successfully
+2025-04-25T14:34:18.925465+0300 INFO Setting up database...
+2025-04-25T14:34:21.002942+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:34:21.190590+0300 INFO Database setup completed successfully
+2025-04-25T14:34:21.191582+0300 INFO Database setup completed
+2025-04-25T14:34:21.192583+0300 INFO Seeding glossary terms...
+2025-04-25T14:34:21.392571+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:34:21.393574+0300 INFO Glossary seeding completed
+2025-04-25T14:34:21.393574+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:34:21.394579+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:34:21.547585+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:34:21.548596+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:34:25.049858+0300 INFO Shutting down application...
+2025-04-25T14:34:25.270369+0300 INFO Database connections closed
+2025-04-25T14:34:25.271379+0300 INFO Shutdown complete.
+2025-04-25T14:34:28.378949+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:34:29.098943+0300 INFO Algolia client initialized successfully
+2025-04-25T14:34:30.250998+0300 INFO Setting up database...
+2025-04-25T14:34:32.244240+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:34:32.433246+0300 INFO Database setup completed successfully
+2025-04-25T14:34:32.434247+0300 INFO Database setup completed
+2025-04-25T14:34:32.434247+0300 INFO Seeding glossary terms...
+2025-04-25T14:34:32.644262+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:34:32.645262+0300 INFO Glossary seeding completed
+2025-04-25T14:34:32.646264+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:34:32.647249+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:34:32.885241+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:34:32.886249+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:34:45.557537+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-25T14:34:47.867631+0300 INFO Shutting down application...
+2025-04-25T14:34:48.081639+0300 INFO Database connections closed
+2025-04-25T14:34:48.082644+0300 INFO Shutdown complete.
+2025-04-25T14:34:51.232533+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:34:52.987337+0300 INFO Algolia client initialized successfully
+2025-04-25T14:34:53.917363+0300 INFO Setting up database...
+2025-04-25T14:34:57.186498+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:34:57.404508+0300 INFO Database setup completed successfully
+2025-04-25T14:34:57.405504+0300 INFO Database setup completed
+2025-04-25T14:34:57.405504+0300 INFO Seeding glossary terms...
+2025-04-25T14:34:57.629548+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:34:57.630551+0300 INFO Glossary seeding completed
+2025-04-25T14:34:57.631553+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:34:57.631553+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:34:57.865296+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:34:57.866295+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:35:08.044361+0300 INFO Shutting down application...
+2025-04-25T14:35:10.338220+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:35:11.121886+0300 INFO Database connections closed
+2025-04-25T14:35:11.122885+0300 INFO Shutdown complete.
+2025-04-25T14:35:11.557635+0300 INFO Algolia client initialized successfully
+2025-04-25T14:35:14.182195+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:35:14.637222+0300 INFO Algolia client initialized successfully
+2025-04-25T14:35:15.667555+0300 INFO Setting up database...
+2025-04-25T14:35:17.472607+0300 INFO Setting tool with unique_id=test-unique-1eaa952d-8d05-48a7-930a-21075f1af0ab featured status to True
+2025-04-25T14:35:17.851390+0300 ERROR Failed to update Algolia index: 'AlgoliaIndexer' object has no attribute 'is_configured'
+2025-04-25T14:35:18.034625+0300 INFO Setting tool with unique_id=test-unique-1eaa952d-8d05-48a7-930a-21075f1af0ab featured status to False
+2025-04-25T14:35:18.455409+0300 ERROR Failed to update Algolia index: 'AlgoliaIndexer' object has no attribute 'is_configured'
+2025-04-25T14:35:19.415742+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:35:19.655371+0300 INFO Database setup completed successfully
+2025-04-25T14:35:19.656374+0300 INFO Database setup completed
+2025-04-25T14:35:19.656374+0300 INFO Seeding glossary terms...
+2025-04-25T14:35:19.854399+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:35:19.855400+0300 INFO Glossary seeding completed
+2025-04-25T14:35:19.856402+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:35:19.856402+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:35:20.029391+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:35:20.030393+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:35:32.215599+0300 INFO Shutting down application...
+2025-04-25T14:35:32.424616+0300 INFO Database connections closed
+2025-04-25T14:35:32.425609+0300 INFO Shutdown complete.
+2025-04-25T14:35:36.207869+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:35:36.804866+0300 INFO Algolia client initialized successfully
+2025-04-25T14:35:37.760340+0300 INFO Setting up database...
+2025-04-25T14:35:39.757738+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:35:39.967390+0300 INFO Database setup completed successfully
+2025-04-25T14:35:39.968029+0300 INFO Database setup completed
+2025-04-25T14:35:39.968587+0300 INFO Seeding glossary terms...
+2025-04-25T14:35:40.149311+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:35:40.150310+0300 INFO Glossary seeding completed
+2025-04-25T14:35:40.151309+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:35:40.152309+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:35:40.319748+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:35:40.319748+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:35:43.358419+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:35:43.838522+0300 INFO Algolia client initialized successfully
+2025-04-25T14:35:45.066508+0300 INFO Setting up database...
+2025-04-25T14:35:47.156366+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:35:47.378543+0300 INFO Database setup completed successfully
+2025-04-25T14:35:47.379535+0300 INFO Database setup completed
+2025-04-25T14:35:47.379535+0300 INFO Seeding glossary terms...
+2025-04-25T14:35:47.614544+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:35:47.615538+0300 INFO Glossary seeding completed
+2025-04-25T14:35:47.615538+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:35:47.616533+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:35:47.789920+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:35:47.790917+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:35:53.769203+0300 INFO Shutting down application...
+2025-04-25T14:35:54.025257+0300 INFO Database connections closed
+2025-04-25T14:35:54.026266+0300 INFO Shutdown complete.
+2025-04-25T14:35:57.184921+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:35:57.674424+0300 INFO Algolia client initialized successfully
+2025-04-25T14:35:58.615492+0300 INFO Setting up database...
+2025-04-25T14:36:00.692893+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:36:00.905913+0300 INFO Database setup completed successfully
+2025-04-25T14:36:00.906898+0300 INFO Database setup completed
+2025-04-25T14:36:00.907907+0300 INFO Seeding glossary terms...
+2025-04-25T14:36:01.116482+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:36:01.117483+0300 INFO Glossary seeding completed
+2025-04-25T14:36:01.118490+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:36:01.118490+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:36:01.278487+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:36:01.280487+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:36:15.093360+0300 INFO Derived UUID 13720d61-bc8f-54ff-815c-074b22154d59 from ObjectId 68088b0da40b1de891a1315b for tool 'There's An AI For That'
+2025-04-25T14:36:15.305294+0300 INFO Derived UUID d8484c5b-ca74-5117-86d3-5b7494a13fb0 from ObjectId 68088b0da40b1de891a1315c for tool 'Korbit'
+2025-04-25T14:36:15.306297+0300 INFO Derived UUID e450591f-b05d-5d30-9071-2fdd74653d06 from ObjectId 68088b0da40b1de891a1315d for tool 'LoveStudy.ai'
+2025-04-25T14:36:15.761505+0300 INFO Derived UUID 182d8349-a8d5-5d9b-862f-23ecbde921c2 from ObjectId 68088b0da40b1de891a1315e for tool 'PhonePi MCP'
+2025-04-25T14:36:16.617493+0300 INFO Derived UUID e3071a23-e5a6-5b06-bf16-e3de1833bcb2 from ObjectId 68088b0da40b1de891a1315f for tool 'Optimyzee – AI-Powered Google Ads Optimization'
+2025-04-25T14:36:16.817792+0300 INFO Derived UUID fbdfec73-a0eb-5baa-bd7c-aa57146fe358 from ObjectId 68088b0da40b1de891a13160 for tool 'Thesify'
+2025-04-25T14:36:17.015321+0300 INFO Derived UUID 3ec409e3-867d-5886-b7fc-3931182f9d96 from ObjectId 68088b0da40b1de891a13161 for tool 'Apply AI'
+2025-04-25T14:36:17.214589+0300 INFO Derived UUID e10746dc-004a-5124-907d-73f02d464f84 from ObjectId 68088b0da40b1de891a13162 for tool 'The Drive AI'
+2025-04-25T14:36:17.414954+0300 INFO Derived UUID b644583b-da77-57b3-a8d1-bb2a244938cc from ObjectId 68088b0da40b1de891a13163 for tool 'Tenali AI'
+2025-04-25T14:36:17.616288+0300 INFO Derived UUID 50b40d7d-abe6-5784-b3cc-eb170fb92e1d from ObjectId 68088b0da40b1de891a13164 for tool 'Automina'
+2025-04-25T14:36:17.857606+0300 INFO Derived UUID 58f3d8d6-d875-52a2-a56b-20537d25ce4b from ObjectId 68088b0da40b1de891a13165 for tool 'SeekMyDomain'
+2025-04-25T14:36:18.266608+0300 INFO Derived UUID f964aebe-84e3-56b7-9482-c814ba0833f6 from ObjectId 68088b0da40b1de891a13166 for tool 'Web Gremlin'
+2025-04-25T14:36:18.495610+0300 INFO Derived UUID cb44036a-9ea8-5872-8730-646d15e93d2f from ObjectId 68088b0da40b1de891a13167 for tool 'BladeRunner'
+2025-04-25T14:36:18.497614+0300 INFO Derived UUID 69b7bde2-f7cb-5881-b144-75239a4da66b from ObjectId 68088b0da40b1de891a13168 for tool 'nxtblog.ai'
+2025-04-25T14:36:18.693610+0300 INFO Derived UUID 5c7dab1a-97a2-545e-8478-efa0f1e8f187 from ObjectId 68088b0da40b1de891a13169 for tool 'Helpjuice'
+2025-04-25T14:36:19.148040+0300 INFO Derived UUID b22b456c-ccf0-5bed-b6b9-3d64791d9a8a from ObjectId 68088b0da40b1de891a1316a for tool 'AI GPT o1 GPT-4o: AI Assistant'
+2025-04-25T14:36:19.380808+0300 INFO Derived UUID 330ec564-a962-5ca0-a334-467057db6c30 from ObjectId 68088b0da40b1de891a1316b for tool 'RoastLinkedIn'
+2025-04-25T14:36:20.025283+0300 INFO Derived UUID e1e94d07-f7d1-569d-83d4-c51c1123ee2e from ObjectId 68088b0da40b1de891a1316c for tool 'Document resume generator'
+2025-04-25T14:36:20.242289+0300 INFO Derived UUID 5341c5db-7fe1-59d7-8257-3bd57874136b from ObjectId 68088b0da40b1de891a1316d for tool 'GliaStudio'
+2025-04-25T14:36:20.243282+0300 INFO Derived UUID f97693f0-f39d-596d-9717-c4d2088e423d from ObjectId 68088b0da40b1de891a1316e for tool 'Fork.ai'
+2025-04-25T14:36:20.651279+0300 INFO Derived UUID c1cb5ffa-e477-50e9-84f7-2938ade9b307 from ObjectId 68088b0da40b1de891a1316f for tool 'Word Studio'
+2025-04-25T14:36:20.865289+0300 INFO Derived UUID ccd723c0-b10e-535b-a317-a888e2682c2e from ObjectId 68088b0da40b1de891a13170 for tool 'ScreenSnapAI'
+2025-04-25T14:36:21.097876+0300 INFO Derived UUID ca231a9e-d6f5-57de-977f-e7793255ac95 from ObjectId 68088b0da40b1de891a13171 for tool 'Storipress'
+2025-04-25T14:36:21.312069+0300 INFO Derived UUID bd1d1835-6ab6-506a-91b1-5d1c3a89f452 from ObjectId 68088b0da40b1de891a13172 for tool 'PaperClip'
+2025-04-25T14:36:21.313094+0300 INFO Derived UUID 893fea1a-7d4f-57b4-a05c-ef0b6f96f3cc from ObjectId 68088b0da40b1de891a13173 for tool 'Univer.se'
+2025-04-25T14:36:21.530758+0300 INFO Derived UUID 0b051cd5-ff43-5ee2-ad25-c53bddc0a3ce from ObjectId 68088b0da40b1de891a13174 for tool 'SaveDay'
+2025-04-25T14:36:21.737871+0300 INFO Derived UUID 75fced41-0154-5270-86e8-3837a4330583 from ObjectId 68088b0da40b1de891a13175 for tool 'Manus'
+2025-04-25T14:36:22.374220+0300 INFO Derived UUID 0561fc5d-1b3d-565c-9563-7cee8e8f0711 from ObjectId 68088b0da40b1de891a13176 for tool 'Ai Fashion Model Generator Free'
+2025-04-25T14:36:22.617223+0300 INFO Derived UUID 754812b7-d798-5674-8fd1-1e48ad5a75d8 from ObjectId 68088b0da40b1de891a13177 for tool 'Taskade'
+2025-04-25T14:36:22.829231+0300 INFO Derived UUID 97d84acd-74fb-5828-8d40-b3c07d4a7a03 from ObjectId 68088b0da40b1de891a13178 for tool 'SellerPic'
+2025-04-25T14:36:23.058331+0300 INFO Derived UUID 7b19f385-d5cc-5b01-9c33-955d10c1fcb3 from ObjectId 68088b0da40b1de891a13179 for tool 'MemFree'
+2025-04-25T14:36:23.269229+0300 INFO Derived UUID 4b78bc46-dd93-5f8a-8a17-7ae1acf8fdac from ObjectId 68088b0da40b1de891a1317a for tool 'MonAI'
+2025-04-25T14:36:23.503106+0300 INFO Derived UUID 82528197-6c96-540f-936f-d5c81f0bf371 from ObjectId 68088b0da40b1de891a1317b for tool 'SUS Technology'
+2025-04-25T14:36:23.733105+0300 INFO Derived UUID f0cc0660-1c7d-521c-b492-decdf24b5f61 from ObjectId 68088b0da40b1de891a1317c for tool 'Mitra'
+2025-04-25T14:36:23.948781+0300 INFO Derived UUID 3759d598-9b51-5877-9303-c2eed68e3979 from ObjectId 68088b0da40b1de891a1317d for tool 'Mentor AI'
+2025-04-25T14:36:24.181649+0300 INFO Derived UUID 106d783a-18cb-585d-90fb-d8e5cd03049b from ObjectId 68088b0da40b1de891a1317e for tool 'Branchbob'
+2025-04-25T14:36:24.871896+0300 INFO Derived UUID 0a3506c2-abc6-59af-8120-15719283beb2 from ObjectId 68088b0da40b1de891a1317f for tool 'Imagine : AI Art Generator'
+2025-04-25T14:36:24.872904+0300 INFO Derived UUID 8319bf78-3ba8-52b9-b957-41f57cea2ef9 from ObjectId 68088b0da40b1de891a13180 for tool 'Stud.AI'
+2025-04-25T14:36:25.088897+0300 INFO Derived UUID 297cb8be-29ae-5be7-9292-e2da0d7032db from ObjectId 68088b0da40b1de891a13181 for tool 'Knowbase'
+2025-04-25T14:36:25.308249+0300 INFO Derived UUID adca6b55-818e-5e52-afb9-77d9ec126c4d from ObjectId 68088b0da40b1de891a13182 for tool '42Signals'
+2025-04-25T14:36:25.536227+0300 INFO Derived UUID ff78a6f3-b3d8-58ed-92c4-c54a80da9370 from ObjectId 68088b0da40b1de891a13183 for tool 'ExamGenie AI'
+2025-04-25T14:36:25.733067+0300 INFO Derived UUID 08f13731-35c0-5813-bbda-e3124617e547 from ObjectId 68088b0da40b1de891a13184 for tool 'AiLancer'
+2025-04-25T14:36:25.942808+0300 INFO Derived UUID 730a8597-8b75-5f53-955d-d8baba0cd15c from ObjectId 68088b0da40b1de891a13185 for tool 'Oner AI'
+2025-04-25T14:36:25.944799+0300 INFO Derived UUID 5eb93bdb-300b-5bfa-a227-24a75957932c from ObjectId 68088b0da40b1de891a13186 for tool 'D-ID'
+2025-04-25T14:36:26.176782+0300 INFO Derived UUID db66a834-9e98-5d44-9c29-6bdefb2f62a6 from ObjectId 68088b0da40b1de891a13187 for tool 'Kaiber'
+2025-04-25T14:36:26.391118+0300 INFO Derived UUID 5cbc9e42-1560-5e51-8a7c-b2834b9e58ef from ObjectId 68088b0da40b1de891a13188 for tool 'Manga TV'
+2025-04-25T14:36:26.392233+0300 INFO Derived UUID 64f11ecf-dfa6-534b-a92f-f40aeb242ab6 from ObjectId 68088b0da40b1de891a13189 for tool 'Make-A-Video'
+2025-04-25T14:36:27.076511+0300 INFO Derived UUID 9e3eb994-2263-573c-94d0-9b839d7d02d4 from ObjectId 68088b0da40b1de891a1318a for tool 'D-ID Creative Reality Studio'
+2025-04-25T14:36:27.498109+0300 INFO Derived UUID cc4bc8e6-d433-5ea7-b585-591a893f07d2 from ObjectId 68088b0da40b1de891a1318b for tool 'Sora by OpenAI'
+2025-04-25T14:36:27.697212+0300 INFO Derived UUID 5385b6dc-f0b2-5f59-b206-b010b6cffdbd from ObjectId 68088b0da40b1de891a1318c for tool 'AI Studios'
+2025-04-25T14:36:27.896552+0300 INFO Derived UUID 4de56bf9-c949-59bf-ab43-4c9963ba729f from ObjectId 68088b0da40b1de891a1318d for tool 'VideoGen'
+2025-04-25T14:36:28.133089+0300 INFO Derived UUID ee5f9778-47f9-56f0-8a4b-1c32fcfcdcc2 from ObjectId 68088b0da40b1de891a1318e for tool 'HeyGen'
+2025-04-25T14:36:28.333466+0300 INFO Derived UUID 986c6e80-085b-5ed7-b149-b713d16d267e from ObjectId 68088b0da40b1de891a1318f for tool 'Supercreator'
+2025-04-25T14:36:28.534078+0300 INFO Derived UUID 56724cd0-d25c-520f-bab9-65ed366b5675 from ObjectId 68088b0da40b1de891a13190 for tool 'Kome AI'
+2025-04-25T14:36:28.535085+0300 INFO Derived UUID 25ec50df-145b-5102-93bb-4bb97f1c3bd2 from ObjectId 68088b0da40b1de891a13191 for tool 'Easy-Peasy.AI'
+2025-04-25T14:36:28.735358+0300 INFO Derived UUID 84520141-f2ce-5d26-9c08-a2781f18a999 from ObjectId 68088b0da40b1de891a13192 for tool 'ChaiBar'
+2025-04-25T14:36:29.813895+0300 INFO Derived UUID 29271161-2766-5b79-b90b-10b68687bd73 from ObjectId 68088b0da40b1de891a13193 for tool 'Aiter – Marketing Content, Strategy and Ads Generator'
+2025-04-25T14:36:30.465687+0300 INFO Derived UUID 464c747d-e5b0-5c02-b4a2-ffd16a9624b2 from ObjectId 68088b0da40b1de891a13194 for tool 'HyperWrite | AI Writing Assistant'
+2025-04-25T14:36:30.466691+0300 INFO Derived UUID f420af53-102a-5736-9acd-8c2ee3888e78 from ObjectId 68088b0da40b1de891a13195 for tool 'Copy.ai'
+2025-04-25T14:36:30.663479+0300 INFO Derived UUID 9fc719c5-c9ea-54f7-a026-11122ca92772 from ObjectId 68088b0da40b1de891a13196 for tool 'AIGPT'
+2025-04-25T14:36:30.893331+0300 INFO Derived UUID 50b586ba-9401-5d0c-8082-b39e12f77fa0 from ObjectId 68088b0da40b1de891a13197 for tool 'Simplified'
+2025-04-25T14:36:31.114908+0300 INFO Derived UUID 5af59b07-301f-55b7-8b4d-4ce1c9c5bba4 from ObjectId 68088b0da40b1de891a13198 for tool 'Magickpen'
+2025-04-25T14:36:31.339510+0300 INFO Derived UUID 65c4eaca-d6d0-550f-a834-56478f6ff09c from ObjectId 68088b0da40b1de891a13199 for tool 'AI Magicx'
+2025-04-25T14:36:31.589788+0300 INFO Derived UUID 1ba6ef9b-4714-5e0e-9e59-2eeb72ca050e from ObjectId 68088b0da40b1de891a1319a for tool 'Designs AI'
+2025-04-25T14:36:32.023334+0300 INFO Derived UUID 8090271c-9022-52e3-8af3-5c91fe3ba4f5 from ObjectId 68088b0da40b1de891a1319b for tool 'FASHN Virtual Try-On'
+2025-04-25T14:36:32.240518+0300 INFO Derived UUID c0aa9a38-8309-5c95-a170-712dac4fa686 from ObjectId 68088b0da40b1de891a1319c for tool 'Korbit'
+2025-04-25T14:36:32.241578+0300 INFO Derived UUID eeb68d0e-04a7-5561-8b90-4c297deb83cc from ObjectId 68088b0da40b1de891a1319d for tool 'LoveStudy.ai'
+2025-04-25T14:36:32.459603+0300 INFO Derived UUID c35b68d5-1b55-5a50-a2ff-c8d48391f8c1 from ObjectId 68088b0da40b1de891a1319e for tool 'fAIshion'
+2025-04-25T14:36:32.907961+0300 INFO Derived UUID a928cd8f-ff84-5d12-9937-d56e93719c07 from ObjectId 68088b0da40b1de891a1319f for tool 'PhotoFlux AI: Virtual Try-On'
+2025-04-25T14:36:33.142669+0300 INFO Derived UUID a65513e4-ddb2-5e9e-b161-951f08c8cb1f from ObjectId 68088b0da40b1de891a131a0 for tool 'CostumePlay AI'
+2025-04-25T14:36:33.588760+0300 INFO Derived UUID cfc0c487-d779-52f6-aa3b-539ff51f083d from ObjectId 68088b0da40b1de891a131a1 for tool 'Fitting Room'
+2025-04-25T14:36:33.819781+0300 INFO Derived UUID 79e31791-0bae-50f6-9895-cbfaee00709b from ObjectId 68088b0da40b1de891a131a2 for tool 'HeyBeauty'
+2025-04-25T14:36:34.065758+0300 INFO Derived UUID fc1df052-2133-5c17-a3a9-6cc680de2f41 from ObjectId 68088b0da40b1de891a131a3 for tool 'Avumi'
+2025-04-25T14:36:34.506795+0300 INFO Derived UUID 0ed36910-03ff-5dc1-b6a3-0e6afabc30ef from ObjectId 68088b0da40b1de891a131a4 for tool 'DressMe - AI stylist'
+2025-04-25T14:36:34.726085+0300 INFO Derived UUID c1efbb1d-a205-57b5-aba1-c4bb7148a2be from ObjectId 68088b0da40b1de891a131a5 for tool 'Beautygence'
+2025-04-25T14:36:35.173486+0300 INFO Derived UUID 9fcd2523-68cd-55ae-85bd-ac6d385e0353 from ObjectId 68088b0da40b1de891a131a6 for tool 'Outfit Anyone AI'
+2025-04-25T14:36:38.107685+0300 INFO Derived UUID ef250a03-53d7-5af7-a132-785a57dc8712 from ObjectId 68088b0da40b1de891a131a7 for tool 'Loom AI'
+2025-04-25T14:36:38.324090+0300 INFO Derived UUID 7b39d0a4-dbab-57de-8268-0fba2a966006 from ObjectId 680897ffa40b1de891a137bb for tool 'TIAViz'
+2025-04-25T14:36:38.732465+0300 INFO Derived UUID 89c04f70-7779-5d8f-b151-a5dd6fec7670 from ObjectId 680897ffa40b1de891a137bc for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:36:38.947012+0300 INFO Derived UUID a21fb2c5-3d0e-574c-8efd-6251c3314889 from ObjectId 68089a43a40b1de891a137c7 for tool 'Allegro'
+2025-04-25T14:36:39.388276+0300 INFO Derived UUID 1bbabb46-b686-534f-8f3b-734960f4394f from ObjectId 68089cbba40b1de891a137c8 for tool 'Bio-Eng-LMM AI Assist chatbot'
+2025-04-25T14:36:40.737515+0300 INFO Derived UUID 8b4d58e3-f60a-5ee9-89e4-4bf00ea3e94c from ObjectId 68089dc4a40b1de891a137ca for tool 'Product Description Generator From Amazon Aliexpress Url'
+2025-04-25T14:36:40.979641+0300 INFO Derived UUID 2ee9535f-c68f-56dc-b4ea-520058a620a0 from ObjectId 68089dc4a40b1de891a137cb for tool 'Descrb'
+2025-04-25T14:36:41.625054+0300 INFO Derived UUID 54a58215-3fd1-5e83-8afd-e8e60fb052be from ObjectId 68089dc4a40b1de891a137cc for tool 'Real Estate Listing'
+2025-04-25T14:36:41.855241+0300 INFO Derived UUID 43dc65f4-2698-5ea1-8fcd-365676904a05 from ObjectId 68089dc4a40b1de891a137cd for tool 'shopGPT'
+2025-04-25T14:36:42.067464+0300 INFO Derived UUID a3faa478-c987-5c9d-a278-fb8aab76d02f from ObjectId 68089dc4a40b1de891a137ce for tool 'AI:JD by Pangea'
+2025-04-25T14:36:42.284889+0300 INFO Derived UUID 8ee81928-283c-5da0-b15c-b9b72c1fdcb9 from ObjectId 68089dc4a40b1de891a137cf for tool 'Easylisting'
+2025-04-25T14:36:42.496401+0300 INFO Derived UUID 77c222c4-d579-5218-807a-9c253f782b20 from ObjectId 68089dc4a40b1de891a137d0 for tool 'Listingcopy'
+2025-04-25T14:36:43.363996+0300 INFO Derived UUID 3768ac99-a306-5572-b1a4-d0c18dd3385f from ObjectId 68089dc4a40b1de891a137d1 for tool 'Free Job Description Generator'
+2025-04-25T14:36:43.577191+0300 INFO Derived UUID 837abf7a-1f14-5bc5-9f96-f0f2f1b46bd3 from ObjectId 68089dc4a40b1de891a137d2 for tool 'Smartscout'
+2025-04-25T14:36:43.784145+0300 INFO Derived UUID 044bcec2-0a84-5784-9be6-2b4e2b470634 from ObjectId 68089dc4a40b1de891a137d3 for tool 'Describely'
+2025-04-25T14:36:44.026696+0300 INFO Derived UUID 38661e2d-9cda-5654-a3d6-f49b216caf72 from ObjectId 68089dc4a40b1de891a137d4 for tool 'Hyrable'
+2025-04-25T14:36:44.269402+0300 INFO Derived UUID ba514e02-e6f7-543b-b52d-f0c70342b1a1 from ObjectId 68089dc4a40b1de891a137d5 for tool 'Prodescription'
+2025-04-25T14:36:44.501530+0300 INFO Derived UUID 67197061-d1dc-51f5-9ac5-32393781b442 from ObjectId 68089dc4a40b1de891a137d6 for tool 'depikt'
+2025-04-25T14:36:44.735542+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T14:36:44.949861+0300 INFO Derived UUID 2b315ab2-5b5f-5d7a-a449-5665b2180a84 from ObjectId 68089dc4a40b1de891a137d8 for tool 'CopyMonkey'
+2025-04-25T14:36:45.182877+0300 INFO Derived UUID a71e4a09-11e9-5d02-b360-c309f820d9d4 from ObjectId 68089dc4a40b1de891a137d9 for tool 'Copysmith'
+2025-04-25T14:36:45.397540+0300 INFO Derived UUID c4d15b36-ee51-5ffa-a026-6d2322f590ba from ObjectId 68089dc4a40b1de891a137da for tool 'Lista'
+2025-04-25T14:36:45.628877+0300 INFO Derived UUID 4cca4eaa-97d9-55a8-afb3-762d88a50549 from ObjectId 68089dc4a40b1de891a137db for tool 'LeadScripts'
+2025-04-25T14:36:46.542837+0300 INFO Derived UUID addb2383-f79b-5505-979c-71ebc912242d from ObjectId 68089dc4a40b1de891a137dc for tool 'Listing Agent for AI Produced Artwork'
+2025-04-25T14:37:12.657755+0300 INFO Setting tool with unique_id=easylist featured status to True
+2025-04-25T14:37:13.061897+0300 ERROR Failed to update Algolia index: 'id'
+2025-04-25T14:37:13.063904+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T14:38:39.904434+0300 INFO Shutting down application...
+2025-04-25T14:38:41.167081+0300 INFO Database connections closed
+2025-04-25T14:38:41.168307+0300 INFO Shutdown complete.
+2025-04-25T14:38:44.549427+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:38:45.189010+0300 INFO Algolia client initialized successfully
+2025-04-25T14:38:46.606976+0300 INFO Setting up database...
+2025-04-25T14:38:49.362605+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:38:49.553751+0300 INFO Database setup completed successfully
+2025-04-25T14:38:49.554052+0300 INFO Database setup completed
+2025-04-25T14:38:49.555049+0300 INFO Seeding glossary terms...
+2025-04-25T14:38:49.756772+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:38:49.757775+0300 INFO Glossary seeding completed
+2025-04-25T14:38:49.757775+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:38:49.758773+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:38:49.924245+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:38:49.924540+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:38:53.590985+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:38:54.118492+0300 INFO Algolia client initialized successfully
+2025-04-25T14:38:55.365215+0300 INFO Setting up database...
+2025-04-25T14:38:57.504278+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:38:57.704460+0300 INFO Database setup completed successfully
+2025-04-25T14:38:57.704757+0300 INFO Database setup completed
+2025-04-25T14:38:57.705702+0300 INFO Seeding glossary terms...
+2025-04-25T14:38:57.928594+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:38:57.928594+0300 INFO Glossary seeding completed
+2025-04-25T14:38:57.929593+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:38:57.930592+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:38:58.082531+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:38:58.083898+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:39:00.372477+0300 INFO Shutting down application...
+2025-04-25T14:39:00.572934+0300 INFO Database connections closed
+2025-04-25T14:39:00.573930+0300 INFO Shutdown complete.
+2025-04-25T14:39:04.319648+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:39:04.833950+0300 INFO Algolia client initialized successfully
+2025-04-25T14:39:06.013461+0300 INFO Setting up database...
+2025-04-25T14:39:08.240546+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:39:08.461257+0300 INFO Database setup completed successfully
+2025-04-25T14:39:08.462223+0300 INFO Database setup completed
+2025-04-25T14:39:08.463211+0300 INFO Seeding glossary terms...
+2025-04-25T14:39:08.695819+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:39:08.696390+0300 INFO Glossary seeding completed
+2025-04-25T14:39:08.697358+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:39:08.697358+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:39:08.827520+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:39:08.828484+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:39:12.904881+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:39:13.362054+0300 INFO Algolia client initialized successfully
+2025-04-25T14:39:14.497144+0300 INFO Setting up database...
+2025-04-25T14:39:19.407313+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:39:19.620716+0300 INFO Database setup completed successfully
+2025-04-25T14:39:19.620716+0300 INFO Database setup completed
+2025-04-25T14:39:19.621682+0300 INFO Seeding glossary terms...
+2025-04-25T14:39:19.830357+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:39:19.830802+0300 INFO Glossary seeding completed
+2025-04-25T14:39:19.831838+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:39:19.831952+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:39:19.998801+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:39:19.999710+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:39:23.730709+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:39:24.162003+0300 INFO Algolia client initialized successfully
+2025-04-25T14:39:25.383009+0300 INFO Setting up database...
+2025-04-25T14:39:27.373681+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:39:27.553845+0300 INFO Database setup completed successfully
+2025-04-25T14:39:27.555025+0300 INFO Database setup completed
+2025-04-25T14:39:27.555844+0300 INFO Seeding glossary terms...
+2025-04-25T14:39:27.764939+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:39:27.765928+0300 INFO Glossary seeding completed
+2025-04-25T14:39:27.766940+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:39:27.767541+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:39:27.913265+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:39:27.914502+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:39:38.181924+0300 INFO Shutting down application...
+2025-04-25T14:39:38.404554+0300 INFO Database connections closed
+2025-04-25T14:39:38.405554+0300 INFO Shutdown complete.
+2025-04-25T14:39:41.906070+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:39:42.351136+0300 INFO Algolia client initialized successfully
+2025-04-25T14:39:43.804479+0300 INFO Setting up database...
+2025-04-25T14:39:46.065895+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:39:46.267534+0300 INFO Database setup completed successfully
+2025-04-25T14:39:46.268540+0300 INFO Database setup completed
+2025-04-25T14:39:46.268540+0300 INFO Seeding glossary terms...
+2025-04-25T14:39:46.465837+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:39:46.466862+0300 INFO Glossary seeding completed
+2025-04-25T14:39:46.467857+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:39:46.467857+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:39:46.599523+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:39:46.600391+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:39:47.429437+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-25T14:39:47.655869+0300 INFO Shutting down application...
+2025-04-25T14:39:47.865699+0300 INFO Database connections closed
+2025-04-25T14:39:47.866330+0300 INFO Shutdown complete.
+2025-04-25T14:39:51.836853+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T14:39:52.315242+0300 INFO Algolia client initialized successfully
+2025-04-25T14:39:53.468067+0300 INFO Setting up database...
+2025-04-25T14:39:55.478695+0300 INFO Connected to MongoDB for setup
+2025-04-25T14:39:55.683875+0300 INFO Database setup completed successfully
+2025-04-25T14:39:55.684707+0300 INFO Database setup completed
+2025-04-25T14:39:55.685711+0300 INFO Seeding glossary terms...
+2025-04-25T14:39:55.878004+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T14:39:55.879986+0300 INFO Glossary seeding completed
+2025-04-25T14:39:55.879986+0300 INFO Configuring Algolia indexes...
+2025-04-25T14:39:55.881262+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-25T14:39:56.030911+0300 INFO Algolia glossary index configured successfully
+2025-04-25T14:39:56.032911+0300 INFO Algolia indexes configured successfully
+2025-04-25T14:40:06.323627+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'
+2025-04-25T14:40:43.722138+0300 INFO Derived UUID f5219bc0-0853-52b7-a420-938d84b09534 from ObjectId 68089dc4a40b1de891a137d7 for tool 'Easylist'

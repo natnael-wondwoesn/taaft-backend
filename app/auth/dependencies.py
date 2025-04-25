@@ -163,8 +163,12 @@ class RateLimitMiddleware:
         # Process the request
         request = Request(scope)
 
-        # Skip rate limiting for authentication routes
-        if request.url.path.startswith("/auth/"):
+        # Skip rate limiting for authentication routes and public routes
+        if (
+            request.url.path.startswith("/auth/")
+            or request.url.path.startswith("/public/")
+            or request.url.path.startswith("/tools/featured")
+        ):
             return await self.app(scope, receive, send)
 
         # Try to get authorization header
@@ -287,7 +291,7 @@ class RateLimitMiddleware:
 
 
 class AdminControlMiddleware:
-    """Middleware to restrict PUT/POST/DELETE methods to admin users except for specific routes."""
+    """Middleware for controlling access to admin endpoints."""
 
     def __init__(self, app):
         """Initialize the middleware with the ASGI application."""
@@ -306,10 +310,24 @@ class AdminControlMiddleware:
             # Not an HTTP request, just pass through
             return await self.app(scope, receive, send)
 
-        # Get request method and path
+        # Process the request
         request = Request(scope)
-        method = request.method
+
+        # List of endpoints that are publicly accessible or don't need auth checks
+        public_endpoints = [
+            "/auth/",  # Auth endpoints
+            "/health",  # Health check endpoint
+            "/public/",  # Public endpoints
+            "/tools/featured",  # Featured tools endpoint
+        ]
+
+        # If it's a public endpoint, skip auth checks
         path = request.url.path
+        if any(path.startswith(endpoint) for endpoint in public_endpoints):
+            return await self.app(scope, receive, send)
+
+        # Get request method
+        method = request.method
 
         # Check if method is restricted (POST, PUT, DELETE)
         if method in ["POST", "PUT", "DELETE", "PATCH"]:

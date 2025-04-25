@@ -46,6 +46,8 @@ from .auth.dependencies import RateLimitMiddleware, AdminControlMiddleware
 
 # Import the tools router
 from .tools import router as tools_router
+from .tools import public_router as public_tools_router
+from .tools.middleware import PublicFeaturedToolsMiddleware
 
 # Import the site queue routers
 from .queue import api_router as site_queue_router
@@ -124,7 +126,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Add CORS middleware
+# Add middleware - CORS must be first, then other middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # For production, specify actual origins
@@ -133,17 +135,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add rate limit middleware
-app.add_middleware(RateLimitMiddleware)
-
-# Add admin control middleware to restrict access to certain endpoints
+# The order is important here:
+# 1. PublicFeaturedToolsMiddleware - to mark certain routes as public
+# 2. AdminControlMiddleware - to restrict admin operations
+# 3. RateLimitMiddleware - to limit request rates for authenticated users
+app.add_middleware(PublicFeaturedToolsMiddleware)
 app.add_middleware(AdminControlMiddleware)
+app.add_middleware(RateLimitMiddleware)
 
 # Include routers
 app.include_router(chat_router)
 app.include_router(algolia_router)
 app.include_router(auth_router)  # Include auth router with prefix
 app.include_router(tools_router)  # Include tools router
+app.include_router(public_tools_router)  # Include public tools router
 app.include_router(site_queue_router)  # Include site queue router
 app.include_router(site_dashboard_router)  # Include site dashboard router
 app.include_router(glossary_router)  # Include glossary router

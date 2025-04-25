@@ -66,8 +66,8 @@ def test_204_hit_issue():
         "nbPages": 21,  # With 10 hits per page, we'd need 21 pages
         "hitsPerPage": 10,  # Simulate the 10 hit pagination limit
         "processingTimeMS": 42,
-        "query": "ai tool",
-        "params": "query=ai%20tool",
+        "query": "ai tool automation chatbot",  # Added search query for tags
+        "params": "query=ai%20tool%20automation%20chatbot",
     }
 
     print(f"Created mock dataset with {len(mock_hits)} hits")
@@ -128,6 +128,7 @@ def test_204_hit_issue():
         "unique_id",
         "price",
         "rating",
+        "search_tags",
     ]
 
     for i, hit in enumerate(formatted_data["hits"]):
@@ -137,8 +138,26 @@ def test_204_hit_issue():
                 hit[field] is not None
             ), f"Required field '{field}' is None in hit {i}"
 
+    # Verify search tags are correctly embedded
+    expected_tags = ["ai", "tool", "automation", "chatbot"]
+    first_hit_tags = first_hit.get("search_tags", [])
+
+    print(f"\nVerifying search tags in hits...")
+    print(f"First hit search tags: {first_hit_tags}")
+
+    # Check all expected tags are in each hit
+    for tag in expected_tags:
+        assert tag in first_hit_tags, f"Expected tag '{tag}' missing from first hit"
+        assert tag in middle_hit.get(
+            "search_tags", []
+        ), f"Expected tag '{tag}' missing from middle hit"
+        assert tag in last_hit.get(
+            "search_tags", []
+        ), f"Expected tag '{tag}' missing from last hit"
+
     print("\n✓ All 204 hits were correctly formatted with all required fields")
     print("✓ The issue where only 10 hits were returned has been fixed")
+    print("✓ Search tags were correctly embedded in all hits")
 
     return True
 
