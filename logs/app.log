@@ -5145,3 +5145,6 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T07:07:21.022803+0300 INFO Algolia tools index configured successfully
 2025-04-25T07:07:21.201254+0300 INFO Algolia glossary index configured successfully
 2025-04-25T07:07:21.202253+0300 INFO Algolia indexes configured successfully
+2025-04-25T07:10:21.853198+0300 INFO Shutting down application...
+2025-04-25T07:10:22.044810+0300 INFO Database connections closed
+2025-04-25T07:10:22.045808+0300 INFO Shutdown complete.

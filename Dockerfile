@@ -13,8 +13,11 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Copy application code
 COPY app/ ./app/
 
-# Create logs directory and static directory
-RUN mkdir -p logs && mkdir -p static
+# Copy static directory with its contents
+COPY static/ ./static/
+
+# Create logs directory
+RUN mkdir -p logs
 
 # Expose the port the app runs on
 EXPOSE 8000
