@@ -109,6 +109,13 @@ class AlgoliaConfig:
                     "categories.name",
                     "keywords",
                     "tags",
+                    "pricing_type",
+                    "pricing_url",
+                    "url",
+                    "logo_url",
+                    "keywords",
+                    "category_id",
+                    "unique_id",
                 ],
                 # Configure custom ranking
                 "customRanking": [

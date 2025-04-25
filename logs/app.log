@@ -6129,3 +6129,96 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T09:06:24.162048+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
 2025-04-25T09:06:45.871027+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
 2025-04-25T09:07:10.447304+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:10:38.625815+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:11:46.619782+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:12:04.605362+0300 INFO Shutting down application...
+2025-04-25T09:12:04.845430+0300 INFO Database connections closed
+2025-04-25T09:12:04.845707+0300 INFO Shutdown complete.
+2025-04-25T09:12:08.237533+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:12:08.239533+0300 INFO Algolia client initialized successfully
+2025-04-25T09:12:09.415690+0300 INFO Setting up database...
+2025-04-25T09:12:13.638937+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:12:13.911749+0300 INFO Database setup completed successfully
+2025-04-25T09:12:13.913804+0300 INFO Database setup completed
+2025-04-25T09:12:13.913804+0300 INFO Seeding glossary terms...
+2025-04-25T09:12:14.097983+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:12:14.098982+0300 INFO Glossary seeding completed
+2025-04-25T09:12:14.099978+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:12:14.786777+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:12:15.386367+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:12:15.387605+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:12:19.214488+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:12:19.215488+0300 INFO Algolia client initialized successfully
+2025-04-25T09:12:20.254305+0300 INFO Setting up database...
+2025-04-25T09:12:22.457506+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:12:22.663032+0300 INFO Database setup completed successfully
+2025-04-25T09:12:22.664036+0300 INFO Database setup completed
+2025-04-25T09:12:22.664159+0300 INFO Seeding glossary terms...
+2025-04-25T09:12:22.867723+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:12:22.869726+0300 INFO Glossary seeding completed
+2025-04-25T09:12:22.870726+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:12:23.482880+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:12:23.686885+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:12:23.688886+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:12:25.530136+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:13:29.325418+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:13:54.311654+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:14:21.547845+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:14:51.654273+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:15:14.898780+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:15:33.433538+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:15:39.375843+0300 INFO Detected keywords in LLM response: ['AI for Marketing', 'Predictive Analytics', 'Customer Segmentation AI', 'Social Media Automation', 'Content Personalization AI']
+2025-04-25T09:15:39.378853+0300 INFO Performing keyword search: 'AI for Marketing, Predictive Analytics, Customer Segmentation AI, Social Media Automation, Content Personalization AI' on index 'taaft_tools'
+2025-04-25T09:19:05.249953+0300 INFO Shutting down application...
+2025-04-25T09:19:05.502553+0300 INFO Database connections closed
+2025-04-25T09:19:05.503478+0300 INFO Shutdown complete.
+2025-04-25T09:19:08.780387+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:19:08.781391+0300 INFO Algolia client initialized successfully
+2025-04-25T09:19:09.898240+0300 INFO Setting up database...
+2025-04-25T09:19:14.206214+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:19:14.513562+0300 INFO Database setup completed successfully
+2025-04-25T09:19:14.514562+0300 INFO Database setup completed
+2025-04-25T09:19:14.514562+0300 INFO Seeding glossary terms...
+2025-04-25T09:19:14.923306+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:19:14.924307+0300 INFO Glossary seeding completed
+2025-04-25T09:19:14.924307+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:19:15.845018+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:19:16.006694+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:19:16.007677+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:25:04.181771+0300 INFO Shutting down application...
+2025-04-25T09:25:04.618932+0300 INFO Database connections closed
+2025-04-25T09:25:04.619694+0300 INFO Shutdown complete.
+2025-04-25T09:25:07.880771+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:25:07.882746+0300 INFO Algolia client initialized successfully
+2025-04-25T09:25:08.993901+0300 INFO Setting up database...
+2025-04-25T09:25:12.605680+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:25:12.854784+0300 INFO Database setup completed successfully
+2025-04-25T09:25:12.854984+0300 INFO Database setup completed
+2025-04-25T09:25:12.854984+0300 INFO Seeding glossary terms...
+2025-04-25T09:25:13.117334+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:25:13.118182+0300 INFO Glossary seeding completed
+2025-04-25T09:25:13.118182+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:25:14.483394+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:25:14.652640+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:25:14.653732+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:26:40.075284+0300 INFO Shutting down application...
+2025-04-25T09:26:40.466490+0300 INFO Database connections closed
+2025-04-25T09:26:40.467498+0300 INFO Shutdown complete.
+2025-04-25T09:26:43.560127+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:26:43.561128+0300 INFO Algolia client initialized successfully
+2025-04-25T09:26:44.671166+0300 INFO Setting up database...
+2025-04-25T09:26:49.640661+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:26:49.884667+0300 INFO Database setup completed successfully
+2025-04-25T09:26:49.885941+0300 INFO Database setup completed
+2025-04-25T09:26:49.885941+0300 INFO Seeding glossary terms...
+2025-04-25T09:26:50.192613+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:26:50.193616+0300 INFO Glossary seeding completed
+2025-04-25T09:26:50.194977+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:26:50.909121+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:26:51.113360+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:26:51.114364+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:28:38.903264+0300 INFO Shutting down application...
+2025-04-25T09:28:39.127149+0300 INFO Database connections closed
+2025-04-25T09:28:39.128148+0300 INFO Shutdown complete.
+2025-04-25T09:29:10.415305+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:29:10.417310+0300 INFO Algolia client initialized successfully

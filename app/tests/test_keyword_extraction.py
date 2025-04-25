@@ -22,11 +22,11 @@ async def test_keyword_extraction():
     test_cases = [
         {
             "name": "Standard format",
-            "text": """Here are some keywords to help you find AI tools that match your needs: Keywords = ['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next?""",
+            "text": """Here are some keywords to help you find AI tools that match your needs: Keywords = ['Image Generation', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next?""",
         },
         {
             "name": "Alternative format",
-            "text": """Based on your needs, here are some keywords: ['AI Chatbots', 'Customer Service', 'Retail Solutions'].""",
+            "text": """Based on your needs, here are some keywords: ['Image Generation', 'Customer Service', 'Retail Solutions'].""",
         },
         {
             "name": "No keywords",
@@ -43,6 +43,7 @@ async def test_keyword_extraction():
         result = await llm_service.detect_and_extract_keywords(test_case["text"])
 
         if result:
+            print(f"result Bomboclat: {result}")
             print(
                 f"Keywords detected! Search results: {len(result.get('hits', []))} hits"
             )
