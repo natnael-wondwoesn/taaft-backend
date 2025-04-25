@@ -812,16 +812,16 @@ async def get_keywords(
     """
     query = {}
 
-    # Apply minimum frequency filter if specified
-    if min_frequency > 0:
-        query["frequency"] = {"$gte": min_frequency}
+    # # Apply minimum frequency filter if specified
+    # if min_frequency > 0:
+    #     query["frequency"] = {"$gte": min_frequency}
 
-    # Create cursor
+    # # Create cursor
     cursor = keywords_collection.find(query).skip(skip).limit(limit)
 
-    # Apply sorting if requested
-    if sort_by_frequency:
-        cursor = cursor.sort("frequency", -1)  # Sort by frequency descending
+    # # Apply sorting if requested
+    # if sort_by_frequency:
+    #     cursor = cursor.sort("frequency", -1)  # Sort by frequency descending
 
     # Process results
     keywords_list = []
@@ -831,14 +831,6 @@ async def get_keywords(
         # while the get_tools function uses 'word'
         keyword_value = keyword.get("keyword") or keyword.get("word")
 
-        keywords_list.append(
-            {
-                "keyword": keyword_value,
-                "frequency": keyword.get("frequency", 0),
-                "tools": keyword.get("tools", []),
-                "created_at": keyword.get("created_at"),
-                "updated_at": keyword.get("updated_at"),
-            }
-        )
+        keywords_list.append(keyword_value)
 
     return keywords_list

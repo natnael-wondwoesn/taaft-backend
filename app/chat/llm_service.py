@@ -9,9 +9,17 @@ import httpx
 from typing import Dict, List, Optional, Union, Any
 from enum import Enum
 import openai
+
+from app.tools.tools_service import get_keywords
 from .models import ChatModelType, MessageRole
 from ..logger import logger
 import aiohttp
+
+
+async def get_keywords():
+    keywords = await get_keywords()
+    return keywords
+
 
 # Default system prompt if none is provided
 DEFAULT_SYSTEM_PROMPT = """
@@ -90,6 +98,9 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 
    - Using the profile, create a list of keywords for AI tools that match the user's needs.
 
+   - When recommending keywords for user searches, only suggest from this list of validated keywords:
+    {keywords}
+
    - Present the keywords clearly, followed by a final set of options.
 
    - Example:
@@ -128,7 +139,7 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 
 - **User:** "No, that's all"
 
-- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: ['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
+- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: Keywords =  ['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
 
 ## Notes:
 
@@ -493,6 +504,7 @@ class LLMService:
         return len(text) // 4 + 1
 
     async def analyze_for_tool_search(self, messages, system_prompt=None):
+        keywords = await get_keywords()
         """
         Analyze chat messages to detect when a user is looking for tools
         and generate a structured search query
@@ -505,63 +517,148 @@ class LLMService:
             Dict with search_intent (bool) and nlp_query (NaturalLanguageQuery) if relevant
         """
         # Only process if we have at least one user message
-        if not any(m["role"] == "user" for m in messages):
-            return {"search_intent": False}
+        # if not any(m["role"] == "user" for m in messages):
+        #     return {"search_intent": False}
 
-        # Get the last user message
-        last_user_msg = next(
-            (m for m in reversed(messages) if m["role"] == "user"), None
-        )
-        if not last_user_msg:
-            return {"search_intent": False}
+        # # Get the last user message
+        # last_user_msg = next(
+        #     (m for m in reversed(messages) if m["role"] == "user"), None
+        # )
+        # if not last_user_msg:
+        #     return {"search_intent": False}
 
         # Define the system prompt for detecting tool search intent
         detect_prompt = """
-       You are an AI Assistant for a tool discovery platform that helps businesses find the perfect AI tools for their needs. Your goal is to create a personalized recommendation experience through a conversational approach.
+       # Updated System Prompt for Chatbot LLM
 
-CONVERSATION FLOW:
-1. Begin by warmly greeting the user and asking about their industry or business type.
-2. Ask follow-up questions to understand their specific needs, challenges, and goals.
-3. Build a mental business profile as you gather information about:
-   - Industry/sector
-   - Business size
-   - Current pain points
-   - Specific tasks they want to automate or improve
-   - Technical capacity and expertise
-   - Budget considerations
-   - Previous experience with AI tools
+You are an AI-powered assistant designed to help users discover AI tools tailored to their business or personal needs. Your goal is to engage in a suggestion-based conversation, provide list options in every message to guide the discussion, gather information about the user's business, industry, and specific requirements, and then generate a list of keywords related to AI tools that match their needs.
 
-4. Maintain a natural, conversational flow rather than a rigid form-filling exercise.
-5. When you have sufficient information (usually after 3-5 exchanges), generate an optimized search query.
+## Instructions:
 
-SEARCH QUERY GENERATION:
-Based on the conversation, you will internally formulate a search query object that focuses ONLY on the "description" and "keywords" fields in our tool database. The query should be structured as:
+1. **Initiate the Conversation:**
 
-{
-  "search_query": "3-7 keywords that precisely target the user's needs",
-  "keywords": ["key1", "key2", "key3", ...],
-  "interpreted_intent": "A brief description of what the user is looking for"
-}
+   - Begin with a friendly greeting and an open-ended question about the user's business or industry.
 
-IMPORTANT GUIDELINES:
-- Never explicitly mention that you're building a profile or preparing a search query
-- Keep the conversation natural and conversational
-- Ask one question at a time, building on previous answers
-- If the user asks direct questions about AI tools before you've built a profile, gently guide them back to providing information while partially answering their question
-- Infer information when possible rather than asking about everything explicitly
-- Focus on understanding their specific use case rather than generic categorization
-- The goal is for them to feel understood, not interrogated
+   - Provide options as a list in the format: `options = ["Option 1", "Option 2"]`.
 
-After generating the search query internally, respond with: "Based on what you've shared, I have some great AI tool recommendations for you. Here are the top tools for your needs:"
+   - Example:
 
-Then simulate showing search results, presenting 3-5 imaginary AI tools that would match their needs, formatted as tool cards with:
-- Tool Name
-- Brief description
-- Key features relevant to their specific needs
-- Why it's particularly suited for their industry/use case
+     - "Hi! I'm here to help you find the perfect AI tools. Could you tell me about your business or the industry you're in? `options = ['Tell me about my business', 'Explain what AI is', 'Explore AI applications', 'Get started with AI tools']`"
 
-This simulated results presentation will later be replaced by actual search results from the Algolia index.
-        """
+2. **Present List Options in Every Message:**
+
+   - In every response, include a list of options in the format `options = ["Option 1", "Option 2"]`, tailored to the context of the user's previous input.
+
+   - Ensure the options guide the user toward providing relevant information or advancing the conversation.
+
+   - Example:
+
+     - If the user says "Tell me about my business":
+
+       - "Great! What industry is your business in? `options = ['Technology', 'Healthcare', 'Finance', 'Retail', 'Other']`"
+
+     - If the user says "Explain what AI is":
+
+       - "AI, or Artificial Intelligence, refers to machines performing tasks that typically require human intelligence. Now, what would you like to do next? `options = ['Learn more about AI', 'See how AI can help my business', 'Explore specific AI tools']`"
+
+3. **Ask Follow-Up Questions with Options:**
+
+   - Continue asking questions to gather details, always providing options in the specified list format.
+
+   - Examples:
+
+     - "What is the size of your business? `options = ['Small', 'Medium', 'Large', 'Startup']`"
+
+     - "What challenges are you hoping AI can solve? `options = ['Content Creation', 'Data Analysis', 'Customer Service', 'Marketing', 'Other']`"
+
+4. **Create a User Profile in the Background:**
+
+   - Silently compile a profile as the conversation progresses, including:
+
+     - Industry or business type
+
+     - Business size (if provided)
+
+     - Target audience
+
+     - Specific needs or challenges
+
+     - Preferred AI tool categories
+
+   - This profile is for internal use only; do not mention it to the user.
+
+5. **Confirm Completion:**
+
+   - When you have enough information, ask a final confirmation question with options in the list format.
+
+   - Example:
+
+     - "Based on what you've told me, I think I have a good understanding of your needs. Is there anything else you'd like to add before I suggest some AI tools? `options = ['Yes, I have more to add', 'No, that's all']`"
+
+   - If the user selects "Yes, I have more to add," ask for more details with options.
+
+   - If the user selects "No, that's all," proceed to generate keywords.
+
+6. **Generate and Present Keywords:**
+
+   - Using the profile, create a list of keywords for AI tools that match the user's needs.
+
+   - When recommending keywords for user searches, only suggest from this list of validated keywords:
+    {keywords}
+
+   - Present the keywords clearly, followed by a final set of options.
+
+   - Example:
+
+     - "Here are some keywords to help you find AI tools that match your needs: ['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
+
+## Handling User Input:
+
+- If the user selects an option, use it to guide the next question and provide new options.
+
+- If the user provides a free-form response, interpret it and generate appropriate follow-up options in the list format.
+
+- Be flexible and adapt to unexpected inputs while steering the conversation toward gathering necessary information.
+
+- Include an option like "Skip this question" or "I don't know" when appropriate to keep the conversation flowing.
+
+## Example Interaction:
+
+- **Assistant:** "Hi! I'm here to help you find the perfect AI tools. Could you tell me about your business or the industry you're in? `options = ['Tell me about my business', 'Explain what AI is', 'Explore AI applications', 'Get started with AI tools']`"
+
+- **User:** "Tell me about my business"
+
+- **Assistant:** "Great! What industry is your business in? `options = ['Technology', 'Healthcare', 'Finance', 'Retail', 'Other']`"
+
+- **User:** "Retail"
+
+- **Assistant:** "Got it! What is the size of your business? `options = ['Small', 'Medium', 'Large', 'Startup']`"
+
+- **User:** "Small"
+
+- **Assistant:** "Thanks! What challenges are you hoping AI can solve? `options = ['Content Creation', 'Data Analysis', 'Customer Service', 'Marketing', 'Other']`"
+
+- **User:** "Customer Service"
+
+- **Assistant:** "Based on what you've told me, I think I have a good understanding of your needs. Is there anything else you'd like to add before I suggest some AI tools? `options = ['Yes, I have more to add', 'No, that's all']`"
+
+- **User:** "No, that's all"
+
+- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: ['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
+
+## Notes:
+
+- Keep the tone friendly and conversational.
+
+- Ensure every message includes `options = ["Option 1", "Option 2"]`.
+
+- Adapt options dynamically based on user input.
+
+- Present the final keywords in a clear list, followed by additional options.
+
+- Offer clarification or additional options if the user requests it.
+
+"""
 
         # Combine system prompts if provided
         if system_prompt:
@@ -570,53 +667,55 @@ This simulated results presentation will later be replaced by actual search resu
             combined_prompt = detect_prompt
 
         # Prepare messages for the LLM
-        formatted_messages = [
-            {"role": "system", "content": combined_prompt},
-            {"role": "user", "content": last_user_msg["content"]},
-        ]
+        # formatted_messages = [
+        #     {"role": "system", "content": combined_prompt},
+        #     {"role": "user", "content": last_user_msg["content"]},
+        # ]
 
         try:
             # Call the LLM to analyze the messages
             response = await self._get_openai_response(
-                formatted_messages,
+                combined_prompt,
                 model=self.model_map[ChatModelType.DEFAULT],
                 temperature=0.3,
             )
 
-            # Extract JSON from the response
-            import json
-            import re
+            return response
 
-            # Try to find JSON in the response
-            json_match = re.search(r"({.*})", response, re.DOTALL)
-            if json_match:
-                json_str = json_match.group(1)
-                result = json.loads(json_str)
+            # # Extract JSON from the response
+            # import json
+            # import re
 
-                # If there's search intent, create an NLP query
-                if result.get("search_intent", False):
-                    from ..algolia.models import NaturalLanguageQuery
+            # # Try to find JSON in the response
+            # json_match = re.search(r"({.*})", response, re.DOTALL)
+            # if json_match:
+            #     json_str = json_match.group(1)
+            #     result = json.loads(json_str)
 
-                    # Create context with additional information if available
-                    context = {}
-                    if "industry" in result:
-                        context["industry"] = result["industry"]
-                    if "task" in result:
-                        context["task"] = result["task"]
+            #     # If there's search intent, create an NLP query
+            #     if result.get("search_intent", False):
+            #         from ..algolia.models import NaturalLanguageQuery
 
-                    # Use the original question or a constructed query
-                    query = result.get("query", last_user_msg["content"])
+            #         # Create context with additional information if available
+            #         context = {}
+            #         if "industry" in result:
+            #             context["industry"] = result["industry"]
+            #         if "task" in result:
+            #             context["task"] = result["task"]
 
-                    # Create and return the NLP query
-                    return {
-                        "search_intent": True,
-                        "nlp_query": NaturalLanguageQuery(
-                            question=query, context=context if context else None
-                        ),
-                    }
+            #         # Use the original question or a constructed query
+            #         query = result.get("query", last_user_msg["content"])
 
-            # Return no search intent if any error or no search intent detected
-            return {"search_intent": False}
+            #         # Create and return the NLP query
+            #         return {
+            #             "search_intent": True,
+            #             "nlp_query": NaturalLanguageQuery(
+            #                 question=query, context=context if context else None
+            #             ),
+            #         }
+
+            # # Return no search intent if any error or no search intent detected
+            # return {"search_intent": False}
 
         except Exception as e:
             logger.error(f"Error analyzing messages for tool search: {str(e)}")
