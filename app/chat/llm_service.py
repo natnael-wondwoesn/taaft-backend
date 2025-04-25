@@ -9,16 +9,26 @@ import httpx
 from typing import Dict, List, Optional, Union, Any
 from enum import Enum
 import openai
+import re
 
-from app.tools.tools_service import get_keywords
+from app.tools.tools_service import get_keywords as tools_get_keywords
 from .models import ChatModelType, MessageRole
 from ..logger import logger
 import aiohttp
+from app.algolia.search import algolia_search
 
 
 async def get_keywords():
-    keywords = await get_keywords()
-    return keywords
+    """
+    Get keywords from tools service, handling any errors
+    that might occur during import or function call
+    """
+    try:
+        keywords = await tools_get_keywords()
+        return keywords
+    except Exception as e:
+        logger.error(f"Error getting keywords from tools service: {str(e)}")
+        return []
 
 
 # Default system prompt if none is provided
@@ -139,7 +149,7 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 
 - **User:** "No, that's all"
 
-- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: Keywords =  ['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
+- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: keywords =['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
 
 ## Notes:
 
@@ -182,6 +192,54 @@ class LLMService:
         if self.openai_api_key:
             openai.api_key = self.openai_api_key
 
+    async def detect_and_extract_keywords(self, response_text):
+        """
+        Detect keywords in LLM response and trigger Algolia search if found.
+
+        This function looks for the pattern where keywords are listed in the format:
+        'Keywords = ['keyword1', 'keyword2', ...]'
+        or just plain keywords: ['keyword1', 'keyword2', ...]
+
+        Args:
+            response_text: Text from LLM response
+
+        Returns:
+            Dictionary with search results if keywords found, None otherwise
+        """
+        # Pattern to match 'Keywords = [...]' in the response
+        keywords_pattern = r"Keywords\s*=\s*\[(.*?)\]"
+        match = re.search(keywords_pattern, response_text)
+
+        if not match:
+            # Alternative pattern to match just the keywords list
+            # This could match something like "here are some keywords: ['x', 'y', 'z']"
+            alt_pattern = r"keywords.*?\[(.*?)\]"
+            match = re.search(alt_pattern, response_text, re.IGNORECASE)
+
+        if match:
+            # Extract the keywords from the match
+            keywords_str = match.group(1)
+            # Parse the keywords string to get individual keywords
+            keywords = []
+            for keyword in re.findall(r"'(.*?)'|\"(.*?)\"", keywords_str):
+                # Each match is a tuple with one empty element
+                keyword = next(filter(None, keyword), None)
+                if keyword:
+                    keywords.append(keyword)
+
+            if keywords:
+                logger.info(f"Detected keywords in LLM response: {keywords}")
+                # Call Algolia search with the extracted keywords
+                try:
+                    search_results = await algolia_search.perform_keyword_search(
+                        keywords
+                    )
+                    return search_results
+                except Exception as e:
+                    logger.error(f"Error performing Algolia search: {str(e)}")
+
+        return None
+
     async def get_llm_response(
         self, messages, model_type=ChatModelType.DEFAULT, system_prompt=None
     ):
@@ -198,17 +256,24 @@ class LLMService:
 
         # Use appropriate model client based on model_type
         if model_type == ChatModelType.GPT_4:
-            return await self._get_openai_response(formatted_messages, model="gpt-4")
+            response = await self._get_openai_response(
+                formatted_messages, model="gpt-4"
+            )
         elif model_type == ChatModelType.CLAUDE:
-            return await self._get_anthropic_response(formatted_messages)
+            response = await self._get_anthropic_response(formatted_messages)
         elif model_type == ChatModelType.LLAMA:
-            return await self._get_llama_response(formatted_messages)
+            response = await self._get_llama_response(formatted_messages)
         else:
             # Default to a configured fallback model
             fallback_model = os.getenv("DEFAULT_LLM_MODEL", "gpt-3.5-turbo")
-            return await self._get_openai_response(
+            response = await self._get_openai_response(
                 formatted_messages, model=fallback_model
             )
+
+        # Check if the response contains keywords and trigger Algolia search
+        await self.detect_and_extract_keywords(response)
+
+        return response
 
     async def get_streaming_llm_response(
         self, messages, model_type=ChatModelType.DEFAULT, system_prompt=None
@@ -224,19 +289,25 @@ class LLMService:
 
         logger.info(f"Getting streaming LLM response with model: {model_type}")
 
+        # Buffer to collect the full response for processing
+        full_response = ""
+
         # Use appropriate model client based on model_type
         if model_type == ChatModelType.GPT_4:
             async for chunk in self._get_openai_streaming_response(
                 formatted_messages, model="gpt-4"
             ):
+                full_response += chunk
                 yield chunk
         elif model_type == ChatModelType.CLAUDE:
             async for chunk in self._get_anthropic_streaming_response(
                 formatted_messages
             ):
+                full_response += chunk
                 yield chunk
         elif model_type == ChatModelType.LLAMA:
             async for chunk in self._get_llama_streaming_response(formatted_messages):
+                full_response += chunk
                 yield chunk
         else:
             # Default to a configured fallback model
@@ -244,7 +315,11 @@ class LLMService:
             async for chunk in self._get_openai_streaming_response(
                 formatted_messages, model=fallback_model
             ):
+                full_response += chunk
                 yield chunk
+
+        # After streaming is complete, check for keywords and trigger Algolia search
+        await self.detect_and_extract_keywords(full_response)
 
     async def _get_openai_streaming_response(self, messages, model="gpt-3.5-turbo"):
         """Get a streaming response from OpenAI"""

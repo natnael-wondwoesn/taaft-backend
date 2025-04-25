@@ -94,7 +94,7 @@ class AlgoliaSearch:
         search_index = index_name or self.config.tools_index_name
 
         # Join keywords into a space-separated search query
-        search_query = " ".join(keywords) if keywords else ""
+        search_query = ", ".join(keywords) if keywords else ""
 
         logger.info(
             f"Performing keyword search: '{search_query}' on index '{search_index}'"
@@ -113,23 +113,40 @@ class AlgoliaSearch:
 
         try:
             # Construct the search request
-            search_args = {
-                "requests": [
-                    {
-                        "indexName": search_index,
-                        "query": search_query,
-                        "page": page,
-                        "hitsPerPage": per_page,
-                    }
-                ]
+            # print(f"{search_query}")
+            # Convert the search query to the specified format with a placeholder popularity value
+            # Using a fixed popularity value of 2.5658 as specified in the instructions
+            # search_query = list(search_query.join())
+            print(f"search_index: {search_query}")
+            params = {
+                "params": {
+                    "index_name": search_index,
+                    "query": search_query,
+                    "page": page,
+                    "hitsPerPage": per_page,
+                }
             }
 
             # Execute search using Algolia client
-            results = self.config.client.multiple_queries(search_args)
+            results = self.config.client.search_single_index(
+                index_name=search_index, search_params={"query": f"{search_query}"}
+            )
 
-            # Return the results from the first request
-            if results and "results" in results and len(results["results"]) > 0:
-                return results["results"][0]
+            print(f"results: {results.nb_hits}")
+
+            # Process the response based on its actual structure
+            # The response contains direct search results without a "results" field
+            if results:
+                # Extract the relevant search result fields
+                return {
+                    "hits": results.hits,
+                    "nbHits": results.nb_hits,
+                    "page": results.page,
+                    "nbPages": results.nb_pages,
+                    "processingTimeMS": results.processing_time_ms,
+                    "query": results.query,
+                    "params": results.params,
+                }
             else:
                 logger.warning("No results found or invalid response format.")
                 return {
