@@ -6109,3 +6109,23 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-25T09:04:29.918258+0300 INFO Shutting down application...
 2025-04-25T09:04:30.131243+0300 INFO Database connections closed
 2025-04-25T09:04:30.132252+0300 INFO Shutdown complete.
+2025-04-25T09:04:33.770120+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-25T09:04:33.771780+0300 INFO Algolia client initialized successfully
+2025-04-25T09:04:34.806623+0300 INFO Setting up database...
+2025-04-25T09:04:38.587502+0300 INFO Connected to MongoDB for setup
+2025-04-25T09:04:38.792947+0300 INFO Database setup completed successfully
+2025-04-25T09:04:38.793503+0300 INFO Database setup completed
+2025-04-25T09:04:38.794501+0300 INFO Seeding glossary terms...
+2025-04-25T09:04:39.100157+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-25T09:04:39.102154+0300 INFO Glossary seeding completed
+2025-04-25T09:04:39.102154+0300 INFO Configuring Algolia indexes...
+2025-04-25T09:04:40.125020+0300 INFO Algolia tools index configured successfully
+2025-04-25T09:04:40.329125+0300 INFO Algolia glossary index configured successfully
+2025-04-25T09:04:40.329899+0300 INFO Algolia indexes configured successfully
+2025-04-25T09:04:41.888267+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:05:04.418159+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:05:24.667933+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:05:42.690802+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:06:24.162048+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:06:45.871027+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-25T09:07:10.447304+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
