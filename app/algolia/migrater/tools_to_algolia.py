@@ -28,7 +28,7 @@ load_dotenv()
 # Define the Algolia connection parameters
 algolia_app_id = os.getenv("ALGOLIA_APP_ID")
 algolia_admin_key = os.getenv("ALGOLIA_ADMIN_KEY")
-algolia_index_name = os.getenv("ALGOLIA_TOOLS_INDEX", "taaft_tools")
+algolia_index_name = os.getenv("ALGOLIA_TOOLS_INDEX", "tools_index")
 
 # MongoDB connection parameters
 mongodb_url = os.getenv("MONGODB_URL")

@@ -318,27 +318,48 @@ async def stream_llm_response(
             "status": "streaming",
         }
 
+        formatted_data = None
+        message_id = str(ObjectId())
+
         async for chunk in llm_service.get_streaming_llm_response(
             messages=formatted_messages,
             model_type=model_type,
             system_prompt=system_prompt,
         ):
-            # Add new content to the accumulated response
-            streamed_chunks.append(chunk)
-            response_data["content"] = "".join(streamed_chunks)
+            # Check if this is a formatted_data message
+            if isinstance(chunk, dict) and chunk.get("type") == "formatted_data":
+                formatted_data = chunk.get("data")
+                # Send the formatted data in a separate message
+                formatted_data_response = {
+                    "type": "formatted_data",
+                    "chat_id": chat_id,
+                    "user_id": user_id,
+                    "data": formatted_data,
+                }
+                for conn in chat_connections:
+                    await manager.send_personal_json(
+                        formatted_data_response, conn["websocket"]
+                    )
+            else:
+                # Add new content to the accumulated response
+                streamed_chunks.append(chunk)
+                response_data["content"] = "".join(streamed_chunks)
 
-            # Send the updated response to all connections for this chat
-            for conn in chat_connections:
-                await manager.send_personal_json(response_data, conn["websocket"])
+                # Send the updated response to all connections for this chat
+                for conn in chat_connections:
+                    await manager.send_personal_json(response_data, conn["websocket"])
 
         # Mark the response as complete
         response_data["status"] = "complete"
+        response_data["message_id"] = message_id
+        if formatted_data:
+            response_data["formatted_data"] = formatted_data
 
         # Send final response to all connections
         for conn in chat_connections:
             await manager.send_personal_json(response_data, conn["websocket"])
 
-        # Save the complete response to the database
+        # Save assistant's response to database
         assistant_message = {
             "role": MessageRole.ASSISTANT,
             "content": "".join(streamed_chunks),
@@ -347,7 +368,9 @@ async def stream_llm_response(
             "metadata": {
                 "model": model_type,
                 "tokens": llm_service.estimate_tokens("".join(streamed_chunks)),
+                "formatted_data": formatted_data,
             },
+            "_id": ObjectId(message_id),
         }
         await chat_db.add_message(assistant_message)
 

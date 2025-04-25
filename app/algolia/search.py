@@ -93,6 +93,8 @@ class AlgoliaSearch:
         # Use the provided index name or fall back to the default tools index
         search_index = index_name or self.config.tools_index_name
 
+        print(f"keywords: {keywords}")
+
         # Join keywords into a space-separated search query
         search_query = ", ".join(keywords) if keywords else ""
 
@@ -124,12 +126,21 @@ class AlgoliaSearch:
                     "query": search_query,
                     "page": page,
                     "hitsPerPage": per_page,
+                    "attributesToRetrieve": ["*"],
                 }
             }
 
             # Execute search using Algolia client
             results = self.config.client.search_single_index(
-                index_name=search_index, search_params={"query": f"{search_query}"}
+                index_name=search_index,
+                search_params={
+                    "query": f"{search_query}",
+                    "attributesToRetrieve": ["*"],
+                    "advancedSyntax": True,
+                    "typoTolerance": True,
+                    "removeWordsIfNoResults": "allOptional",
+                    "hitsPerPage": 1000,  # Increase to get all available hits
+                },
             )
 
             print(f"results: {results.nb_hits}")
@@ -375,6 +386,31 @@ class AlgoliaSearch:
         fake_messages = [{"role": "user", "content": text}]
         return self.extract_keywords_from_chat(fake_messages)
 
+    async def get_known_keywords_from_database(self) -> List[str]:
+        """
+        Fetch all keywords from the database keywords collection.
+
+        Returns:
+            List of all keywords stored in the database
+        """
+        from ..database.database import keywords
+
+        # Fetch all keywords from the database
+        cursor = keywords.find({})
+
+        # Process results
+        keywords_list = []
+        async for keyword_doc in cursor:
+            # Check the field name - could be either 'keyword' or 'word' depending on
+            # which function created it. The update_tool_keywords uses 'keyword',
+            # while the get_tools function uses 'word'
+            keyword_value = keyword_doc.get("keyword") or keyword_doc.get("word")
+
+            if keyword_value and keyword_value not in keywords_list:
+                keywords_list.append(keyword_value)
+
+        return keywords_list
+
 
 # Create a singleton instance of AlgoliaSearch
 algolia_search = AlgoliaSearch()
@@ -398,8 +434,9 @@ async def format_search_results_summary(search_results: Dict[str, Any]) -> str:
         num_hits = search_results.get("nbHits", 0)
         hits = search_results.get("hits", [])
 
+    print(f"hits: {hits}")
     # Create the initial greeting message
-    summary = f"Hey! Great News! I have found {num_hits} tools to help you from our directory.\n\n"
+    summary = f"Hey! Great News! I have found Plenty of tools to help you from our directory.\n\n"
 
     # If no results were found, provide a message
     if num_hits == 0:

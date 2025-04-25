@@ -73,21 +73,12 @@ class AlgoliaSearch:
     ) -> Dict[str, Any]:
         """
         Perform a search using keywords from chat conversation
-
-        Args:
-            keywords: List of keywords extracted from the conversation
-            index_name: Optional index name to override the default tools index
-            page: Page number (0-based for Algolia)
-            per_page: Number of results per page
-
-        Returns:
-            Dictionary containing search results from Algolia
         """
         # Use the provided index name or fall back to the default tools index
         search_index = index_name or self.config.tools_index_name
 
         # Join keywords into a space-separated search query
-        search_query = " ".join(keywords) if keywords else ""
+        search_query = ", ".join(keywords) if keywords else ""
 
         logger.info(
             f"Performing keyword search: '{search_query}' on index '{search_index}'"
@@ -105,33 +96,62 @@ class AlgoliaSearch:
             }
 
         try:
-            # Construct the search request
-            search_args = {
-                "requests": [
-                    {
-                        "indexName": search_index,
-                        "query": search_query,
-                        "page": page,
-                        "hitsPerPage": per_page,
-                    }
-                ]
+            # Execute search using Algolia client with explicit attribute retrieval
+            results = self.config.client.search_single_index(
+                index_name=search_index,
+                search_params={
+                    "query": f"{search_query}",
+                    "attributesToRetrieve": ["*"],  # Request all attributes
+                    "page": page,
+                    "hitsPerPage": per_page,
+                },
+            )
+
+            # Extract full object data from Hit objects
+            full_hits = []
+            if hasattr(results, "hits") and results.hits:
+                for hit in results.hits:
+                    # Extract all available attributes from the Hit object
+                    hit_dict = {}
+
+                    # First, add any direct attributes from the hit object
+                    for attr_name in dir(hit):
+                        # Skip private/special attributes and methods
+                        if attr_name.startswith("_") or callable(
+                            getattr(hit, attr_name)
+                        ):
+                            continue
+
+                        hit_dict[attr_name] = getattr(hit, attr_name)
+
+                    # Some Hit objects may store actual data in _source or _fields
+                    if hasattr(hit, "_source"):
+                        hit_dict.update(hit._source)
+
+                    # Add the hit to our results
+                    full_hits.append(hit_dict)
+
+            # Build the complete response with enhanced hit data
+            response = {
+                "hits": full_hits if full_hits else results.hits,
+                "nbHits": results.nb_hits if hasattr(results, "nb_hits") else 0,
+                "page": results.page if hasattr(results, "page") else page,
+                "nbPages": results.nb_pages if hasattr(results, "nb_pages") else 0,
+                "processingTimeMS": (
+                    results.processing_time_ms
+                    if hasattr(results, "processing_time_ms")
+                    else 0
+                ),
+                "query": results.query if hasattr(results, "query") else search_query,
+                "params": results.params if hasattr(results, "params") else "",
             }
 
-            # Execute search using Algolia client
-            results = self.config.client.multiple_queries(search_args)
+            # For debugging
+            logger.info(f"Algolia search returned {response['nbHits']} results")
+            if response["hits"] and len(response["hits"]) > 0:
+                logger.info(f"First hit keys: {list(response['hits'][0].keys())}")
 
-            # Return the results from the first request
-            if results and "results" in results and len(results["results"]) > 0:
-                return results["results"][0]
-            else:
-                logger.warning("No results found or invalid response format.")
-                return {
-                    "hits": [],
-                    "nbHits": 0,
-                    "page": page,
-                    "nbPages": 0,
-                    "processingTimeMS": 0,
-                }
+            return response
 
         except Exception as e:
             logger.error(f"Error performing keyword search: {str(e)}")

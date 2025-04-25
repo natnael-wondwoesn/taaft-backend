@@ -33,7 +33,6 @@ async def get_keywords():
 
 # Default system prompt if none is provided
 DEFAULT_SYSTEM_PROMPT = """
-
 # Updated System Prompt for Chatbot LLM
 
 You are an AI-powered assistant designed to help users discover AI tools tailored to their business or personal needs. Your goal is to engage in a suggestion-based conversation, provide list options in every message to guide the discussion, gather information about the user's business, industry, and specific requirements, and then generate a list of keywords related to AI tools that match their needs.
@@ -109,7 +108,7 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
    - Using the profile, create a list of keywords for AI tools that match the user's needs.
 
    - When recommending keywords for user searches, only suggest from this list of validated keywords:
-    {keywords}
+   ["42signals", "ads", "agent", "aigpt", "ailancer", "aiter", "aliexpress", "allegro", "amazon", "anyone", "apply", "art", "artistic", "artwork", "assist", "assistant", "audio-to-audio", "automation", "automina", "avumi", "beautygence", "bladerunner", "bounding boxes", "brainstroming", "branchbob", "business automation", "chaibar", "chat model", "chatbot", "chatbots", "collaboration", "color match", "commercial licensing", "communication", "Content creation", "copymonkey", "copysmith", "costumeplay", "creative", "custom AI", "Data Analysis", "DeepSeek", "depikt", "descrb", "describely", "description", "designs", "document", "dressme", "drive", "easylist", "easylisting", "estate", "examgenie", "faishion", "fashion", "fashn", "fitting", "free", "generator", "gliastudio", "Google", "gpt", "gremlin", "helpjuice", "heybeauty", "heygen", "hyperwrite", "hyrable", "image generation", "image processing", "image segmentation", "imagine", "job", "kaiber", "knowbase", "kome", "korbit", "language model", "leadscripts", "lista", "listing", "listingcopy", "Llama-3", "loom", "magickpen", "magicx", "manga", "manus", "Marketing", "mask creation", "mcp", "memfree", "mentor", "mitra", "model", "monai", "multimodal", "NLP", "Nous Research", "object detection", "oner", "open-source", "openai", "optimization", "optimyzee", "outfit", "pangea", "paperclip", "phonepi", "photoflux", "playground", "prodescription", "produced", "product", "real", "reality", "resume", "roastlinkedin", "room", "saveday", "screensnapai", "seekmydomain", "sellerpic", "shopgpt", "simplified", "smartscout", "Social media", "sora", "speech synthesis", "storipress", "strategy", "studio", "studios", "stylist", "supercreator", "sus", "T4 GPU", "taskade", "tenali", "text generation", "text-to-image", "that", "thesify", "tiaviz", "url", "videogen", "virtual", "web", "Well-being", "word", "writing", "AI", "AI art", "AI images", "AI interaction", "AI journals", "AI memes", "AI model", "AI models", "AI tools", "AI voice generation", "AI workloads", "AI-generated faces", "Babes 2.0", "DRAGON", "Entertainment", "Gemma 3", "Gmail", "HiDream-I1", "Journaling", "Kimi-VL", "LKM technology", "LLMs", "Llama 3.3", "Meme battles", "MoE", "Ollama", "Outlook", "PhoBERT", "Vietnamese NLP", "3D model"]
 
    - Present the keywords clearly, followed by a final set of options.
 
@@ -149,7 +148,7 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 
 - **User:** "No, that's all"
 
-- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: keywords =['AI Chatbots', 'Customer Service Automation', 'Retail AI Solutions', 'Natural Language Processing']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
+- **Assistant:** "Here are some keywords to help you find AI tools that match your needs: keywords =['chatbot', 'customer AI', 'automation', 'assistant', 'business automation']. What would you like to do next? `options = ['Explore these keywords', 'Add more details', 'Start over']`"
 
 ## Notes:
 
@@ -230,9 +229,10 @@ class LLMService:
             if keywords:
                 logger.info(f"Detected keywords in LLM response: {keywords}")
                 # Call Algolia search with the extracted keywords
+                print(f"keywords 123: {keywords}")
                 try:
                     search_results = await algolia_search.perform_keyword_search(
-                        keywords
+                        keywords, per_page=1000  # Ensure we get all available hits
                     )
                     return search_results
                 except Exception as e:
@@ -271,12 +271,20 @@ class LLMService:
             )
 
         # Check if the response contains keywords and trigger Algolia search
-        res = await self.detect_and_extract_keywords(response)
-        if res:
-            result = await format_search_results_summary(res)
-            return result
+        search_results = await self.detect_and_extract_keywords(response)
+        if search_results:
+            # Import the formatter here to avoid circular imports
+            from app.algolia.tools_formatter import format_tools_to_desired_format
 
-        return response
+            # Format the search results to the desired format
+            formatted_tools = format_tools_to_desired_format(search_results)
+
+            # Generate the summary using the original search results
+            summary = await format_search_results_summary(search_results)
+
+            return {"message": summary, "formatted_data": formatted_tools}
+
+        return {"message": response}
 
     async def get_streaming_llm_response(
         self, messages, model_type=ChatModelType.DEFAULT, system_prompt=None
@@ -322,7 +330,19 @@ class LLMService:
                 yield chunk
 
         # After streaming is complete, check for keywords and trigger Algolia search
-        await self.detect_and_extract_keywords(full_response)
+        search_results = await self.detect_and_extract_keywords(full_response)
+        if search_results:
+            # Import the formatter here to avoid circular imports
+            from app.algolia.tools_formatter import format_tools_to_desired_format
+
+            # Format the search results to the desired format
+            formatted_tools = format_tools_to_desired_format(search_results)
+
+            # Generate the summary using the original search results
+            summary = await format_search_results_summary(search_results)
+
+            # Yield a special message indicating the formatted data is available
+            yield {"type": "formatted_data", "data": formatted_tools}
 
     async def _get_openai_streaming_response(self, messages, model="gpt-3.5-turbo"):
         """Get a streaming response from OpenAI"""

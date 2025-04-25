@@ -202,6 +202,7 @@ async def stream_chat_message(
             # Variables to collect the full response
             full_response = ""
             message_id = str(ObjectId())
+            formatted_data = None
 
             # Initial event with message ID
             yield f"data: {json.dumps({'event': 'start', 'message_id': message_id})}\n\n"
@@ -212,9 +213,14 @@ async def stream_chat_message(
                 model_type=model_type,
                 system_prompt=system_prompt,
             ):
-                full_response += chunk
-                yield f"data: {json.dumps({'event': 'chunk', 'content': chunk})}\n\n"
-                await asyncio.sleep(0.01)  # Small delay to control flow
+                # Check if this is a formatted_data message
+                if isinstance(chunk, dict) and chunk.get("type") == "formatted_data":
+                    formatted_data = chunk.get("data")
+                    yield f"data: {json.dumps({'event': 'formatted_data', 'data': formatted_data})}\n\n"
+                else:
+                    full_response += chunk
+                    yield f"data: {json.dumps({'event': 'chunk', 'content': chunk})}\n\n"
+                    await asyncio.sleep(0.01)  # Small delay to control flow
 
             # Final event
             yield f"data: {json.dumps({'event': 'end', 'message_id': message_id})}\n\n"
@@ -228,6 +234,7 @@ async def stream_chat_message(
                 "metadata": {
                     "model": model_type,
                     "tokens": llm_service.estimate_tokens(full_response),
+                    "formatted_data": formatted_data,
                 },
                 "_id": ObjectId(message_id),
             }
@@ -298,16 +305,20 @@ async def send_chat_message(
             system_prompt=system_prompt,
         )
 
+        # Extract message and formatted_data from the response
+        message_content = llm_response.get("message", "")
+        formatted_data = llm_response.get("formatted_data")
+
         # Save assistant's response to database
         message_id = str(ObjectId())
         assistant_message = {
             "role": MessageRole.ASSISTANT,
-            "content": llm_response,
+            "content": message_content,
             "chat_id": ObjectId(session_id),
             "timestamp": datetime.datetime.utcnow(),
             "metadata": {
                 "model": model_type,
-                "tokens": llm_service.estimate_tokens(llm_response),
+                "tokens": llm_service.estimate_tokens(message_content),
             },
             "_id": ObjectId(message_id),
         }
@@ -324,12 +335,13 @@ async def send_chat_message(
 
         # Return the formatted response
         return ChatMessageResponse(
-            message=llm_response,
+            message=message_content,
             chat_id=session_id,
             message_id=message_id,
             timestamp=assistant_message["timestamp"],
             model=model_type,
             metadata=assistant_message.get("metadata"),
+            formatted_data=formatted_data,
         )
 
     except Exception as e:

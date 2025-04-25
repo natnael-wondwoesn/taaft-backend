@@ -17,7 +17,7 @@ class AlgoliaSettings(BaseSettings):
     api_key: str
     search_only_api_key: str
     write_api_key: str
-    tools_index_name: str = "taaft_tools"
+    tools_index_name: str = "tools_index"
     glossary_index_name: str = "taaft_glossary"
 
     model_config = {
@@ -39,7 +39,7 @@ except Exception as e:
         api_key="",
         search_only_api_key="",
         write_api_key="",
-        tools_index_name="taaft_tools",
+        tools_index_name="tools_index",
         glossary_index_name="taaft_glossary",
     )
 
@@ -72,6 +72,14 @@ class AlgoliaConfig:
             try:
                 # Create the client using the SearchClient constructor with v4 syntax
                 self.client = SearchClient(self.app_id, self.write_api_key)
+                self.client.set_settings(
+                    index_name=self.tools_index_name,
+                    index_settings={
+                        "paginationLimitedTo": 1000,
+                        "attributesToRetrieve": ["*"],
+                    },
+                    forward_to_replicas=True,
+                )
                 logger.info("Algolia client initialized successfully")
             except Exception as e:
                 logger.error(f"Failed to initialize Algolia client: {str(e)}")
@@ -99,54 +107,54 @@ class AlgoliaConfig:
 
         try:
             # Configure searchable attributes using the updated API structure
-            settings = {
-                "searchableAttributes": [
-                    "name",
-                    "description",
-                    "long_description",
-                    "features",
-                    "use_cases",
-                    "categories.name",
-                    "keywords",
-                    "tags",
-                    "pricing_type",
-                    "pricing_url",
-                    "url",
-                    "logo_url",
-                    "keywords",
-                    "category_id",
-                    "unique_id",
-                ],
-                # Configure custom ranking
-                "customRanking": [
-                    "desc(trending_score)",
-                    "desc(ratings.average)",
-                    "desc(is_featured)",
-                    "desc(updated_at)",
-                ],
-                # Configure facets for filtering
-                "attributesForFaceting": [
-                    "categories.name",
-                    "categories.id",
-                    "pricing.type",
-                    "is_featured",
-                    "is_sponsored",
-                    "searchable(features)",
-                    "keywords",
-                ],
-                # Configure highlighting
-                "attributesToHighlight": ["name", "description", "features"],
-                # Configure snippeting
-                "attributesToSnippet": ["long_description:50", "description:30"],
-                # Configure pagination
-                "hitsPerPage": 20,
-                # Additional settings
-                "typoTolerance": True,
-                "distinct": True,
-                "enablePersonalization": True,
-                "queryLanguages": ["en"],
-                "removeWordsIfNoResults": "allOptional",
-            }
+            # settings = {
+            #     "searchableAttributes": [
+            #         "name",
+            #         "description",
+            #         "long_description",
+            #         "features",
+            #         "use_cases",
+            #         "categories.name",
+            #         "keywords",
+            #         "tags",
+            #         "pricing_type",
+            #         "pricing_url",
+            #         "url",
+            #         "logo_url",
+            #         "keywords",
+            #         "category_id",
+            #         "unique_id",
+            #     ],
+            #     # Configure custom ranking
+            #     "customRanking": [
+            #         "desc(trending_score)",
+            #         "desc(ratings.average)",
+            #         "desc(is_featured)",
+            #         "desc(updated_at)",
+            #     ],
+            #     # Configure facets for filtering
+            #     "attributesForFaceting": [
+            #         "categories.name",
+            #         "categories.id",
+            #         "pricing.type",
+            #         "is_featured",
+            #         "is_sponsored",
+            #         "searchable(features)",
+            #         "searchable(keywords)",
+            #     ],
+            #     # Configure highlighting
+            #     "attributesToHighlight": ["name", "description", "features"],
+            #     # Configure snippeting
+            #     "attributesToSnippet": ["long_description:50", "description:30"],
+            #     # Configure pagination
+            #     "hitsPerPage": 20,
+            #     # Additional settings
+            #     "typoTolerance": True,
+            #     "distinct": True,
+            #     "enablePersonalization": True,
+            #     "queryLanguages": ["en"],
+            #     "removeWordsIfNoResults": "allOptional",
+            # }
 
             # Fix: Use the correct format for set_settings
             response = self.client.set_settings(self.tools_index_name, settings)
