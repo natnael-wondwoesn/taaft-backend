@@ -108,13 +108,29 @@ class ChatDB:
         self, session_id: str, limit: int = 100, skip: int = 0
     ) -> List[Dict[str, Any]]:
         """Get messages for a chat session, ordered by timestamp"""
-        cursor = (
-            self.messages.find({"chat_id": ObjectId(session_id)})
-            .sort("timestamp", 1)
-            .skip(skip)
-            .limit(limit)
+        # First fetch all messages ordered by timestamp
+        cursor = self.messages.find({"chat_id": ObjectId(session_id)}).sort(
+            "timestamp", 1
         )
-        return await cursor.to_list(length=limit)
+
+        # Convert to list so we can filter
+        all_messages = await cursor.to_list(length=None)
+
+        # Filter out Algolia tool messages
+        filtered_messages = []
+        for message in all_messages:
+            print(f"message: {message}")
+            content = message.get("content", "")
+            # Skip Algolia summary messages which have this specific format
+            if message.get("role") == "assistant" and content.startswith(
+                "Hey! Great News!"
+            ):
+                pass
+            else:
+                filtered_messages.append(message)
+
+        # Apply skip and limit to the filtered list
+        return filtered_messages[skip : skip + limit]
 
     async def get_user_sessions(
         self, user_id: str, limit: int = 20, skip: int = 0
@@ -270,8 +286,20 @@ class MockDB:
         # Sort by timestamp
         session_messages.sort(key=lambda x: x.get("timestamp", datetime.datetime.min))
 
+        # Filter out Algolia tool messages
+        filtered_messages = []
+        for message in session_messages:
+            content = message.get("content", "")
+            # Skip Algolia summary messages which have this specific format
+            if message.get("role") == "assistant" and content.startswith(
+                "Hey! Great News! I have found Plenty of tools"
+            ):
+                continue
+
+            filtered_messages.append(message)
+
         # Apply skip and limit
-        return session_messages[skip : skip + limit]
+        return filtered_messages[skip : skip + limit]
 
     async def get_user_sessions(
         self, user_id: str, limit: int = 20, skip: int = 0
