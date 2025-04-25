@@ -22,6 +22,12 @@ def objectid_to_uuid(objectid_str: str) -> UUID:
     Uses UUID v5 with the ObjectId as the name and NAMESPACE_OID as namespace.
     """
     try:
+        # Ensure we have a string representation of the ObjectId
+        if hasattr(objectid_str, "_id"):
+            objectid_str = str(objectid_str._id)
+        elif hasattr(objectid_str, "__str__"):
+            objectid_str = str(objectid_str)
+
         # Create a UUID5 (name-based) using the ObjectId string
         return uuid5(NAMESPACE_OID, objectid_str)
     except Exception as e:
@@ -247,14 +253,24 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
 
         # If 'id' is missing, use a UUID derived from '_id'
         if not tool_id and "_id" in tool:
-            objectid_str = str(tool.get("_id"))
-            # Convert ObjectId string to a UUID
-            derived_uuid = objectid_to_uuid(objectid_str)
+            # Get the ObjectId - can be a string or an actual ObjectId object
+            objectid = tool.get("_id")
+            # Convert ObjectId to a UUID
+            derived_uuid = objectid_to_uuid(objectid)
             tool_id = str(derived_uuid)
             # Optionally log that we're deriving a UUID from _id
             logger.info(
-                f"Derived UUID {tool_id} from ObjectId {objectid_str} for tool '{tool.get('name')}'"
+                f"Derived UUID {tool_id} from ObjectId {objectid} for tool '{tool.get('name')}'"
             )
+
+            # Update the tool with the derived UUID to avoid future conversion
+            try:
+                await tools.update_one({"_id": objectid}, {"$set": {"id": tool_id}})
+                logger.info(
+                    f"Updated tool {tool.get('name')} with derived UUID {tool_id}"
+                )
+            except Exception as e:
+                logger.error(f"Failed to update tool with derived UUID: {e}")
 
         # If both 'id' and '_id' are missing, generate a new UUID (should ideally not happen)
         elif not tool_id:
@@ -365,46 +381,54 @@ async def get_tools(
     if count_only:
         return await tools.count_documents(query)
 
-    # Create the cursor
-    cursor = tools.find(query).skip(skip).limit(limit)
+    # Create the cursor with efficient sorting in MongoDB
+    # Use aggregation pipeline for more complex sorting logic
+    pipeline = [{"$match": query}, {"$skip": skip}, {"$limit": limit}]
 
-    # Apply sorting if requested
+    # Add sorting stages to the pipeline
     if sort_by:
-        # Apply ascending sort first
-        cursor = cursor.sort(sort_by, 1)
+        # First sort by the requested field
+        sort_direction = -1 if sort_order.lower() == "desc" else 1
+        pipeline.append({"$sort": {sort_by: sort_direction}})
+
+    # Add a stage to create a new field indicating if description is empty
+    pipeline.append(
+        {
+            "$addFields": {
+                "has_description": {
+                    "$cond": [
+                        {
+                            "$or": [
+                                {"$eq": ["$description", ""]},
+                                {"$eq": ["$description", None]},
+                            ]
+                        },
+                        0,  # description is empty or null
+                        1,  # description has content
+                    ]
+                }
+            }
+        }
+    )
+
+    # Sort by the has_description field (prioritize tools with descriptions)
+    # Always sort in descending order (1 = has description comes first)
+    pipeline.append({"$sort": {"has_description": -1}})
+
+    # Log the pipeline for debugging
+    logger.debug(f"MongoDB aggregation pipeline: {pipeline}")
+
+    # Execute the aggregation pipeline
+    cursor = tools.aggregate(pipeline)
 
     # Process results
     tools_list = []
     async for tool in cursor:
-        # Extract keywords
-        keywords = tool.get("keywords", [])
-        if keywords:
-            for keyword in keywords:
-                try:
-                    # Use update_one with upsert=True instead of insert_one
-                    await keywords_collection.update_one(
-                        {"word": keyword},
-                        {
-                            "$set": {"updated_at": datetime.utcnow()},
-                            "$setOnInsert": {"created_at": datetime.utcnow()},
-                            "$inc": {"frequency": 1},
-                        },
-                        upsert=True,
-                    )
-                except Exception as e:
-                    # Just log the error and continue, don't let it break the flow
-                    logger.warning(f"Error updating keyword '{keyword}': {str(e)}")
-
         tool_response = await create_tool_response(tool)
-
         if tool_response:
             tools_list.append(tool_response)
 
-    # Simply reverse the list for descending order
-    if sort_order.lower() == "desc":
-        tools_list.reverse()
-
-    return tools_list.reverse()
+    return tools_list
 
 
 async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
@@ -421,20 +445,32 @@ async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
     if tool:
         return await create_tool_response(tool)
 
-    # Second try: Check if this could be a UUID derived from an ObjectId
-    # We'll try to find all tools and check if any have a derived UUID matching the requested one
-    all_tools = await tools.find({}).to_list(length=None)
+    # Try an approach that doesn't require loading all tools
+    # Get all tools without an 'id' field to check if they match after conversion
+    tools_without_id = await tools.find({"id": {"$exists": False}}).to_list(length=None)
 
-    for db_tool in all_tools:
+    for db_tool in tools_without_id:
         if "_id" in db_tool:
-            object_id_str = str(db_tool.get("_id"))
-            derived_uuid = objectid_to_uuid(object_id_str)
+            objectid = db_tool.get("_id")
+            derived_uuid = objectid_to_uuid(objectid)
 
             # If the derived UUID matches the requested one, we found our tool
             if str(derived_uuid) == str(tool_id):
                 logger.info(
-                    f"Found tool via derived UUID: {tool_id} from ObjectId: {object_id_str}"
+                    f"Found tool via derived UUID conversion: {db_tool.get('name')}"
                 )
+
+                # Update the tool with the derived UUID to avoid future conversion
+                try:
+                    await tools.update_one(
+                        {"_id": objectid}, {"$set": {"id": str(derived_uuid)}}
+                    )
+                    logger.info(
+                        f"Updated tool {db_tool.get('name')} with derived UUID {derived_uuid}"
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to update tool with derived UUID: {e}")
+
                 return await create_tool_response(db_tool)
 
     # If we get here, the tool wasn't found by either method

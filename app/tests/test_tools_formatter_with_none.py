@@ -83,6 +83,7 @@ def test_tools_formatter_with_none():
             "unique_id",
             "price",
             "rating",
+            "search_tags",
         ]
 
         for field in required_fields:

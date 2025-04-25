@@ -52,6 +52,10 @@ async def get_featured_tools(
     # Get total count of featured tools
     total = await get_tools(count_only=True, filters=filters)
 
+    # Ensure tools is always a list, even if None is returned
+    if tools is None:
+        tools = []
+
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
 
@@ -96,5 +100,9 @@ async def get_sponsored_tools(
 
     # Get total count of featured tools
     total = await get_tools(count_only=True, filters=filters)
+
+    # Ensure tools is always a list, even if None is returned
+    if tools is None:
+        tools = []
 
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}

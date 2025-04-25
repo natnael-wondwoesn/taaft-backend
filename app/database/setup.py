@@ -97,7 +97,7 @@ async def setup_database():
         logger.info("Created tools collection")
 
         # Create indexes for tools collection
-        await database.tools.create_index("id", unique=True)
+        # await database.tools.create_index("id", unique=True)
         await database.tools.create_index("unique_id", unique=True)
         await database.tools.create_index("name")
         await database.tools.create_index("created_at")
