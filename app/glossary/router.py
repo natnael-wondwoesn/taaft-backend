@@ -71,6 +71,36 @@ async def list_glossary_terms(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
+@router.get("/terms/count", response_model=int)
+async def count_glossary_terms(
+    category: Optional[str] = Query(None, description="Filter by category"),
+    search: Optional[str] = Query(
+        None, description="Search text in name and definition"
+    ),
+    first_letter: Optional[str] = Query(
+        None, description="Filter by first letter of the term name"
+    ),
+    glossary_db: GlossaryDB = Depends(get_glossary_db),
+):
+    """
+    Count the total number of glossary terms with optional filtering.
+    No authentication required (free tier access).
+    """
+    try:
+        # Create filter parameters
+        filter_params = GlossaryTermFilter(
+            category=category, search=search, first_letter=first_letter
+        )
+
+        # Count terms
+        count = await glossary_db.count_terms(filter_params=filter_params)
+        return count
+
+    except Exception as e:
+        logger.error(f"Error counting glossary terms: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
 @router.get("/terms/{term_id}", response_model=GlossaryTermResponse)
 async def get_glossary_term(
     term_id: str,
@@ -95,6 +125,41 @@ async def get_glossary_term(
         raise
     except Exception as e:
         logger.error(f"Error getting glossary term: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.get("/categories", response_model=List[str])
+async def get_glossary_categories(
+    glossary_db: GlossaryDB = Depends(get_glossary_db),
+):
+    """
+    Get all unique categories from the glossary terms.
+    No authentication required (free tier access).
+    """
+    try:
+        categories = await glossary_db.get_categories()
+        return categories
+
+    except Exception as e:
+        logger.error(f"Error getting glossary categories: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.get("/letters", response_model=List[str])
+async def get_available_letters(
+    glossary_db: GlossaryDB = Depends(get_glossary_db),
+):
+    """
+    Get all available first letters from the glossary terms.
+    This is used for alphabetical navigation in the UI.
+    No authentication required (free tier access).
+    """
+    try:
+        letters = await glossary_db.get_available_letters()
+        return letters
+
+    except Exception as e:
+        logger.error(f"Error getting available letters: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -215,71 +280,6 @@ async def delete_glossary_term(
         raise
     except Exception as e:
         logger.error(f"Error deleting glossary term: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-
-@router.get("/categories", response_model=List[str])
-async def get_glossary_categories(
-    glossary_db: GlossaryDB = Depends(get_glossary_db),
-):
-    """
-    Get all unique categories from the glossary terms.
-    No authentication required (free tier access).
-    """
-    try:
-        categories = await glossary_db.get_categories()
-        return categories
-
-    except Exception as e:
-        logger.error(f"Error getting glossary categories: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-
-@router.get("/terms/count", response_model=int)
-async def count_glossary_terms(
-    category: Optional[str] = Query(None, description="Filter by category"),
-    search: Optional[str] = Query(
-        None, description="Search text in name and definition"
-    ),
-    first_letter: Optional[str] = Query(
-        None, description="Filter by first letter of the term name"
-    ),
-    glossary_db: GlossaryDB = Depends(get_glossary_db),
-):
-    """
-    Count the total number of glossary terms with optional filtering.
-    No authentication required (free tier access).
-    """
-    try:
-        # Create filter parameters
-        filter_params = GlossaryTermFilter(
-            category=category, search=search, first_letter=first_letter
-        )
-
-        # Count terms
-        count = await glossary_db.count_terms(filter_params=filter_params)
-        return count
-
-    except Exception as e:
-        logger.error(f"Error counting glossary terms: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
-
-
-@router.get("/letters", response_model=List[str])
-async def get_available_letters(
-    glossary_db: GlossaryDB = Depends(get_glossary_db),
-):
-    """
-    Get all available first letters from the glossary terms.
-    This is used for alphabetical navigation in the UI.
-    No authentication required (free tier access).
-    """
-    try:
-        letters = await glossary_db.get_available_letters()
-        return letters
-
-    except Exception as e:
-        logger.error(f"Error getting available letters: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
