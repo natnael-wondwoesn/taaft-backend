@@ -6,3 +6,4 @@ logs/app.log
 /logs/*
 app/algolia/migrater/Algolia_index_load.py
 upgrade_user.py
+test_openai_api.py

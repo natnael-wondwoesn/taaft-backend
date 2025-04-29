@@ -3,7 +3,7 @@ Public routes for tools, accessible without authentication
 """
 
 from fastapi import APIRouter, HTTPException, Query
-from typing import Optional
+from typing import Optional, List
 
 from .models import PaginatedToolsResponse
 from .tools_service import get_tools

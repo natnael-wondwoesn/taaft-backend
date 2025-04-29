@@ -15,6 +15,7 @@ from .tools_service import (
     search_tools,
     toggle_tool_featured_status,
     toggle_tool_featured_status_by_unique_id,
+    keyword_search_tools,
 )
 
 router = APIRouter(prefix="/tools", tags=["tools"])
@@ -301,3 +302,39 @@ async def set_tool_featured_status_by_unique_id(
 #     if not success:
 #         raise HTTPException(status_code=404, detail="Tool not found")
 #     return None
+
+
+@router.post("/keyword-search", response_model=PaginatedToolsResponse)
+async def keyword_search_endpoint(
+    keywords: List[str],
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Search for tools using exact keywords match.
+    This endpoint performs a direct database search without using LLM or Algolia.
+
+    - **keywords**: List of keywords to search for
+    - **skip**: Number of results to skip (for pagination)
+    - **limit**: Maximum number of results to return
+    """
+    # Validate input
+    if not keywords or not isinstance(keywords, list):
+        raise HTTPException(status_code=400, detail="Keywords list is required")
+
+    # Strip whitespace and filter out empty keywords
+    cleaned_keywords = [k.strip() for k in keywords if k and k.strip()]
+
+    if not cleaned_keywords:
+        raise HTTPException(
+            status_code=400, detail="At least one valid keyword is required"
+        )
+
+    # Perform the search
+    tools = await keyword_search_tools(
+        keywords=cleaned_keywords, skip=skip, limit=limit
+    )
+    total = await keyword_search_tools(keywords=cleaned_keywords, count_only=True)
+
+    return {"tools": tools, "total": total, "skip": skip, "limit": limit}

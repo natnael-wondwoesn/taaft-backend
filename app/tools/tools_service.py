@@ -981,3 +981,47 @@ async def toggle_tool_featured_status_by_unique_id(
 
     # Return the updated tool as a ToolResponse
     return await create_tool_response(updated_tool)
+
+
+async def keyword_search_tools(
+    keywords: List[str], skip: int = 0, limit: int = 100, count_only: bool = False
+) -> Union[List[ToolResponse], int]:
+    """
+    Search for tools by exact keywords match.
+    This function performs a direct MongoDB query without using LLM or Algolia.
+
+    Args:
+        keywords: List of search keywords
+        skip: Number of items to skip for pagination
+        limit: Maximum number of items to return
+        count_only: Whether to return only the count of matching tools
+
+    Returns:
+        Either a list of matching tools or the count of matching tools
+    """
+    # Create a query to find tools where any of the provided keywords match
+    # Look in name, description, keywords array, and category fields
+    query = {
+        "$or": [
+            {"name": {"$regex": "|".join(keywords), "$options": "i"}},
+            {"description": {"$regex": "|".join(keywords), "$options": "i"}},
+            {"keywords": {"$in": keywords}},
+            {"category": {"$regex": "|".join(keywords), "$options": "i"}},
+        ]
+    }
+
+    # If only count is needed, return the count
+    if count_only:
+        return await tools.count_documents(query)
+
+    # Find matching tools with pagination
+    cursor = tools.find(query).skip(skip).limit(limit)
+
+    # Process results
+    tools_list = []
+    async for tool in cursor:
+        tool_response = await create_tool_response(tool)
+        if tool_response:
+            tools_list.append(tool_response)
+
+    return tools_list
