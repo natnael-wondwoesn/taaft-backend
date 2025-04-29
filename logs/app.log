@@ -11723,3 +11723,41 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-29T11:51:02.749262+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
 2025-04-29T11:51:02.952893+0300 INFO Algolia glossary index configured successfully
 2025-04-29T11:51:02.953890+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:52:14.547566+0300 INFO Shutting down application...
+2025-04-29T11:52:14.837298+0300 INFO Database connections closed
+2025-04-29T11:52:14.838465+0300 INFO Shutdown complete.
+2025-04-29T11:53:08.263296+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:53:09.278308+0300 INFO Algolia client initialized successfully
+2025-04-29T11:53:10.217401+0300 INFO Setting up database...
+2025-04-29T11:53:14.536437+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:53:14.765759+0300 INFO Database setup completed successfully
+2025-04-29T11:53:14.765898+0300 INFO Database setup completed
+2025-04-29T11:53:14.766901+0300 INFO Seeding glossary terms...
+2025-04-29T11:53:14.980147+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:53:14.981144+0300 INFO Glossary seeding completed
+2025-04-29T11:53:14.981144+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:53:14.982145+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:53:15.157568+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:53:15.158567+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:53:38.094500+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-29T11:54:22.121111+0300 ERROR Error in send_chat_message: 404: Chat session with ID 680283d06b7b47b47b6caee5 not found
+2025-04-29T11:54:43.130695+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-29T11:55:53.969528+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-29T11:55:59.200463+0300 INFO Detected keywords in LLM response: ['AI in Healthcare', 'Chatbots', 'Data Analysis Tools', 'Marketing AI', 'AI for Content Creation']
+2025-04-29T11:55:59.203468+0300 INFO Performing keyword search: 'AI in Healthcare, Chatbots, Data Analysis Tools, Marketing AI, AI for Content Creation' on index 'tools_index'
+2025-04-29T11:56:40.688487+0300 INFO Shutting down application...
+2025-04-29T11:56:40.975839+0300 INFO Database connections closed
+2025-04-29T11:56:40.976478+0300 INFO Shutdown complete.
+2025-04-29T11:56:44.438377+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:56:45.768616+0300 INFO Algolia client initialized successfully
+2025-04-29T11:56:46.909679+0300 INFO Setting up database...
+2025-04-29T11:56:51.420621+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:56:51.649080+0300 INFO Database setup completed successfully
+2025-04-29T11:56:51.650071+0300 INFO Database setup completed
+2025-04-29T11:56:51.651076+0300 INFO Seeding glossary terms...
+2025-04-29T11:56:52.006767+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:56:52.007322+0300 INFO Glossary seeding completed
+2025-04-29T11:56:52.008326+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:56:52.008326+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:56:52.239687+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:56:52.241664+0300 INFO Algolia indexes configured successfully
