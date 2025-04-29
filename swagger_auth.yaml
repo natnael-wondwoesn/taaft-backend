@@ -140,7 +140,7 @@ paths:
       tags:
         - Authentication
       summary: Verify email
-      description: Verify user email with verification token
+      description: Verify user email with verification token. Users receive this token via email when they register.
       operationId: verifyEmail
       requestBody:
         required: true
@@ -173,7 +173,7 @@ paths:
       tags:
         - Authentication
       summary: Request password reset
-      description: Request a password reset token
+      description: Request a password reset token. An email with a reset link will be sent to the specified email address if the account exists.
       operationId: requestPasswordReset
       requestBody:
         required: true

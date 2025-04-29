@@ -15,6 +15,7 @@ import datetime
 from bson import ObjectId
 from pydantic import EmailStr
 from ..logger import logger
+import os
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -22,7 +23,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post(
     "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
 )
-async def register_user(user_data: UserCreate):
+async def register_user(user_data: UserCreate, request: Request = None):
     """Register a new user and assign to free tier."""
 
     # Check if user with this email already exists
@@ -64,6 +65,31 @@ async def register_user(user_data: UserCreate):
     created_user = await database.users.find_one({"_id": result.inserted_id})
 
     logger.info(f"New user registered: {user_data.email}")
+
+    # Create a verification token
+    verification_token = create_access_token(
+        data={"sub": str(result.inserted_id), "purpose": "email_verification"}
+    )
+
+    # Get base URL from request or settings
+    base_url = (
+        str(request.base_url)
+        if request
+        else os.getenv("BASE_URL", "http://localhost:8000")
+    )
+
+    # Import here to avoid circular imports
+    from ..services.email_service import send_verification_email
+
+    # Send verification email
+    email_sent = send_verification_email(user_data.email, verification_token, base_url)
+
+    if not email_sent:
+        # Email sending failed, log the token for debugging
+        logger.info(
+            f"Verification email not sent to {user_data.email}. Token: {verification_token}"
+        )
+        logger.warning(f"Failed to send verification email to {user_data.email}")
 
     # Convert to response model
     return UserResponse(
@@ -210,7 +236,9 @@ async def verify_email(token: str = Body(...)):
 
 
 @router.post("/request-password-reset", response_model=Dict[str, str])
-async def request_password_reset(email: EmailStr = Body(..., embed=True)):
+async def request_password_reset(
+    email: EmailStr = Body(..., embed=True), request: Request = None
+):
     """Request a password reset token."""
 
     # Find user
@@ -219,13 +247,28 @@ async def request_password_reset(email: EmailStr = Body(..., embed=True)):
         # Always return success even if user doesn't exist (security)
         return {"message": "If the email exists, a password reset link will be sent"}
 
-    # In a real system, you would send an email with reset link
-    # For now, we'll just log it
+    # Create a reset token
     reset_token = create_access_token(
         data={"sub": str(user["_id"]), "purpose": "password_reset"}
     )
 
-    logger.info(f"Password reset requested for {email}. Token: {reset_token}")
+    # Get base URL from request or settings
+    base_url = (
+        str(request.base_url)
+        if request
+        else os.getenv("BASE_URL", "http://localhost:8000")
+    )
+
+    # Import here to avoid circular imports
+    from ..services.email_service import send_password_reset_email
+
+    # Send password reset email
+    email_sent = send_password_reset_email(email, reset_token, base_url)
+
+    if not email_sent:
+        # Email sending failed, log the token for debugging
+        logger.info(f"Password reset requested for {email}. Token: {reset_token}")
+        logger.warning(f"Failed to send password reset email to {email}")
 
     return {"message": "If the email exists, a password reset link will be sent"}
 
