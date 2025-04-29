@@ -11505,3 +11505,221 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-04-29T10:13:47.029954+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
 2025-04-29T10:13:47.288463+0300 INFO Algolia glossary index configured successfully
 2025-04-29T10:13:47.289470+0300 INFO Algolia indexes configured successfully
+<<<<<<< HEAD
+2025-04-29T11:19:57.047335+0300 INFO Shutting down application...
+2025-04-29T11:19:58.597967+0300 INFO Database connections closed
+2025-04-29T11:19:58.599050+0300 INFO Shutdown complete.
+2025-04-29T11:20:02.548552+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:20:03.698469+0300 INFO Algolia client initialized successfully
+2025-04-29T11:20:05.084114+0300 INFO Setting up database...
+2025-04-29T11:20:12.423856+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:20:12.770867+0300 INFO Database setup completed successfully
+2025-04-29T11:20:12.772602+0300 INFO Database setup completed
+2025-04-29T11:20:12.772849+0300 INFO Seeding glossary terms...
+2025-04-29T11:20:12.962295+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:20:12.964174+0300 INFO Glossary seeding completed
+2025-04-29T11:20:12.965254+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:20:12.966714+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:20:13.200842+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:20:13.202199+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:20:16.756356+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:20:17.542726+0300 INFO Algolia client initialized successfully
+2025-04-29T11:20:18.591502+0300 INFO Setting up database...
+2025-04-29T11:20:25.017749+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:20:25.324609+0300 INFO Database setup completed successfully
+2025-04-29T11:20:25.326210+0300 INFO Database setup completed
+2025-04-29T11:20:25.327085+0300 INFO Seeding glossary terms...
+2025-04-29T11:20:25.531516+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:20:25.532707+0300 INFO Glossary seeding completed
+2025-04-29T11:20:25.533523+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:20:25.534155+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:20:25.787847+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:20:25.789832+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:20:29.040168+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:20:30.153488+0300 INFO Algolia client initialized successfully
+2025-04-29T11:20:31.220138+0300 INFO Setting up database...
+2025-04-29T11:20:39.403460+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:20:39.777404+0300 INFO Database setup completed successfully
+2025-04-29T11:20:39.778190+0300 INFO Database setup completed
+2025-04-29T11:20:39.779181+0300 INFO Seeding glossary terms...
+2025-04-29T11:20:39.981179+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:20:39.982186+0300 INFO Glossary seeding completed
+2025-04-29T11:20:39.982186+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:20:39.983188+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:20:40.266111+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:20:40.268111+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:20:51.146134+0300 INFO Shutting down application...
+2025-04-29T11:20:51.543270+0300 INFO Database connections closed
+2025-04-29T11:20:51.544256+0300 INFO Shutdown complete.
+2025-04-29T11:20:54.633761+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:21:00.277867+0300 INFO Algolia client initialized successfully
+2025-04-29T11:21:01.370286+0300 INFO Setting up database...
+2025-04-29T11:21:09.460283+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:21:09.664509+0300 INFO Database setup completed successfully
+2025-04-29T11:21:09.665416+0300 INFO Database setup completed
+2025-04-29T11:21:09.665416+0300 INFO Seeding glossary terms...
+2025-04-29T11:21:09.971758+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:21:09.972656+0300 INFO Glossary seeding completed
+2025-04-29T11:21:09.973636+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:21:09.974641+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:21:10.384655+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:21:10.386020+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:21:13.980962+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:21:15.298027+0300 INFO Algolia client initialized successfully
+2025-04-29T11:21:16.382851+0300 INFO Setting up database...
+2025-04-29T11:21:25.333273+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:21:26.458380+0300 INFO Database setup completed successfully
+2025-04-29T11:21:26.458380+0300 INFO Database setup completed
+2025-04-29T11:21:26.459385+0300 INFO Seeding glossary terms...
+2025-04-29T11:21:28.098448+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:21:28.099246+0300 INFO Glossary seeding completed
+2025-04-29T11:21:28.100242+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:21:28.100242+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:21:29.947923+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:21:29.948618+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:21:34.753924+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:21:40.846160+0300 INFO Algolia client initialized successfully
+2025-04-29T11:21:42.000225+0300 INFO Setting up database...
+2025-04-29T11:22:03.704968+0300 ERROR Could not connect to MongoDB: The resolution lifetime expired after 21.607 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.
+2025-04-29T11:22:03.707048+0300 ERROR Error during startup: The resolution lifetime expired after 21.607 seconds: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.
+2025-04-29T11:22:06.542197+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:22:20.126888+0300 INFO Algolia client initialized successfully
+2025-04-29T11:22:21.902524+0300 INFO Setting up database...
+2025-04-29T11:22:28.385957+0300 ERROR Could not connect to MongoDB: All nameservers failed to answer the query _mongodb._tcp.cluster0.0gsof12.mongodb.net. IN SRV: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered [WinError 10051] A socket operation was attempted to an unreachable network; Server Do53:172.20.10.1@53 answered [WinError 10051] A socket operation was attempted to an unreachable network
+2025-04-29T11:22:28.388984+0300 ERROR Error during startup: All nameservers failed to answer the query _mongodb._tcp.cluster0.0gsof12.mongodb.net. IN SRV: Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered The DNS operation timed out.; Server Do53:172.20.10.1@53 answered The DNS operation timed out.; Server Do53:10.206.24.85@53 answered [WinError 10051] A socket operation was attempted to an unreachable network; Server Do53:172.20.10.1@53 answered [WinError 10051] A socket operation was attempted to an unreachable network
+2025-04-29T11:23:24.137866+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:23:25.166025+0300 INFO Algolia client initialized successfully
+2025-04-29T11:23:26.202317+0300 INFO Setting up database...
+2025-04-29T11:23:29.904950+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:23:30.110492+0300 INFO Database setup completed successfully
+2025-04-29T11:23:30.111501+0300 INFO Database setup completed
+2025-04-29T11:23:30.111501+0300 INFO Seeding glossary terms...
+2025-04-29T11:23:30.314911+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:23:30.315499+0300 INFO Glossary seeding completed
+2025-04-29T11:23:30.316500+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:23:30.317499+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:23:30.623206+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:23:30.624655+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:28:54.224188+0300 INFO Shutting down application...
+2025-04-29T11:28:54.515948+0300 INFO Database connections closed
+2025-04-29T11:28:54.516937+0300 INFO Shutdown complete.
+2025-04-29T11:28:58.044171+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:28:59.021073+0300 INFO Algolia client initialized successfully
+2025-04-29T11:29:00.021886+0300 INFO Setting up database...
+2025-04-29T11:29:03.730137+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:29:04.037733+0300 INFO Database setup completed successfully
+2025-04-29T11:29:04.038676+0300 INFO Database setup completed
+2025-04-29T11:29:04.039679+0300 INFO Seeding glossary terms...
+2025-04-29T11:29:04.267406+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:29:04.268848+0300 INFO Glossary seeding completed
+2025-04-29T11:29:04.269849+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:29:04.270897+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:29:04.581089+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:29:04.582081+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:29:08.298207+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:29:08.808471+0300 INFO Algolia client initialized successfully
+2025-04-29T11:29:09.862545+0300 INFO Setting up database...
+2025-04-29T11:29:12.349411+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:29:12.560919+0300 INFO Database setup completed successfully
+2025-04-29T11:29:12.561926+0300 INFO Database setup completed
+2025-04-29T11:29:12.561926+0300 INFO Seeding glossary terms...
+2025-04-29T11:29:12.761656+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:29:12.763258+0300 INFO Glossary seeding completed
+2025-04-29T11:29:12.763662+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:29:12.764719+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:29:12.946768+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:29:12.948772+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:29:29.906113+0300 INFO User logged in: natnael.wondwoesn@gmail.com
+2025-04-29T11:30:18.419931+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-29T11:30:24.014346+0300 ERROR OpenAI API error: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
+2025-04-29T11:30:24.015910+0300 ERROR Error in send_chat_message: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
+2025-04-29T11:31:23.610410+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-29T11:31:27.603692+0300 ERROR OpenAI API error: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
+2025-04-29T11:31:27.605268+0300 ERROR Error in send_chat_message: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
+2025-04-29T11:32:19.859153+0300 INFO Shutting down application...
+2025-04-29T11:32:20.236071+0300 INFO Database connections closed
+2025-04-29T11:32:20.237022+0300 INFO Shutdown complete.
+2025-04-29T11:32:23.886520+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:32:24.747845+0300 INFO Algolia client initialized successfully
+2025-04-29T11:32:25.820099+0300 INFO Setting up database...
+2025-04-29T11:32:28.940216+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:32:29.145129+0300 INFO Database setup completed successfully
+2025-04-29T11:32:29.146129+0300 INFO Database setup completed
+2025-04-29T11:32:29.146995+0300 INFO Seeding glossary terms...
+2025-04-29T11:32:29.451527+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:32:29.452518+0300 INFO Glossary seeding completed
+2025-04-29T11:32:29.453078+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:32:29.454065+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:32:29.880247+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:32:29.881237+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:32:35.087180+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-29T11:33:08.268748+0300 INFO Getting LLM response with model: ChatModelType.GPT_4
+2025-04-29T11:33:14.268325+0300 INFO Detected keywords in LLM response: ['AI', 'Image Generator']
+2025-04-29T11:33:14.270149+0300 INFO Performing keyword search: 'AI, Image Generator' on index 'tools_index'
+2025-04-29T11:34:52.128958+0300 INFO Shutting down application...
+2025-04-29T11:34:52.359442+0300 INFO Database connections closed
+2025-04-29T11:34:52.360938+0300 INFO Shutdown complete.
+2025-04-29T11:34:55.696742+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:34:56.705167+0300 INFO Algolia client initialized successfully
+2025-04-29T11:34:57.796253+0300 INFO Setting up database...
+2025-04-29T11:35:02.540810+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:35:02.950649+0300 INFO Database setup completed successfully
+2025-04-29T11:35:02.951657+0300 INFO Database setup completed
+2025-04-29T11:35:02.952650+0300 INFO Seeding glossary terms...
+2025-04-29T11:35:03.278029+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:35:03.279091+0300 INFO Glossary seeding completed
+2025-04-29T11:35:03.280004+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:35:03.280999+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:35:03.462678+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:35:03.462678+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:36:30.921777+0300 INFO Shutting down application...
+2025-04-29T11:36:31.273668+0300 INFO Database connections closed
+2025-04-29T11:36:31.274661+0300 INFO Shutdown complete.
+2025-04-29T11:36:34.379812+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:36:35.418126+0300 INFO Algolia client initialized successfully
+2025-04-29T11:36:36.484174+0300 INFO Setting up database...
+2025-04-29T11:36:40.856549+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:36:41.254559+0300 INFO Database setup completed successfully
+2025-04-29T11:36:41.255559+0300 INFO Database setup completed
+2025-04-29T11:36:41.255559+0300 INFO Seeding glossary terms...
+2025-04-29T11:36:41.562042+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:36:41.563034+0300 INFO Glossary seeding completed
+2025-04-29T11:36:41.565039+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:36:41.566029+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:36:41.972103+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:36:41.973170+0300 INFO Algolia indexes configured successfully
+=======
+>>>>>>> 7372fbcad9be9b3b47b89544667978bbbff7090c
+2025-04-29T11:43:14.152152+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:43:14.995549+0300 INFO Algolia client initialized successfully
+2025-04-29T11:43:37.126136+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:43:37.779123+0300 INFO Algolia client initialized successfully
+2025-04-29T11:43:46.159498+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:43:47.036011+0300 INFO Algolia client initialized successfully
+2025-04-29T11:43:48.165727+0300 INFO Setting up database...
+2025-04-29T11:43:51.769218+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:43:52.071488+0300 INFO Database setup completed successfully
+2025-04-29T11:43:52.072491+0300 INFO Database setup completed
+2025-04-29T11:43:52.072491+0300 INFO Seeding glossary terms...
+2025-04-29T11:43:52.308612+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:43:52.309614+0300 INFO Glossary seeding completed
+2025-04-29T11:43:52.310618+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:43:52.310618+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:43:52.567966+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:43:52.570119+0300 INFO Algolia indexes configured successfully
+2025-04-29T11:50:52.520465+0300 INFO Shutting down application...
+2025-04-29T11:50:52.774403+0300 INFO Database connections closed
+2025-04-29T11:50:52.775417+0300 INFO Shutdown complete.
+2025-04-29T11:50:56.271542+0300 INFO Algolia configuration loaded. App ID: AMO2SU5APR
+2025-04-29T11:50:57.320906+0300 INFO Algolia client initialized successfully
+2025-04-29T11:50:58.451010+0300 INFO Setting up database...
+2025-04-29T11:51:02.207955+0300 INFO Connected to MongoDB for setup
+2025-04-29T11:51:02.440650+0300 INFO Database setup completed successfully
+2025-04-29T11:51:02.441649+0300 INFO Database setup completed
+2025-04-29T11:51:02.441939+0300 INFO Seeding glossary terms...
+2025-04-29T11:51:02.747303+0300 INFO Glossary already contains 10 terms. Skipping seeding.
+2025-04-29T11:51:02.748261+0300 INFO Glossary seeding completed
+2025-04-29T11:51:02.748261+0300 INFO Configuring Algolia indexes...
+2025-04-29T11:51:02.749262+0300 ERROR Failed to configure Algolia tools index: 'AlgoliaSettings' object has no attribute 'to_dict'
+2025-04-29T11:51:02.952893+0300 INFO Algolia glossary index configured successfully
+2025-04-29T11:51:02.953890+0300 INFO Algolia indexes configured successfully
