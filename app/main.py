@@ -9,6 +9,7 @@ from fastapi import (
     HTTPException,
     status,
 )
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -125,6 +126,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+# Add this line - must be added before other middlewares
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="3456789iuhgfcdfghj",  # Use a secure random string, ideally from env var
+)
+
 
 # Add middleware - CORS must be first, then other middleware
 app.add_middleware(
