@@ -48,7 +48,7 @@ except ImportError:
 load_dotenv()
 
 # OpenAI API setup
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = "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"
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set")
 
