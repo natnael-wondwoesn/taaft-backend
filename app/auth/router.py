@@ -41,6 +41,7 @@ async def register_user(user_data: UserCreate):
         email=user_data.email,
         hashed_password=hashed_password,
         full_name=user_data.full_name,
+        subscribeToNewsletter=user_data.subscribeToNewsletter,
         service_tier=ServiceTier.FREE,  # Default to free tier
         is_active=True,
         is_verified=False,  # User needs to verify email
@@ -72,6 +73,7 @@ async def register_user(user_data: UserCreate):
         service_tier=created_user["service_tier"],
         is_active=created_user["is_active"],
         is_verified=created_user["is_verified"],
+        subscribeToNewsletter=created_user.get("subscribeToNewsletter", False),
         created_at=created_user["created_at"],
         usage=created_user["usage"],
     )
@@ -260,3 +262,34 @@ async def reset_password(token: str = Body(...), new_password: str = Body(...)):
         )
 
     return {"message": "Password reset successful"}
+
+
+@router.post("/update-newsletter-preference", response_model=Dict[str, str])
+async def update_newsletter_preference(
+    subscribeToNewsletter: bool = Body(...),
+    current_user: UserInDB = Depends(get_current_user),
+):
+    """Update the user's newsletter subscription preference."""
+
+    # Update user in database
+    result = await database.users.update_one(
+        {"_id": current_user.id},
+        {
+            "$set": {
+                "subscribeToNewsletter": subscribeToNewsletter,
+                "updated_at": datetime.datetime.utcnow(),
+            }
+        },
+    )
+
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Failed to update newsletter preference",
+        )
+
+    logger.info(
+        f"User {current_user.email} updated newsletter preference to: {subscribeToNewsletter}"
+    )
+
+    return {"message": "Newsletter preference updated successfully"}

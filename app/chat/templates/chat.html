@@ -471,6 +471,10 @@
                 <input type="email" id="sign-up-email" placeholder="Email" required>
                 <input type="password" id="sign-up-password" placeholder="Password" required>
                 <input type="password" id="sign-up-confirm-password" placeholder="Confirm Password" required>
+                <div class="checkbox-container" style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <input type="checkbox" id="sign-up-newsletter" style="width: auto; margin-right: 8px;">
+                    <label for="sign-up-newsletter">Subscribe to newsletter</label>
+                </div>
                 <button id="sign-up-btn">Sign Up</button>
                 <p>Already have an account? <a href="#" id="show-sign-in">Sign In</a></p>
             </div>
@@ -1116,6 +1120,7 @@
             const email = document.getElementById('sign-up-email').value;
             const password = document.getElementById('sign-up-password').value;
             const confirmPassword = document.getElementById('sign-up-confirm-password').value;
+            const subscribeToNewsletter = document.getElementById('sign-up-newsletter').checked;
             const errorEl = document.getElementById('sign-up-error');
             
             if (!email || !password) {
@@ -1137,7 +1142,8 @@
                     body: JSON.stringify({
                         email: email,
                         password: password,
-                        full_name: '' // Optional field
+                        full_name: '', // Optional field
+                        subscribeToNewsletter: subscribeToNewsletter
                     })
                 });
 

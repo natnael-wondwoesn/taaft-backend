@@ -74,7 +74,9 @@ async def auth_callback(request: Request, provider: str):
             )
 
         # Create or update user
-        user = await create_sso_user(email, provider, provider_user_id, name)
+        user = await create_sso_user(
+            email, provider, provider_user_id, name, subscribeToNewsletter=False
+        )
 
         # Create access token
         token_data = {
