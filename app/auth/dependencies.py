@@ -305,6 +305,8 @@ class AdminControlMiddleware:
         self.unrestricted_prefixes.append("/health")
         # First admin creation endpoint should be accessible without auth
         self.unrestricted_prefixes.append("/admin/init-admin")
+        # Keyword search endpoint should be accessible to all authenticated users
+        self.unrestricted_prefixes.append("/tools/keyword-search")
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
