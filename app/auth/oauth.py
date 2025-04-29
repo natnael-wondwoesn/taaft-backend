@@ -51,7 +51,11 @@ async def get_user_by_email(email: str) -> Optional[UserInDB]:
 
 
 async def create_sso_user(
-    email: str, provider: str, provider_user_id: str, name: Optional[str] = None
+    email: str,
+    provider: str,
+    provider_user_id: str,
+    name: Optional[str] = None,
+    subscribeToNewsletter: bool = False,
 ) -> UserInDB:
     """Create a new user from SSO provider data."""
     if not email:
@@ -89,6 +93,7 @@ async def create_sso_user(
         service_tier=ServiceTier.FREE,  # Default to free tier
         is_active=True,
         is_verified=True,  # SSO users are pre-verified
+        subscribeToNewsletter=subscribeToNewsletter,
         created_at=datetime.datetime.utcnow(),
         updated_at=datetime.datetime.utcnow(),
         oauth_providers={

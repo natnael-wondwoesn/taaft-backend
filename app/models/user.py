@@ -45,6 +45,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     full_name: Optional[str] = None
+    subscribeToNewsletter: bool = False
 
     @validator("password")
     def password_strength(cls, v):
@@ -62,6 +63,7 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     password: Optional[str] = None
     service_tier: Optional[ServiceTier] = None
+    subscribeToNewsletter: Optional[bool] = None
 
 
 class OAuthProvider(str, Enum):
@@ -81,6 +83,7 @@ class UserInDB(BaseModel):
     service_tier: ServiceTier = ServiceTier.FREE
     is_active: bool = True
     is_verified: bool = False
+    subscribeToNewsletter: bool = False
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     last_login: Optional[datetime.datetime] = None
@@ -106,6 +109,7 @@ class UserResponse(BaseModel):
     service_tier: ServiceTier
     is_active: bool
     is_verified: bool
+    subscribeToNewsletter: bool = False
     created_at: datetime.datetime
     oauth_providers: Dict[str, Dict[str, Any]] = {}
     usage: dict

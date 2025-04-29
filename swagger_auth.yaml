@@ -26,6 +26,10 @@ paths:
                   minimum: 8
                 full_name:
                   type: string
+                subscribeToNewsletter:
+                  type: boolean
+                  description: Whether the user wants to subscribe to the newsletter
+                  default: false
       responses:
         '201':
           description: User registered successfully
@@ -232,6 +236,42 @@ paths:
         '400':
           description: Invalid or expired reset token
       security: []
+
+  /auth/update-newsletter-preference:
+    post:
+      tags:
+        - Authentication
+      summary: Update newsletter subscription preference
+      description: Update the user's preference for receiving newsletters
+      operationId: updateNewsletterPreference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - subscribeToNewsletter
+              properties:
+                subscribeToNewsletter:
+                  type: boolean
+                  description: Whether the user wants to subscribe to the newsletter
+      responses:
+        '200':
+          description: Newsletter preference updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Failed to update newsletter preference
+        '401':
+          description: Unauthorized
+      security:
+        - bearerAuth: []
 
 components:
   schemas:
