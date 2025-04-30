@@ -24,6 +24,7 @@ from .models import (
 from .database import ChatDB, get_chat_db
 from .llm_service import llm_service
 from ..logger import logger
+from ..database.database import database
 
 router = APIRouter(
     prefix="/api/chat",
@@ -41,6 +42,25 @@ async def create_chat_session(
     """Create a new chat session"""
     # Convert Pydantic model to dict
     session_data = session.dict()
+
+    # Validate user_id if provided
+    if session.user_id:
+        # Check if the user_id is a valid ObjectId
+        try:
+            user_id_obj = ObjectId(session.user_id)
+        except:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid user ID format: {session.user_id}",
+            )
+
+        # Check if the user exists in the database
+        user = await database.users.find_one({"_id": user_id_obj})
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"User with ID {session.user_id} not found",
+            )
 
     # Create session in database
     created_session = await chat_db.create_session(session_data)

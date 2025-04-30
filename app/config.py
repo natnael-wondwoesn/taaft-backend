@@ -23,6 +23,14 @@ class Settings(BaseSettings):
     DEFAULT_CHAT_MODEL: str = os.getenv("DEFAULT_CHAT_MODEL", "gpt4")
     MAX_MESSAGES_PER_SESSION: int = int(os.getenv("MAX_MESSAGES_PER_SESSION", "100"))
 
+    # SMTP settings for email
+    SMTP_SERVER: str = os.getenv("SMTP_SERVER", "")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USERNAME: str = os.getenv("SMTP_USERNAME", "")
+    SMTP_PASSWORD: str = os.getenv("hxndgvqecwvpvigo", "hxndgvqecwvpvigo")
+    EMAIL_FROM: str = os.getenv("EMAIL_FROM", "noreply@example.com")
+    EMAIL_ENABLED: bool = os.getenv("EMAIL_ENABLED", "False").lower() == "true"
+
     # API settings
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "TAAFT Backend"
