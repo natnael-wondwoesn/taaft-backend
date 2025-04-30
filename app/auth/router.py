@@ -16,6 +16,7 @@ from bson import ObjectId
 from pydantic import EmailStr
 from ..logger import logger
 import os
+import random
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -78,18 +79,31 @@ async def register_user(user_data: UserCreate, request: Request = None):
         else os.getenv("BASE_URL", "http://localhost:8000")
     )
 
-    # Import here to avoid circular imports
-    from ..services.email_service import send_verification_email
+    # Log verification attempt
+    logger.info(f"Attempting to send verification email to {user_data.email}")
 
-    # Send verification email
-    email_sent = send_verification_email(user_data.email, verification_token, base_url)
+    try:
+        # Import here to avoid circular imports
+        from ..services.email_service import send_verification_email
 
-    if not email_sent:
-        # Email sending failed, log the token for debugging
-        logger.info(
-            f"Verification email not sent to {user_data.email}. Token: {verification_token}"
+        # Send verification email
+        email_sent = send_verification_email(
+            user_data.email, verification_token, base_url
         )
-        logger.warning(f"Failed to send verification email to {user_data.email}")
+
+        if not email_sent:
+            # Email sending failed, log the token for debugging
+            logger.info(
+                f"Verification email not sent to {user_data.email}. Token: {verification_token}"
+            )
+            logger.warning(f"Failed to send verification email to {user_data.email}")
+        else:
+            logger.info(f"Verification email successfully sent to {user_data.email}")
+    except Exception as e:
+        logger.error(
+            f"Exception while sending verification email to {user_data.email}: {str(e)}"
+        )
+        logger.info(f"Verification token for manual verification: {verification_token}")
 
     # Convert to response model
     return UserResponse(
@@ -336,3 +350,159 @@ async def update_newsletter_preference(
     )
 
     return {"message": "Newsletter preference updated successfully"}
+
+
+@router.post("/request-login-code", response_model=Dict[str, str])
+async def request_login_code(email: EmailStr = Body(..., embed=True)):
+    """
+    Request a one-time login code for passwordless login.
+
+    This endpoint generates a numeric code and sends it to the user's email.
+    The code is valid for 10 minutes.
+    """
+    # Find user
+    user = await database.users.find_one({"email": email})
+    if not user:
+        # For security, don't reveal if email exists or not
+        return {"message": "If the email exists, a login code will be sent"}
+
+    # Generate a 6-digit login code
+    login_code = "".join(random.choice("0123456789") for _ in range(6))
+
+    # Hash the login code for storage
+    hashed_code = get_password_hash(login_code)
+
+    # Calculate expiration time (10 minutes from now)
+    expiration_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+
+    # Store the login code in the database
+    await database.login_codes.update_one(
+        {"user_id": ObjectId(user["_id"])},
+        {
+            "$set": {
+                "hashed_code": hashed_code,
+                "expires_at": expiration_time,
+                "created_at": datetime.datetime.utcnow(),
+            }
+        },
+        upsert=True,
+    )
+
+    # Import email service
+    from ..services.email_service import send_login_code_email
+
+    # Send the login code via email
+    email_sent = send_login_code_email(email, login_code)
+
+    if not email_sent:
+        logger.warning(f"Failed to send login code email to {email}")
+
+    return {"message": "If the email exists, a login code will be sent"}
+
+
+@router.post("/verify-login-code", response_model=Dict[str, str])
+async def verify_login_code(email: EmailStr = Body(...), code: str = Body(...)):
+    """
+    Verify a one-time login code and return access tokens.
+
+    This endpoint validates the provided login code and returns JWT tokens if valid.
+    """
+    # Find user
+    user = await database.users.find_one({"email": email})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or login code",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Retrieve stored login code
+    login_code_doc = await database.login_codes.find_one(
+        {"user_id": ObjectId(user["_id"])}
+    )
+    if not login_code_doc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or login code",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Check if code is expired
+    if datetime.datetime.utcnow() > login_code_doc["expires_at"]:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Login code has expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Verify the code
+    if not verify_password(code, login_code_doc["hashed_code"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or login code",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Delete the used code
+    await database.login_codes.delete_one({"user_id": ObjectId(user["_id"])})
+
+    # Create token data
+    token_data = {
+        "sub": str(user["_id"]),
+        "service_tier": user["service_tier"],
+        "is_verified": user["is_verified"],
+    }
+
+    # Create access and refresh tokens
+    access_token = create_access_token(data=token_data)
+    refresh_token = create_refresh_token(data=token_data)
+
+    logger.info(f"User logged in via one-time code: {email}")
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+    }
+
+
+@router.post("/resend-verification", response_model=Dict[str, str])
+async def resend_verification_email(
+    email: EmailStr = Body(..., embed=True), request: Request = None
+):
+    """
+    Resend verification email to a user who hasn't verified their email yet.
+    """
+    # Find user
+    user = await database.users.find_one({"email": email})
+
+    # If user doesn't exist or is already verified, return generic message
+    if not user or user.get("is_verified", False):
+        return {
+            "message": "If the email exists and is not verified, a verification link will be sent"
+        }
+
+    # Create a verification token
+    verification_token = create_access_token(
+        data={"sub": str(user["_id"]), "purpose": "email_verification"}
+    )
+
+    # Get base URL from request or settings
+    base_url = (
+        str(request.base_url)
+        if request
+        else os.getenv("BASE_URL", "http://localhost:8000")
+    )
+
+    # Import email service
+    from ..services.email_service import send_verification_email
+
+    # Send verification email
+    email_sent = send_verification_email(email, verification_token, base_url)
+
+    if not email_sent:
+        logger.warning(f"Failed to send verification email to {email}")
+
+    return {
+        "message": "If the email exists and is not verified, a verification link will be sent"
+    }

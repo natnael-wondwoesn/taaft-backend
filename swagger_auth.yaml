@@ -273,6 +273,112 @@ paths:
       security:
         - bearerAuth: []
 
+  /auth/request-login-code:
+    post:
+      tags:
+        - Authentication
+      summary: Request login code
+      description: Request a one-time login code for passwordless authentication. A 6-digit code will be sent to the email address if it exists in the system.
+      operationId: requestLoginCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Login code request processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "If the email exists, a login code will be sent"
+      security: []
+
+  /auth/verify-login-code:
+    post:
+      tags:
+        - Authentication
+      summary: Verify login code
+      description: Verify a one-time login code and return JWT tokens if valid
+      operationId: verifyLoginCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - code
+              properties:
+                email:
+                  type: string
+                  format: email
+                code:
+                  type: string
+                  description: The 6-digit code sent to the user's email
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: "bearer"
+        '401':
+          description: Invalid email or code, or the code has expired
+      security: []
+
+  /auth/resend-verification:
+    post:
+      tags:
+        - Authentication
+      summary: Resend verification email
+      description: Resend the email verification link to a user who hasn't verified their email yet
+      operationId: resendVerificationEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Verification email request processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "If the email exists and is not verified, a verification link will be sent"
+      security: []
+
 components:
   schemas:
     UserResponse:

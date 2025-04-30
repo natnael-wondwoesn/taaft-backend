@@ -158,6 +158,20 @@ async def setup_database():
         await database.keywords.create_index("word", unique=True)
         logger.info("Created indexes for keywords collection")
 
+    # Initialize login_codes collection
+    if "login_codes" not in collections:
+        await database.create_collection("login_codes")
+        logger.info("Created login_codes collection")
+
+        # Create indexes for login_codes collection
+        await database.login_codes.create_index("user_id", unique=True)
+        await database.login_codes.create_index("expires_at")
+        await database.login_codes.create_index("created_at")
+
+        # Create TTL index to automatically delete expired codes
+        await database.login_codes.create_index("expires_at", expireAfterSeconds=0)
+        logger.info("Created indexes for login_codes collection")
+
     logger.info("Database setup completed successfully")
 
 
