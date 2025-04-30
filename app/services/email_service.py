@@ -22,9 +22,14 @@ def send_email(
     Returns:
         bool: True if email was sent successfully, False otherwise
     """
+    # Log debug information about email configuration
+    logger.info(
+        f"Email configuration: ENABLED={settings.EMAIL_ENABLED}, SERVER={settings.SMTP_SERVER}, PORT={settings.SMTP_PORT}"
+    )
+
     # Skip if email is not enabled in settings
     if not settings.EMAIL_ENABLED:
-        logger.info(
+        logger.warning(
             f"Email sending is disabled. Would have sent email to {to_email} with subject '{subject}'"
         )
         return False
@@ -35,7 +40,9 @@ def send_email(
         or not settings.SMTP_USERNAME
         or not settings.SMTP_PASSWORD
     ):
-        logger.warning("SMTP settings not configured. Email not sent.")
+        logger.warning(
+            f"SMTP settings not configured. SERVER={settings.SMTP_SERVER}, USERNAME={settings.SMTP_USERNAME}, PASSWORD={'*****' if settings.SMTP_PASSWORD else 'Not set'}"
+        )
         return False
 
     message = MIMEMultipart("alternative")
@@ -61,11 +68,16 @@ def send_email(
 
     try:
         # Connect to SMTP server
+        logger.info(
+            f"Attempting to connect to SMTP server: {settings.SMTP_SERVER}:{settings.SMTP_PORT}"
+        )
         server = smtplib.SMTP(settings.SMTP_SERVER, settings.SMTP_PORT)
         server.starttls()  # Secure the connection
-        server.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+        logger.info(f"Attempting SMTP login with username: {settings.SMTP_USERNAME}")
+        server.login(settings.SMTP_USERNAME, "hxndgvqecwvpvigo")
 
         # Send email
+        logger.info(f"Sending email from {settings.EMAIL_FROM} to {to_email}")
         server.sendmail(settings.EMAIL_FROM, to_email, message.as_string())
         server.quit()
 

@@ -7,3 +7,8 @@ logs/app.log
 app/algolia/migrater/Algolia_index_load.py
 upgrade_user.py
 test_openai_api.py
+add_email_config.ps1
+check_email_config.ps1
+fix_env_file.ps1
+setup_email_config.ps1
+test_password_reset.py
