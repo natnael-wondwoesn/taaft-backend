@@ -21,6 +21,8 @@ class PublicFeaturedToolsMiddleware(BaseHTTPMiddleware):
             re.compile(r"^/tools/featured/?(\?.*)?$"),
             # New sponsored endpoint
             re.compile(r"^/tools/sponsored/?(\?.*)?$"),
+            # Main tools endpoint
+            re.compile(r"^/tools/?(\?.*)?$"),
         ]
 
     async def dispatch(self, request: Request, call_next):

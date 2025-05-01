@@ -327,6 +327,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             is_featured=tool.get("is_featured", False),
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
+            categories=tool.get("categories"),
         )
     except Exception as e:
         logger.error(f"Error creating tool response: {str(e)}")
