@@ -71,6 +71,9 @@ class CategoriesService:
 
             # If we have categories in the dedicated collection, return those
             if categories_list:
+                logger.info(
+                    f"Found {len(categories_list)} categories in categories collection"
+                )
                 return [
                     CategoryResponse(
                         id=cat["id"],
@@ -82,6 +85,9 @@ class CategoriesService:
                 ]
 
             # Otherwise, fall back to extracting from tools collection
+            logger.warning(
+                "No categories found in categories collection, checking tools collection"
+            )
             # Get tools collection
             tools_collection = await self._get_tools_collection()
 
@@ -115,7 +121,7 @@ class CategoriesService:
                         )
                     )
 
-            # If no categories were found in the database, use the defaults
+            # If no categories were found in either collection, only then use the defaults
             if not categories:
                 logger.warning("No categories found in database, using defaults")
                 for category in self.default_categories:
