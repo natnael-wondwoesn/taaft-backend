@@ -80,6 +80,7 @@ class CategoriesService:
                         name=cat["name"],
                         slug=cat["slug"],
                         count=cat.get("count", 0),
+                        svg=cat.get("svg"),
                     )
                     for cat in categories_list
                 ]
@@ -118,6 +119,7 @@ class CategoriesService:
                                 "slug", cat_name.lower().replace(" ", "-")
                             ),
                             count=count,
+                            svg=category.get("svg"),
                         )
                     )
 
@@ -131,6 +133,7 @@ class CategoriesService:
                             name=category["name"],
                             slug=category["slug"],
                             count=0,
+                            svg=None,
                         )
                     )
 
@@ -144,13 +147,25 @@ class CategoriesService:
             # Return default categories in case of error
             return [
                 CategoryResponse(
-                    id="marketing", name="Marketing", slug="marketing", count=0
+                    id="marketing",
+                    name="Marketing",
+                    slug="marketing",
+                    count=0,
+                    svg=None,
                 ),
                 CategoryResponse(
-                    id="e-commerce", name="E-Commerce", slug="e-commerce", count=0
+                    id="e-commerce",
+                    name="E-Commerce",
+                    slug="e-commerce",
+                    count=0,
+                    svg=None,
                 ),
                 CategoryResponse(
-                    id="analytics", name="Analytics", slug="analytics", count=0
+                    id="analytics",
+                    name="Analytics",
+                    slug="analytics",
+                    count=0,
+                    svg=None,
                 ),
             ]
 
@@ -175,6 +190,7 @@ class CategoriesService:
                     name=category["name"],
                     slug=category["slug"],
                     count=category.get("count", 0),
+                    svg=category.get("svg"),
                 )
 
             # If not found, fall back to getting from all categories
@@ -213,6 +229,7 @@ class CategoriesService:
                     name=category["name"],
                     slug=category["slug"],
                     count=category.get("count", 0),
+                    svg=category.get("svg"),
                 )
 
             # If not found, fall back to getting from all categories
@@ -301,6 +318,7 @@ class CategoriesService:
                     if not existing_category
                     else existing_category.get("count", 0) + 1
                 ),
+                svg=category_data.get("svg"),
             )
 
         except Exception as e:

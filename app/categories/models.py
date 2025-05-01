@@ -25,6 +25,7 @@ class Category(BaseModel):
     id: str
     name: str
     slug: str
+    svg: Optional[str] = None
 
 
 class CategoryResponse(Category):

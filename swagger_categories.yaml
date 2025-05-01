@@ -81,6 +81,9 @@ components:
         count:
           type: integer
           description: Number of tools in this category
+        svg:
+          type: string
+          description: SVG icon for the category
       required:
         - id
         - name
