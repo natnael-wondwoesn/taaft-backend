@@ -14,6 +14,8 @@ from ..logger import logger
 import datetime
 from bson import ObjectId
 from pymongo import ASCENDING, DESCENDING
+from ..auth.dependencies import get_admin_user
+from ..models.user import UserInDB
 
 # Create router
 router = APIRouter(
@@ -257,10 +259,11 @@ async def update_glossary_term(
 async def delete_glossary_term(
     term_id: str,
     glossary_db: GlossaryDB = Depends(get_glossary_db),
+    current_user: UserInDB = Depends(get_admin_user),
 ):
     """
     Delete a glossary term.
-    No authentication required for this implementation (free tier access).
+    Admin access required.
     """
     try:
         # Check if term exists first
