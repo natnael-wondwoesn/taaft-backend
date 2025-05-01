@@ -314,6 +314,7 @@ async def keyword_search_endpoint(
     """
     Search for tools using exact keywords match.
     This endpoint performs a direct database search without using LLM or Algolia.
+    Accessible to all authenticated users, not just admins.
 
     - **keywords**: List of keywords to search for
     - **skip**: Number of results to skip (for pagination)

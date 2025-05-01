@@ -13,3 +13,16 @@ fix_env_file.ps1
 setup_email_config.ps1
 test_password_reset.py
 generate_category_svgs_llm.py
+app/__pycache__/main.cpython-312.pyc
+app/__pycache__/main.cpython-312.pyc
+app/__pycache__/websocket.cpython-312.pyc
+app/chat/__pycache__/llm_service.cpython-312.pyc
+app/chat/__pycache__/models.cpython-312.pyc
+app/chat/__pycache__/router.cpython-312.pyc
+app/chat/__pycache__/routes.cpython-312.pyc
+app/chat/__pycache__/schemas.cpython-312.pyc
+app/chat/__pycache__/utils.cpython-312.pyc
+app/chat/__pycache__/websocket.cpython-312.pyc
+app/chat/__pycache__/websocket.cpython-312.pyc
+app/__pycache__/main.cpython-312.pyc
+/app/__pycache__
