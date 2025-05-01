@@ -12,3 +12,4 @@ check_email_config.ps1
 fix_env_file.ps1
 setup_email_config.ps1
 test_password_reset.py
+generate_category_svgs_llm.py
