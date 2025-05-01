@@ -146,6 +146,41 @@ async def setup_database():
         await database.categories.create_index("slug", unique=True)
         await database.categories.create_index("count")
         await database.categories.create_index([("name", TEXT)])
+
+        # Check if there are already categories in the collection
+        categories_count = await database.categories.count_documents({})
+        if categories_count == 0:
+            # Only seed default categories if none exist
+            logger.info("No categories found, seeding default categories")
+            default_categories = [
+                {
+                    "id": "marketing",
+                    "name": "Marketing",
+                    "slug": "marketing",
+                    "count": 0,
+                },
+                {
+                    "id": "e-commerce",
+                    "name": "E-Commerce",
+                    "slug": "e-commerce",
+                    "count": 0,
+                },
+                {
+                    "id": "analytics",
+                    "name": "Analytics",
+                    "slug": "analytics",
+                    "count": 0,
+                },
+            ]
+            for category in default_categories:
+                category["created_at"] = datetime.datetime.utcnow()
+            await database.categories.insert_many(default_categories)
+            logger.info(f"Inserted {len(default_categories)} default categories")
+        else:
+            logger.info(
+                f"Found {categories_count} existing categories, skipping default seeding"
+            )
+
         logger.info("Created indexes for categories collection")
 
     # Initialize keywords collection
