@@ -68,8 +68,9 @@ async def register_user(user_data: UserCreate, request: Request = None):
     base_url = (
         str(request.base_url)
         if request
-        else os.getenv("BASE_URL", "http://localhost:8000")
+        else os.getenv("BASE_URL", "https://taaft-backend.onrender.com")
     )
+    logger.info(f"Base URL for verification email: {base_url}")
     logger.info(f"Attempting to send verification email to {user_data.email}")
 
     try:
