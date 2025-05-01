@@ -169,6 +169,8 @@ class RateLimitMiddleware:
             or request.url.path.startswith("/public/")
             or request.url.path.startswith("/tools/featured")
             or request.url.path.startswith("/tools/sponsored")
+            or request.url.path == "/api/auth/reset-password"
+            or request.url.path == "/tools"  # Allow direct access to /tools endpoint
         ):
             return await self.app(scope, receive, send)
 
@@ -326,6 +328,7 @@ class AdminControlMiddleware:
             "/public/",  # Public endpoints
             "/tools/featured",  # Featured tools endpoint
             "/tools/sponsored",  # Sponsored tools endpoint
+            "/tools",  # Direct tools endpoint
         ]
 
         # If it's a public endpoint, skip auth checks

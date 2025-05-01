@@ -190,7 +190,7 @@ async def save_categories_to_db(categories: List[Dict[str, str]]) -> None:
     print(f"Saving {len(categories)} categories to database...")
 
     # Clear existing categories
-    await categories_collection.delete_many({})
+    # await categories_collection.delete_many({})
 
     # Add a timestamp and initialize count to 0
     timestamp = datetime.utcnow()

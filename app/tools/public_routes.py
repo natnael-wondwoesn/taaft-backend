@@ -11,6 +11,57 @@ from .tools_service import get_tools
 public_router = APIRouter(prefix="/public/tools", tags=["public_tools"])
 
 
+@public_router.get("/", response_model=PaginatedToolsResponse)
+async def list_public_tools(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(500, ge=1, le=1000),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    price_type: Optional[str] = Query(None, description="Filter by price type"),
+    sort_by: Optional[str] = Query(
+        None, description="Field to sort by (name, created_at, updated_at)"
+    ),
+    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+):
+    """
+    List all tools with pagination, filtering and sorting.
+    This endpoint is publicly accessible without authentication.
+    """
+    # Build filters dictionary from query parameters
+    filters = {}
+    if category:
+        filters["category"] = category
+    if price_type:
+        filters["price"] = price_type
+
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    # Get the tools with filtering and sorting
+    tools = await get_tools(
+        skip=skip,
+        limit=limit,
+        filters=filters if filters else None,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
+
+    # Get total count with the same filters
+    total = await get_tools(count_only=True, filters=filters if filters else None)
+
+    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+
+
 @public_router.get("/featured", response_model=PaginatedToolsResponse)
 async def get_featured_tools(
     skip: int = Query(0, ge=0),
