@@ -339,6 +339,10 @@ class AdminControlMiddleware:
         # Get request method
         method = request.method
 
+        # Allow POST requests to /tools/keyword-search without admin check
+        if path == "/tools/keyword-search" and method == "POST":
+            return await self.app(scope, receive, send)
+
         # Check if method is restricted (POST, PUT, DELETE)
         if method in ["POST", "PUT", "DELETE", "PATCH"]:
             # Check if path is unrestricted

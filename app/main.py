@@ -70,6 +70,9 @@ from .terms import router as terms_router
 # Import the GHL (GoHighLevel) router
 from .ghl.router import router as ghl_router
 
+# Import the blog router
+from .blog import router as blog_router
+
 # Import the glossary seed script
 from .seed_glossary import seed_glossary_terms
 
@@ -176,6 +179,7 @@ app.include_router(categories_router)  # Include categories router
 app.include_router(terms_router)  # Include terms router
 app.include_router(admin_router)  # Include admin router
 app.include_router(ghl_router)  # Include GHL integration router
+app.include_router(blog_router)  # Include blog router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
