@@ -156,6 +156,8 @@ app.add_middleware(
 # The order is important here:
 # 1. PublicFeaturedToolsMiddleware - to mark certain routes as public
 # 2. AdminControlMiddleware - to restrict admin operations
+#    Note: Regular authenticated endpoints like /tools/keyword-search will use their
+#    own authentication via the route handler's get_current_active_user dependency
 # 3. RateLimitMiddleware - to limit request rates for authenticated users
 app.add_middleware(PublicFeaturedToolsMiddleware)
 app.add_middleware(AdminControlMiddleware)
