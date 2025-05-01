@@ -300,7 +300,7 @@ class AdminControlMiddleware:
         """Initialize the middleware with the ASGI application."""
         self.app = app
         # Paths that are allowed for non-admin users
-        self.unrestricted_prefixes = ["/chat", "/algolia", "/api/chat"]
+        self.unrestricted_prefixes = ["/chat", "/algolia", "/api/chat", "/tools"]
         # Auth endpoints should also be accessible
         self.unrestricted_prefixes.append("/auth")
         # Health check should be accessible
@@ -310,6 +310,8 @@ class AdminControlMiddleware:
         # Glossary endpoints should be accessible to all users for GET/POST/PUT operations
         # DELETE operations are restricted at the route handler level with the get_admin_user dependency
         self.unrestricted_prefixes.append("/api/glossary")
+        # Keyword search endpoint should be accessible to all authenticated users
+        self.unrestricted_prefixes.append("/tools/keyword-search")
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
