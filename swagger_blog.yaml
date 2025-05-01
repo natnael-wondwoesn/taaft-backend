@@ -1,0 +1,325 @@
+openapi: 3.0.0
+info:
+  title: TAAFT Blog API
+  description: API for accessing blog articles with bidirectional linking to glossary terms
+  version: 1.0.0
+tags:
+  - name: blog
+    description: Operations for accessing blog articles
+
+paths:
+  /api/blog/articles:
+    get:
+      tags:
+        - blog
+      summary: List blog articles
+      description: |
+        List blog articles with pagination and sorting.
+        No authentication required (free tier access).
+      parameters:
+        - name: skip
+          in: query
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: sort_by
+          in: query
+          description: Field to sort by
+          required: false
+          schema:
+            type: string
+            default: published_date
+        - name: sort_desc
+          in: query
+          description: Sort in descending order
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: List of blog articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogArticleResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/blog/articles/{article_id}:
+    get:
+      tags:
+        - blog
+      summary: Get a blog article
+      description: |
+        Get a specific blog article by ID with related glossary terms.
+        No authentication required (free tier access).
+      parameters:
+        - name: article_id
+          in: path
+          description: ID of the blog article
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Blog article with related glossary terms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogArticleWithGlossaryTerms'
+        '404':
+          description: Blog article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/blog/by-term/{term_id}:
+    get:
+      tags:
+        - blog
+      summary: Get blog articles related to a glossary term
+      description: |
+        Get blog articles related to a specific glossary term.
+        No authentication required (free tier access).
+      parameters:
+        - name: term_id
+          in: path
+          description: ID of the glossary term
+          required: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 50
+      responses:
+        '200':
+          description: List of related blog articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RelatedBlogArticle'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/blog/glossary-terms:
+    get:
+      tags:
+        - blog
+      summary: Get a list of glossary terms
+      description: |
+        Get a list of glossary terms with slug and short definition.
+        Optimized for frontend consumption.
+        No authentication required (free tier access).
+      parameters:
+        - name: skip
+          in: query
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 500
+        - name: search
+          in: query
+          description: Search text in name
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of glossary terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlossaryTermSummary'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    BlogArticleBase:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the blog article
+        slug:
+          type: string
+          description: URL-friendly slug for the article
+        content:
+          type: string
+          description: Content of the blog article
+        summary:
+          type: string
+          description: Brief summary of the article
+        author:
+          type: string
+          description: Author of the article
+        published_date:
+          type: string
+          format: date-time
+          description: Date when the article was published
+        last_updated:
+          type: string
+          format: date-time
+          description: Date when the article was last updated
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the article
+        related_glossary_terms:
+          type: array
+          items:
+            type: string
+          description: IDs of related glossary terms
+      required:
+        - title
+        - slug
+        - content
+        - summary
+        - author
+        - published_date
+    
+    BlogArticleResponse:
+      allOf:
+        - $ref: '#/components/schemas/BlogArticleBase'
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the blog article
+          required:
+            - id
+    
+    BlogArticleWithGlossaryTerms:
+      allOf:
+        - $ref: '#/components/schemas/BlogArticleResponse'
+        - type: object
+          properties:
+            related_glossary_term_details:
+              type: array
+              items:
+                $ref: '#/components/schemas/GlossaryTermSummary'
+              description: Details of related glossary terms
+    
+    RelatedBlogArticle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the blog article
+        title:
+          type: string
+          description: The title of the blog article
+        slug:
+          type: string
+          description: URL-friendly slug for the article
+        summary:
+          type: string
+          description: Brief summary of the article
+        published_date:
+          type: string
+          format: date-time
+          description: Date when the article was published
+      required:
+        - id
+        - title
+        - slug
+        - summary
+        - published_date
+    
+    GlossaryTermSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the glossary term
+        name:
+          type: string
+          description: Name of the glossary term
+        slug:
+          type: string
+          description: URL-friendly slug for the term
+        short_definition:
+          type: string
+          description: Brief definition of the term
+      required:
+        - id
+        - name
+        - slug
+        - short_definition
+    
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message 

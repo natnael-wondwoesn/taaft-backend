@@ -4,6 +4,7 @@ Combine separate Swagger YAML files into a single complete Swagger documentation
 """
 import os
 import yaml
+import copy
 
 
 def read_yaml(file_path):
@@ -20,120 +21,104 @@ def read_yaml(file_path):
         return {}
 
 
-def main():
-    print("Starting Swagger combination process...")
-
-    # Read the base Swagger file
-    base_swagger = read_yaml("swagger.yaml")
-
-    # Initialize paths and schemas
-    if "paths" not in base_swagger:
-        base_swagger["paths"] = {}
-        print("Initialized empty paths dictionary")
-    elif base_swagger["paths"] is None:
-        base_swagger["paths"] = {}
-        print("Paths was None, initialized empty dictionary")
-
-    if "components" not in base_swagger:
-        base_swagger["components"] = {}
-        print("Initialized empty components dictionary")
-
-    if "schemas" not in base_swagger["components"]:
-        base_swagger["components"]["schemas"] = {}
-        print("Initialized empty schemas dictionary")
-
-    # List of all module Swagger files
-    module_files = [
-        "swagger_auth.yaml",
-        "swagger_chat.yaml",
-        "swagger_search.yaml",
-        "swagger_tools.yaml",
-        "swagger_queue.yaml",
-        "swagger_glossary.yaml",
-        "swagger_categories.yaml",
-        "swagger_terms.yaml",
+def combine_swagger_files():
+    """Combine multiple Swagger YAML files into a single file."""
+    # Files to combine
+    files = [
+        "swagger.yaml",  # Base file with OpenAPI info
+        "swagger_auth.yaml",  # Authentication related endpoints
+        "swagger_tools.yaml",  # Tool-related endpoints
+        "swagger_search.yaml",  # Search-related endpoints
+        "swagger_glossary.yaml",  # Glossary-related endpoints
+        "swagger_queue.yaml",  # Site queue related endpoints
+        "swagger_chat.yaml",  # Chat related endpoints
+        "swagger_categories.yaml",  # Categories related endpoints
+        "swagger_terms.yaml",  # Term definition related endpoints
+        "swagger_blog.yaml",  # Blog related endpoints with glossary linking
     ]
 
-    # Process each module file
-    for module_file in module_files:
-        print(f"Processing {module_file}...")
-        if not os.path.exists(module_file):
-            print(f"Warning: {module_file} does not exist. Skipping.")
+    # Read the base file first
+    with open(files[0], "r") as f:
+        combined = yaml.safe_load(f)
+
+    # Initialize paths and components if they don't exist
+    if "paths" not in combined or combined["paths"] is None:
+        combined["paths"] = {}
+    if "components" not in combined or combined["components"] is None:
+        combined["components"] = {}
+    if (
+        "schemas" not in combined["components"]
+        or combined["components"]["schemas"] is None
+    ):
+        combined["components"]["schemas"] = {}
+
+    # Process each additional file
+    for file_path in files[1:]:
+        if not os.path.exists(file_path):
+            print(f"Warning: File {file_path} does not exist. Skipping.")
             continue
 
-        # Read the module file
-        module_swagger = read_yaml(module_file)
+        with open(file_path, "r") as f:
+            try:
+                data = yaml.safe_load(f)
 
-        # Merge paths
-        if "paths" in module_swagger and module_swagger["paths"]:
-            print(f"Merging paths from {module_file}")
-            paths_before = (
-                len(base_swagger["paths"])
-                if isinstance(base_swagger["paths"], dict)
-                else 0
-            )
-            base_swagger["paths"].update(module_swagger["paths"])
-            paths_after = (
-                len(base_swagger["paths"])
-                if isinstance(base_swagger["paths"], dict)
-                else 0
-            )
-            print(f"  Added {paths_after - paths_before} paths")
-        else:
-            print(f"No paths found in {module_file}")
+                # Only include the file's content if it has valid content
+                if data:
+                    # Add tags if they exist
+                    if "tags" in data and data["tags"]:
+                        if "tags" not in combined or combined["tags"] is None:
+                            combined["tags"] = []
 
-        # Merge components.schemas
-        if "components" in module_swagger and "schemas" in module_swagger["components"]:
-            if module_swagger["components"]["schemas"]:
-                print(f"Merging schemas from {module_file}")
-                schemas_before = (
-                    len(base_swagger["components"]["schemas"])
-                    if isinstance(base_swagger["components"]["schemas"], dict)
-                    else 0
-                )
-                base_swagger["components"]["schemas"].update(
-                    module_swagger["components"]["schemas"]
-                )
-                schemas_after = (
-                    len(base_swagger["components"]["schemas"])
-                    if isinstance(base_swagger["components"]["schemas"], dict)
-                    else 0
-                )
-                print(f"  Added {schemas_after - schemas_before} schemas")
-            else:
-                print(f"Empty schemas in {module_file}")
-        else:
-            print(f"No schemas found in {module_file}")
+                        # Create a set of existing tag names to avoid duplicates
+                        existing_tags = {tag["name"] for tag in combined["tags"]}
 
-    # Clean up any placeholder comments in the paths
-    if isinstance(base_swagger["paths"], dict):
-        print("Checking for placeholder comments...")
-        placeholder_paths = []
-        for path_key, path_value in base_swagger["paths"].items():
-            if (
-                path_key == "# Placeholder for paths - will be filled in separate files"
-                or path_key == "#/paths"
-            ):
-                placeholder_paths.append(path_key)
-            elif isinstance(path_value, str) and "# Placeholder" in path_value:
-                placeholder_paths.append(path_key)
+                        # Add only tags that don't already exist
+                        for tag in data["tags"]:
+                            if tag["name"] not in existing_tags:
+                                combined["tags"].append(tag)
+                                existing_tags.add(tag["name"])
 
-        # Remove any found placeholders
-        if placeholder_paths:
-            print(f"Found {len(placeholder_paths)} placeholder items to remove")
-            for path_key in placeholder_paths:
-                base_swagger["paths"].pop(path_key, None)
-        else:
-            print("No placeholder comments found")
+                    # Add paths if they exist
+                    if "paths" in data and data["paths"]:
+                        for path, path_info in data["paths"].items():
+                            if path in combined["paths"]:
+                                # If path exists, merge the HTTP methods
+                                for method, method_info in path_info.items():
+                                    if method in combined["paths"][path]:
+                                        print(
+                                            f"Warning: Duplicate endpoint {method.upper()} {path} in {file_path}. Using the new definition."
+                                        )
+                                    combined["paths"][path][method] = method_info
+                            else:
+                                # If path doesn't exist, add it
+                                combined["paths"][path] = path_info
 
-    # Write the combined Swagger to a new file
-    try:
-        with open("combined_swagger.yaml", "w") as file:
-            yaml.dump(base_swagger, file, sort_keys=False)
-        print("Combined Swagger documentation generated: combined_swagger.yaml")
-    except Exception as e:
-        print(f"Error writing to combined_swagger.yaml: {e}")
+                    # Add components if they exist
+                    if "components" in data and data["components"]:
+                        for comp_type, comp_items in data["components"].items():
+                            if (
+                                comp_type not in combined["components"]
+                                or combined["components"][comp_type] is None
+                            ):
+                                combined["components"][comp_type] = {}
+
+                            # Merge the component items
+                            for item_name, item_info in comp_items.items():
+                                if item_name in combined["components"][comp_type]:
+                                    print(
+                                        f"Warning: Duplicate component {comp_type}.{item_name} in {file_path}. Using the new definition."
+                                    )
+                                combined["components"][comp_type][item_name] = item_info
+            except yaml.YAMLError as e:
+                print(f"Error parsing {file_path}: {e}")
+                continue
+
+    # Write combined YAML
+    with open("combined_swagger.yaml", "w") as f:
+        yaml.dump(combined, f, default_flow_style=False, sort_keys=False)
+
+    print("Combined Swagger file created: combined_swagger.yaml")
 
 
 if __name__ == "__main__":
-    main()
+    combine_swagger_files()

@@ -22,6 +22,8 @@ tags:
   description: Tools management
 - name: Sites Queue
   description: Prioritized queue of sites
+- name: blog
+  description: Operations for accessing blog articles
 paths:
   /auth/register:
     post:
@@ -50,6 +52,10 @@ paths:
                   minimum: 8
                 full_name:
                   type: string
+                subscribeToNewsletter:
+                  type: boolean
+                  description: Whether the user wants to subscribe to the newsletter
+                  default: false
       responses:
         '201':
           description: User registered successfully
@@ -156,7 +162,8 @@ paths:
       tags:
       - Authentication
       summary: Verify email
-      description: Verify user email with verification token
+      description: Verify user email with verification token. Users receive this token
+        via email when they register.
       operationId: verifyEmail
       requestBody:
         required: true
@@ -188,7 +195,8 @@ paths:
       tags:
       - Authentication
       summary: Request password reset
-      description: Request a password reset token
+      description: Request a password reset token. An email with a reset link will
+        be sent to the specified email address if the account exists.
       operationId: requestPasswordReset
       requestBody:
         required: true
@@ -250,172 +258,155 @@ paths:
         '400':
           description: Invalid or expired reset token
       security: []
-  /api/chat/sessions:
+  /auth/update-newsletter-preference:
     post:
       tags:
-      - Chat
-      summary: Create chat session
-      description: Create a new chat session
-      operationId: createChatSession
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChatSessionCreate'
-      responses:
-        '201':
-          description: Chat session created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChatSession'
-    get:
-      tags:
-      - Chat
-      summary: Get user sessions
-      description: Get all chat sessions for a user
-      operationId: getUserSessions
-      parameters:
-      - name: user_id
-        in: query
-        required: true
-        schema:
-          type: string
-      - name: skip
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 0
-          default: 0
-      - name: limit
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 100
-          default: 20
-      responses:
-        '200':
-          description: List of chat sessions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ChatSession'
-        '400':
-          description: User ID is required
-  /api/chat/sessions/{session_id}:
-    get:
-      tags:
-      - Chat
-      summary: Get chat session
-      description: Get a chat session by ID
-      operationId: getChatSession
-      parameters:
-      - name: session_id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Chat session details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChatSession'
-        '404':
-          description: Chat session not found
-    put:
-      tags:
-      - Chat
-      summary: Update chat session
-      description: Update a chat session
-      operationId: updateChatSession
-      parameters:
-      - name: session_id
-        in: path
-        required: true
-        schema:
-          type: string
+      - Authentication
+      summary: Update newsletter subscription preference
+      description: Update the user's preference for receiving newsletters
+      operationId: updateNewsletterPreference
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+              - subscribeToNewsletter
               properties:
-                title:
-                  type: string
-                model:
-                  $ref: '#/components/schemas/ChatModelType'
-                system_prompt:
-                  type: string
+                subscribeToNewsletter:
+                  type: boolean
+                  description: Whether the user wants to subscribe to the newsletter
       responses:
         '200':
-          description: Chat session updated successfully
+          description: Newsletter preference updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatSession'
-        '404':
-          description: Chat session not found
-    delete:
-      tags:
-      - Chat
-      summary: Delete chat session
-      description: Delete a chat session and all its messages
-      operationId: deleteChatSession
-      parameters:
-      - name: session_id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '204':
-          description: Chat session deleted successfully
-        '404':
-          description: Chat session not found
-  /api/chat/sessions/{session_id}/archive:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Failed to update newsletter preference
+        '401':
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+  /auth/request-login-code:
     post:
       tags:
-      - Chat
-      summary: Archive chat session
-      description: Archive a chat session (mark as inactive)
-      operationId: archiveChatSession
-      parameters:
-      - name: session_id
-        in: path
+      - Authentication
+      summary: Request login code
+      description: Request a one-time login code for passwordless authentication.
+        A 6-digit code will be sent to the email address if it exists in the system.
+      operationId: requestLoginCode
+      requestBody:
         required: true
-        schema:
-          type: string
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
       responses:
         '200':
-          description: Chat session archived successfully
+          description: Login code request processed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatSession'
-        '404':
-          description: Chat session not found
-  /api/chat/sessions/{session_id}/messages:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: If the email exists, a login code will be sent
+      security: []
+  /auth/verify-login-code:
+    post:
+      tags:
+      - Authentication
+      summary: Verify login code
+      description: Verify a one-time login code and return JWT tokens if valid
+      operationId: verifyLoginCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - code
+              properties:
+                email:
+                  type: string
+                  format: email
+                code:
+                  type: string
+                  description: The 6-digit code sent to the user's email
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: bearer
+        '401':
+          description: Invalid email or code, or the code has expired
+      security: []
+  /auth/resend-verification:
+    post:
+      tags:
+      - Authentication
+      summary: Resend verification email
+      description: Resend the email verification link to a user who hasn't verified
+        their email yet
+      operationId: resendVerificationEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Verification email request processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: If the email exists and is not verified, a verification
+                      link will be sent
+      security: []
+  /tools:
     get:
       tags:
-      - Chat
-      summary: Get chat messages
-      description: Get all messages for a chat session
-      operationId: getChatMessages
+      - Tools
+      summary: List tools
+      description: List all tools with pagination
+      operationId: listTools
       parameters:
-      - name: session_id
-        in: path
-        required: true
-        schema:
-          type: string
       - name: skip
         in: query
         required: false
@@ -423,121 +414,193 @@ paths:
           type: integer
           minimum: 0
           default: 0
+        description: Number of items to skip
       - name: limit
         in: query
         required: false
         schema:
           type: integer
           minimum: 1
-          maximum: 500
+          maximum: 1000
           default: 100
+        description: Maximum number of items to return
       responses:
         '200':
-          description: List of messages in the chat session
+          description: List of tools with pagination info
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
-        '404':
-          description: Chat session not found
+                $ref: '#/components/schemas/PaginatedToolsResponse'
+        '401':
+          description: Unauthorized
     post:
       tags:
-      - Chat
-      summary: Send chat message
-      description: Send a message to the chat and get a response from the LLM
-      operationId: sendChatMessage
+      - Tools
+      summary: Create tool
+      description: Create a new tool
+      operationId: createNewTool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolCreate'
+      responses:
+        '201':
+          description: Tool created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /tools/search:
+    get:
+      tags:
+      - Tools
+      summary: Search tools
+      description: Search for tools by name or description
+      operationId: searchToolsEndpoint
       parameters:
-      - name: session_id
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Search query
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        description: Number of items to skip
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+        description: Maximum number of items to return
+      responses:
+        '200':
+          description: Search results with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedToolsResponse'
+        '401':
+          description: Unauthorized
+  /tools/{tool_id}:
+    get:
+      tags:
+      - Tools
+      summary: Get tool
+      description: Get a specific tool by its UUID
+      operationId: getTool
+      parameters:
+      - name: tool_id
         in: path
         required: true
         schema:
           type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChatMessageRequest'
+          format: uuid
+        description: Tool UUID
       responses:
         '200':
-          description: Chat message sent and response received
+          description: Tool details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatMessageResponse'
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
         '404':
-          description: Chat session not found
-        '500':
-          description: Error getting response from language model
-  /api/chat/search:
-    get:
+          description: Tool not found
+    put:
       tags:
-      - Chat
-      summary: Search chat messages
-      description: Search for chat messages across sessions
-      operationId: searchChatMessages
+      - Tools
+      summary: Update tool
+      description: Update an existing tool
+      operationId: updateExistingTool
       parameters:
-      - name: query
-        in: query
+      - name: tool_id
+        in: path
         required: true
         schema:
           type: string
-      - name: user_id
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: limit
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 200
-          default: 50
-      responses:
-        '200':
-          description: Search results
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
-  /api/chat:
-    post:
-      tags:
-      - Chat
-      summary: Quick chat
-      description: Send a message without creating a session first (one-shot query)
-      operationId: quickChat
+          format: uuid
+        description: Tool UUID
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatMessageRequest'
+              $ref: '#/components/schemas/ToolUpdate'
       responses:
         '200':
-          description: Response from the LLM
+          description: Tool updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatMessageResponse'
-        '500':
-          description: Error getting response from language model
-  /ws:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+    delete:
+      tags:
+      - Tools
+      summary: Delete tool
+      description: Delete a tool
+      operationId: deleteExistingTool
+      parameters:
+      - name: tool_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Tool UUID
+      responses:
+        '204':
+          description: Tool deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
+  /tools/unique/{unique_id}:
     get:
       tags:
-      - Chat
-      summary: WebSocket connection
-      description: Establish a WebSocket connection for real-time chat
-      operationId: websocketEndpoint
+      - Tools
+      summary: Get tool by unique ID
+      description: Get a specific tool by its unique_id
+      operationId: getToolByUniqueIdentifier
+      parameters:
+      - name: unique_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Tool unique ID
       responses:
-        '101':
-          description: WebSocket connection established
+        '200':
+          description: Tool details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Tool not found
   /api/search/tools:
     get:
       tags:
@@ -970,208 +1033,6 @@ paths:
                 $ref: '#/components/schemas/SearchResult'
         '503':
           description: Search service is not configured
-  /tools:
-    get:
-      tags:
-      - Tools
-      summary: List tools
-      description: List all tools with pagination
-      operationId: listTools
-      parameters:
-      - name: skip
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 0
-          default: 0
-        description: Number of items to skip
-      - name: limit
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 1000
-          default: 100
-        description: Maximum number of items to return
-      responses:
-        '200':
-          description: List of tools with pagination info
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedToolsResponse'
-        '401':
-          description: Unauthorized
-    post:
-      tags:
-      - Tools
-      summary: Create tool
-      description: Create a new tool
-      operationId: createNewTool
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ToolCreate'
-      responses:
-        '201':
-          description: Tool created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ToolResponse'
-        '400':
-          description: Invalid input
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal server error
-  /tools/search:
-    get:
-      tags:
-      - Tools
-      summary: Search tools
-      description: Search for tools by name or description
-      operationId: searchToolsEndpoint
-      parameters:
-      - name: q
-        in: query
-        required: true
-        schema:
-          type: string
-        description: Search query
-      - name: skip
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 0
-          default: 0
-        description: Number of items to skip
-      - name: limit
-        in: query
-        required: false
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 1000
-          default: 100
-        description: Maximum number of items to return
-      responses:
-        '200':
-          description: Search results with pagination info
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedToolsResponse'
-        '401':
-          description: Unauthorized
-  /tools/{tool_id}:
-    get:
-      tags:
-      - Tools
-      summary: Get tool
-      description: Get a specific tool by its UUID
-      operationId: getTool
-      parameters:
-      - name: tool_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-        description: Tool UUID
-      responses:
-        '200':
-          description: Tool details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ToolResponse'
-        '401':
-          description: Unauthorized
-        '404':
-          description: Tool not found
-    put:
-      tags:
-      - Tools
-      summary: Update tool
-      description: Update an existing tool
-      operationId: updateExistingTool
-      parameters:
-      - name: tool_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-        description: Tool UUID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ToolUpdate'
-      responses:
-        '200':
-          description: Tool updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ToolResponse'
-        '401':
-          description: Unauthorized
-        '404':
-          description: Tool not found
-    delete:
-      tags:
-      - Tools
-      summary: Delete tool
-      description: Delete a tool
-      operationId: deleteExistingTool
-      parameters:
-      - name: tool_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-        description: Tool UUID
-      responses:
-        '204':
-          description: Tool deleted successfully
-        '401':
-          description: Unauthorized
-        '404':
-          description: Tool not found
-  /tools/unique/{unique_id}:
-    get:
-      tags:
-      - Tools
-      summary: Get tool by unique ID
-      description: Get a specific tool by its unique_id
-      operationId: getToolByUniqueIdentifier
-      parameters:
-      - name: unique_id
-        in: path
-        required: true
-        schema:
-          type: string
-        description: Tool unique ID
-      responses:
-        '200':
-          description: Tool details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ToolResponse'
-        '401':
-          description: Unauthorized
-        '404':
-          description: Tool not found
   /api/sites:
     post:
       tags:
@@ -1363,158 +1224,95 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/N8nSiteFormat'
-  /api/glossary/terms:
+  /api/chat/sessions:
+    post:
+      tags:
+      - Chat
+      summary: Create chat session
+      description: Create a new chat session
+      operationId: createChatSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionCreate'
+      responses:
+        '201':
+          description: Chat session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
     get:
       tags:
-      - glossary
-      summary: List glossary terms
-      description: 'List glossary terms with pagination and filtering.
-
-        No authentication required (free tier access).
-
-        '
+      - Chat
+      summary: Get user sessions
+      description: Get all chat sessions for a user
+      operationId: getUserSessions
       parameters:
-      - name: category
+      - name: user_id
         in: query
-        description: Filter by category
-        required: false
-        schema:
-          type: string
-      - name: search
-        in: query
-        description: Search text in name and definition
-        required: false
+        required: true
         schema:
           type: string
       - name: skip
         in: query
-        description: Number of items to skip
         required: false
         schema:
           type: integer
-          default: 0
           minimum: 0
+          default: 0
       - name: limit
         in: query
-        description: Number of items to return
         required: false
         schema:
           type: integer
-          default: 100
           minimum: 1
-          maximum: 500
-      - name: sort_by
-        in: query
-        description: Field to sort by
-        required: false
-        schema:
-          type: string
-          default: name
-      - name: sort_desc
-        in: query
-        description: Sort in descending order
-        required: false
-        schema:
-          type: boolean
-          default: false
+          maximum: 100
+          default: 20
       responses:
         '200':
-          description: List of glossary terms
+          description: List of chat sessions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GlossaryTermResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    post:
-      tags:
-      - glossary
-      summary: Create a glossary term
-      description: 'Create a new glossary term.
-
-        No authentication required (free tier access).
-
-        '
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GlossaryTermCreate'
-      responses:
-        '201':
-          description: Glossary term created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GlossaryTermResponse'
-        '409':
-          description: Glossary term with this name already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/glossary/terms/{term_id}:
+                  $ref: '#/components/schemas/ChatSession'
+        '400':
+          description: User ID is required
+  /api/chat/sessions/{session_id}:
     get:
       tags:
-      - glossary
-      summary: Get a glossary term
-      description: 'Get a specific glossary term by ID.
-
-        No authentication required (free tier access).
-
-        '
+      - Chat
+      summary: Get chat session
+      description: Get a chat session by ID
+      operationId: getChatSession
       parameters:
-      - name: term_id
+      - name: session_id
         in: path
-        description: ID of the glossary term
         required: true
         schema:
           type: string
       responses:
         '200':
-          description: Glossary term
+          description: Chat session details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GlossaryTermResponse'
+                $ref: '#/components/schemas/ChatSession'
         '404':
-          description: Glossary term not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Chat session not found
     put:
       tags:
-      - glossary
-      summary: Update a glossary term
-      description: 'Update an existing glossary term.
-
-        No authentication required (free tier access).
-
-        '
+      - Chat
+      summary: Update chat session
+      description: Update a chat session
+      operationId: updateChatSession
       parameters:
-      - name: term_id
+      - name: session_id
         in: path
-        description: ID of the glossary term
         required: true
         schema:
           type: string
@@ -1523,124 +1321,218 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GlossaryTermUpdate'
+              type: object
+              properties:
+                title:
+                  type: string
+                model:
+                  $ref: '#/components/schemas/ChatModelType'
+                system_prompt:
+                  type: string
       responses:
         '200':
-          description: Updated glossary term
+          description: Chat session updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GlossaryTermResponse'
+                $ref: '#/components/schemas/ChatSession'
         '404':
-          description: Glossary term not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '409':
-          description: Glossary term with this name already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Chat session not found
     delete:
       tags:
-      - glossary
-      summary: Delete a glossary term
-      description: 'Delete a glossary term.
-
-        No authentication required (free tier access).
-
-        '
+      - Chat
+      summary: Delete chat session
+      description: Delete a chat session and all its messages
+      operationId: deleteChatSession
       parameters:
-      - name: term_id
+      - name: session_id
         in: path
-        description: ID of the glossary term
         required: true
         schema:
           type: string
       responses:
         '204':
-          description: Glossary term deleted
+          description: Chat session deleted successfully
         '404':
-          description: Glossary term not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/glossary/categories:
-    get:
+          description: Chat session not found
+  /api/chat/sessions/{session_id}/archive:
+    post:
       tags:
-      - glossary
-      summary: Get all categories
-      description: 'Get all unique categories from the glossary terms.
-
-        No authentication required (free tier access).
-
-        '
+      - Chat
+      summary: Archive chat session
+      description: Archive a chat session (mark as inactive)
+      operationId: archiveChatSession
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
-          description: List of categories
+          description: Chat session archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+  /api/chat/sessions/{session_id}/messages:
+    get:
+      tags:
+      - Chat
+      summary: Get chat messages
+      description: Get all messages for a chat session
+      operationId: getChatMessages
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+      responses:
+        '200':
+          description: List of messages in the chat session
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /api/glossary/terms/count:
-    get:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          description: Chat session not found
+    post:
       tags:
-      - glossary
-      summary: Count glossary terms
-      description: 'Count the total number of glossary terms with optional filtering.
-
-        No authentication required (free tier access).
-
-        '
+      - Chat
+      summary: Send chat message
+      description: Send a message to the chat and get a response from the LLM
+      operationId: sendChatMessage
       parameters:
-      - name: category
-        in: query
-        description: Filter by category
-        required: false
+      - name: session_id
+        in: path
+        required: true
         schema:
           type: string
-      - name: search
-        in: query
-        description: Search text in name and definition
-        required: false
-        schema:
-          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
       responses:
         '200':
-          description: Count of glossary terms
+          description: Chat message sent and response received
           content:
             application/json:
               schema:
-                type: integer
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '404':
+          description: Chat session not found
         '500':
-          description: Internal server error
+          description: Error getting response from language model
+  /api/chat/sessions/{session_id}/messages/stream:
+    post:
+      tags:
+      - Chat
+      summary: Stream chat message
+      description: Send a message to the chat and get a streaming response from the
+        LLM using Server-Sent Events
+      operationId: streamChatMessage
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Stream of chat responses
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '404':
+          description: Chat session not found
+        '500':
+          description: Error streaming response from language model
+  /api/chat/search:
+    get:
+      tags:
+      - Chat
+      summary: Search chat messages
+      description: Search for chat messages across sessions
+      operationId: searchChatMessages
+      parameters:
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+      responses:
+        '200':
+          description: Search results
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+  /api/chat:
+    post:
+      tags:
+      - Chat
+      summary: Quick chat
+      description: Send a message without creating a session first (one-shot query)
+      operationId: quickChat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Response from the LLM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+        '500':
+          description: Error getting response from language model
   /api/categories:
     get:
       tags:
@@ -1789,6 +1681,230 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PopularTerm'
+  /api/terms/glossary-term:
+    post:
+      tags:
+      - Terms
+      summary: Get a specific term from the glossary
+      description: Retrieve a specific term from the glossary, or generate it using
+        LLM if it doesn't exist
+      operationId: getGlossaryTerm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlossaryTermRequest'
+      responses:
+        '200':
+          description: Term definition successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermDefinitionResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Error retrieving glossary term
+  /api/blog/articles:
+    get:
+      tags:
+      - blog
+      summary: List blog articles
+      description: 'List blog articles with pagination and sorting.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: skip
+        in: query
+        description: Number of items to skip
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: limit
+        in: query
+        description: Number of items to return
+        required: false
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: sort_by
+        in: query
+        description: Field to sort by
+        required: false
+        schema:
+          type: string
+          default: published_date
+      - name: sort_desc
+        in: query
+        description: Sort in descending order
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: List of blog articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogArticleResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/blog/articles/{article_id}:
+    get:
+      tags:
+      - blog
+      summary: Get a blog article
+      description: 'Get a specific blog article by ID with related glossary terms.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: article_id
+        in: path
+        description: ID of the blog article
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Blog article with related glossary terms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogArticleWithGlossaryTerms'
+        '404':
+          description: Blog article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/blog/by-term/{term_id}:
+    get:
+      tags:
+      - blog
+      summary: Get blog articles related to a glossary term
+      description: 'Get blog articles related to a specific glossary term.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: term_id
+        in: path
+        description: ID of the glossary term
+        required: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: Number of items to skip
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: limit
+        in: query
+        description: Number of items to return
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 50
+      responses:
+        '200':
+          description: List of related blog articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RelatedBlogArticle'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/blog/glossary-terms:
+    get:
+      tags:
+      - blog
+      summary: Get a list of glossary terms
+      description: 'Get a list of glossary terms with slug and short definition.
+
+        Optimized for frontend consumption.
+
+        No authentication required (free tier access).
+
+        '
+      parameters:
+      - name: skip
+        in: query
+        description: Number of items to skip
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: limit
+        in: query
+        description: Number of items to return
+        required: false
+        schema:
+          type: integer
+          default: 100
+          minimum: 1
+          maximum: 500
+      - name: search
+        in: query
+        description: Search text in name
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of glossary terms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlossaryTermSummary'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -1832,215 +1948,6 @@ components:
               type: integer
             storage_used_bytes:
               type: integer
-    MessageRole:
-      type: string
-      enum:
-      - user
-      - assistant
-      - system
-    ChatModelType:
-      type: string
-      enum:
-      - gpt4
-      - claude
-      - llama
-      - default
-    MessageBase:
-      type: object
-      required:
-      - role
-      - content
-      properties:
-        role:
-          $ref: '#/components/schemas/MessageRole'
-        content:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-    Message:
-      allOf:
-      - $ref: '#/components/schemas/MessageBase'
-      - type: object
-        properties:
-          id:
-            type: string
-          chat_id:
-            type: string
-          metadata:
-            type: object
-            additionalProperties: true
-    ChatSessionBase:
-      type: object
-      properties:
-        title:
-          type: string
-          default: New Chat
-        user_id:
-          type: string
-        model:
-          $ref: '#/components/schemas/ChatModelType'
-          default: default
-        system_prompt:
-          type: string
-    ChatSessionCreate:
-      $ref: '#/components/schemas/ChatSessionBase'
-    ChatSession:
-      allOf:
-      - $ref: '#/components/schemas/ChatSessionBase'
-      - type: object
-        properties:
-          id:
-            type: string
-          created_at:
-            type: string
-            format: date-time
-          updated_at:
-            type: string
-            format: date-time
-          message_count:
-            type: integer
-            default: 0
-          is_active:
-            type: boolean
-            default: true
-          metadata:
-            type: object
-            additionalProperties: true
-    ChatMessageRequest:
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-        model:
-          $ref: '#/components/schemas/ChatModelType'
-        system_prompt:
-          type: string
-        metadata:
-          type: object
-          additionalProperties: true
-    ChatMessageResponse:
-      type: object
-      required:
-      - message
-      - chat_id
-      - message_id
-      - timestamp
-      - model
-      properties:
-        message:
-          type: string
-        chat_id:
-          type: string
-        message_id:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-        model:
-          $ref: '#/components/schemas/ChatModelType'
-        metadata:
-          type: object
-          additionalProperties: true
-    SearchParams:
-      type: object
-      properties:
-        query:
-          type: string
-        categories:
-          type: array
-          items:
-            type: string
-        pricing_types:
-          type: array
-          items:
-            type: string
-        min_rating:
-          type: number
-          minimum: 0
-          maximum: 5
-        page:
-          type: integer
-          minimum: 1
-          default: 1
-        per_page:
-          type: integer
-          minimum: 1
-          maximum: 100
-          default: 20
-        sort_by:
-          type: string
-          enum:
-          - relevance
-          - newest
-          - trending
-        filters:
-          type: string
-    SearchResult:
-      type: object
-      properties:
-        hits:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        page:
-          type: integer
-        per_page:
-          type: integer
-        total_hits:
-          type: integer
-        total_pages:
-          type: integer
-        processing_time_ms:
-          type: integer
-        query:
-          type: string
-    NaturalLanguageQuery:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: Natural language search query
-        context:
-          type: object
-          additionalProperties: true
-          description: Additional context for the search
-    ProcessedQuery:
-      type: object
-      properties:
-        original_query:
-          type: string
-        search_query:
-          type: string
-        categories:
-          type: array
-          items:
-            type: string
-        pricing_types:
-          type: array
-          items:
-            type: string
-        filters:
-          type: string
-        interpretation:
-          type: string
-    PricingType:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Pricing type ID
-        name:
-          type: string
-          description: Pricing type name
-      required:
-      - id
-      - name
     ToolCreate:
       type: object
       required:
@@ -2265,6 +2172,103 @@ components:
         limit:
           type: integer
           description: Maximum number of items returned
+    SearchParams:
+      type: object
+      properties:
+        query:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        pricing_types:
+          type: array
+          items:
+            type: string
+        min_rating:
+          type: number
+          minimum: 0
+          maximum: 5
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        per_page:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        sort_by:
+          type: string
+          enum:
+          - relevance
+          - newest
+          - trending
+        filters:
+          type: string
+    SearchResult:
+      type: object
+      properties:
+        hits:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_hits:
+          type: integer
+        total_pages:
+          type: integer
+        processing_time_ms:
+          type: integer
+        query:
+          type: string
+    NaturalLanguageQuery:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language search query
+        context:
+          type: object
+          additionalProperties: true
+          description: Additional context for the search
+    ProcessedQuery:
+      type: object
+      properties:
+        original_query:
+          type: string
+        search_query:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        pricing_types:
+          type: array
+          items:
+            type: string
+        filters:
+          type: string
+        interpretation:
+          type: string
+    PricingType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pricing type ID
+        name:
+          type: string
+          description: Pricing type name
+      required:
+      - id
+      - name
     SiteStatus:
       type: string
       enum:
@@ -2480,104 +2484,118 @@ components:
         description:
           type: string
           description: Description of the site
-    GlossaryTermResponse:
+    MessageRole:
+      type: string
+      enum:
+      - user
+      - assistant
+      - system
+    ChatModelType:
+      type: string
+      enum:
+      - gpt4
+      - claude
+      - llama
+      - default
+    MessageBase:
       type: object
+      required:
+      - role
+      - content
       properties:
-        id:
+        role:
+          $ref: '#/components/schemas/MessageRole'
+        content:
           type: string
-          description: Unique identifier for the glossary term
-        name:
-          type: string
-          description: The name/title of the glossary term
-        definition:
-          type: string
-          description: Detailed definition of the term
-        related_terms:
-          type: array
-          items:
-            type: string
-          description: List of related term names
-        tool_references:
-          type: array
-          items:
-            type: string
-          description: List of tool IDs that are related to this term
-        categories:
-          type: array
-          items:
-            type: string
-          description: Categories this term belongs to
-        created_at:
+        timestamp:
           type: string
           format: date-time
-          description: Creation timestamp
-        updated_at:
+    Message:
+      allOf:
+      - $ref: '#/components/schemas/MessageBase'
+      - type: object
+        properties:
+          id:
+            type: string
+          chat_id:
+            type: string
+          metadata:
+            type: object
+            additionalProperties: true
+    ChatSessionBase:
+      type: object
+      properties:
+        title:
+          type: string
+          default: New Chat
+        user_id:
+          type: string
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+          default: default
+        system_prompt:
+          type: string
+    ChatSessionCreate:
+      $ref: '#/components/schemas/ChatSessionBase'
+    ChatSession:
+      allOf:
+      - $ref: '#/components/schemas/ChatSessionBase'
+      - type: object
+        properties:
+          id:
+            type: string
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+          message_count:
+            type: integer
+            default: 0
+          is_active:
+            type: boolean
+            default: true
+          metadata:
+            type: object
+            additionalProperties: true
+    ChatMessageRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+        system_prompt:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    ChatMessageResponse:
+      type: object
+      required:
+      - message
+      - chat_id
+      - message_id
+      - timestamp
+      - model
+      properties:
+        message:
+          type: string
+        chat_id:
+          type: string
+        message_id:
+          type: string
+        timestamp:
           type: string
           format: date-time
-          description: Last update timestamp
-      required:
-      - id
-      - name
-      - definition
-      - created_at
-      - updated_at
-    GlossaryTermCreate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name/title of the glossary term
-        definition:
-          type: string
-          description: Detailed definition of the term
-        related_terms:
-          type: array
-          items:
-            type: string
-          description: List of related term names
-        tool_references:
-          type: array
-          items:
-            type: string
-          description: List of tool IDs that are related to this term
-        categories:
-          type: array
-          items:
-            type: string
-          description: Categories this term belongs to
-      required:
-      - name
-      - definition
-    GlossaryTermUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name/title of the glossary term
-        definition:
-          type: string
-          description: Detailed definition of the term
-        related_terms:
-          type: array
-          items:
-            type: string
-          description: List of related term names
-        tool_references:
-          type: array
-          items:
-            type: string
-          description: List of tool IDs that are related to this term
-        categories:
-          type: array
-          items:
-            type: string
-          description: Categories this term belongs to
-    ErrorResponse:
-      type: object
-      properties:
-        detail:
-          type: string
-          description: Error message
+        model:
+          $ref: '#/components/schemas/ChatModelType'
+        metadata:
+          type: object
+          additionalProperties: true
     CategoryResponse:
       type: object
       properties:
@@ -2593,6 +2611,9 @@ components:
         count:
           type: integer
           description: Number of tools in this category
+        svg:
+          type: string
+          description: SVG icon for the category
       required:
       - id
       - name
@@ -2680,5 +2701,132 @@ components:
       - llama
       - default
       default: default
+    GlossaryTermRequest:
+      type: object
+      required:
+      - term
+      properties:
+        term:
+          type: string
+          description: The specific term to retrieve from the glossary
+        user_id:
+          type: string
+          description: Optional user ID for tracking history
+        model:
+          $ref: '#/components/schemas/TermModelType'
+    BlogArticleBase:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the blog article
+        slug:
+          type: string
+          description: URL-friendly slug for the article
+        content:
+          type: string
+          description: Content of the blog article
+        summary:
+          type: string
+          description: Brief summary of the article
+        author:
+          type: string
+          description: Author of the article
+        published_date:
+          type: string
+          format: date-time
+          description: Date when the article was published
+        last_updated:
+          type: string
+          format: date-time
+          description: Date when the article was last updated
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the article
+        related_glossary_terms:
+          type: array
+          items:
+            type: string
+          description: IDs of related glossary terms
+      required:
+      - title
+      - slug
+      - content
+      - summary
+      - author
+      - published_date
+    BlogArticleResponse:
+      allOf:
+      - $ref: '#/components/schemas/BlogArticleBase'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: Unique identifier for the blog article
+        required:
+        - id
+    BlogArticleWithGlossaryTerms:
+      allOf:
+      - $ref: '#/components/schemas/BlogArticleResponse'
+      - type: object
+        properties:
+          related_glossary_term_details:
+            type: array
+            items:
+              $ref: '#/components/schemas/GlossaryTermSummary'
+            description: Details of related glossary terms
+    RelatedBlogArticle:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the blog article
+        title:
+          type: string
+          description: The title of the blog article
+        slug:
+          type: string
+          description: URL-friendly slug for the article
+        summary:
+          type: string
+          description: Brief summary of the article
+        published_date:
+          type: string
+          format: date-time
+          description: Date when the article was published
+      required:
+      - id
+      - title
+      - slug
+      - summary
+      - published_date
+    GlossaryTermSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the glossary term
+        name:
+          type: string
+          description: Name of the glossary term
+        slug:
+          type: string
+          description: URL-friendly slug for the term
+        short_definition:
+          type: string
+          description: Brief definition of the term
+      required:
+      - id
+      - name
+      - slug
+      - short_definition
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
 security:
 - bearerAuth: []
