@@ -43,6 +43,7 @@ class ToolBase(BaseModel):
     saved_by_user: bool = False
     # Keyword support
     keywords: Optional[List[str]] = None
+    categories: Optional[List[Dict[str, Any]]] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
