@@ -50,6 +50,9 @@ from .tools import router as tools_router
 from .tools import public_router as public_tools_router
 from .tools.middleware import PublicFeaturedToolsMiddleware
 
+# Import the admin router
+from .admin import router as admin_router
+
 # Import the site queue routers
 from .queue import api_router as site_queue_router
 from .queue import dashboard_router as site_dashboard_router
@@ -62,6 +65,9 @@ from .categories import router as categories_router
 
 # Import the terms router
 from .terms import router as terms_router
+
+# Import the GHL (GoHighLevel) router
+from .ghl.router import router as ghl_router
 
 # Import the glossary seed script
 from .seed_glossary import seed_glossary_terms
@@ -129,7 +135,9 @@ app = FastAPI(lifespan=lifespan)
 # Add this line - must be added before other middlewares
 app.add_middleware(
     SessionMiddleware,
-    secret_key="3456789iuhgfcdfghj",  # Use a secure random string, ideally from env var
+    secret_key=os.getenv(
+        "SESSION_SECRET_KEY"
+    ),  # Use a secure random string, ideally from env var
 )
 
 
@@ -161,6 +169,8 @@ app.include_router(site_dashboard_router)  # Include site dashboard router
 app.include_router(glossary_router)  # Include glossary router
 app.include_router(categories_router)  # Include categories router
 app.include_router(terms_router)  # Include terms router
+app.include_router(admin_router)  # Include admin router
+app.include_router(ghl_router)  # Include GHL integration router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
