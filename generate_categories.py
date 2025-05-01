@@ -189,19 +189,31 @@ async def save_categories_to_db(categories: List[Dict[str, str]]) -> None:
     """
     print(f"Saving {len(categories)} categories to database...")
 
-    # Clear existing categories
-    # await categories_collection.delete_many({})
+    # Check for existing categories first
+    existing_categories = await categories_collection.find({}).to_list(length=1000)
+    existing_ids = {cat["id"] for cat in existing_categories}
+    existing_slugs = {cat["slug"] for cat in existing_categories}
 
-    # Add a timestamp and initialize count to 0
-    timestamp = datetime.utcnow()
+    # Filter out categories that already exist (by id or slug)
+    new_categories = []
     for category in categories:
-        category["created_at"] = timestamp
-        category["count"] = 0
+        if category["id"] in existing_ids or category["slug"] in existing_slugs:
+            print(
+                f"Category already exists with id {category['id']} or slug {category['slug']}"
+            )
+            continue
 
-    # Insert new categories
-    if categories:
-        await categories_collection.insert_many(categories)
-        print(f"Successfully saved {len(categories)} categories to database")
+        # Add a timestamp and initialize count to 0
+        category["created_at"] = datetime.utcnow()
+        category["count"] = 0
+        new_categories.append(category)
+
+    # Insert new categories if any
+    if new_categories:
+        await categories_collection.insert_many(new_categories)
+        print(f"Successfully saved {len(new_categories)} new categories to database")
+    else:
+        print("No new categories to save")
 
 
 async def map_tools_to_categories(

@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=List[CategoryResponse])
+@router.get("/", response_model=List[CategoryResponse])
 async def get_categories():
     """
     Get all available categories for tools
