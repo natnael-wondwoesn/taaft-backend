@@ -36,7 +36,7 @@ class CategoriesService:
 
     async def _get_tools_collection(self) -> AsyncIOMotorCollection:
         """Get the tools collection"""
-        if not self.tools_collection:
+        if self.tools_collection is None:
             self.tools_collection = database.client.get_database(
                 "taaft_db"
             ).get_collection("tools")
@@ -44,7 +44,7 @@ class CategoriesService:
 
     async def _get_categories_collection(self) -> AsyncIOMotorCollection:
         """Get the categories collection"""
-        if not self.categories_collection:
+        if self.categories_collection is None:
             # Get database connection
             db = database.client.get_database("taaft_db")
 
