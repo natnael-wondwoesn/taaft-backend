@@ -183,6 +183,172 @@ async def serve_frontend():
     return FileResponse("static/frontend/index.html")
 
 
+# Handle email verification link from emails
+@app.get("/verify-email", include_in_schema=False)
+async def handle_email_verification(token: str):
+    """
+    Handle email verification links from emails.
+    This route receives the token via GET request and verifies the email.
+    """
+    try:
+        # Import verify_email function from auth router
+        from .auth.utils import decode_token
+        from bson import ObjectId
+
+        # Decode and validate token
+        token_data = decode_token(token)
+        if token_data is None:
+            return HTMLResponse(
+                content=f"""
+            <html>
+            <head>
+                <title>Email Verification Failed</title>
+                <style>
+                    body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
+                    .container {{ max-width: 600px; margin: 0 auto; }}
+                    .error {{ color: #dc3545; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1 class="error">Verification Failed</h1>
+                    <p>The verification link is invalid or has expired.</p>
+                    <p>Please request a new verification link from the login page.</p>
+                </div>
+            </body>
+            </html>
+            """,
+                status_code=400,
+            )
+
+        # Verify the token is for email verification
+        if token_data.purpose != "email_verification":
+            return HTMLResponse(
+                content=f"""
+            <html>
+            <head>
+                <title>Email Verification Failed</title>
+                <style>
+                    body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
+                    .container {{ max-width: 600px; margin: 0 auto; }}
+                    .error {{ color: #dc3545; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1 class="error">Verification Failed</h1>
+                    <p>Invalid token purpose.</p>
+                    <p>Please request a new verification link from the login page.</p>
+                </div>
+            </body>
+            </html>
+            """,
+                status_code=400,
+            )
+
+        # Update user verification status
+        result = await database.users.update_one(
+            {"_id": ObjectId(token_data.sub)},
+            {"$set": {"is_verified": True, "updated_at": datetime.datetime.utcnow()}},
+        )
+
+        if result.modified_count == 0:
+            # Check if user already verified
+            user = await database.users.find_one({"_id": ObjectId(token_data.sub)})
+            if user and user.get("is_verified", False):
+                return HTMLResponse(
+                    content=f"""
+                <html>
+                <head>
+                    <title>Email Already Verified</title>
+                    <style>
+                        body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
+                        .container {{ max-width: 600px; margin: 0 auto; }}
+                        .success {{ color: #28a745; }}
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1 class="success">Already Verified</h1>
+                        <p>Your email has already been verified.</p>
+                        <p>You can now login to your account.</p>
+                    </div>
+                </body>
+                </html>
+                """
+                )
+            else:
+                return HTMLResponse(
+                    content=f"""
+                <html>
+                <head>
+                    <title>Email Verification Failed</title>
+                    <style>
+                        body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
+                        .container {{ max-width: 600px; margin: 0 auto; }}
+                        .error {{ color: #dc3545; }}
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1 class="error">Verification Failed</h1>
+                        <p>User not found or verification failed.</p>
+                        <p>Please contact support if this issue persists.</p>
+                    </div>
+                </body>
+                </html>
+                """,
+                    status_code=400,
+                )
+
+        # Return success page
+        return HTMLResponse(
+            content=f"""
+        <html>
+        <head>
+            <title>Email Verified</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
+                .container {{ max-width: 600px; margin: 0 auto; }}
+                .success {{ color: #28a745; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1 class="success">Email Verified</h1>
+                <p>Your email has been successfully verified.</p>
+                <p>You can now login to your account and access all features.</p>
+            </div>
+        </body>
+        </html>
+        """
+        )
+    except Exception as e:
+        logger.error(f"Error verifying email: {str(e)}")
+        return HTMLResponse(
+            content=f"""
+        <html>
+        <head>
+            <title>Email Verification Error</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
+                .container {{ max-width: 600px; margin: 0 auto; }}
+                .error {{ color: #dc3545; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1 class="error">Verification Error</h1>
+                <p>An error occurred during verification.</p>
+                <p>Please try again or contact support if this issue persists.</p>
+            </div>
+        </body>
+        </html>
+        """,
+            status_code=500,
+        )
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

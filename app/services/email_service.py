@@ -100,6 +100,10 @@ def send_password_reset_email(to_email: str, reset_token: str, base_url: str) ->
     Returns:
         bool: True if email was sent successfully, False otherwise
     """
+    # Remove trailing slash from base_url if present to prevent double slashes
+    if base_url.endswith("/"):
+        base_url = base_url.rstrip("/")
+
     reset_url = f"{base_url}/reset-password?token={reset_token}"
 
     subject = "Password Reset Request"
@@ -229,6 +233,10 @@ def send_verification_email(
     Returns:
         bool: True if email was sent successfully, False otherwise
     """
+    # Remove trailing slash from base_url if present to prevent double slashes
+    if base_url.endswith("/"):
+        base_url = base_url.rstrip("/")
+
     verification_url = f"{base_url}/verify-email?token={verification_token}"
 
     subject = "Verify Your Email Address"
