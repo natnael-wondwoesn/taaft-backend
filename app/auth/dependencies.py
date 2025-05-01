@@ -307,6 +307,9 @@ class AdminControlMiddleware:
         self.unrestricted_prefixes.append("/admin/init-admin")
         # Keyword search endpoint should be accessible to all authenticated users
         self.unrestricted_prefixes.append("/tools/keyword-search")
+        # Glossary endpoints should be accessible to all users for GET/POST/PUT operations
+        # DELETE operations are restricted at the route handler level with the get_admin_user dependency
+        self.unrestricted_prefixes.append("/api/glossary")
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
