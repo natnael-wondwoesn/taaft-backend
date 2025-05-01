@@ -1,7 +1,15 @@
+import json
 from authlib.integrations.starlette_client import OAuth
 from starlette.config import Config
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
+
+from app.ghl.ghl_service import (
+    GHLContactData,
+    SignupType,
+    create_ghl_contact,
+    sync_user_to_ghl,
+)
 from ..logger import logger
 import os
 from dotenv import load_dotenv
@@ -182,3 +190,26 @@ async def get_github_user(access_token: str) -> Tuple[str, str, Optional[str]]:
             )
 
         return primary_email, str(user_data["id"]), user_data.get("name")
+
+
+async def sync_to_company_ghl(user: Dict[str, Any], signup_type: SignupType):
+    """Sync user data to company GHL account."""
+    tags = []
+    if signup_type in [SignupType.ACCOUNT, SignupType.BOTH]:
+        tags.append("full_account")
+    if signup_type in [SignupType.NEWSLETTER, SignupType.BOTH]:
+        tags.append("newsletter")
+
+    ghl_data = GHLContactData(
+        email=user["email"], first_name=user.get("full_name"), tags=tags
+    )
+    try:
+        ghl_contact = await create_ghl_contact(ghl_data)
+        logger.info(f"Created GHL contact for {user['email']}: {ghl_contact}")
+        return {"success": True, "data": ghl_contact}
+    except Exception as e:
+        logger.error(f"GHL contact creation failed for {user['email']}: {str(e)}")
+        # Save to file for retry
+        with open("failed_ghl_signups.txt", "a") as f:
+            f.write(f"{json.dumps(ghl_data.dict())}\n")
+        raise

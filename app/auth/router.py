@@ -1,5 +1,9 @@
+import asyncio
 from fastapi import APIRouter, HTTPException, status, Depends, Body, Request
 from fastapi.security import OAuth2PasswordRequestForm
+
+from app.auth.oauth import sync_to_company_ghl
+from app.ghl.ghl_service import SignupType
 from ..models.user import UserCreate, UserInDB, UserResponse, ServiceTier
 from ..database.database import database
 from .utils import (
@@ -21,13 +25,11 @@ import random
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+# app/auth/router.py (update existing /register endpoint)
 @router.post(
     "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
 )
 async def register_user(user_data: UserCreate, request: Request = None):
-    """Register a new user and assign to free tier."""
-
-    # Check if user with this email already exists
     existing_user = await database.users.find_one({"email": user_data.email})
     if existing_user:
         raise HTTPException(
@@ -35,18 +37,15 @@ async def register_user(user_data: UserCreate, request: Request = None):
             detail="User with this email already exists",
         )
 
-    # Hash the password
     hashed_password = get_password_hash(user_data.password)
-
-    # Create user object with free tier
     new_user = UserInDB(
         email=user_data.email,
         hashed_password=hashed_password,
         full_name=user_data.full_name,
         subscribeToNewsletter=user_data.subscribeToNewsletter,
-        service_tier=ServiceTier.FREE,  # Default to free tier
+        service_tier=ServiceTier.FREE,
         is_active=True,
-        is_verified=False,  # User needs to verify email
+        is_verified=False,
         created_at=datetime.datetime.utcnow(),
         updated_at=datetime.datetime.utcnow(),
         usage={
@@ -57,42 +56,29 @@ async def register_user(user_data: UserCreate, request: Request = None):
         },
     )
 
-    # Insert user into database
     result = await database.users.insert_one(
         new_user.dict(by_alias=True, exclude={"id"})
     )
-
-    # Get created user
     created_user = await database.users.find_one({"_id": result.inserted_id})
-
     logger.info(f"New user registered: {user_data.email}")
 
-    # Create a verification token
     verification_token = create_access_token(
         data={"sub": str(result.inserted_id), "purpose": "email_verification"}
     )
-
-    # Get base URL from request or settings
     base_url = (
         str(request.base_url)
         if request
         else os.getenv("BASE_URL", "http://localhost:8000")
     )
-
-    # Log verification attempt
     logger.info(f"Attempting to send verification email to {user_data.email}")
 
     try:
-        # Import here to avoid circular imports
         from ..services.email_service import send_verification_email
 
-        # Send verification email
         email_sent = send_verification_email(
             user_data.email, verification_token, base_url
         )
-
         if not email_sent:
-            # Email sending failed, log the token for debugging
             logger.info(
                 f"Verification email not sent to {user_data.email}. Token: {verification_token}"
             )
@@ -105,7 +91,14 @@ async def register_user(user_data: UserCreate, request: Request = None):
         )
         logger.info(f"Verification token for manual verification: {verification_token}")
 
-    # Convert to response model
+    try:
+        signup_type = (
+            SignupType.BOTH if user_data.subscribeToNewsletter else SignupType.ACCOUNT
+        )
+        asyncio.create_task(sync_to_company_ghl(created_user, signup_type))
+    except Exception as e:
+        logger.error(f"Failed to sync user to company GoHighLevel account: {str(e)}")
+
     return UserResponse(
         id=str(created_user["_id"]),
         email=created_user["email"],
