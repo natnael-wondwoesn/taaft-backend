@@ -23,6 +23,8 @@ class PublicFeaturedToolsMiddleware(BaseHTTPMiddleware):
             re.compile(r"^/tools/sponsored/?(\?.*)?$"),
             # Main tools endpoint
             re.compile(r"^/tools/?(\?.*)?$"),
+            # Password reset endpoint
+            re.compile(r"^/api/auth/reset-password.*$"),
         ]
 
     async def dispatch(self, request: Request, call_next):

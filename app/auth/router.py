@@ -14,7 +14,7 @@ from .utils import (
     decode_token,
 )
 from .dependencies import get_current_user
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import datetime
 from bson import ObjectId
 from pydantic import EmailStr
@@ -282,12 +282,33 @@ async def request_password_reset(
 
 
 @router.post("/reset-password", response_model=Dict[str, str])
-async def reset_password(token: str = Body(...), new_password: str = Body(...)):
-    """Reset user password with a valid token."""
+async def reset_password(
+    token: Optional[str] = Body(None),
+    new_password: str = Body(...),
+    request: Request = None,
+):
+    """Reset user password with a valid token.
+
+    The token can be provided either in the request body or as a query parameter.
+    """
+    # Get token from request body or query parameters
+    if not token and request:
+        token = request.query_params.get("token")
+
+    if not token:
+        logger.error("Password reset failed: No token provided")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token is required",
+        )
+
+    # Log token length for debugging (don't log the actual token for security)
+    logger.info(f"Processing password reset with token length: {len(token)}")
 
     # Decode and validate token
     token_data = decode_token(token)
     if token_data is None:
+        logger.error("Password reset failed: Invalid or expired token")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or expired reset token",
@@ -296,23 +317,37 @@ async def reset_password(token: str = Body(...), new_password: str = Body(...)):
     # Hash the new password
     hashed_password = get_password_hash(new_password)
 
-    # Update user password
-    result = await database.users.update_one(
-        {"_id": ObjectId(token_data.sub)},
-        {
-            "$set": {
-                "hashed_password": hashed_password,
-                "updated_at": datetime.datetime.utcnow(),
-            }
-        },
-    )
+    # Log user ID from token (for debugging)
+    user_id = token_data.sub
+    logger.info(f"Resetting password for user ID: {user_id}")
 
-    if result.modified_count == 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="User not found"
+    # Update user password
+    try:
+        result = await database.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {
+                "$set": {
+                    "hashed_password": hashed_password,
+                    "updated_at": datetime.datetime.utcnow(),
+                }
+            },
         )
 
-    return {"message": "Password reset successful"}
+        if result.modified_count == 0:
+            logger.error(f"Password reset failed: User not found with ID {user_id}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="User not found"
+            )
+
+        logger.info(f"Password reset successful for user ID: {user_id}")
+        return {"message": "Password reset successful"}
+
+    except Exception as e:
+        logger.error(f"Password reset error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while resetting the password",
+        )
 
 
 @router.post("/update-newsletter-preference", response_model=Dict[str, str])
@@ -500,3 +535,9 @@ async def resend_verification_email(
     return {
         "message": "If the email exists and is not verified, a verification link will be sent"
     }
+
+
+@router.options("/reset-password")
+async def reset_password_options():
+    """Handle OPTIONS request for CORS preflight"""
+    return {"detail": "OK"}
