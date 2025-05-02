@@ -251,33 +251,34 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
         # Prioritize the primary 'id' field (string UUID)
         tool_id = tool.get("id")
 
-        # If 'id' is missing, use a UUID derived from '_id'
-        if not tool_id and "_id" in tool:
-            # Get the ObjectId - can be a string or an actual ObjectId object
-            objectid = tool.get("_id")
-            # Convert ObjectId to a UUID
-            derived_uuid = objectid_to_uuid(objectid)
-            tool_id = str(derived_uuid)
-            # Optionally log that we're deriving a UUID from _id
-            logger.info(
-                f"Derived UUID {tool_id} from ObjectId {objectid} for tool '{tool.get('name')}'"
-            )
-
-            # Update the tool with the derived UUID to avoid future conversion
-            try:
-                await tools.update_one({"_id": objectid}, {"$set": {"id": tool_id}})
+        # If 'id' is missing or empty, use a UUID derived from '_id'
+        if not tool_id or tool_id == "":
+            if "_id" in tool:
+                # Get the ObjectId - can be a string or an actual ObjectId object
+                objectid = tool.get("_id")
+                # Convert ObjectId to a UUID
+                derived_uuid = objectid_to_uuid(objectid)
+                tool_id = str(derived_uuid)
+                # Optionally log that we're deriving a UUID from _id
                 logger.info(
-                    f"Updated tool {tool.get('name')} with derived UUID {tool_id}"
+                    f"Derived UUID {tool_id} from ObjectId {objectid} for tool '{tool.get('name')}'"
                 )
-            except Exception as e:
-                logger.error(f"Failed to update tool with derived UUID: {e}")
 
-        # If both 'id' and '_id' are missing, generate a new UUID (should ideally not happen)
-        elif not tool_id:
-            tool_id = str(uuid4())
-            logger.error(
-                f"Tool missing both 'id' and '_id' fields. Generated new ID: {tool_id}. Tool data: {tool}"
-            )
+                # Update the tool with the derived UUID to avoid future conversion
+                try:
+                    await tools.update_one({"_id": objectid}, {"$set": {"id": tool_id}})
+                    logger.info(
+                        f"Updated tool {tool.get('name')} with derived UUID {tool_id}"
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to update tool with derived UUID: {e}")
+            else:
+                # If both 'id' is empty/missing and '_id' is missing, generate a new UUID
+                tool_id = str(uuid4())
+                # No error log since we're handling this case now
+                logger.info(
+                    f"Tool has empty or missing 'id' and no '_id' field. Generated new ID: {tool_id}. Tool: {tool.get('name')}"
+                )
 
         # Extract keywords if not already present and update in the background
         if not tool.get("keywords"):
@@ -747,62 +748,49 @@ async def search_tools(
     If count_only is True, returns only the total count of matching tools.
     """
     from ..algolia.config import algolia_config
-    from ..algolia.models import SearchParams
     from ..algolia.search import algolia_search
 
     # Try using Algolia first if configured
     if algolia_config.is_configured():
         try:
-            # Create search parameters
-            params = SearchParams(
+            # Use the direct search function for more flexible name/description search
+            search_result = await algolia_search.direct_search_tools(
                 query=query,
-                page=(
-                    skip // limit + 1 if not count_only else 1
-                ),  # Convert skip/limit to page-based pagination
+                page=(skip // limit) if limit > 0 else 0,  # Convert skip/limit to page
                 per_page=(
-                    1 if count_only else limit
+                    limit if not count_only else 1
                 ),  # Only need one result if just counting
             )
 
-            # Execute search with Algolia
-            result = await algolia_search.search_tools(params)
-
             if count_only:
-                return result.total
+                return search_result.total
 
             # Convert Algolia results to ToolResponse objects
             tools_list = []
-            for tool in result.tools:
+            for tool in search_result.tools:
                 # Convert Algolia result to a dictionary format compatible with our helper
                 tool_dict = {
                     "id": tool.objectID,
-                    "price": (
-                        tool.pricing.type.value
-                        if hasattr(tool, "pricing") and tool.pricing
-                        else ""
-                    ),
+                    "price": tool.price or "",
                     "name": tool.name,
                     "description": tool.description,
-                    "link": tool.website if hasattr(tool, "website") else "",
-                    "unique_id": tool.slug if hasattr(tool, "slug") else "",
-                    "rating": (
-                        str(tool.ratings.average)
-                        if hasattr(tool, "ratings") and tool.ratings
-                        else None
-                    ),
+                    "link": tool.website or "",
+                    "unique_id": tool.slug or "",
+                    "rating": None,  # Will be handled by create_tool_response
                     "saved_numbers": None,
                     "created_at": tool.created_at,
                     "updated_at": tool.updated_at,
-                    "category": (
-                        tool.categories[0].name
-                        if hasattr(tool, "categories") and tool.categories
-                        else None
-                    ),
-                    "features": tool.features if hasattr(tool, "features") else None,
-                    "is_featured": (
-                        tool.is_featured if hasattr(tool, "is_featured") else False
-                    ),
+                    "features": tool.features,
+                    "is_featured": tool.is_featured,
                 }
+
+                # Add categories if available
+                if tool.categories:
+                    if isinstance(tool.categories, list) and len(tool.categories) > 0:
+                        if isinstance(tool.categories[0], dict):
+                            tool_dict["category"] = tool.categories[0].get("id")
+                        elif hasattr(tool.categories[0], "id"):
+                            tool_dict["category"] = tool.categories[0].id
 
                 tool_response = await create_tool_response(tool_dict)
                 if tool_response:
@@ -810,7 +798,6 @@ async def search_tools(
             return tools_list
         except Exception as e:
             # Log the error and fall back to MongoDB
-
             logger.error(
                 f"Error searching with Algolia, falling back to MongoDB: {str(e)}"
             )

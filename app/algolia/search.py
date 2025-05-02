@@ -27,6 +27,7 @@ from .models import (
     NaturalLanguageQuery,
     ProcessedQuery,
     PricingType,
+    AlgoliaToolRecord,
 )
 from ..logger import logger
 
@@ -410,6 +411,105 @@ class AlgoliaSearch:
                 keywords_list.append(keyword_value)
 
         return keywords_list
+
+    async def direct_search_tools(
+        self,
+        query: str,
+        page: int = 0,
+        per_page: int = 20,
+    ) -> SearchResult:
+        """
+        Search for tools directly by name or description using Algolia.
+        This search is more flexible and doesn't require exact matches.
+
+        Args:
+            query: The search query text
+            page: Page number (0-based for Algolia)
+            per_page: Number of results per page
+
+        Returns:
+            SearchResult object containing the search results
+        """
+        # Check if Algolia is configured
+        if not self.config.is_configured():
+            logger.warning("Algolia not configured. Returning empty search results.")
+            return SearchResult(
+                tools=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                pages=0,
+                processing_time_ms=0,
+            )
+
+        try:
+            # Set up search parameters to focus on name and description fields
+            search_params = {
+                "query": query,
+                "restrictSearchableAttributes": ["name", "description"],
+                "page": page,
+                "hitsPerPage": per_page,
+                "typoTolerance": True,  # Allow for typos in search
+                "advancedSyntax": True,
+                "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
+            }
+
+            # Execute search using Algolia client
+            index_name = self.config.tools_index_name
+            search_response = self.config.client.search_single_index(
+                index_name=index_name, search_params=search_params
+            )
+
+            # Convert results to tool records
+            tools = []
+            for hit in search_response.hits:
+                # print(f"hit: {hit}")
+                try:
+                    # Create AlgoliaToolRecord from each hit
+                    tool_record = AlgoliaToolRecord(
+                        objectID=getattr(hit, "objectID", ""),
+                        name=getattr(hit, "name", ""),
+                        description=getattr(hit, "description", ""),
+                        slug=getattr(hit, "slug", None)
+                        or getattr(hit, "unique_id", None),
+                        website=getattr(hit, "website", None)
+                        or getattr(hit, "link", None),
+                        features=getattr(hit, "features", []),
+                        categories=getattr(hit, "categories", []),
+                        pricing=getattr(hit, "pricing", None),
+                        price=getattr(hit, "price", ""),
+                        is_featured=getattr(hit, "is_featured", False),
+                        created_at=getattr(hit, "created_at", None),
+                        updated_at=getattr(hit, "updated_at", None),
+                    )
+                    # print(f"tool_record: {tool_record}")
+                    tools.append(tool_record)
+                    print(f"tools: {tools}")
+                except Exception as e:
+                    logger.error(f"Error converting hit to AlgoliaToolRecord: {str(e)}")
+                    continue
+            print(f"tools: {tools}")
+            # Create and return SearchResult
+            return SearchResult(
+                tools=tools,
+                total=search_response.nb_hits,
+                page=search_response.page,
+                per_page=per_page,
+                pages=search_response.nb_pages,
+                processing_time_ms=search_response.processing_time_ms,
+            )
+
+        except Exception as e:
+            logger.error(f"Error performing direct search: {str(e)}")
+            # Return empty results on error
+            return SearchResult(
+                tools=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                pages=0,
+                processing_time_ms=0,
+            )
 
 
 # Create a singleton instance of AlgoliaSearch
