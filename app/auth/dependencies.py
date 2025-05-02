@@ -329,6 +329,7 @@ class AdminControlMiddleware:
             "/tools/featured",  # Featured tools endpoint
             "/tools/sponsored",  # Sponsored tools endpoint
             "/tools",  # Direct tools endpoint
+            "/api/auth/reset-password",  # Password reset endpoint
         ]
 
         # If it's a public endpoint, skip auth checks

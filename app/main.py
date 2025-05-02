@@ -152,8 +152,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # For production, specify actual origins
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # The order is important here:
@@ -799,3 +800,23 @@ async def mock_nlp_search_api(nlq: NaturalLanguageQuery = Body(...)):
     result.processed_query = processed_query
 
     return result
+
+
+# Define all public routes that should bypass auth
+public_routes = [
+    "/auth/token",
+    "/auth/register",
+    "/auth/verify-email",
+    "/auth/request-password-reset",
+    "/auth/reset-password",
+    "/api/auth/reset-password",  # Ensure both route patterns are included
+    "/auth/refresh-token",
+    "/docs",
+    "/redoc",
+    "/openapi.json",
+    "/health",
+    "/",
+    "/tools/featured",
+    "/tools/sponsored",
+    "/public/",
+]
