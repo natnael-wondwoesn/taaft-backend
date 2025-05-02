@@ -535,9 +535,3 @@ async def resend_verification_email(
     return {
         "message": "If the email exists and is not verified, a verification link will be sent"
     }
-
-
-@router.options("/reset-password")
-async def reset_password_options():
-    """Handle OPTIONS request for CORS preflight"""
-    return {"detail": "OK"}
