@@ -45,3 +45,9 @@ keywords = database.get_collection("keywords")
 
 # Blog articles collection
 blog_articles = database.get_collection("blog_articles")
+
+# Favorites collection
+favorites = database.get_collection("favorites")
+
+# Shares collection
+shares = database.get_collection("shares")

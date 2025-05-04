@@ -207,6 +207,32 @@ async def setup_database():
         await database.login_codes.create_index("expires_at", expireAfterSeconds=0)
         logger.info("Created indexes for login_codes collection")
 
+    # Initialize favorites collection
+    if "favorites" not in collections:
+        await database.create_collection("favorites")
+        logger.info("Created favorites collection")
+
+        # Create indexes for favorites collection
+        await database.favorites.create_index(
+            [("user_id", ASCENDING), ("tool_unique_id", ASCENDING)], unique=True
+        )
+        await database.favorites.create_index("user_id")
+        await database.favorites.create_index("tool_unique_id")
+        await database.favorites.create_index("created_at")
+        logger.info("Created indexes for favorites collection")
+
+    # Initialize shares collection
+    if "shares" not in collections:
+        await database.create_collection("shares")
+        logger.info("Created shares collection")
+
+        # Create indexes for shares collection
+        await database.shares.create_index("user_id")
+        await database.shares.create_index("tool_unique_id")
+        await database.shares.create_index("share_id", unique=True)
+        await database.shares.create_index("created_at")
+        logger.info("Created indexes for shares collection")
+
     logger.info("Database setup completed successfully")
 
 

@@ -73,6 +73,12 @@ from .ghl.router import router as ghl_router
 # Import the blog router
 from .blog import router as blog_router
 
+# Import the favorites router
+from .favorites import router as favorites_router
+
+# Import the shares router
+from .shares import router as shares_router
+
 # Import the glossary seed script
 from .seed_glossary import seed_glossary_terms
 
@@ -150,7 +156,13 @@ app.add_middleware(
 # Add middleware - CORS must be first, then other middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, specify actual origins
+    allow_origins=[
+        "http://localhost:3000",  # Frontend development server
+        "https://taaft.ai",  # Production frontend
+        "https://www.taaft.ai",
+        "https://taaft-deploy-18xw.vercel.app/",
+        "*",  # For development and testing (remove in production)
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
@@ -181,6 +193,8 @@ app.include_router(terms_router)  # Include terms router
 app.include_router(admin_router)  # Include admin router
 app.include_router(ghl_router)  # Include GHL integration router
 app.include_router(blog_router)  # Include blog router
+app.include_router(favorites_router)  # Include favorites router
+app.include_router(shares_router)  # Include shares router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")

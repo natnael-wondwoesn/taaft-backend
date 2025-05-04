@@ -3,8 +3,9 @@ from uuid import UUID, uuid4, uuid5, NAMESPACE_OID
 from datetime import datetime
 import asyncio
 from typing import List, Optional, Union, Dict, Any
+from bson import ObjectId
 
-from ..database.database import tools, database
+from ..database.database import tools, database, favorites
 from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
 from ..categories.service import categories_service
@@ -1013,3 +1014,34 @@ async def keyword_search_tools(
             tools_list.append(tool_response)
 
     return tools_list
+
+
+async def get_tool_with_favorite_status(
+    tool_unique_id: str, user_id: str
+) -> Optional[ToolResponse]:
+    """
+    Get a tool by ID and include whether it's favorited by the user.
+
+    Args:
+        tool_id: ID of the tool
+        user_id: ID of the user
+
+    Returns:
+        Tool with favorite status if found, None otherwise
+    """
+    tool = await get_tool_by_unique_id(tool_unique_id)
+
+    if not tool:
+        return None
+
+    # Check if tool is in user's favorites
+    favorite = await favorites.find_one(
+        {"user_id": str(user_id), "tool_unique_id": str(tool_unique_id)}
+    )
+
+    # Convert to dict to modify
+    tool_dict = tool.dict()
+    tool_dict["saved_by_user"] = favorite is not None
+
+    # Convert back to response model
+    return ToolResponse(**tool_dict)
