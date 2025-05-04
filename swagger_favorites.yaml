@@ -1,0 +1,389 @@
+openapi: 3.0.0
+info:
+  title: Favorites and Shares API
+  description: |
+    API for managing tool favorites and sharing tools.
+    All endpoints are available to any authenticated user regardless of service tier.
+  version: 1.0.0
+  
+servers:
+  - url: 'https://api.taaft.ai'
+    description: Production server
+  - url: 'http://localhost:8000'
+    description: Local development server
+    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    FavoriteCreate:
+      type: object
+      required:
+        - tool_id
+      properties:
+        tool_id:
+          type: string
+          format: uuid
+          description: UUID of the tool to favorite
+          
+    FavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the favorite record
+        user_id:
+          type: string
+          description: ID of the user who favorited the tool
+        tool_id:
+          type: string
+          format: uuid
+          description: UUID of the favorited tool
+        created_at:
+          type: string
+          format: date-time
+          description: When the tool was favorited
+          
+    FavoritesListResponse:
+      type: object
+      properties:
+        favorites:
+          type: array
+          items:
+            $ref: '#/components/schemas/FavoriteResponse'
+        total:
+          type: integer
+          description: Total number of favorites
+        skip:
+          type: integer
+          description: Number of items skipped
+        limit:
+          type: integer
+          description: Maximum number of items returned
+          
+    ShareCreate:
+      type: object
+      required:
+        - tool_unique_id
+      properties:
+        tool_unique_id:
+          type: string
+          description: Unique identifier of the tool to share
+          
+    ShareResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the share record
+        user_id:
+          type: string
+          description: ID of the user who shared the tool
+        tool_unique_id:
+          type: string
+          description: Unique identifier of the shared tool
+        share_id:
+          type: string
+          description: Unique share identifier
+        created_at:
+          type: string
+          format: date-time
+          description: When the tool was shared
+        share_link:
+          type: string
+          description: Shareable URL for the tool
+    
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
+
+paths:
+  /favorites:
+    post:
+      summary: Add a tool to user's favorites
+      operationId: addToFavorites
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavoriteCreate'
+      responses:
+        '200':
+          description: Tool added to favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Tool not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Tool is already in favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+    get:
+      summary: List user's favorite tools
+      operationId: listFavorites
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: skip
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of favorites
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoritesListResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /favorites/{tool_id}:
+    delete:
+      summary: Remove a tool from favorites
+      operationId: removeFromFavorites
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID of the tool to remove from favorites
+      responses:
+        '204':
+          description: Tool removed from favorites
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Favorite not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /favorites/tools:
+    get:
+      summary: List user's favorited tools with details
+      operationId: listFavoriteTools
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: skip
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of favorited tools with details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /share:
+    post:
+      summary: Create a shareable link for a tool
+      operationId: shareTool
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShareCreate'
+      responses:
+        '200':
+          description: Share created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Tool not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /share/by-id/{share_id}:
+    get:
+      summary: Get tool details by share ID
+      operationId: getShare
+      parameters:
+        - name: share_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique share identifier
+      responses:
+        '200':
+          description: Tool details with share information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tool:
+                    type: object
+                  share:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date-time
+                      shared_by:
+                        type: string
+        '404':
+          description: Share not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /share/my-shares:
+    get:
+      summary: List user's shares
+      operationId: listUserShares
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: skip
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: List of shares
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShareResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /tools/{tool_id}/with-favorite:
+    get:
+      summary: Get tool with favorite status
+      operationId: getToolWithFavorite
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID of the tool
+      responses:
+        '200':
+          description: Tool with favorite status
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Tool not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 

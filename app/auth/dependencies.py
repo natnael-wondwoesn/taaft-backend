@@ -169,6 +169,8 @@ class RateLimitMiddleware:
             or request.url.path.startswith("/public/")
             or request.url.path.startswith("/tools/featured")
             or request.url.path.startswith("/tools/sponsored")
+            or request.url.path.startswith("/favorites/")
+            or request.url.path.startswith("/share/")
             or request.url.path == "/api/auth/reset-password"
             or request.url.path == "/tools"  # Allow direct access to /tools endpoint
         ):
@@ -312,6 +314,10 @@ class AdminControlMiddleware:
         self.unrestricted_prefixes.append("/api/glossary")
         # Keyword search endpoint should be accessible to all authenticated users
         self.unrestricted_prefixes.append("/tools/keyword-search")
+        # Favorites endpoint should be accessible to all authenticated users
+        self.unrestricted_prefixes.append("/favorites")
+        # Share endpoint should be accessible to all authenticated users
+        self.unrestricted_prefixes.append("/share")
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -329,7 +335,11 @@ class AdminControlMiddleware:
             "/tools/featured",  # Featured tools endpoint
             "/tools/sponsored",  # Sponsored tools endpoint
             "/tools",  # Direct tools endpoint
+            "/tools/keyword-search",  # Keyword search endpoint
+            "/api/tools/keyword-search",  # Keyword search endpoint with API prefix
             "/api/auth/reset-password",  # Password reset endpoint
+            "/favorites/",  # Favorites endpoints
+            "/share/",  # Share endpoints
         ]
 
         # If it's a public endpoint, skip auth checks
@@ -341,7 +351,9 @@ class AdminControlMiddleware:
         method = request.method
 
         # Allow POST requests to /tools/keyword-search without admin check
-        if path == "/tools/keyword-search" and method == "POST":
+        if (
+            path == "/tools/keyword-search" or path == "/api/tools/keyword-search"
+        ) and method == "POST":
             return await self.app(scope, receive, send)
 
         # Check if method is restricted (POST, PUT, DELETE)

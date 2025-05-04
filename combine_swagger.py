@@ -23,6 +23,20 @@ def read_yaml(file_path):
 
 def combine_swagger_files():
     """Combine multiple Swagger YAML files into a single file."""
+    # Define all API spec files to combine
+    api_specs = [
+        "swagger_auth.yaml",
+        "swagger_tools.yaml",
+        "swagger_search.yaml",
+        "swagger_glossary.yaml",
+        "swagger_queue.yaml",
+        "swagger_terms.yaml",
+        "swagger_categories.yaml",
+        "swagger_chat.yaml",
+        "swagger_blog.yaml",
+        "swagger_favorites.yaml",  # Add the favorites and shares API spec
+    ]
+
     # Files to combine
     files = [
         "swagger.yaml",  # Base file with OpenAPI info

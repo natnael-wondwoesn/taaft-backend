@@ -16,6 +16,7 @@ from .tools_service import (
     toggle_tool_featured_status,
     toggle_tool_featured_status_by_unique_id,
     keyword_search_tools,
+    get_tool_with_favorite_status,
 )
 
 router = APIRouter(prefix="/tools", tags=["tools"])
@@ -339,3 +340,17 @@ async def keyword_search_endpoint(
     total = await keyword_search_tools(keywords=cleaned_keywords, count_only=True)
 
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+
+
+@router.get("/unique/{unique_id}/with-favorite", response_model=ToolResponse)
+async def get_tool_with_favorite_by_unique_id(
+    unique_id: str,
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Get a specific tool by its unique_id and include whether it is in the user's favorites.
+    """
+    tool = await get_tool_with_favorite_status(unique_id, current_user.id)
+    if not tool:
+        raise HTTPException(status_code=404, detail="Tool not found")
+    return tool

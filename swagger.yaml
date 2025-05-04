@@ -23,6 +23,10 @@ tags:
     description: Tools management
   - name: Sites Queue
     description: Prioritized queue of sites
+  - name: Favorites
+    description: User favorites management
+  - name: Shares
+    description: Tool sharing functionality
 
 paths:
   # Placeholder for paths - will be filled in separate files
