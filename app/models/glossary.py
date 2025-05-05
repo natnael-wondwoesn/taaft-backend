@@ -11,6 +11,12 @@ class GlossaryTerm(BaseModel):
     id: Optional[ObjectId] = Field(alias="_id", default=None)
     name: str = Field(..., description="The name/title of the glossary term")
     definition: str = Field(..., description="Detailed definition of the term")
+    short_definition: Optional[str] = Field(
+        default="", description="Concise definition for quick reference"
+    )
+    slug: Optional[str] = Field(
+        default="", description="URL-friendly slug for the term"
+    )
     related_terms: List[str] = Field(
         default_factory=list, description="List of related term names"
     )
@@ -45,6 +51,8 @@ class GlossaryTermResponse(BaseModel):
     id: str
     name: str
     definition: str
+    short_definition: Optional[str] = ""
+    slug: Optional[str] = ""
     related_terms: List[str] = []
     tool_references: List[str] = []
     categories: List[str] = []
@@ -60,6 +68,8 @@ class GlossaryTermCreate(BaseModel):
 
     name: str
     definition: str
+    short_definition: Optional[str] = ""
+    slug: Optional[str] = ""
     related_terms: List[str] = []
     tool_references: List[str] = []
     categories: List[str] = []
@@ -70,6 +80,8 @@ class GlossaryTermUpdate(BaseModel):
 
     name: Optional[str] = None
     definition: Optional[str] = None
+    short_definition: Optional[str] = None
+    slug: Optional[str] = None
     related_terms: Optional[List[str]] = None
     tool_references: Optional[List[str]] = None
     categories: Optional[List[str]] = None

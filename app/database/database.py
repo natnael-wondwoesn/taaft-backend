@@ -44,7 +44,7 @@ glossary_terms = database.get_collection("glossary_terms")
 keywords = database.get_collection("keywords")
 
 # Blog articles collection
-blog_articles = database.get_collection("blog_articles")
+blog_articles = database.get_collection("blogs")
 
 # Favorites collection
 favorites = database.get_collection("favorites")

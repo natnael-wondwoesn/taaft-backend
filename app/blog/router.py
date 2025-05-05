@@ -21,7 +21,7 @@ router = APIRouter(
 async def list_blog_articles(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    sort_by: str = Query("published_date", description="Field to sort by"),
+    sort_by: str = Query("_id", description="Field to sort by"),
     sort_desc: bool = Query(True, description="Sort in descending order"),
     blog_db: BlogDB = Depends(get_blog_db),
 ):
@@ -76,7 +76,7 @@ async def get_blog_article(
                     {
                         "id": term["id"],
                         "name": term["name"],
-                        "slug": term["slug"],
+                        "slug": term.get("slug", ""),
                         "short_definition": term.get("short_definition", ""),
                     }
                 )
@@ -112,13 +112,18 @@ async def get_blog_articles_by_glossary_term(
     # Format the response
     formatted_articles = []
     for article in articles:
+        # Create a preview of the body text
+        body_preview = (
+            article.get("body", "")[:150] + "..." if article.get("body") else None
+        )
+
         formatted_articles.append(
             {
                 "id": str(article["_id"]),
                 "title": article["title"],
-                "slug": article["slug"],
-                "summary": article["summary"],
-                "published_date": article["published_date"],
+                "url": article.get("url", ""),
+                "body_preview": body_preview,
+                "images": article.get("images", []),
             }
         )
 
@@ -159,9 +164,41 @@ async def get_glossary_terms_list(
             {
                 "id": str(term["_id"]),
                 "name": term["name"],
-                "slug": term["slug"],
+                "slug": term.get("slug", ""),
                 "short_definition": term.get("short_definition", ""),
             }
         )
 
     return formatted_terms
+
+
+@router.post("/articles/{article_id}/glossary-terms", response_model=dict)
+async def update_article_glossary_terms(
+    article_id: str = Path(..., description="ID of the blog article"),
+    term_ids: List[str] = Query(..., description="IDs of glossary terms to link"),
+    blog_db: BlogDB = Depends(get_blog_db),
+):
+    """
+    Update the glossary terms linked to a specific blog article.
+    This enables bidirectional linking between blog articles and glossary terms.
+    """
+    # Verify the article exists
+    article = await blog_db.get_article_by_id(article_id)
+    if not article:
+        raise HTTPException(status_code=404, detail="Blog article not found")
+
+    # Update the article's related_glossary_terms field
+    success = await blog_db.update_article_glossary_terms(article_id, term_ids)
+
+    if not success:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to update related glossary terms for this article",
+        )
+
+    return {
+        "status": "success",
+        "message": "Successfully updated related glossary terms",
+        "article_id": article_id,
+        "term_ids": term_ids,
+    }

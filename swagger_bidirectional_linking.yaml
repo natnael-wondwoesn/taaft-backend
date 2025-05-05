@@ -1,0 +1,414 @@
+openapi: 3.0.0
+info:
+  title: TAAFT Bidirectional Linking API
+  description: API for bidirectional linking between glossary terms and blog articles
+  version: 1.0.0
+tags:
+  - name: bidirectional_linking
+    description: Operations for bidirectional linking between glossary terms and blog articles
+
+paths:
+  /api/linking/terms/{term_id}/articles:
+    get:
+      tags:
+        - bidirectional_linking
+      summary: Get blog articles related to a glossary term
+      description: |
+        Get blog articles related to a specific glossary term.
+        Returns the term details and a list of related articles.
+        Optimized for frontend consumption with appropriate data structure.
+        No authentication required (free tier access).
+      parameters:
+        - name: term_id
+          in: path
+          description: ID of the glossary term
+          required: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: List of related blog articles with term details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogArticlesForTermResponse'
+        '404':
+          description: Glossary term not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /api/linking/terms:
+    get:
+      tags:
+        - bidirectional_linking
+      summary: Get a list of glossary terms with slugs and short definitions
+      description: |
+        Get a list of glossary terms with their slug and short definition.
+        Optimized for frontend consumption with a simplified structure.
+        Supports optional search functionality and can include article counts.
+        No authentication required (free tier access).
+      parameters:
+        - name: skip
+          in: query
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 500
+        - name: search
+          in: query
+          description: Search text in name
+          required: false
+          schema:
+            type: string
+        - name: include_article_counts
+          in: query
+          description: Include count of related articles for each term
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: List of glossary terms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlossaryTermsListResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/linking/static-mapping:
+    get:
+      tags:
+        - bidirectional_linking
+      summary: Get a static mapping of terms to articles and vice versa
+      description: |
+        Generate a static mapping of terms to articles and articles to terms.
+        This can be used for frontend caching or static site generation.
+        
+        The response includes two mappings:
+        - terms_to_articles: Maps term IDs to their details and related article IDs
+        - articles_to_terms: Maps article IDs to their details and related term IDs
+        
+        This endpoint is optimized for bulk data retrieval and can be cached
+        on the client side for improved performance.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: Static mapping of terms to articles and articles to terms
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  terms_to_articles:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        term:
+                          $ref: '#/components/schemas/GlossaryTermSummary'
+                        article_ids:
+                          type: array
+                          items:
+                            type: string
+                  articles_to_terms:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        article:
+                          $ref: '#/components/schemas/BlogArticleSummary'
+                        term_ids:
+                          type: array
+                          items:
+                            type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/blog/articles/{article_id}/glossary-terms:
+    post:
+      tags:
+        - bidirectional_linking
+        - blog
+      summary: Update glossary terms for a blog article
+      description: |
+        Update the glossary terms linked to a specific blog article.
+        This enables bidirectional linking between blog articles and glossary terms.
+        No authentication required (free tier access).
+      parameters:
+        - name: article_id
+          in: path
+          description: ID of the blog article
+          required: true
+          schema:
+            type: string
+        - name: term_ids
+          in: query
+          description: IDs of glossary terms to link
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Successfully updated related glossary terms
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Successfully updated related glossary terms
+                  article_id:
+                    type: string
+                  term_ids:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: Blog article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/linking/cache/enable:
+    post:
+      tags:
+        - bidirectional_linking
+      summary: Enable caching for bidirectional linking
+      description: |
+        Enable the caching for bidirectional linking to improve performance.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: Cache enabled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Cache enabled
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/linking/cache/disable:
+    post:
+      tags:
+        - bidirectional_linking
+      summary: Disable caching for bidirectional linking
+      description: |
+        Disable the caching for bidirectional linking.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: Cache disabled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Cache disabled and cleared
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/linking/cache/clear:
+    post:
+      tags:
+        - bidirectional_linking
+      summary: Clear the bidirectional linking cache
+      description: |
+        Clear the bidirectional linking cache.
+        No authentication required (free tier access).
+      responses:
+        '200':
+          description: Cache cleared
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Cache cleared
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    GlossaryTermSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the glossary term
+        name:
+          type: string
+          description: The name of the glossary term
+        slug:
+          type: string
+          description: URL-friendly slug for the term
+        short_definition:
+          type: string
+          description: Short definition of the term for quick reference
+      required:
+        - id
+        - name
+        - slug
+    
+    GlossaryTermWithArticlesCount:
+      allOf:
+        - $ref: '#/components/schemas/GlossaryTermSummary'
+        - type: object
+          properties:
+            article_count:
+              type: integer
+              description: Number of related articles for this term
+              default: 0
+    
+    BlogArticleSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the blog article
+        title:
+          type: string
+          description: The title of the blog article
+        url:
+          type: string
+          description: Original URL of the article
+        body_preview:
+          type: string
+          description: A truncated preview of the article body
+        images:
+          type: array
+          items:
+            type: string
+          description: List of image URLs for the article
+      required:
+        - id
+        - title
+    
+    BlogArticlesForTermResponse:
+      type: object
+      properties:
+        term:
+          $ref: '#/components/schemas/GlossaryTermSummary'
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlogArticleSummary'
+        total_count:
+          type: integer
+          description: Total number of related articles (for pagination)
+      required:
+        - term
+        - articles
+        - total_count
+    
+    GlossaryTermsListResponse:
+      type: object
+      properties:
+        terms:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/GlossaryTermSummary'
+              - $ref: '#/components/schemas/GlossaryTermWithArticlesCount'
+        total_count:
+          type: integer
+          description: Total number of terms (for pagination)
+      required:
+        - terms
+        - total_count
+    
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
+      required:
+        - detail 
