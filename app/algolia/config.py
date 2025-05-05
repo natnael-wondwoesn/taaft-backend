@@ -9,6 +9,9 @@ from pydantic_settings import BaseSettings
 from algoliasearch.search.client import SearchClientSync as SearchClient
 from ..logger import logger
 
+# Import our optimized client
+from .client import OptimizedAlgoliaClient
+
 
 class AlgoliaSettings(BaseSettings):
     """Settings for Algolia search"""
@@ -67,23 +70,32 @@ class AlgoliaConfig:
 
         # Initialize client only if credentials are provided
         self.client = None
+        self.optimized_client = None
+
+        # Get performance settings
+        algolia_timeout = int(os.getenv("ALGOLIA_TIMEOUT", "5"))  # 5 seconds default
+        algolia_max_retries = int(
+            os.getenv("ALGOLIA_MAX_RETRIES", "3")
+        )  # 3 retries default
 
         if self.app_id and self.api_key:
             try:
-                # Create the client using the SearchClient constructor with v4 syntax
+                # Create the standard client for admin operations
                 self.client = SearchClient(self.app_id, self.write_api_key)
-                self.client.set_settings(
-                    index_name=self.tools_index_name,
-                    index_settings={
-                        "paginationLimitedTo": 1000,
-                        "attributesToRetrieve": ["*"],
-                    },
-                    forward_to_replicas=True,
+
+                # Create the optimized client for search operations
+                self.optimized_client = OptimizedAlgoliaClient(
+                    app_id=self.app_id,
+                    api_key=self.search_only_api_key,
+                    timeout=algolia_timeout,
+                    max_retries=algolia_max_retries,
                 )
+
                 logger.info("Algolia client initialized successfully")
             except Exception as e:
                 logger.error(f"Failed to initialize Algolia client: {str(e)}")
                 self.client = None
+                self.optimized_client = None
         else:
             logger.warning(
                 "Algolia credentials not provided. Search functionality will be limited."
@@ -91,7 +103,7 @@ class AlgoliaConfig:
 
     def is_configured(self) -> bool:
         """Check if Algolia is properly configured"""
-        return self.client is not None
+        return self.client is not None and self.optimized_client is not None
 
     def get_search_only_api_key(self) -> str:
         """Get the search-only API key for frontend use"""

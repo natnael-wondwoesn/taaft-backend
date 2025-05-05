@@ -40,7 +40,11 @@ from .algolia.models import (
 from .chat import router as chat_router
 
 # Import the Algolia router
-from .algolia import router as algolia_router, algolia_config
+from .algolia import (
+    router as algolia_router,
+    algolia_config,
+    SearchPerformanceMiddleware,
+)
 
 # Import the auth router
 from .auth import router as auth_router
@@ -88,6 +92,10 @@ load_dotenv()
 
 # Check for test mode
 TEST_MODE = os.getenv("TEST_MODE", "false").lower() == "true"
+
+# Get search cache configuration from environment variables
+SEARCH_CACHE_ENABLED = os.getenv("SEARCH_CACHE_ENABLED", "true").lower() == "true"
+SEARCH_CACHE_TTL = int(os.getenv("SEARCH_CACHE_TTL", "300"))  # Default 5 minutes
 
 
 @asynccontextmanager
@@ -175,9 +183,15 @@ app.add_middleware(
 #    Note: Regular authenticated endpoints like /tools/keyword-search will use their
 #    own authentication via the route handler's get_current_active_user dependency
 # 3. RateLimitMiddleware - to limit request rates for authenticated users
+# 4. SearchPerformanceMiddleware - to monitor and cache search responses
 app.add_middleware(PublicFeaturedToolsMiddleware)
 app.add_middleware(AdminControlMiddleware)
 app.add_middleware(RateLimitMiddleware)
+app.add_middleware(
+    SearchPerformanceMiddleware,
+    cache_enabled=SEARCH_CACHE_ENABLED,
+    default_ttl=SEARCH_CACHE_TTL,
+)
 
 # Include routers
 app.include_router(chat_router)

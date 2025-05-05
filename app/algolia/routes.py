@@ -18,16 +18,22 @@ import datetime
 
 from .models import SearchParams, SearchResult, NaturalLanguageQuery, ProcessedQuery
 from .config import algolia_config
-from .search import algolia_search
 from .indexer import algolia_indexer
 from ..database import database
 from ..logger import logger
 
+# Create the router before importing middleware that might use it
 router = APIRouter(
     prefix="/api/search",
     tags=["Search"],
     responses={404: {"description": "Not found"}},
 )
+
+# Now import the search implementation that might depend on the router
+from .search import algolia_search
+
+# Import performance stats after router is defined
+from .middleware import SEARCH_PERFORMANCE_STATS
 
 
 # Get MongoDB collections
@@ -377,3 +383,78 @@ async def get_all_keywords():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error getting keywords: {str(e)}",
         )
+
+
+@router.get("/stats")
+async def get_search_stats():
+    """
+    Get search performance statistics
+
+    Returns:
+        Dictionary containing search performance metrics
+    """
+    # Calculate averages
+    avg_response_time = 0
+    avg_cached_response_time = 0
+
+    if SEARCH_PERFORMANCE_STATS["total_requests"] > 0:
+        avg_response_time = (
+            SEARCH_PERFORMANCE_STATS["total_response_time"]
+            / SEARCH_PERFORMANCE_STATS["total_requests"]
+        )
+
+    if SEARCH_PERFORMANCE_STATS["cached_requests"] > 0:
+        avg_cached_response_time = (
+            SEARCH_PERFORMANCE_STATS["cached_response_time"]
+            / SEARCH_PERFORMANCE_STATS["cached_requests"]
+        )
+
+    # Calculate cache hit ratio
+    cache_hit_ratio = 0
+    if SEARCH_PERFORMANCE_STATS["total_requests"] > 0:
+        cache_hit_ratio = (
+            SEARCH_PERFORMANCE_STATS["cached_requests"]
+            / SEARCH_PERFORMANCE_STATS["total_requests"]
+        )
+
+    return {
+        "total_requests": SEARCH_PERFORMANCE_STATS["total_requests"],
+        "average_response_time": avg_response_time,
+        "cached_requests": SEARCH_PERFORMANCE_STATS["cached_requests"],
+        "average_cached_response_time": avg_cached_response_time,
+        "cache_hit_ratio": cache_hit_ratio,
+        "slow_requests": SEARCH_PERFORMANCE_STATS["slow_requests"],
+        "error_requests": SEARCH_PERFORMANCE_STATS["error_requests"],
+        "stats_since": SEARCH_PERFORMANCE_STATS["last_reset"].isoformat(),
+    }
+
+
+@router.post("/stats/reset")
+async def reset_search_stats():
+    """
+    Reset search performance statistics
+
+    Returns:
+        Success message
+    """
+    # Store previous stats for the response
+    previous_stats = dict(SEARCH_PERFORMANCE_STATS)
+
+    # Reset the stats
+    SEARCH_PERFORMANCE_STATS.update(
+        {
+            "total_requests": 0,
+            "total_response_time": 0,
+            "cached_requests": 0,
+            "cached_response_time": 0,
+            "slow_requests": 0,
+            "error_requests": 0,
+            "last_reset": datetime.datetime.utcnow(),
+        }
+    )
+
+    return {
+        "status": "success",
+        "message": "Search statistics reset successfully",
+        "previous_stats": previous_stats,
+    }
