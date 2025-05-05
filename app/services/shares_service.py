@@ -42,8 +42,8 @@ async def create_share(user_id: str, share_data: ShareCreate) -> ShareResponse:
     share["_id"] = result.inserted_id
 
     # Generate share link
-    base_url = os.getenv("FRONTEND_URL", "https://taaft.ai")
-    share_link = f"{base_url}/tool/{tool['unique_id']}?share={share_id}"
+    base_url = os.getenv("FRONTEND_URL", "https://taaft-deploy-18xw.vercel.app")
+    share_link = f"{base_url}/tools/{tool['id']}?share={share_id}"
 
     # Convert to response model
     return ShareResponse(
