@@ -4,7 +4,7 @@ Data models for Algolia search integration
 Defines schemas for tool indexing and search
 """
 from enum import Enum
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from pydantic import BaseModel, Field, HttpUrl
 import datetime
 from bson import ObjectId
@@ -93,6 +93,10 @@ class AlgoliaToolRecord(BaseModel):
     }
 
 
+# Define ToolRecord for backwards compatibility
+ToolRecord = AlgoliaToolRecord
+
+
 # Models for search
 class SearchParams(BaseModel):
     """Parameters for search operations"""
@@ -122,15 +126,16 @@ class SearchFacets(BaseModel):
 
 
 class SearchResult(BaseModel):
-    """Result model for search operations"""
+    """Search result model"""
 
-    tools: List[AlgoliaToolRecord]
+    tools: List[Union[ToolRecord, AlgoliaToolRecord]]
     total: int
     page: int
     per_page: int
     pages: int
+    processing_time_ms: int
     facets: Optional[SearchFacets] = None
-    processing_time_ms: Optional[int] = None
+    response_time: Optional[float] = None
     processed_query: Optional["ProcessedQuery"] = None
 
     model_config = {"arbitrary_types_allowed": True}

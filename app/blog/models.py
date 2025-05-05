@@ -8,13 +8,9 @@ class BlogArticleBase(BaseModel):
     """Base model for blog articles."""
 
     title: str
-    slug: str
-    content: str
-    summary: str
-    author: str
-    published_date: datetime
-    last_updated: Optional[datetime] = None
-    tags: List[str] = []
+    url: Optional[str] = None
+    body: str
+    images: List[str] = []
     related_glossary_terms: List[str] = []  # List of glossary term IDs
 
 
@@ -28,11 +24,9 @@ class BlogArticleUpdate(BaseModel):
     """Model for updating a blog article."""
 
     title: Optional[str] = None
-    content: Optional[str] = None
-    summary: Optional[str] = None
-    author: Optional[str] = None
-    last_updated: Optional[datetime] = None
-    tags: Optional[List[str]] = None
+    url: Optional[str] = None
+    body: Optional[str] = None
+    images: Optional[List[str]] = None
     related_glossary_terms: Optional[List[str]] = None
 
 
@@ -56,6 +50,6 @@ class RelatedBlogArticle(BaseModel):
 
     id: str
     title: str
-    slug: str
-    summary: str
-    published_date: datetime
+    url: Optional[str] = None
+    body_preview: Optional[str] = None  # A truncated version of the body for previews
+    images: List[str] = []

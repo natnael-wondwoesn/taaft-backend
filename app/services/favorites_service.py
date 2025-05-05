@@ -66,14 +66,24 @@ async def remove_favorite(user_id: str, tool_unique_id: str) -> bool:
     Returns:
         True if successful, raises exception otherwise
     """
+    logger.info(
+        f"Attempting to remove favorite: user_id={user_id}, tool_unique_id={tool_unique_id}"
+    )
+
     # Find and delete the favorite
     result = await favorites.delete_one(
         {"user_id": str(user_id), "tool_unique_id": tool_unique_id}
     )
 
     if result.deleted_count == 0:
+        logger.warning(
+            f"Favorite not found: user_id={user_id}, tool_unique_id={tool_unique_id}"
+        )
         raise HTTPException(status_code=404, detail="Favorite not found")
 
+    logger.info(
+        f"Successfully removed favorite: user_id={user_id}, tool_unique_id={tool_unique_id}"
+    )
     return True
 
 

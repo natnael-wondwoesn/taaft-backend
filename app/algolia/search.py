@@ -17,6 +17,7 @@ import openai
 import os
 from pydantic import ValidationError
 import re
+import time
 
 from .config import algolia_config
 from .models import (
@@ -94,10 +95,11 @@ class AlgoliaSearch:
         # Use the provided index name or fall back to the default tools index
         search_index = index_name or self.config.tools_index_name
 
-        print(f"keywords: {keywords}")
+        # Performance optimization: Start tracking execution time
+        start_time = time.time()
 
         # Join keywords into a space-separated search query
-        search_query = ", ".join(keywords) if keywords else ""
+        search_query = " ".join(keywords) if keywords else ""
 
         logger.info(
             f"Performing keyword search: '{search_query}' on index '{search_index}'"
@@ -115,49 +117,80 @@ class AlgoliaSearch:
             }
 
         try:
-            # Construct the search request
-            # print(f"{search_query}")
-            # Convert the search query to the specified format with a placeholder popularity value
-            # Using a fixed popularity value of 2.5658 as specified in the instructions
-            # search_query = list(search_query.join())
-            print(f"search_index: {search_query}")
-            params = {
-                "params": {
-                    "index_name": search_index,
-                    "query": search_query,
-                    "page": page,
-                    "hitsPerPage": per_page,
-                    "attributesToRetrieve": ["*"],
-                }
+            # Optimization: Use more efficient search parameters
+            search_params = {
+                "query": search_query,
+                "page": page,
+                "hitsPerPage": per_page,
+                "attributesToRetrieve": ["*"],
+                "advancedSyntax": True,
+                "typoTolerance": True,
+                "removeWordsIfNoResults": "allOptional",
+                "analytics": False,  # Disable analytics for faster response
+                "enablePersonalization": False,  # Disable personalization for speed
+                "distinct": True,
             }
 
-            # Execute search using Algolia client
-            results = self.config.client.search_single_index(
-                index_name=search_index,
-                search_params={
-                    "query": f"{search_query}",
-                    "attributesToRetrieve": ["*"],
-                    "advancedSyntax": True,
-                    "typoTolerance": True,
-                    "removeWordsIfNoResults": "allOptional",
-                    "hitsPerPage": 1000,  # Increase to get all available hits
-                },
-            )
+            # Use optimized client if available
+            if (
+                hasattr(self.config, "optimized_client")
+                and self.config.optimized_client
+            ):
+                logger.debug("Using optimized Algolia client for search")
+                results = await self.config.optimized_client.search_single_index(
+                    index_name=search_index, search_params=search_params
+                )
+            else:
+                # Fall back to standard client
+                logger.debug("Using standard Algolia client for search")
+                results = self.config.client.search_single_index(
+                    index_name=search_index,
+                    search_params=search_params,
+                )
 
-            print(f"results: {results.nb_hits}")
+            # Performance logging
+            elapsed = time.time() - start_time
+            logger.debug(f"Algolia search completed in {elapsed:.4f}s")
 
-            # Process the response based on its actual structure
-            # The response contains direct search results without a "results" field
+            # Return standardized results
             if results:
-                # Extract the relevant search result fields
                 return {
-                    "hits": results.hits,
-                    "nbHits": results.nb_hits,
-                    "page": results.page,
-                    "nbPages": results.nb_pages,
-                    "processingTimeMS": results.processing_time_ms,
-                    "query": results.query,
-                    "params": results.params,
+                    "hits": (
+                        results.hits
+                        if hasattr(results, "hits")
+                        else results.get("hits", [])
+                    ),
+                    "nbHits": (
+                        results.nb_hits
+                        if hasattr(results, "nb_hits")
+                        else results.get("nbHits", 0)
+                    ),
+                    "page": (
+                        results.page
+                        if hasattr(results, "page")
+                        else results.get("page", page)
+                    ),
+                    "nbPages": (
+                        results.nb_pages
+                        if hasattr(results, "nb_pages")
+                        else results.get("nbPages", 0)
+                    ),
+                    "processingTimeMS": (
+                        results.processing_time_ms
+                        if hasattr(results, "processing_time_ms")
+                        else results.get("processingTimeMS", 0)
+                    ),
+                    "query": (
+                        results.query
+                        if hasattr(results, "query")
+                        else results.get("query", search_query)
+                    ),
+                    "params": (
+                        results.params
+                        if hasattr(results, "params")
+                        else results.get("params", search_params)
+                    ),
+                    "responseTime": elapsed,
                 }
             else:
                 logger.warning("No results found or invalid response format.")
@@ -167,10 +200,13 @@ class AlgoliaSearch:
                     "page": page,
                     "nbPages": 0,
                     "processingTimeMS": 0,
+                    "responseTime": elapsed,
                 }
 
         except Exception as e:
-            logger.error(f"Error performing keyword search: {str(e)}")
+            # Log and return error
+            elapsed = time.time() - start_time
+            logger.error(f"Error performing keyword search ({elapsed:.4f}s): {str(e)}")
             return {
                 "hits": [],
                 "nbHits": 0,
@@ -178,6 +214,7 @@ class AlgoliaSearch:
                 "nbPages": 0,
                 "processingTimeMS": 0,
                 "error": str(e),
+                "responseTime": elapsed,
             }
 
     def extract_keywords_from_chat(self, messages: List[Dict[str, Any]]) -> List[str]:
@@ -430,6 +467,9 @@ class AlgoliaSearch:
         Returns:
             SearchResult object containing the search results
         """
+        # Start tracking execution time
+        start_time = time.time()
+
         # Check if Algolia is configured
         if not self.config.is_configured():
             logger.warning("Algolia not configured. Returning empty search results.")
@@ -443,64 +483,152 @@ class AlgoliaSearch:
             )
 
         try:
-            # Set up search parameters to focus on name and description fields
+            # Set up optimized search parameters
             search_params = {
                 "query": query,
                 "restrictSearchableAttributes": ["name", "description"],
                 "page": page,
                 "hitsPerPage": per_page,
-                "typoTolerance": True,  # Allow for typos in search
+                "typoTolerance": True,
                 "advancedSyntax": True,
-                "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
+                "removeWordsIfNoResults": "allOptional",
+                "analytics": False,  # Disable analytics for speed
+                "enablePersonalization": False,  # Disable personalization
+                "distinct": True,
             }
 
             # Execute search using Algolia client
             index_name = self.config.tools_index_name
-            search_response = self.config.client.search_single_index(
-                index_name=index_name, search_params=search_params
-            )
 
-            # Convert results to tool records
+            # Use optimized client if available
+            if (
+                hasattr(self.config, "optimized_client")
+                and self.config.optimized_client
+            ):
+                logger.debug("Using optimized Algolia client for direct search")
+                search_response = (
+                    await self.config.optimized_client.search_single_index(
+                        index_name=index_name, search_params=search_params
+                    )
+                )
+            else:
+                # Fall back to standard client
+                logger.debug("Using standard Algolia client for direct search")
+                search_response = self.config.client.search_single_index(
+                    index_name=index_name, search_params=search_params
+                )
+
+            # Convert results to tool records efficiently
             tools = []
-            for hit in search_response.hits:
-                # print(f"hit: {hit}")
+
+            # Handle both object and dict response formats
+            hits = []
+            if hasattr(search_response, "hits"):
+                hits = search_response.hits
+            elif isinstance(search_response, dict):
+                hits = search_response.get("hits", [])
+
+            for hit in hits:
                 try:
                     # Create AlgoliaToolRecord from each hit
                     tool_record = AlgoliaToolRecord(
-                        objectID=getattr(hit, "objectID", ""),
-                        name=getattr(hit, "name", ""),
-                        description=getattr(hit, "description", ""),
-                        slug=getattr(hit, "slug", None)
-                        or getattr(hit, "unique_id", None),
-                        website=getattr(hit, "website", None)
-                        or getattr(hit, "link", None),
-                        features=getattr(hit, "features", []),
-                        categories=getattr(hit, "categories", []),
-                        pricing=getattr(hit, "pricing", None),
-                        price=getattr(hit, "price", ""),
-                        is_featured=getattr(hit, "is_featured", False),
-                        created_at=getattr(hit, "created_at", None),
-                        updated_at=getattr(hit, "updated_at", None),
+                        objectID=(
+                            getattr(hit, "objectID", "")
+                            if not isinstance(hit, dict)
+                            else hit.get("objectID", "")
+                        ),
+                        name=(
+                            getattr(hit, "name", "")
+                            if not isinstance(hit, dict)
+                            else hit.get("name", "")
+                        ),
+                        description=(
+                            getattr(hit, "description", "")
+                            if not isinstance(hit, dict)
+                            else hit.get("description", "")
+                        ),
+                        slug=(
+                            getattr(hit, "slug", None)
+                            if not isinstance(hit, dict)
+                            else hit.get("slug") or hit.get("unique_id")
+                        ),
+                        website=(
+                            getattr(hit, "website", None)
+                            if not isinstance(hit, dict)
+                            else hit.get("website") or hit.get("link")
+                        ),
+                        features=(
+                            getattr(hit, "features", [])
+                            if not isinstance(hit, dict)
+                            else hit.get("features", [])
+                        ),
+                        categories=(
+                            getattr(hit, "categories", [])
+                            if not isinstance(hit, dict)
+                            else hit.get("categories", [])
+                        ),
+                        pricing=(
+                            getattr(hit, "pricing", None)
+                            if not isinstance(hit, dict)
+                            else hit.get("pricing")
+                        ),
+                        price=(
+                            getattr(hit, "price", "")
+                            if not isinstance(hit, dict)
+                            else hit.get("price", "")
+                        ),
+                        is_featured=(
+                            getattr(hit, "is_featured", False)
+                            if not isinstance(hit, dict)
+                            else hit.get("is_featured", False)
+                        ),
+                        created_at=(
+                            getattr(hit, "created_at", None)
+                            if not isinstance(hit, dict)
+                            else hit.get("created_at")
+                        ),
+                        updated_at=(
+                            getattr(hit, "updated_at", None)
+                            if not isinstance(hit, dict)
+                            else hit.get("updated_at")
+                        ),
                     )
-                    # print(f"tool_record: {tool_record}")
                     tools.append(tool_record)
-                    print(f"tools: {tools}")
                 except Exception as e:
                     logger.error(f"Error converting hit to AlgoliaToolRecord: {str(e)}")
                     continue
-            print(f"tools: {tools}")
+
+            # Calculate response time
+            elapsed = time.time() - start_time
+            logger.debug(f"Direct search completed in {elapsed:.4f}s")
+
+            # Get result metadata from either object or dict response
+            if hasattr(search_response, "nb_hits"):
+                total = search_response.nb_hits
+                result_page = search_response.page
+                pages = search_response.nb_pages
+                processing_time_ms = search_response.processing_time_ms
+            else:
+                total = search_response.get("nbHits", 0)
+                result_page = search_response.get("page", page)
+                pages = search_response.get("nbPages", 0)
+                processing_time_ms = search_response.get("processingTimeMS", 0)
+
             # Create and return SearchResult
             return SearchResult(
                 tools=tools,
-                total=search_response.nb_hits,
-                page=search_response.page,
+                total=total,
+                page=result_page,
                 per_page=per_page,
-                pages=search_response.nb_pages,
-                processing_time_ms=search_response.processing_time_ms,
+                pages=pages,
+                processing_time_ms=processing_time_ms,
+                response_time=elapsed,
             )
 
         except Exception as e:
-            logger.error(f"Error performing direct search: {str(e)}")
+            elapsed = time.time() - start_time
+            logger.error(f"Error performing direct search ({elapsed:.4f}s): {str(e)}")
+
             # Return empty results on error
             return SearchResult(
                 tools=[],
@@ -509,6 +637,7 @@ class AlgoliaSearch:
                 per_page=per_page,
                 pages=0,
                 processing_time_ms=0,
+                response_time=elapsed,
             )
 
 

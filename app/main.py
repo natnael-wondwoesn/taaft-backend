@@ -40,7 +40,11 @@ from .algolia.models import (
 from .chat import router as chat_router
 
 # Import the Algolia router
-from .algolia import router as algolia_router, algolia_config
+from .algolia import (
+    router as algolia_router,
+    algolia_config,
+    SearchPerformanceMiddleware,
+)
 
 # Import the auth router
 from .auth import router as auth_router
@@ -79,6 +83,9 @@ from .favorites import router as favorites_router
 # Import the shares router
 from .shares import router as shares_router
 
+# Import the bidirectional linking router
+from .bidirectional_linking import router as bidirectional_linking_router
+
 # Import the glossary seed script
 from .seed_glossary import seed_glossary_terms
 
@@ -88,6 +95,10 @@ load_dotenv()
 
 # Check for test mode
 TEST_MODE = os.getenv("TEST_MODE", "false").lower() == "true"
+
+# Get search cache configuration from environment variables
+SEARCH_CACHE_ENABLED = os.getenv("SEARCH_CACHE_ENABLED", "true").lower() == "true"
+SEARCH_CACHE_TTL = int(os.getenv("SEARCH_CACHE_TTL", "300"))  # Default 5 minutes
 
 
 @asynccontextmanager
@@ -175,9 +186,15 @@ app.add_middleware(
 #    Note: Regular authenticated endpoints like /tools/keyword-search will use their
 #    own authentication via the route handler's get_current_active_user dependency
 # 3. RateLimitMiddleware - to limit request rates for authenticated users
+# 4. SearchPerformanceMiddleware - to monitor and cache search responses
 app.add_middleware(PublicFeaturedToolsMiddleware)
 app.add_middleware(AdminControlMiddleware)
 app.add_middleware(RateLimitMiddleware)
+app.add_middleware(
+    SearchPerformanceMiddleware,
+    cache_enabled=SEARCH_CACHE_ENABLED,
+    default_ttl=SEARCH_CACHE_TTL,
+)
 
 # Include routers
 app.include_router(chat_router)
@@ -195,6 +212,7 @@ app.include_router(ghl_router)  # Include GHL integration router
 app.include_router(blog_router)  # Include blog router
 app.include_router(favorites_router)  # Include favorites router
 app.include_router(shares_router)  # Include shares router
+app.include_router(bidirectional_linking_router)  # Include bidirectional linking router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")

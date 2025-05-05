@@ -16,16 +16,16 @@ class BlogDB:
         article = await blog_articles.find_one({"_id": ObjectId(article_id)})
         return article
 
-    async def get_article_by_slug(self, slug: str) -> Optional[Dict[str, Any]]:
-        """Get a blog article by slug."""
-        article = await blog_articles.find_one({"slug": slug})
+    async def get_article_by_url(self, url: str) -> Optional[Dict[str, Any]]:
+        """Get a blog article by URL."""
+        article = await blog_articles.find_one({"url": url})
         return article
 
     async def list_articles(
         self,
         skip: int = 0,
         limit: int = 20,
-        sort_by: str = "published_date",
+        sort_by: str = "_id",  # Default sort by _id since there's no published_date
         sort_order: int = DESCENDING,
     ) -> List[Dict[str, Any]]:
         """List blog articles with pagination and sorting."""
@@ -43,7 +43,7 @@ class BlogDB:
         term_id: str,
         skip: int = 0,
         limit: int = 10,
-        sort_by: str = "published_date",
+        sort_by: str = "_id",  # Default sort by _id
         sort_order: int = DESCENDING,
     ) -> List[Dict[str, Any]]:
         """Get blog articles related to a specific glossary term."""
@@ -138,6 +138,38 @@ class BlogDB:
         query = filter_query or {}
         count = await blog_articles.count_documents(query)
         return count
+
+    async def update_article_glossary_terms(
+        self, article_id: str, term_ids: List[str]
+    ) -> bool:
+        """
+        Update the related glossary terms for an article.
+
+        Args:
+            article_id: ID of the article to update
+            term_ids: List of glossary term IDs to associate with the article
+
+        Returns:
+            True if successful, False otherwise
+        """
+        if not ObjectId.is_valid(article_id):
+            return False
+
+        # Validate the term IDs exist
+        valid_term_ids = []
+        for term_id in term_ids:
+            if ObjectId.is_valid(term_id):
+                term = await glossary_terms.find_one({"_id": ObjectId(term_id)})
+                if term:
+                    valid_term_ids.append(str(term_id))
+
+        # Update the article
+        result = await blog_articles.update_one(
+            {"_id": ObjectId(article_id)},
+            {"$set": {"related_glossary_terms": valid_term_ids}},
+        )
+
+        return result.modified_count > 0
 
 
 async def get_blog_db() -> BlogDB:

@@ -4,7 +4,9 @@ Combine separate Swagger YAML files into a single complete Swagger documentation
 """
 import os
 import yaml
+import json
 import copy
+import sys
 
 
 def read_yaml(file_path):
@@ -23,36 +25,24 @@ def read_yaml(file_path):
 
 def combine_swagger_files():
     """Combine multiple Swagger YAML files into a single file."""
-    # Define all API spec files to combine
-    api_specs = [
+    # List of swagger files to combine
+    swagger_files = [
+        "swagger.yaml",
         "swagger_auth.yaml",
         "swagger_tools.yaml",
         "swagger_search.yaml",
         "swagger_glossary.yaml",
         "swagger_queue.yaml",
+        "swagger_chat.yaml",
         "swagger_terms.yaml",
         "swagger_categories.yaml",
-        "swagger_chat.yaml",
         "swagger_blog.yaml",
-        "swagger_favorites.yaml",  # Add the favorites and shares API spec
-    ]
-
-    # Files to combine
-    files = [
-        "swagger.yaml",  # Base file with OpenAPI info
-        "swagger_auth.yaml",  # Authentication related endpoints
-        "swagger_tools.yaml",  # Tool-related endpoints
-        "swagger_search.yaml",  # Search-related endpoints
-        "swagger_glossary.yaml",  # Glossary-related endpoints
-        "swagger_queue.yaml",  # Site queue related endpoints
-        "swagger_chat.yaml",  # Chat related endpoints
-        "swagger_categories.yaml",  # Categories related endpoints
-        "swagger_terms.yaml",  # Term definition related endpoints
-        "swagger_blog.yaml",  # Blog related endpoints with glossary linking
+        "swagger_favorites.yaml",
+        "swagger_bidirectional_linking.yaml",  # Added bidirectional linking API
     ]
 
     # Read the base file first
-    with open(files[0], "r") as f:
+    with open(swagger_files[0], "r") as f:
         combined = yaml.safe_load(f)
 
     # Initialize paths and components if they don't exist
@@ -67,7 +57,7 @@ def combine_swagger_files():
         combined["components"]["schemas"] = {}
 
     # Process each additional file
-    for file_path in files[1:]:
+    for file_path in swagger_files[1:]:
         if not os.path.exists(file_path):
             print(f"Warning: File {file_path} does not exist. Skipping.")
             continue
