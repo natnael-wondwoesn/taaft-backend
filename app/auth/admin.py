@@ -558,27 +558,62 @@ async def exempt_user_from_rate_limits(
 async def get_rate_limit_exempt_users(
     current_user: UserInDB = Depends(get_admin_user),
 ):
-    """Get the list of users exempted from rate limits."""
-    from .dependencies import RATE_LIMIT_EXEMPT_USERS
+    """Get the list of exempt users."""
+    return {"exempt_users": RATE_LIMIT_EXEMPT_USERS}
 
-    # Get user details for each exempt user ID
-    exempt_users = []
-    for user_id in RATE_LIMIT_EXEMPT_USERS:
-        # Only get valid ObjectIds
-        if ObjectId.is_valid(user_id):
-            user = await database.users.find_one({"_id": ObjectId(user_id)})
-            if user:
-                exempt_users.append(
-                    {
-                        "id": str(user["_id"]),
-                        "email": user["email"],
-                        "service_tier": user["service_tier"],
-                    }
-                )
-            else:
-                # User ID is in the exempt list but doesn't exist in the database
-                exempt_users.append(
-                    {"id": user_id, "email": "Unknown user", "service_tier": "UNKNOWN"}
-                )
 
-    return {"exempt_users": exempt_users, "count": len(exempt_users)}
+@router.patch("/users/{user_id}/verification", response_model=UserResponse)
+async def update_user_verification_status(
+    user_id: str,
+    is_verified: bool = Body(..., embed=True),
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """Update a user's verification status."""
+
+    # Check if valid ObjectId
+    if not ObjectId.is_valid(user_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user ID format"
+        )
+
+    # Check if user exists
+    user = await database.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    # Update verification status
+    update_data = {"is_verified": is_verified, "updated_at": datetime.utcnow()}
+
+    # Update user
+    result = await database.users.update_one(
+        {"_id": ObjectId(user_id)}, {"$set": update_data}
+    )
+
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user verification status",
+        )
+
+    # Get updated user
+    updated_user = await database.users.find_one({"_id": ObjectId(user_id)})
+
+    logger.info(
+        f"User {user_id} verification status updated to {is_verified} by admin {current_user.email}"
+    )
+
+    # Convert to response model
+    return UserResponse(
+        id=str(updated_user["_id"]),
+        email=updated_user["email"],
+        full_name=updated_user.get("full_name"),
+        service_tier=updated_user["service_tier"],
+        is_active=updated_user["is_active"],
+        is_verified=updated_user["is_verified"],
+        subscribeToNewsletter=updated_user.get("subscribeToNewsletter", False),
+        created_at=updated_user["created_at"],
+        oauth_providers=updated_user.get("oauth_providers", {}),
+        usage=updated_user["usage"],
+    )

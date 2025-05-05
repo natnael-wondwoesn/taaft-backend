@@ -134,6 +134,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user"
         )
 
+    # Check if user is verified
+    if not user["is_verified"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Email verification required. Please verify your email before logging in.",
+        )
+
     # Update last login time
     await database.users.update_one(
         {"_id": user["_id"]}, {"$set": {"last_login": datetime.datetime.utcnow()}}
