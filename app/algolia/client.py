@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Any, Union
 import time
 import asyncio
 from algoliasearch.search.client import SearchClientSync as SearchClient
+from algoliasearch.search.config import SearchConfig
 
 # Fix: Import exceptions from the right location
 # The actual exceptions vary by version, so we'll handle exceptions generically
@@ -45,11 +46,8 @@ class OptimizedAlgoliaClient:
     def _initialize_client(self):
         """Initialize the Algolia client with performance optimizations"""
         try:
-            self._client = SearchClient(
-                self.app_id,
-                self.api_key,
-                {"connectTimeout": self.timeout * 1000},  # Convert to milliseconds
-            )
+            # Simplified client initialization - no custom config
+            self._client = SearchClient(self.app_id, self.api_key)
             logger.info("Optimized Algolia client initialized successfully")
         except Exception as e:
             logger.error(f"Failed to initialize Algolia client: {str(e)}")
