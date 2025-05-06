@@ -54,6 +54,7 @@ async def register_user(user_data: UserCreate, request: Request = None):
             "total_requests": 0,
             "storage_used_bytes": 0,
         },
+        saved_tools=[],  # Initialize empty saved tools array
     )
 
     result = await database.users.insert_one(
@@ -110,6 +111,7 @@ async def register_user(user_data: UserCreate, request: Request = None):
         subscribeToNewsletter=created_user.get("subscribeToNewsletter", False),
         created_at=created_user["created_at"],
         usage=created_user["usage"],
+        saved_tools=created_user.get("saved_tools", []),
     )
 
 
@@ -221,6 +223,9 @@ async def get_current_user_info(current_user: UserInDB = Depends(get_current_use
         is_verified=current_user.is_verified,
         created_at=current_user.created_at,
         usage=current_user.usage,
+        saved_tools=(
+            current_user.saved_tools if hasattr(current_user, "saved_tools") else []
+        ),
     )
 
 

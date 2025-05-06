@@ -93,8 +93,10 @@ async def get_user(
         service_tier=user["service_tier"],
         is_active=user["is_active"],
         is_verified=user["is_verified"],
+        subscribeToNewsletter=user.get("subscribeToNewsletter", False),
         created_at=user["created_at"],
         usage=user["usage"],
+        saved_tools=user.get("saved_tools", []),
     )
 
 
@@ -153,8 +155,10 @@ async def update_user(
         service_tier=updated_user["service_tier"],
         is_active=updated_user["is_active"],
         is_verified=updated_user["is_verified"],
+        subscribeToNewsletter=updated_user.get("subscribeToNewsletter", False),
         created_at=updated_user["created_at"],
         usage=updated_user["usage"],
+        saved_tools=updated_user.get("saved_tools", []),
     )
 
 
@@ -497,6 +501,7 @@ async def update_user_tier(
         is_verified=updated_user["is_verified"],
         created_at=updated_user["created_at"],
         usage=updated_user["usage"],
+        saved_tools=updated_user.get("saved_tools", []),
     )
 
 
@@ -616,4 +621,5 @@ async def update_user_verification_status(
         created_at=updated_user["created_at"],
         oauth_providers=updated_user.get("oauth_providers", {}),
         usage=updated_user["usage"],
+        saved_tools=updated_user.get("saved_tools", []),
     )

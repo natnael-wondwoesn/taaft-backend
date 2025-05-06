@@ -4,12 +4,15 @@ from typing import List, Optional, Union, Dict, Any
 from datetime import datetime
 from bson import ObjectId
 
-from ..database.database import favorites, tools
+from ..database.database import favorites, tools, users
 from ..models.favorites import FavoriteCreate, FavoriteInDB, FavoriteResponse
 from ..logger import logger
 
 
-async def add_favorite(user_id: str, favorite_data: FavoriteCreate) -> FavoriteResponse:
+async def add_favorite(
+    user_id: str,
+    favorite_data: FavoriteCreate,
+) -> FavoriteResponse:
     """
     Add a tool to user's favorites.
 
@@ -42,6 +45,12 @@ async def add_favorite(user_id: str, favorite_data: FavoriteCreate) -> FavoriteR
 
     # Insert into database
     result = await favorites.insert_one(favorite)
+
+    # Add the tool's unique_id to the user's saved_tools array
+    await users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$addToSet": {"saved_tools": favorite_data.tool_unique_id}},
+    )
 
     # Get the inserted favorite
     favorite["_id"] = result.inserted_id
@@ -80,6 +89,11 @@ async def remove_favorite(user_id: str, tool_unique_id: str) -> bool:
             f"Favorite not found: user_id={user_id}, tool_unique_id={tool_unique_id}"
         )
         raise HTTPException(status_code=404, detail="Favorite not found")
+
+    # Remove the tool's unique_id from the user's saved_tools array
+    await users.update_one(
+        {"_id": ObjectId(user_id)}, {"$pull": {"saved_tools": tool_unique_id}}
+    )
 
     logger.info(
         f"Successfully removed favorite: user_id={user_id}, tool_unique_id={tool_unique_id}"
