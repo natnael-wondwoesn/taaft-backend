@@ -1005,7 +1005,11 @@ async def toggle_tool_featured_status_by_unique_id(
 
 
 async def keyword_search_tools(
-    keywords: List[str], skip: int = 0, limit: int = 100, count_only: bool = False
+    keywords: List[str],
+    skip: int = 0,
+    limit: int = 100,
+    count_only: bool = False,
+    filters: Optional[Dict[str, Any]] = None,
 ) -> Union[List[ToolResponse], int]:
     """
     Search for tools by exact keywords match.
@@ -1016,6 +1020,7 @@ async def keyword_search_tools(
         skip: Number of items to skip for pagination
         limit: Maximum number of items to return
         count_only: Whether to return only the count of matching tools
+        filters: Additional filters to apply to the search query
 
     Returns:
         Either a list of matching tools or the count of matching tools
@@ -1030,6 +1035,11 @@ async def keyword_search_tools(
             {"category": {"$regex": "|".join(keywords), "$options": "i"}},
         ]
     }
+
+    # Apply additional filters if provided
+    if filters and isinstance(filters, dict):
+        for key, value in filters.items():
+            query[key] = value
 
     # If only count is needed, return the count
     if count_only:

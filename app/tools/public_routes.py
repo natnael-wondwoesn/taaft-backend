@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List
 
 from .models import PaginatedToolsResponse
-from .tools_service import get_tools
+from .tools_service import get_tools, keyword_search_tools, search_tools
 
 public_router = APIRouter(prefix="/public/tools", tags=["public_tools"])
 
@@ -66,6 +66,9 @@ async def list_public_tools(
 async def get_featured_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    search: Optional[str] = Query(None, description="Search term for filtering tools"),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
         None, description="Field to sort by (name, created_at, updated_at)"
     ),
@@ -73,9 +76,21 @@ async def get_featured_tools(
 ):
     """
     Get a list of featured tools. This endpoint is publicly accessible without authentication.
+
+    - **search**: Optional search term to filter tools by name, description, or keywords
+    - **category**: Optional category filter
+    - **price_type**: Optional price type filter
+    - **sort_by**: Field to sort by
+    - **sort_order**: Sort order (asc or desc)
     """
     # Apply filter for featured tools only
     filters = {"is_featured": True}
+
+    # Add additional filters if provided
+    if category:
+        filters["category"] = category
+    if price_type:
+        filters["price"] = price_type
 
     # Validate sort_by field if provided
     valid_sort_fields = ["name", "created_at", "updated_at", "price"]
@@ -91,17 +106,37 @@ async def get_featured_tools(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
-    # Get the featured tools with sorting
-    tools = await get_tools(
-        skip=skip,
-        limit=limit,
-        filters=filters,
-        sort_by=sort_by,
-        sort_order=sort_order,
-    )
+    # If search term is provided, use search_tools
+    if search and search.strip():
+        # Use search_tools, then filter for featured tools in memory
+        search_results = await search_tools(query=search, skip=0, limit=1000)
 
-    # Get total count of featured tools
-    total = await get_tools(count_only=True, filters=filters)
+        # Filter to only include featured tools
+        filtered_tools = [tool for tool in search_results if tool.is_featured]
+
+        # Apply other filters
+        if category:
+            filtered_tools = [
+                tool for tool in filtered_tools if tool.category == category
+            ]
+        if price_type:
+            filtered_tools = [
+                tool for tool in filtered_tools if tool.price == price_type
+            ]
+
+        # Apply pagination
+        total = len(filtered_tools)
+        tools = filtered_tools[skip : skip + limit]
+    else:
+        # No search term, use regular get_tools with filters
+        tools = await get_tools(
+            skip=skip,
+            limit=limit,
+            filters=filters,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
+        total = await get_tools(count_only=True, filters=filters)
 
     # Ensure tools is always a list, even if None is returned
     if tools is None:
@@ -114,6 +149,9 @@ async def get_featured_tools(
 async def get_sponsored_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    search: Optional[str] = Query(None, description="Search term for filtering tools"),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
         None, description="Field to sort by (name, created_at, updated_at)"
     ),
@@ -122,9 +160,21 @@ async def get_sponsored_tools(
     """
     Get a list of sponsored tools (identical to featured tools).
     This endpoint is publicly accessible without authentication.
+
+    - **search**: Optional search term to filter tools by name, description, or keywords
+    - **category**: Optional category filter
+    - **price_type**: Optional price type filter
+    - **sort_by**: Field to sort by
+    - **sort_order**: Sort order (asc or desc)
     """
     # Apply filter for featured tools only (reusing the same field)
     filters = {"is_featured": True}
+
+    # Add additional filters if provided
+    if category:
+        filters["category"] = category
+    if price_type:
+        filters["price"] = price_type
 
     # Validate sort_by field if provided
     valid_sort_fields = ["name", "created_at", "updated_at", "price"]
@@ -140,17 +190,37 @@ async def get_sponsored_tools(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
-    # Get the featured tools with sorting
-    tools = await get_tools(
-        skip=skip,
-        limit=limit,
-        filters=filters,
-        sort_by=sort_by,
-        sort_order=sort_order,
-    )
+    # If search term is provided, use search_tools
+    if search and search.strip():
+        # Use search_tools, then filter for featured tools in memory
+        search_results = await search_tools(query=search, skip=0, limit=1000)
 
-    # Get total count of featured tools
-    total = await get_tools(count_only=True, filters=filters)
+        # Filter to only include featured tools
+        filtered_tools = [tool for tool in search_results if tool.is_featured]
+
+        # Apply other filters
+        if category:
+            filtered_tools = [
+                tool for tool in filtered_tools if tool.category == category
+            ]
+        if price_type:
+            filtered_tools = [
+                tool for tool in filtered_tools if tool.price == price_type
+            ]
+
+        # Apply pagination
+        total = len(filtered_tools)
+        tools = filtered_tools[skip : skip + limit]
+    else:
+        # No search term, use regular get_tools with filters
+        tools = await get_tools(
+            skip=skip,
+            limit=limit,
+            filters=filters,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
+        total = await get_tools(count_only=True, filters=filters)
 
     # Ensure tools is always a list, even if None is returned
     if tools is None:
