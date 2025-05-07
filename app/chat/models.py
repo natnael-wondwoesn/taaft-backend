@@ -30,7 +30,7 @@ class MessageRole(str, Enum):
 
 
 class ChatModelType(str, Enum):
-    GPT_4 = "gpt4"
+    GPT_4 = "gpt-4o-mini"
     CLAUDE = "claude"
     LLAMA = "llama"
     DEFAULT = "default"
