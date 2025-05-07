@@ -255,7 +255,7 @@ async def update_glossary_term(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-@router.delete("/terms/{term_id}", status_code=204)
+@router.delete("/terms/{term_id}", status_code=200)
 async def delete_glossary_term(
     term_id: str,
     glossary_db: GlossaryDB = Depends(get_glossary_db),
@@ -277,7 +277,10 @@ async def delete_glossary_term(
         if not deleted:
             raise HTTPException(status_code=404, detail="Glossary term not found")
 
-        return JSONResponse(status_code=204, content=None)
+        return {
+            "status": "success",
+            "message": f"Glossary term '{existing_term.get('name', 'unknown')}' was successfully deleted",
+        }
 
     except HTTPException:
         raise

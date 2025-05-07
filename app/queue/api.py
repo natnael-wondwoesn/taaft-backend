@@ -102,7 +102,7 @@ async def update_site(
     return await manager.update_site(site_id, site_update)
 
 
-@router.delete("/{site_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{site_id}", status_code=status.HTTP_200_OK)
 async def delete_site(
     site_id: str,
     sites_collection: AsyncIOMotorCollection = Depends(get_sites_collection),
@@ -111,10 +111,27 @@ async def delete_site(
     Delete a site from the queue
     """
     manager = SiteQueueManager(sites_collection)
+
+    # First get the site to include details in success message
+    site = await manager.get_site(site_id)
+    if not site:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Site with ID {site_id} not found",
+        )
+
+    # Attempt to delete the site
     success = await manager.delete_site(site_id)
     if not success:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete site with ID {site_id}",
         )
-    return None
+
+    # Return success message with site details
+    site_name = site.get("url", "unknown")
+    return {
+        "status": "success",
+        "message": f"Site '{site_name}' successfully removed from queue",
+        "site_id": site_id,
+    }

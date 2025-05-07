@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from uuid import UUID, uuid4
 import datetime
 from bson import ObjectId
@@ -9,7 +9,9 @@ from .user import PydanticObjectId
 class ShareCreate(BaseModel):
     """Model for creating a share."""
 
-    tool_unique_id: str
+    tool_unique_id: str = Field(
+        ..., min_length=1, description="Unique identifier of the tool to share"
+    )
 
 
 class ShareBase(BaseModel):
@@ -34,6 +36,31 @@ class ShareResponse(ShareBase):
 
     id: str
     share_link: str
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        json_encoders={ObjectId: lambda oid: str(oid), UUID: lambda uuid: str(uuid)},
+    )
+
+
+class ShareInfoResponse(BaseModel):
+    """Model for the share info in the share by ID response."""
+
+    id: str
+    created_at: datetime
+    shared_by: str
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        json_encoders={ObjectId: lambda oid: str(oid), UUID: lambda uuid: str(uuid)},
+    )
+
+
+class ShareWithToolResponse(BaseModel):
+    """Model for the response with both share and tool data."""
+
+    tool: Dict[str, Any]
+    share: ShareInfoResponse
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,

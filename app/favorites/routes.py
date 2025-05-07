@@ -27,7 +27,7 @@ async def add_to_favorites(
     return await add_favorite(current_user.id, favorite_data)
 
 
-@router.delete("/{tool_unique_id:path}", status_code=204)
+@router.delete("/{tool_unique_id:path}", status_code=200)
 async def remove_from_favorites(
     tool_unique_id: str = Path(
         ..., description="Unique ID of the tool to remove from favorites"
@@ -41,7 +41,9 @@ async def remove_from_favorites(
         f"Received request to remove favorite: user_id={current_user.id}, tool_unique_id={tool_unique_id}"
     )
     await remove_favorite(current_user.id, tool_unique_id)
-    return None
+
+    # Return a success message instead of None
+    return {"status": "success", "message": "Tool successfully removed from favorites"}
 
 
 @router.get("/", response_model=FavoritesListResponse)
