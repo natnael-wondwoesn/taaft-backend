@@ -63,10 +63,14 @@ async def auth_callback(request: Request, provider: str):
         # Get the token
         if provider == OAuthProvider.GOOGLE:
             token = await google.authorize_access_token(request)
-            email, provider_user_id, name = await get_google_user(token["access_token"])
+            email, provider_user_id, name, provider_data = await get_google_user(
+                token["access_token"]
+            )
         elif provider == OAuthProvider.GITHUB:
             token = await github.authorize_access_token(request)
-            email, provider_user_id, name = await get_github_user(token["access_token"])
+            email, provider_user_id, name, provider_data = await get_github_user(
+                token["access_token"]
+            )
         else:
             logger.error(f"Unsupported provider in callback: {provider}")
             return RedirectResponse(
@@ -75,7 +79,12 @@ async def auth_callback(request: Request, provider: str):
 
         # Create or update user
         user = await create_sso_user(
-            email, provider, provider_user_id, name, subscribeToNewsletter=False
+            email,
+            provider,
+            provider_user_id,
+            name,
+            subscribeToNewsletter=False,
+            provider_data=provider_data,
         )
 
         # Create access token

@@ -27,3 +27,5 @@ app/chat/__pycache__/websocket.cpython-312.pyc
 app/__pycache__/main.cpython-312.pyc
 /app/__pycache__
 check_tools.py
+tests/auth/test_oauth.py
+tests/auth/test_oauth.py

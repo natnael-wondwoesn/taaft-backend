@@ -46,7 +46,7 @@ github = oauth.register(
     access_token_url="https://github.com/login/oauth/access_token",
     access_token_params=None,
     refresh_token_url=None,
-    client_kwargs={"scope": "user:email"},
+    client_kwargs={"scope": "read:user"},
 )
 
 
@@ -64,6 +64,7 @@ async def create_sso_user(
     provider_user_id: str,
     name: Optional[str] = None,
     subscribeToNewsletter: bool = False,
+    provider_data: Optional[Dict[str, Any]] = None,
 ) -> UserInDB:
     """Create a new user from SSO provider data."""
     if not email:
@@ -75,18 +76,23 @@ async def create_sso_user(
     # Check if user already exists
     existing_user = await get_user_by_email(email)
     if existing_user:
-        # Update provider info
+        # Update provider info with all provider data
+        update_data = {
+            f"oauth_providers.{provider}": {
+                "id": provider_user_id,
+                "connected_at": datetime.datetime.utcnow(),
+                "profile_data": provider_data,
+            },
+            "last_login": datetime.datetime.utcnow(),
+        }
+
+        # Update name if it wasn't set before
+        if name and not existing_user.full_name:
+            update_data["full_name"] = name
+
         await database.users.update_one(
             {"email": email},
-            {
-                "$set": {
-                    f"oauth_providers.{provider}": {
-                        "id": provider_user_id,
-                        "connected_at": datetime.datetime.utcnow(),
-                    },
-                    "last_login": datetime.datetime.utcnow(),
-                }
-            },
+            {"$set": update_data},
         )
         # Get updated user
         user_data = await database.users.find_one({"email": email})
@@ -108,6 +114,7 @@ async def create_sso_user(
             provider: {
                 "id": provider_user_id,
                 "connected_at": datetime.datetime.utcnow(),
+                "profile_data": provider_data,
             }
         },
         usage={
@@ -130,7 +137,9 @@ async def create_sso_user(
     return UserInDB(**user_data)
 
 
-async def get_google_user(access_token: str) -> Tuple[str, str, Optional[str]]:
+async def get_google_user(
+    access_token: str,
+) -> Tuple[str, str, Optional[str], Dict[str, Any]]:
     """Get user information from Google."""
     async with httpx.AsyncClient() as client:
         resp = await client.get(
@@ -145,11 +154,15 @@ async def get_google_user(access_token: str) -> Tuple[str, str, Optional[str]]:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Failed to get user information from Google",
             )
+        logger.info(f"Google user data: {user_data}")
 
-        return user_data["email"], user_data["id"], user_data.get("name")
+        # Return all user data for storage
+        return user_data["email"], user_data["id"], user_data.get("name"), user_data
 
 
-async def get_github_user(access_token: str) -> Tuple[str, str, Optional[str]]:
+async def get_github_user(
+    access_token: str,
+) -> Tuple[str, str, Optional[str], Dict[str, Any]]:
     """Get user information from GitHub."""
     async with httpx.AsyncClient() as client:
         # Get user profile
@@ -189,7 +202,10 @@ async def get_github_user(access_token: str) -> Tuple[str, str, Optional[str]]:
                 detail="GitHub account doesn't have a verified email",
             )
 
-        return primary_email, str(user_data["id"]), user_data.get("name")
+        # Add email data to user_data for completeness
+        user_data["email_data"] = email_data
+
+        return primary_email, str(user_data["id"]), user_data.get("name"), user_data
 
 
 async def sync_to_company_ghl(user: Dict[str, Any], signup_type: SignupType):

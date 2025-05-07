@@ -59,7 +59,13 @@ def test_invalid_provider():
 def test_google_callback(mock_get_user, mock_authorize, mock_create_sso_user):
     # Mock token and user info
     mock_authorize.return_value = {"access_token": "test_token"}
-    mock_get_user.return_value = ("test@example.com", "user123", "Test User")
+    mock_user_data = {"email": "test@example.com", "id": "user123", "name": "Test User"}
+    mock_get_user.return_value = (
+        "test@example.com",
+        "user123",
+        "Test User",
+        mock_user_data,
+    )
 
     response = client.get("/api/auth/sso/callback/google", allow_redirects=False)
     assert response.status_code == 307  # Redirect
@@ -68,5 +74,10 @@ def test_google_callback(mock_get_user, mock_authorize, mock_create_sso_user):
 
     # Verify user creation
     mock_create_sso_user.assert_called_once_with(
-        "test@example.com", "google", "user123", "Test User"
+        "test@example.com",
+        "google",
+        "user123",
+        "Test User",
+        subscribeToNewsletter=False,
+        provider_data=mock_user_data,
     )
