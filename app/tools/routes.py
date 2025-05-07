@@ -18,6 +18,7 @@ from .tools_service import (
     keyword_search_tools,
     get_tool_with_favorite_status,
 )
+from ..logger import logger
 
 router = APIRouter(prefix="/tools", tags=["tools"])
 
@@ -44,6 +45,10 @@ async def list_tools(
         filters["category"] = category
     if is_featured is not None:
         filters["is_featured"] = is_featured
+        # Log for debugging
+        logger.info(
+            f"Setting is_featured filter to {is_featured}, type: {type(is_featured)}"
+        )
     if price_type:
         filters["price"] = price_type
 
