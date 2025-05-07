@@ -101,6 +101,66 @@ paths:
         '401':
           description: Unauthorized
 
+  /tools/category/{category_slug}:
+    get:
+      tags:
+        - Tools
+      summary: Get tools by category
+      description: Get a list of tools filtered by category slug. The endpoint first looks up the category by slug to get its ID, then filters tools using that ID. Requires authentication.
+      operationId: getToolsByCategory
+      parameters:
+        - name: category_slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The slug of the category to filter by (e.g. 'ai-tools'). This is mapped to a category ID internally.
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Maximum number of items to return
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [name, created_at, updated_at, price]
+          description: Field to sort by
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+          description: Sort order (asc or desc)
+      responses:
+        '200':
+          description: List of tools in the specified category with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedToolsResponse'
+        '400':
+          description: Invalid input parameters
+        '401':
+          description: Unauthorized - authentication required
+        '404':
+          description: Category with this slug not found or no tools found in this category
+
   /tools/{tool_id}:
     get:
       tags:

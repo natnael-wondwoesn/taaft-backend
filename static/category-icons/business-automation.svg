@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="64" height="64" rx="32" fill="url(#paint0_linear_564_5281)"/>
+<path d="M22 28H34" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 22V34" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 28a6 6 0 006-6" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 28a6 6 0 01-6 6" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 28a6 6 0 006 6" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 28a6 6 0 01-6-6" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M36 40H44V44H36V40Z" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20 40V44H28V40H20Z" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M32 44V40" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M32 40H36" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 40H32" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="paint0_linear_564_5281" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+<stop stop-color="#A855F7" stop-opacity="0.3"/>
+<stop offset="1" stop-color="#6366F1" stop-opacity="0.3"/>
+</linearGradient>
+</defs>
+</svg>

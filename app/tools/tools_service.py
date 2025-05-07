@@ -366,7 +366,11 @@ async def get_tools(
         for field, value in filters.items():
             # Handle special filter cases
             if field == "category":
-                query["category"] = value
+                # Look for category in both the "category" field and the "categories" array
+                query["$or"] = [
+                    {"category": value},  # Direct match on category field
+                    {"categories.id": value},  # Match on categories.id in array
+                ]
             elif field == "is_featured":
                 query["is_featured"] = bool(value)
             elif field == "price":

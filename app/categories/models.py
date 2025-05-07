@@ -3,7 +3,7 @@ Data models for categories management
 """
 
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from bson import ObjectId
 
 
@@ -25,10 +25,16 @@ class Category(BaseModel):
     id: str
     name: str
     slug: str
-    svg: Optional[str] = None
+    svg: Optional[str] = Field(
+        None,
+        description="Path to the category's SVG icon file. If None, no icon is available.",
+    )
 
 
 class CategoryResponse(Category):
     """Category model with count information"""
 
-    count: int = 0
+    count: int = Field(
+        0,
+        description="Number of tools in this category",
+    )

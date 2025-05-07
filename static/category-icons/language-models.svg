@@ -1,0 +1,14 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="64" height="64" rx="32" fill="url(#paint0_linear_564_6216)"/>
+<path d="M20 20 L44 20 L44 44 L20 44 Z" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M32 20 L32 44" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20 32 L44 32" stroke="#7E22CE" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/> 
+
+These paths create a simple grid icon that can represent the interconnectedness and complexity of language models.
+<defs>
+<linearGradient id="paint0_linear_564_6216" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+<stop stop-color="#A855F7" stop-opacity="0.3"/>
+<stop offset="1" stop-color="#6366F1" stop-opacity="0.3"/>
+</linearGradient>
+</defs>
+</svg>
