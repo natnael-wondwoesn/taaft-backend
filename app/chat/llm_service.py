@@ -306,7 +306,8 @@ class LLMService:
     ):
         """Get a streaming response from the LLM service, yielding chunks as they arrive"""
         # Include system prompt if provided
-        system_prompt = system_prompt if system_prompt else DEFAULT_SYSTEM_PROMPT
+        print(f"system_prompt: {system_prompt}")
+        system_prompt = DEFAULT_SYSTEM_PROMPT
         if system_prompt:
             formatted_messages = [
                 {"role": "system", "content": system_prompt}
@@ -364,6 +365,7 @@ class LLMService:
         """Get a streaming response from OpenAI"""
         try:
             client = openai.AsyncOpenAI(api_key=self.openai_api_key)
+            print(f"messages: {messages}")
 
             response = await client.chat.completions.create(
                 model=model,
@@ -372,7 +374,7 @@ class LLMService:
                 ],
                 stream=True,
             )
-            print(response)
+            # print(response)
 
             async for chunk in response:
                 if chunk.choices and chunk.choices[0].delta.content:
