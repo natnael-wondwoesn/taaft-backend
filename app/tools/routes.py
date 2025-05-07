@@ -119,6 +119,86 @@ async def get_tool_by_unique_identifier(
     return tool
 
 
+@router.get("/category/{category_slug}", response_model=PaginatedToolsResponse)
+async def get_tools_by_category(
+    category_slug: str,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    sort_by: Optional[str] = Query(
+        None, description="Field to sort by (name, created_at, updated_at)"
+    ),
+    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Get a list of tools filtered by category slug.
+    This endpoint requires authentication.
+
+    Args:
+        category_slug: The slug of the category to filter by (e.g. 'ai-tools')
+        skip: Number of items to skip for pagination
+        limit: Maximum number of items to return
+        sort_by: Field to sort by
+        sort_order: Sort order ('asc' or 'desc')
+
+    Returns:
+        Paginated list of tools belonging to the specified category
+    """
+    # Import the categories service to get the category ID from the slug
+    from ..categories.service import categories_service
+
+    # Get the category by slug
+    category = await categories_service.get_category_by_slug(category_slug)
+
+    # If category is not found, return 404
+    if not category:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Category with slug '{category_slug}' not found",
+        )
+
+    # Apply filter using the category ID
+    filters = {"category": category.id}
+
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    # Check if any tools exist for this category
+    total = await get_tools(count_only=True, filters=filters)
+
+    if total == 0:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No tools found for category '{category_slug}'",
+        )
+
+    # Get tools filtered by category
+    tools = await get_tools(
+        skip=skip,
+        limit=limit,
+        filters=filters,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
+
+    # Ensure tools is always a list, even if None is returned
+    if tools is None:
+        tools = []
+
+    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+
+
 # @router.get("/featured", response_model=PaginatedToolsResponse)
 # async def get_featured_tools(
 #     skip: int = Query(0, ge=0),

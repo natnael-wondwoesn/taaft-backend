@@ -4,6 +4,8 @@ Service for managing tool categories
 """
 from typing import List, Dict, Any, Optional
 from motor.motor_asyncio import AsyncIOMotorCollection
+import os
+import json
 
 from .models import Category, CategoryResponse
 from ..logger import logger
@@ -33,6 +35,65 @@ class CategoriesService:
         ]
         self.tools_collection = None
         self.categories_collection = None
+        self.svg_dir = "static/category-icons"
+
+        # Ensure SVG directory exists
+        os.makedirs(self.svg_dir, exist_ok=True)
+
+    async def _save_svg_file(self, category_id: str, svg_content: str) -> str:
+        """
+        Save SVG content to a file and return the relative path
+
+        Args:
+            category_id: The category ID to use as the filename
+            svg_content: The SVG content to save
+
+        Returns:
+            The relative path to the saved SVG file
+        """
+        try:
+            # Create a safe filename from the category ID
+            filename = f"{category_id}.svg"
+            filepath = os.path.join(self.svg_dir, filename)
+
+            # Save the SVG content to the file
+            with open(filepath, "w", encoding="utf-8") as f:
+                f.write(svg_content)
+
+            # Return the relative path that can be used in URLs
+            return f"/static/category-icons/{filename}"
+        except Exception as e:
+            logger.error(f"Error saving SVG file for category {category_id}: {str(e)}")
+            return None
+
+    async def _get_svg_path(
+        self, category_id: str, svg_content: Optional[str]
+    ) -> Optional[str]:
+        """
+        Get the path to an SVG file, creating it if necessary
+
+        Args:
+            category_id: The category ID
+            svg_content: The SVG content to save if the file doesn't exist
+
+        Returns:
+            The relative path to the SVG file, or None if no SVG is available
+        """
+        if not svg_content:
+            return None
+
+        filename = f"{category_id}.svg"
+        filepath = os.path.join(self.svg_dir, filename)
+
+        # If the file doesn't exist and we have SVG content, save it
+        if not os.path.exists(filepath) and svg_content:
+            return await self._save_svg_file(category_id, svg_content)
+
+        # If the file exists, return its path
+        if os.path.exists(filepath):
+            return f"/static/category-icons/{filename}"
+
+        return None
 
     async def _get_tools_collection(self) -> AsyncIOMotorCollection:
         """Get the tools collection"""
@@ -80,7 +141,7 @@ class CategoriesService:
                         name=cat["name"],
                         slug=cat["slug"],
                         count=cat.get("count", 0),
-                        svg=cat.get("svg"),
+                        svg=await self._get_svg_path(cat["id"], cat.get("svg")),
                     )
                     for cat in categories_list
                 ]
@@ -119,7 +180,9 @@ class CategoriesService:
                                 "slug", cat_name.lower().replace(" ", "-")
                             ),
                             count=count,
-                            svg=category.get("svg"),
+                            svg=await self._get_svg_path(
+                                category["id"], category.get("svg")
+                            ),
                         )
                     )
 
@@ -190,7 +253,7 @@ class CategoriesService:
                     name=category["name"],
                     slug=category["slug"],
                     count=category.get("count", 0),
-                    svg=category.get("svg"),
+                    svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
             # If not found, fall back to getting from all categories
@@ -229,7 +292,7 @@ class CategoriesService:
                     name=category["name"],
                     slug=category["slug"],
                     count=category.get("count", 0),
-                    svg=category.get("svg"),
+                    svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
             # If not found, fall back to getting from all categories
