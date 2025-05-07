@@ -11,7 +11,7 @@ from ..logger import logger
 router = APIRouter(prefix="/admin/chat", tags=["admin"])
 
 
-@router.delete("/sessions/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/sessions/{session_id}", status_code=status.HTTP_200_OK)
 async def admin_delete_chat_session(
     session_id: str = Path(...),
     current_user: UserInDB = Depends(get_admin_user),
@@ -26,6 +26,17 @@ async def admin_delete_chat_session(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid session ID format"
         )
 
+    # Get session info before deletion
+    session = await chat_db.get_session(session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Chat session with ID {session_id} not found",
+        )
+
+    session_name = session.get("name", "Unnamed session")
+    user_id = session.get("user_id", "Unknown user")
+
     # Delete the session
     success = await chat_db.delete_session(session_id)
 
@@ -38,7 +49,11 @@ async def admin_delete_chat_session(
     # Log the deletion
     logger.info(f"Chat session {session_id} deleted by admin {current_user.email}")
 
-    return None
+    return {
+        "status": "success",
+        "message": f"Chat session '{session_name}' for user '{user_id}' successfully deleted by admin",
+        "session_id": session_id,
+    }
 
 
 @router.get("/sessions", response_model=List[Dict[str, Any]])

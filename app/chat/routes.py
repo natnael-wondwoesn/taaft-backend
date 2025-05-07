@@ -129,9 +129,21 @@ async def update_chat_session(
     return updated_session
 
 
-@router.delete("/sessions/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/sessions/{session_id}", status_code=status.HTTP_200_OK)
 async def delete_chat_session(session_id: str, chat_db: ChatDB = Depends(get_chat_db)):
     """Delete a chat session and all its messages"""
+    # First get the session to include details in success message
+    session = await chat_db.get_session(session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Chat session with ID {session_id} not found",
+        )
+
+    # Get the session name for the response message
+    session_name = session.get("name", "Unnamed session")
+
+    # Delete the session
     success = await chat_db.delete_session(session_id)
     if not success:
         raise HTTPException(
@@ -139,7 +151,11 @@ async def delete_chat_session(session_id: str, chat_db: ChatDB = Depends(get_cha
             detail=f"Chat session with ID {session_id} not found",
         )
 
-    return None
+    return {
+        "status": "success",
+        "message": f"Chat session '{session_name}' successfully deleted",
+        "session_id": session_id,
+    }
 
 
 @router.post("/sessions/{session_id}/archive", response_model=ChatSession)

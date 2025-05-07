@@ -162,7 +162,7 @@ async def update_user(
     )
 
 
-@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
 async def delete_user(user_id: str, current_user: UserInDB = Depends(get_admin_user)):
     """Delete a user."""
 
@@ -178,6 +178,16 @@ async def delete_user(user_id: str, current_user: UserInDB = Depends(get_admin_u
             status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot delete yourself"
         )
 
+    # Get user info before deletion for the success message
+    user = await database.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    user_email = user.get("email", "Unknown")
+    user_name = user.get("full_name", user_email)
+
     # Delete user
     result = await database.users.delete_one({"_id": ObjectId(user_id)})
 
@@ -188,8 +198,12 @@ async def delete_user(user_id: str, current_user: UserInDB = Depends(get_admin_u
 
     logger.info(f"User {user_id} deleted by admin {current_user.email}")
 
-    # No content response
-    return None
+    # Return success message
+    return {
+        "status": "success",
+        "message": f"User '{user_name}' with email '{user_email}' successfully deleted",
+        "user_id": user_id,
+    }
 
 
 @router.get("/stats/tiers", response_model=dict)
