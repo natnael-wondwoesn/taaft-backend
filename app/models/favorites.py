@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 from typing import List, Optional
 from uuid import UUID, uuid4
 import datetime
@@ -10,6 +10,14 @@ class FavoriteCreate(BaseModel):
     """Model for creating a favorite."""
 
     tool_unique_id: str
+
+    @field_validator("tool_unique_id")
+    @classmethod
+    def validate_tool_unique_id(cls, v: str) -> str:
+        """Validate that tool_unique_id is not empty."""
+        if not v or v.strip() == "":
+            raise ValueError("Tool unique ID cannot be empty")
+        return v
 
 
 class FavoriteBase(BaseModel):

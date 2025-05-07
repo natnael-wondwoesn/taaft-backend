@@ -23,6 +23,10 @@ async def add_favorite(
     Returns:
         Created favorite
     """
+    # Validate tool_unique_id
+    if not favorite_data.tool_unique_id or favorite_data.tool_unique_id.strip() == "":
+        raise HTTPException(status_code=400, detail="Tool unique ID cannot be empty")
+
     # Check if the tool exists
     tool = await tools.find_one({"unique_id": favorite_data.tool_unique_id})
     if not tool:
@@ -75,6 +79,10 @@ async def remove_favorite(user_id: str, tool_unique_id: str) -> bool:
     Returns:
         True if successful, raises exception otherwise
     """
+    # Validate tool_unique_id
+    if not tool_unique_id or tool_unique_id.strip() == "":
+        raise HTTPException(status_code=400, detail="Tool unique ID cannot be empty")
+
     logger.info(
         f"Attempting to remove favorite: user_id={user_id}, tool_unique_id={tool_unique_id}"
     )
