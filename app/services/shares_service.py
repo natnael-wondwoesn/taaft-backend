@@ -21,6 +21,10 @@ async def create_share(user_id: str, share_data: ShareCreate) -> ShareResponse:
     Returns:
         Created share with share link
     """
+    # Validate tool_unique_id
+    if not share_data.tool_unique_id or share_data.tool_unique_id.strip() == "":
+        raise HTTPException(status_code=400, detail="Tool unique ID cannot be empty")
+
     # Check if the tool exists
     tool = await tools.find_one({"unique_id": share_data.tool_unique_id})
     if not tool:
@@ -75,7 +79,34 @@ async def get_share_by_id(share_id: str) -> Optional[Dict[str, Any]]:
     if not tool:
         return None
 
-    return {"share": share, "tool": tool}
+    # Convert ObjectId to string to avoid serialization issues
+    serialized_share = {
+        "share_id": share["share_id"],
+        "user_id": share["user_id"],
+        "tool_unique_id": share["tool_unique_id"],
+        "created_at": share["created_at"],
+        "_id": str(share["_id"]),
+    }
+
+    # Convert ObjectId to string in tool document
+    serialized_tool = dict(tool)
+    if "_id" in serialized_tool:
+        serialized_tool["_id"] = str(serialized_tool["_id"])
+
+    # Handle any other potential ObjectId fields in the tool object recursively
+    def convert_objectid_to_str(obj):
+        if isinstance(obj, dict):
+            return {k: convert_objectid_to_str(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_objectid_to_str(item) for item in obj]
+        elif isinstance(obj, ObjectId):
+            return str(obj)
+        else:
+            return obj
+
+    serialized_tool = convert_objectid_to_str(serialized_tool)
+
+    return {"share": serialized_share, "tool": serialized_tool}
 
 
 async def get_user_shares(
@@ -126,3 +157,31 @@ async def get_user_shares(
             )
 
     return shares_list
+
+
+async def delete_share(user_id: str, share_id: str) -> bool:
+    """
+    Delete a share by ID.
+
+    Args:
+        user_id: ID of the user (for authorization)
+        share_id: ID of the share to delete
+
+    Returns:
+        True if the share was deleted, False otherwise
+    """
+    # Find the share to verify ownership
+    share = await shares.find_one({"share_id": share_id})
+
+    if not share:
+        return False
+
+    # Check if the user is the owner of the share
+    if str(share["user_id"]) != str(user_id):
+        return False
+
+    # Delete the share
+    result = await shares.delete_one({"share_id": share_id})
+
+    # Return success based on if something was deleted
+    return result.deleted_count > 0
