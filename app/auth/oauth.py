@@ -202,6 +202,8 @@ async def get_github_user(
                 detail="GitHub account doesn't have a verified email",
             )
 
+        logger.info(f"Github Data {user_data}")
+
         # Add email data to user_data for completeness
         user_data["email_data"] = email_data
 
