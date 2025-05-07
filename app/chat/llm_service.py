@@ -203,7 +203,7 @@ class LLMService:
         # Use appropriate model client based on model_type
         if model_type == ChatModelType.GPT_4:
             response = await self._get_openai_response(
-                formatted_messages, model="gpt-4"
+                formatted_messages, model="gpt-4o-mini"
             )
         elif model_type == ChatModelType.CLAUDE:
             response = await self._get_anthropic_response(formatted_messages)
@@ -211,7 +211,7 @@ class LLMService:
             response = await self._get_llama_response(formatted_messages)
         else:
             # Default to a configured fallback model
-            fallback_model = os.getenv("DEFAULT_LLM_MODEL", "gpt-3.5-turbo")
+            fallback_model = os.getenv("DEFAULT_LLM_MODEL", "gpt-4o-mini")
             response = await self._get_openai_response(
                 formatted_messages, model=fallback_model
             )
@@ -252,7 +252,7 @@ class LLMService:
         # Use appropriate model client based on model_type
         if model_type == ChatModelType.GPT_4:
             async for chunk in self._get_openai_streaming_response(
-                formatted_messages, model="gpt-4"
+                formatted_messages, model="gpt-4o-mini"
             ):
                 full_response += chunk
                 yield chunk
@@ -268,7 +268,7 @@ class LLMService:
                 yield chunk
         else:
             # Default to a configured fallback model
-            fallback_model = os.getenv("DEFAULT_LLM_MODEL", "gpt-3.5-turbo")
+            fallback_model = os.getenv("DEFAULT_LLM_MODEL", "gpt-4o-mini")
             async for chunk in self._get_openai_streaming_response(
                 formatted_messages, model=fallback_model
             ):
@@ -290,7 +290,7 @@ class LLMService:
             # Yield a special message indicating the formatted data is available
             yield {"type": "formatted_data", "data": formatted_tools}
 
-    async def _get_openai_streaming_response(self, messages, model="gpt-3.5-turbo"):
+    async def _get_openai_streaming_response(self, messages, model="gpt-4o-mini"):
         """Get a streaming response from OpenAI"""
         try:
             client = openai.AsyncOpenAI(api_key=self.openai_api_key)
