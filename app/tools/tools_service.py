@@ -372,7 +372,35 @@ async def get_tools(
                     {"categories.id": value},  # Match on categories.id in array
                 ]
             elif field == "is_featured":
-                query["is_featured"] = bool(value)
+                # Correctly convert string values from query parameters to boolean
+                if isinstance(value, str):
+                    if value.lower() == "true":
+                        query["is_featured"] = True
+                    elif value.lower() == "false":
+                        # When looking for non-featured tools, need to handle tools
+                        # where the field doesn't exist (count as non-featured)
+                        query["$or"] = [
+                            {"is_featured": False},
+                            {"is_featured": {"$exists": False}},
+                        ]
+                    else:
+                        # If it's not a valid boolean string, use the value as-is
+                        query["is_featured"] = value
+                else:
+                    # For boolean values
+                    if value is False:
+                        # Include both explicit False and missing field
+                        query["$or"] = [
+                            {"is_featured": False},
+                            {"is_featured": {"$exists": False}},
+                        ]
+                    else:
+                        query["is_featured"] = bool(value)
+
+                # Log the value for debugging
+                logger.info(
+                    f"Applying is_featured filter with value: {value} (type: {type(value)}), query: {query}"
+                )
             elif field == "price":
                 query["price"] = value
             elif field == "features":
