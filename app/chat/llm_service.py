@@ -306,6 +306,7 @@ class LLMService:
     ):
         """Get a streaming response from the LLM service, yielding chunks as they arrive"""
         # Include system prompt if provided
+        system_prompt = system_prompt if system_prompt else DEFAULT_SYSTEM_PROMPT
         if system_prompt:
             formatted_messages = [
                 {"role": "system", "content": system_prompt}
