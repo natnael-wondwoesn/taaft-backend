@@ -179,6 +179,22 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 
 """
 
+from pydantic import BaseModel
+from typing import List, Optional
+
+
+class UserProfile(BaseModel):
+    industry: Optional[str] = None
+    business_size: Optional[str] = None
+    challenges: Optional[List[str]] = None
+
+
+class ChatResponse(BaseModel):
+    message: str
+    options: List[str]
+    keywords: Optional[List[str]] = None
+    tool_summary: Optional[List[dict]] = None
+
 
 class LLMService:
     """Service for interacting with LLM providers"""
@@ -310,7 +326,11 @@ class LLMService:
         system_prompt = DEFAULT_SYSTEM_PROMPT
         if system_prompt:
             formatted_messages = [
-                {"role": "system", "content": system_prompt}
+                {
+                    "role": "system",
+                    "content": system_prompt,
+                    "output_schema": ChatResponse,
+                }
             ] + messages
         else:
             formatted_messages = messages
