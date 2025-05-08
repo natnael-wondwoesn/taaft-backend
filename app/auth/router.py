@@ -13,8 +13,8 @@ from .utils import (
     create_refresh_token,
     decode_token,
 )
-from .dependencies import get_current_user
-from typing import Dict, Any, Optional
+from .dependencies import get_current_user, oauth2_scheme
+from typing import Dict, Any, Optional, List
 import datetime
 from bson import ObjectId
 from pydantic import EmailStr
@@ -54,7 +54,6 @@ async def register_user(user_data: UserCreate, request: Request = None):
             "total_requests": 0,
             "storage_used_bytes": 0,
         },
-        saved_tools=[],  # Initialize empty saved tools array
     )
 
     result = await database.users.insert_one(
@@ -111,7 +110,6 @@ async def register_user(user_data: UserCreate, request: Request = None):
         subscribeToNewsletter=created_user.get("subscribeToNewsletter", False),
         created_at=created_user["created_at"],
         usage=created_user["usage"],
-        saved_tools=created_user.get("saved_tools", []),
     )
 
 
@@ -148,11 +146,16 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         {"_id": user["_id"]}, {"$set": {"last_login": datetime.datetime.utcnow()}}
     )
 
+    # Get saved tools from separate collection
+    saved_tools_doc = await database.user_saved_tools.find_one({"user_id": user["_id"]})
+    saved_tools = saved_tools_doc["tools"] if saved_tools_doc else []
+
     # Create token data
     token_data = {
         "sub": str(user["_id"]),
         "service_tier": user["service_tier"],
         "is_verified": user["is_verified"],
+        "saved_tools": saved_tools,
     }
 
     # Create access and refresh tokens
@@ -198,11 +201,18 @@ async def refresh_access_token(refresh_token: str = Body(...)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    # Get saved tools from separate collection
+    saved_tools_doc = await database.user_saved_tools.find_one(
+        {"user_id": ObjectId(token_data.sub)}
+    )
+    saved_tools = saved_tools_doc["tools"] if saved_tools_doc else []
+
     # Create new token data
     new_token_data = {
         "sub": str(user["_id"]),
         "service_tier": user["service_tier"],
         "is_verified": user["is_verified"],
+        "saved_tools": saved_tools,
     }
 
     # Create new access token
@@ -225,9 +235,6 @@ async def get_current_user_info(current_user: UserInDB = Depends(get_current_use
         is_verified=current_user.is_verified,
         created_at=current_user.created_at,
         usage=current_user.usage,
-        saved_tools=(
-            current_user.saved_tools if hasattr(current_user, "saved_tools") else []
-        ),
     )
 
 
@@ -489,11 +496,16 @@ async def verify_login_code(email: EmailStr = Body(...), code: str = Body(...)):
     # Delete the used code
     await database.login_codes.delete_one({"user_id": ObjectId(user["_id"])})
 
+    # Get saved tools from separate collection
+    saved_tools_doc = await database.user_saved_tools.find_one({"user_id": user["_id"]})
+    saved_tools = saved_tools_doc["tools"] if saved_tools_doc else []
+
     # Create token data
     token_data = {
         "sub": str(user["_id"]),
         "service_tier": user["service_tier"],
         "is_verified": user["is_verified"],
+        "saved_tools": saved_tools,
     }
 
     # Create access and refresh tokens
@@ -548,4 +560,57 @@ async def resend_verification_email(
 
     return {
         "message": "If the email exists and is not verified, a verification link will be sent"
+    }
+
+
+@router.get("/saved-tools", response_model=List[str])
+async def get_saved_tools(token: str = Depends(oauth2_scheme)):
+    """Get the user's saved tools directly from the token."""
+    token_data = decode_token(token)
+    if token_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return token_data.saved_tools
+
+
+@router.post("/update-saved-tools", response_model=Dict[str, str])
+async def update_saved_tools(
+    tools: List[str] = Body(...), current_user: UserInDB = Depends(get_current_user)
+):
+    """Update the user's saved tools and return new tokens with updated data."""
+
+    # Update saved tools in a separate collection
+    await database.user_saved_tools.update_one(
+        {"user_id": current_user.id},
+        {
+            "$set": {
+                "tools": tools,
+                "updated_at": datetime.datetime.utcnow(),
+            }
+        },
+        upsert=True,
+    )
+
+    # Create new token data with updated saved tools
+    token_data = {
+        "sub": str(current_user.id),
+        "service_tier": current_user.service_tier,
+        "is_verified": current_user.is_verified,
+        "saved_tools": tools,
+    }
+
+    # Create new access and refresh tokens
+    access_token = create_access_token(data=token_data)
+    refresh_token = create_refresh_token(data=token_data)
+
+    logger.info(f"User {current_user.email} updated saved tools")
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
     }

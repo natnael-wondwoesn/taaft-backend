@@ -92,9 +92,6 @@ class UserInDB(BaseModel):
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     last_login: Optional[datetime.datetime] = None
     oauth_providers: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
-    saved_tools: List[str] = Field(
-        default_factory=list
-    )  # List of tool unique_ids saved by the user
     usage: dict = Field(
         default_factory=lambda: {
             "requests_today": 0,
@@ -122,7 +119,6 @@ class UserResponse(BaseModel):
     created_at: datetime.datetime
     oauth_providers: Dict[str, Dict[str, Any]] = {}
     usage: dict
-    saved_tools: List[str] = []
 
     model_config = {"json_encoders": {ObjectId: lambda oid: str(oid)}}
 
@@ -134,3 +130,4 @@ class TokenData(BaseModel):
     exp: datetime.datetime
     service_tier: ServiceTier
     is_verified: bool
+    saved_tools: List[str] = []  # List of saved tool IDs
