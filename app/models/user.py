@@ -64,6 +64,8 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     service_tier: Optional[ServiceTier] = None
     subscribeToNewsletter: Optional[bool] = None
+    bio: Optional[str] = None
+    profile_image: Optional[str] = None
 
 
 class OAuthProvider(str, Enum):
@@ -80,6 +82,8 @@ class UserInDB(BaseModel):
     email: EmailStr
     hashed_password: str
     full_name: Optional[str] = None
+    bio: Optional[str] = None
+    profile_image: Optional[str] = None
     service_tier: ServiceTier = ServiceTier.FREE
     is_active: bool = True
     is_verified: bool = False
@@ -109,6 +113,8 @@ class UserResponse(BaseModel):
     id: str
     email: EmailStr
     full_name: Optional[str] = None
+    bio: Optional[str] = None
+    profile_image: Optional[str] = None
     service_tier: ServiceTier
     is_active: bool
     is_verified: bool
