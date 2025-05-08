@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.auth.oauth import sync_to_company_ghl
 from app.ghl.ghl_service import SignupType
-from ..models.user import UserCreate, UserInDB, UserResponse, ServiceTier
+from ..models.user import UserCreate, UserInDB, UserResponse, ServiceTier, UserUpdate
 from ..database.database import database
 from .utils import (
     verify_password,
@@ -37,11 +37,23 @@ async def register_user(user_data: UserCreate, request: Request = None):
             detail="User with this email already exists",
         )
 
+    # Check if username exists (if provided)
+    if user_data.username:
+        existing_username = await database.users.find_one(
+            {"username": user_data.username}
+        )
+        if existing_username:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already taken",
+            )
+
     hashed_password = get_password_hash(user_data.password)
     new_user = UserInDB(
         email=user_data.email,
         hashed_password=hashed_password,
         full_name=user_data.full_name,
+        username=user_data.username,
         subscribeToNewsletter=user_data.subscribeToNewsletter,
         service_tier=ServiceTier.FREE,
         is_active=True,
@@ -104,6 +116,7 @@ async def register_user(user_data: UserCreate, request: Request = None):
         id=str(created_user["_id"]),
         email=created_user["email"],
         full_name=created_user.get("full_name"),
+        username=created_user.get("username"),
         service_tier=created_user["service_tier"],
         is_active=created_user["is_active"],
         is_verified=created_user["is_verified"],
@@ -228,6 +241,7 @@ async def get_current_user_info(current_user: UserInDB = Depends(get_current_use
         id=str(current_user.id),
         email=current_user.email,
         full_name=current_user.full_name,
+        username=current_user.username,
         bio=current_user.bio,
         profile_image=current_user.profile_image,
         service_tier=current_user.service_tier,
@@ -614,3 +628,67 @@ async def update_saved_tools(
         "refresh_token": refresh_token,
         "token_type": "bearer",
     }
+
+
+@router.post("/update-profile", response_model=UserResponse)
+async def update_profile(
+    profile_data: UserUpdate,
+    current_user: UserInDB = Depends(get_current_user),
+):
+    """Update the user's profile information."""
+
+    # Initialize update data
+    update_data = {"updated_at": datetime.datetime.utcnow()}
+
+    # Check if username is being updated and if it already exists
+    if profile_data.username and profile_data.username != current_user.username:
+        existing_username = await database.users.find_one(
+            {"username": profile_data.username}
+        )
+        if existing_username:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already taken",
+            )
+        update_data["username"] = profile_data.username
+
+    # Add fields to update if they are provided
+    if profile_data.full_name is not None:
+        update_data["full_name"] = profile_data.full_name
+    if profile_data.bio is not None:
+        update_data["bio"] = profile_data.bio
+    if profile_data.profile_image is not None:
+        update_data["profile_image"] = profile_data.profile_image
+
+    # Update user in database
+    result = await database.users.update_one(
+        {"_id": current_user.id}, {"$set": update_data}
+    )
+
+    if (
+        result.modified_count == 0 and len(update_data) > 1
+    ):  # Only updated_at would mean length 1
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Failed to update profile",
+        )
+
+    # Get updated user data
+    updated_user = await database.users.find_one({"_id": current_user.id})
+
+    logger.info(f"User {current_user.email} updated profile information")
+
+    return UserResponse(
+        id=str(updated_user["_id"]),
+        email=updated_user["email"],
+        full_name=updated_user.get("full_name"),
+        username=updated_user.get("username"),
+        bio=updated_user.get("bio"),
+        profile_image=updated_user.get("profile_image"),
+        service_tier=updated_user["service_tier"],
+        is_active=updated_user["is_active"],
+        is_verified=updated_user["is_verified"],
+        subscribeToNewsletter=updated_user.get("subscribeToNewsletter", False),
+        created_at=updated_user["created_at"],
+        usage=updated_user["usage"],
+    )

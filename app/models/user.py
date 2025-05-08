@@ -45,6 +45,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     full_name: Optional[str] = None
+    username: Optional[str] = None
     subscribeToNewsletter: bool = False
 
     @validator("password")
@@ -62,6 +63,7 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
+    username: Optional[str] = None
     service_tier: Optional[ServiceTier] = None
     subscribeToNewsletter: Optional[bool] = None
     bio: Optional[str] = None
@@ -82,6 +84,7 @@ class UserInDB(BaseModel):
     email: EmailStr
     hashed_password: str
     full_name: Optional[str] = None
+    username: Optional[str] = None
     bio: Optional[str] = None
     profile_image: Optional[str] = None
     service_tier: ServiceTier = ServiceTier.FREE
@@ -110,6 +113,7 @@ class UserResponse(BaseModel):
     id: str
     email: EmailStr
     full_name: Optional[str] = None
+    username: Optional[str] = None
     bio: Optional[str] = None
     profile_image: Optional[str] = None
     service_tier: ServiceTier
