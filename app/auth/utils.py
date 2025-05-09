@@ -15,10 +15,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "supersecretkey")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(
-    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
-)  # 1 hour by default
+    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080")
+)  # 1 week by default
 REFRESH_TOKEN_EXPIRE_DAYS = int(
-    os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7")
+    os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "14")
 )  # 7 days by default
 
 

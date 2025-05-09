@@ -18,6 +18,7 @@ GHL_REDIRECT_URI = os.getenv("GHL_REDIRECT_URI")
 GHL_ACCESS_TOKEN = os.getenv("GHL_ACCESS_TOKEN")
 GHL_REFRESH_TOKEN = os.getenv("GHL_REFRESH_TOKEN")
 GHL_LOCATION_ID = os.getenv("GHL_LOCATION_ID")
+print(GHL_CLIENT_ID)
 
 
 class SignupType(str, Enum):
@@ -40,6 +41,7 @@ class GHLContactData(BaseModel):
 async def refresh_ghl_token():
     """Refresh GHL access token using refresh token."""
     url = "https://services.leadconnectorhq.com/oauth/token"
+    print(GHL_REFRESH_TOKEN)
     payload = {
         "grant_type": "refresh_token",
         "refresh_token": GHL_REFRESH_TOKEN,
@@ -54,11 +56,6 @@ async def refresh_ghl_token():
         tokens = response.json()
         os.environ["GHL_ACCESS_TOKEN"] = tokens["access_token"]
         os.environ["GHL_REFRESH_TOKEN"] = tokens["refresh_token"]
-        # Optionally store in MongoDB
-        # from ..database.database import database
-        # await database.ghl_tokens.update_one(
-        #     {"_id": "ghl_tokens"}, {"$set": tokens}, upsert=True
-        # )
         logger.info("GHL access token refreshed successfully")
         return tokens
 
@@ -66,7 +63,7 @@ async def refresh_ghl_token():
 async def get_ghl_access_token(
     code: str, client_id: str, client_secret: str, redirect_uri: str
 ):
-    token_url = "https://marketplace.gohighlevel.com/oauth/token"
+    token_url = "https://services.leadconnectorhq.com/oauth/token"
     payload = {
         "grant_type": "authorization_code",
         "code": code,

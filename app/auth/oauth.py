@@ -46,7 +46,7 @@ github = oauth.register(
     access_token_url="https://github.com/login/oauth/access_token",
     access_token_params=None,
     refresh_token_url=None,
-    client_kwargs={"scope": "read:user"},
+    client_kwargs={"scope": "read:user user:email", "prompt": "select_account"},
 )
 
 
@@ -170,10 +170,25 @@ async def get_github_user(
         resp = await client.get("https://api.github.com/user", headers=headers)
         user_data = resp.json()
 
+        if not resp.is_success:
+            logger.error(f"Failed to get GitHub user profile: {user_data}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to retrieve GitHub user profile",
+            )
+
         # Get email (GitHub may not provide email in profile)
         email_resp = await client.get(
             "https://api.github.com/user/emails", headers=headers
         )
+
+        if not email_resp.is_success:
+            logger.error(f"Failed to get GitHub email: {email_resp.json()}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to access GitHub email information. Please ensure you granted email permissions.",
+            )
+
         email_data = email_resp.json()
 
         # Find primary email
@@ -199,10 +214,10 @@ async def get_github_user(
             logger.error(f"Failed to get GitHub email: {email_data}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="GitHub account doesn't have a verified email",
+                detail="GitHub account doesn't have a verified email. Please verify an email in your GitHub account settings.",
             )
 
-        logger.info(f"Github Data {user_data}")
+        logger.info(f"Github user authenticated with email: {primary_email}")
 
         # Add email data to user_data for completeness
         user_data["email_data"] = email_data
