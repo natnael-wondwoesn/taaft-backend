@@ -132,6 +132,9 @@ class TokenData(BaseModel):
 
     sub: str  # User ID
     exp: datetime.datetime
-    service_tier: ServiceTier
-    is_verified: bool
+    service_tier: ServiceTier = ServiceTier.FREE
+    is_verified: bool = False
     saved_tools: List[str] = []  # List of saved tool IDs
+    purpose: Optional[str] = (
+        None  # Token purpose (e.g., "password_reset", "email_verification")
+    )

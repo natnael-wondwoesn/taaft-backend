@@ -72,6 +72,7 @@ def decode_token(token: str) -> Optional[TokenData]:
         service_tier = payload.get("service_tier", ServiceTier.FREE)
         is_verified = payload.get("is_verified", False)
         saved_tools = payload.get("saved_tools", [])
+        purpose = payload.get("purpose")
 
         token_data = TokenData(
             sub=user_id,
@@ -79,6 +80,7 @@ def decode_token(token: str) -> Optional[TokenData]:
             service_tier=service_tier,
             is_verified=is_verified,
             saved_tools=saved_tools,
+            purpose=purpose,
         )
         return token_data
     except JWTError:

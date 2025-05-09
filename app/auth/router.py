@@ -349,6 +349,16 @@ async def reset_password(
             detail="Invalid or expired reset token",
         )
 
+    # Verify token purpose is for password reset
+    if not token_data.purpose or token_data.purpose != "password_reset":
+        logger.error(
+            f"Password reset failed: Invalid token purpose '{token_data.purpose}'"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid reset token purpose",
+        )
+
     # Hash the new password
     hashed_password = get_password_hash(new_password)
 
