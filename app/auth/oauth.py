@@ -33,7 +33,7 @@ google = oauth.register(
     client_id=os.getenv("GOOGLE_CLIENT_ID", ""),
     client_secret=os.getenv("GOOGLE_CLIENT_SECRET", ""),
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
-    client_kwargs={"scope": "openid email profile"},
+    client_kwargs={"scope": "openid email profile", "prompt": "select_account"},
 )
 
 # GitHub OAuth
