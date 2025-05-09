@@ -73,6 +73,7 @@ async def list_tools(
         filters=filters if filters else None,
         sort_by=sort_by,
         sort_order=sort_order,
+        user_id=str(current_user.id),  # Pass the user_id to check saved state
     )
 
     # Get total count with the same filters
@@ -91,7 +92,9 @@ async def search_tools_endpoint(
     """
     Search for tools by name or description.
     """
-    tools = await search_tools(query=q, skip=skip, limit=limit)
+    tools = await search_tools(
+        query=q, skip=skip, limit=limit, user_id=str(current_user.id)
+    )
     total = await search_tools(query=q, count_only=True)
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
@@ -104,7 +107,7 @@ async def get_tool(
     """
     Get a specific tool by its UUID.
     """
-    tool = await get_tool_by_id(tool_id)
+    tool = await get_tool_by_id(tool_id, user_id=str(current_user.id))
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
     return tool
@@ -118,7 +121,7 @@ async def get_tool_by_unique_identifier(
     """
     Get a specific tool by its unique_id.
     """
-    tool = await get_tool_by_unique_id(unique_id)
+    tool = await get_tool_by_unique_id(unique_id, user_id=str(current_user.id))
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
     return tool
@@ -195,6 +198,7 @@ async def get_tools_by_category(
         filters=filters,
         sort_by=sort_by,
         sort_order=sort_order,
+        user_id=str(current_user.id),
     )
 
     # Ensure tools is always a list, even if None is returned
@@ -398,31 +402,15 @@ async def keyword_search_endpoint(
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
-    Search for tools using exact keywords match.
-    This endpoint performs a direct database search without using LLM or Algolia.
-    Accessible to all authenticated users, not just admins.
-
-    - **keywords**: List of keywords to search for
-    - **skip**: Number of results to skip (for pagination)
-    - **limit**: Maximum number of results to return
+    Search for tools by exact keywords match.
     """
-    # Validate input
-    if not keywords or not isinstance(keywords, list):
-        raise HTTPException(status_code=400, detail="Keywords list is required")
-
-    # Strip whitespace and filter out empty keywords
-    cleaned_keywords = [k.strip() for k in keywords if k and k.strip()]
-
-    if not cleaned_keywords:
-        raise HTTPException(
-            status_code=400, detail="At least one valid keyword is required"
-        )
-
-    # Perform the search
+    # Get tools that match any of the provided keywords
     tools = await keyword_search_tools(
-        keywords=cleaned_keywords, skip=skip, limit=limit
+        keywords=keywords, skip=skip, limit=limit, user_id=str(current_user.id)
     )
-    total = await keyword_search_tools(keywords=cleaned_keywords, count_only=True)
+
+    # Get total count with the same keywords
+    total = await keyword_search_tools(keywords=keywords, count_only=True)
 
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
