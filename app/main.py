@@ -168,7 +168,11 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*",  # For development and testing (remove in production)
+        "http://localhost:3000",  # Frontend development server
+        "https://taaft.ai",  # Production frontend
+        "https://www.taaft.ai",
+        "https://taaft-deploy-18xw.vercel.app/",
+        # "*",  # For development and testing (remove in production)
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
