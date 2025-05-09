@@ -169,8 +169,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Frontend development server
-        "https://taaft.ai",  # Production frontend
-        "https://www.taaft.ai",
+        "https://taaft-deploy-18xw.vercel.app",  # Production frontend
         "https://taaft-deploy-18xw.vercel.app/",
         "https://taaft-deploy-18xw.vercel.app/tools/",
         "https://taaft-deploy-18xw.vercel.app/tools/keyword-search",
