@@ -173,7 +173,10 @@ app.add_middleware(
         "https://www.taaft.ai",
         "https://taaft-deploy-18xw.vercel.app/",
         "https://taaft-deploy-18xw.vercel.app/tools/",
-        "*",  # For development and testing (remove in production)
+        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search",
+        "https://taaft-deploy-18xw.vercel.app/tools/wayin-ai",
+        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search/keyword-search",
+        # "*",  # For development and testing (remove in production)
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
