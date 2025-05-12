@@ -46,12 +46,13 @@ class ToolBase(BaseModel):
     categories: Optional[List[Dict[str, Any]]] = None
 
     # New Fields
-    logo_url: str = ""
+    logo_url: str
     user_reviews: Optional[Dict[str, Any]] = None
     feature_list: Optional[List[str]] = []
     referral_allow: Optional[bool] = False
     generated_description: Optional[str] = None
     industry: Optional[str] = None
+    image_url: Optional[str] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
