@@ -449,7 +449,7 @@ class AlgoliaSearch:
                 "restrictSearchableAttributes": ["name", "description"],
                 "page": page,
                 "hitsPerPage": per_page,
-                "typoTolerance": True,  # Allow for typos in search
+                "typoTolerance": False,  # Allow for typos in search
                 "advancedSyntax": True,
                 "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
             }

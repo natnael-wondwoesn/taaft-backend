@@ -45,6 +45,14 @@ class ToolBase(BaseModel):
     keywords: Optional[List[str]] = None
     categories: Optional[List[Dict[str, Any]]] = None
 
+    # New Fields
+    logo_url: str = ""
+    user_reviews: Optional[Dict[str, Any]] = None
+    feature_list: Optional[List[str]] = []
+    referral_allow: Optional[bool] = False
+    generated_description: Optional[str] = None
+    industry: Optional[str] = None
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
@@ -87,6 +95,13 @@ class ToolUpdate(BaseModel):
     features: Optional[List[str]] = None
     is_featured: Optional[bool] = None
     keywords: Optional[List[str]] = None
+    categories: Optional[List[Dict[str, Any]]] = None
+    logo_url: Optional[str] = None
+    user_reviews: Optional[Dict[str, Any]] = None
+    feature_list: Optional[List[str]] = None
+    referral_allow: Optional[bool] = None
+    generated_description: Optional[str] = None
+    industry: Optional[str] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
