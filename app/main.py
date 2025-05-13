@@ -707,13 +707,14 @@ async def get_all_tools(
     category: Optional[str] = Query(None, description="Filter by category"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
 ):
     """
     List all tools with pagination, filtering and sorting.
     This endpoint is publicly accessible without authentication.
+    Default sorting is by created_at in descending order (newest first).
     """
     from .tools.tools_service import get_tools
 

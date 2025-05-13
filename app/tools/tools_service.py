@@ -349,7 +349,7 @@ async def get_tools(
     count_only: bool = False,
     filters: Optional[Dict[str, Any]] = None,
     sort_by: Optional[str] = None,
-    sort_order: Optional[str] = "asc",
+    sort_order: Optional[str] = "desc",
     user_id: Optional[str] = None,
 ) -> Union[List[ToolResponse], int]:
     """
@@ -427,13 +427,7 @@ async def get_tools(
 
     # Create the cursor with efficient sorting in MongoDB
     # Use aggregation pipeline for more complex sorting logic
-    pipeline = [{"$match": query}, {"$skip": skip}, {"$limit": limit}]
-
-    # Add sorting stages to the pipeline
-    if sort_by:
-        # First sort by the requested field
-        sort_direction = -1 if sort_order.lower() == "desc" else 1
-        pipeline.append({"$sort": {sort_by: sort_direction}})
+    pipeline = [{"$match": query}]
 
     # Add a stage to create a new field indicating if description is empty
     pipeline.append(
@@ -455,9 +449,20 @@ async def get_tools(
         }
     )
 
-    # Sort by the has_description field (prioritize tools with descriptions)
-    # Always sort in descending order (1 = has description comes first)
-    pipeline.append({"$sort": {"has_description": -1}})
+    # Create a sort object that combines both sorts
+    sort_obj = {"has_description": -1}  # Always prioritize tools with descriptions
+
+    # Add the requested sort if provided
+    if sort_by:
+        sort_direction = -1 if sort_order.lower() == "desc" else 1
+        sort_obj[sort_by] = sort_direction
+
+    # Apply the combined sort in a single stage
+    pipeline.append({"$sort": sort_obj})
+
+    # Apply pagination after sorting
+    pipeline.append({"$skip": skip})
+    pipeline.append({"$limit": limit})
 
     # Log the pipeline for debugging
     logger.debug(f"MongoDB aggregation pipeline: {pipeline}")

@@ -31,13 +31,14 @@ async def list_tools(
     is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     List all tools with pagination, filtering and sorting.
+    Default sorting is by created_at in descending order (newest first).
     """
     # Build filters dictionary from query parameters
     filters = {}
@@ -133,14 +134,15 @@ async def get_tools_by_category(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Get a list of tools filtered by category slug.
     This endpoint requires authentication.
+    Default sorting is by created_at in descending order (newest first).
 
     Args:
         category_slug: The slug of the category to filter by (e.g. 'ai-tools')
