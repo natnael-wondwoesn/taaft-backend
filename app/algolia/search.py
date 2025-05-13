@@ -468,17 +468,26 @@ class AlgoliaSearch:
                     # Create AlgoliaToolRecord from each hit
                     tool_record = AlgoliaToolRecord(
                         objectID=getattr(hit, "objectID", ""),
-                        name=getattr(hit, "name", ""),
-                        description=getattr(hit, "description", ""),
-                        slug=getattr(hit, "slug", None)
-                        or getattr(hit, "unique_id", None),
-                        website=getattr(hit, "website", None)
-                        or getattr(hit, "link", None),
-                        features=getattr(hit, "features", []),
-                        categories=getattr(hit, "categories", []),
-                        pricing=getattr(hit, "pricing", None),
-                        price=getattr(hit, "price", ""),
-                        is_featured=getattr(hit, "is_featured", False),
+                        price=getattr(hit, "price", None),
+                        name=getattr(hit, "name", None),
+                        description=getattr(hit, "description", None),
+                        link=getattr(hit, "link", None),
+                        unique_id=getattr(hit, "unique_id", None),
+                        rating=getattr(hit, "rating", None),
+                        saved_numbers=getattr(hit, "saved_numbers", None),
+                        category=getattr(hit, "category", None),
+                        features=getattr(hit, "features", None),
+                        is_featured=getattr(hit, "is_featured", None),
+                        keywords=getattr(hit, "keywords", None),
+                        categories=getattr(hit, "categories", None),
+                        logo_url=getattr(hit, "logo_url", None),
+                        user_reviews=getattr(hit, "user_reviews", None),
+                        feature_list=getattr(hit, "feature_list", None),
+                        referral_allow=getattr(hit, "referral_allow", None),
+                        generated_description=getattr(
+                            hit, "generated_description", None
+                        ),
+                        industry=getattr(hit, "industry", None),
                         created_at=getattr(hit, "created_at", None),
                         updated_at=getattr(hit, "updated_at", None),
                     )

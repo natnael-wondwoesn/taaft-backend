@@ -330,7 +330,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
             categories=tool.get("categories"),
-            logo_url=tool.get("logo_url"),
+            logo_url=tool.get("logo_url", ""),
             user_reviews=tool.get("user_reviews"),
             feature_list=tool.get("feature_list"),
             referral_allow=tool.get("referral_allow"),
@@ -911,14 +911,22 @@ async def search_tools(
                     "price": tool.price or "",
                     "name": tool.name,
                     "description": tool.description,
-                    "link": tool.website or "",
-                    "unique_id": tool.slug or "",
+                    "link": tool.link,
+                    "unique_id": tool.unique_id,
                     "rating": None,  # Will be handled by create_tool_response
-                    "saved_numbers": None,
+                    "saved_numbers": tool.saved_numbers,
                     "created_at": tool.created_at,
                     "updated_at": tool.updated_at,
                     "features": tool.features,
                     "is_featured": tool.is_featured,
+                    "keywords": tool.keywords,
+                    "categories": tool.categories,
+                    "logo_url": tool.logo_url,
+                    "user_reviews": tool.user_reviews,
+                    "feature_list": tool.feature_list,
+                    "referral_allow": tool.referral_allow,
+                    "generated_description": tool.generated_description,
+                    "industry": tool.industry,
                 }
 
                 # Add categories if available
@@ -934,7 +942,7 @@ async def search_tools(
                     # Check if this tool is saved by the user
                     if user_id:
                         # Make sure both are strings for consistent comparison
-                        tool_unique_id = str(tool.slug or "")
+                        tool_unique_id = str(tool.unique_id or "")
                         tool_response.saved_by_user = tool_unique_id in saved_tools_list
                         logger.info(
                             f"Tool {tool_unique_id} saved status (Algolia): {tool_response.saved_by_user}"

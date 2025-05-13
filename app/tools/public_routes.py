@@ -2,11 +2,14 @@
 Public routes for tools, accessible without authentication
 """
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import Optional, List
+
+from app.models.user import UserResponse
 
 from .models import PaginatedToolsResponse
 from .tools_service import get_tools, keyword_search_tools, search_tools
+from ..auth.dependencies import get_current_active_user, get_admin_user
 
 public_router = APIRouter(prefix="/public/tools", tags=["public_tools"])
 
@@ -21,6 +24,7 @@ async def list_public_tools(
         "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
     sort_order: str = Query("desc", description="Sort order (asc or desc)"),
+    current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     List all tools with pagination, filtering and sorting.
@@ -61,6 +65,7 @@ async def list_public_tools(
         filters=filters if filters else None,
         sort_by=sort_by,
         sort_order=sort_order,
+        user_id=str(current_user.id),
     )
 
     # Get total count with the same filters
