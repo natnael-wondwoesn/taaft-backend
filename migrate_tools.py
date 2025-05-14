@@ -37,11 +37,34 @@ async def migrate_tools():
     # - features: Optional list of strings
     # - is_featured: Boolean (default False)
     # - unique_id: String
+    # - keywords: Optional list of strings
+    # - categories: Optional list of dictionaries
+    # - logo_url: String (required, default placeholder URL)
+    # - user_reviews: Optional dictionary
+    # - feature_list: Optional list of strings
+    # - referral_allow: Boolean (default False)
+    # - generated_description: Optional string
+    # - industry: Optional string
+
+    # Default placeholder for logo URL
+    DEFAULT_LOGO_URL = "None"
 
     # Set default values for new fields
     update_fields = {
         "$set": {"updated_at": datetime.utcnow()},
-        "$setOnInsert": {"category": None, "features": [], "is_featured": False},
+        "$setOnInsert": {
+            "category": None,
+            "features": [],
+            "is_featured": False,
+            "keywords": [],
+            "categories": [],
+            "logo_url": DEFAULT_LOGO_URL,
+            "user_reviews": {},
+            "feature_list": [],
+            "referral_allow": False,
+            "generated_description": None,
+            "industry": None,
+        },
     }
 
     # Update all tools that don't have the new fields
@@ -67,6 +90,38 @@ async def migrate_tools():
             update_ops["unique_id"] = tool["id"]
             needs_update = True
 
+        if "keywords" not in tool:
+            update_ops["keywords"] = []
+            needs_update = True
+
+        if "categories" not in tool:
+            update_ops["categories"] = []
+            needs_update = True
+
+        if "logo_url" not in tool or not tool["logo_url"]:
+            update_ops["logo_url"] = DEFAULT_LOGO_URL
+            needs_update = True
+
+        if "user_reviews" not in tool:
+            update_ops["user_reviews"] = {}
+            needs_update = True
+
+        if "feature_list" not in tool:
+            update_ops["feature_list"] = []
+            needs_update = True
+
+        if "referral_allow" not in tool:
+            update_ops["referral_allow"] = False
+            needs_update = True
+
+        if "generated_description" not in tool:
+            update_ops["generated_description"] = None
+            needs_update = True
+
+        if "industry" not in tool:
+            update_ops["industry"] = None
+            needs_update = True
+
         # Update if needed
         if needs_update:
             update_ops["updated_at"] = datetime.utcnow()
@@ -89,6 +144,14 @@ async def verify_migration():
                 {"features": {"$exists": False}},
                 {"is_featured": {"$exists": False}},
                 {"unique_id": {"$exists": False}},
+                {"keywords": {"$exists": False}},
+                {"categories": {"$exists": False}},
+                {"logo_url": {"$exists": False}},
+                {"user_reviews": {"$exists": False}},
+                {"feature_list": {"$exists": False}},
+                {"referral_allow": {"$exists": False}},
+                {"generated_description": {"$exists": False}},
+                {"industry": {"$exists": False}},
             ]
         }
     )

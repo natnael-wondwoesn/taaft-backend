@@ -327,19 +327,42 @@ class AdminControlMiddleware:
         # Process the request
         request = Request(scope)
 
-        # List of endpoints that are publicly accessible or don't need auth checks
+        # List of endpoints that should be accessible without authentication
         public_endpoints = [
-            "/auth/",  # Auth endpoints
-            "/health",  # Health check endpoint
-            "/public/",  # Public endpoints
-            "/tools/featured",  # Featured tools endpoint
-            "/tools/sponsored",  # Sponsored tools endpoint
-            "/tools",  # Direct tools endpoint
-            "/tools/keyword-search",  # Keyword search endpoint
-            "/api/tools/keyword-search",  # Keyword search endpoint with API prefix
+            "/docs",
+            "/redoc",
+            "/openapi.json",
+            # Auth endpoints
+            "/api/auth/login",
+            "/api/auth/token",
+            "/api/auth/register",
+            "/api/auth/refresh-token",
+            "/api/auth/request-login-code",
+            "/api/auth/verify-login-code",
+            "/api/auth/verify-email",
+            "/api/auth/resend-verification",
+            "/api/auth/request-password-reset",
             "/api/auth/reset-password",  # Password reset endpoint
-            "/favorites/",  # Favorites endpoints
-            "/share/",  # Share endpoints
+            # Also include the non-prefixed paths for direct access
+            "/auth/login",
+            "/auth/token",
+            "/auth/register",
+            "/auth/refresh-token",
+            "/auth/request-login-code",
+            "/auth/verify-login-code",
+            "/auth/verify-email",
+            "/auth/resend-verification",
+            "/auth/request-password-reset",
+            "/auth/reset-password",
+            # Public routes for email verification and password reset
+            "/verify-email",
+            "/reset-password",
+            # OAuth endpoints
+            "/api/sso/login/google",
+            "/api/sso/login/github",
+            "/api/sso/callback/google",
+            "/api/sso/callback/github",
+            "/api/sso/providers",
         ]
 
         # If it's a public endpoint, skip auth checks

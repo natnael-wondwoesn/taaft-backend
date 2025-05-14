@@ -106,7 +106,13 @@ def send_password_reset_email(to_email: str, reset_token: str, base_url: str) ->
     if base_url.endswith("/"):
         base_url = base_url.rstrip("/")
 
-    reset_url = f"{base_url}/reset-password?token={reset_token}"
+    # Get the backend URL for token validation
+    backend_url = os.getenv("BASE_URL", "https://taaft-backend.onrender.com")
+    if backend_url.endswith("/"):
+        backend_url = backend_url.rstrip("/")
+
+    # Create a reset URL that goes through the backend validation first
+    reset_url = f"{backend_url}/reset-password?token={reset_token}"
 
     subject = "Password Reset Request"
 

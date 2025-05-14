@@ -12,7 +12,7 @@ from fastapi import (
 )
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .websocket import manager
 from .database import database
@@ -169,10 +169,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Frontend development server
-        "https://taaft.ai",  # Production frontend
-        "https://www.taaft.ai",
+        "https://taaft-deploy-18xw.vercel.app",  # Production frontend
         "https://taaft-deploy-18xw.vercel.app/",
-        "*",  # For development and testing (remove in production)
+        "https://taaft-deploy-18xw.vercel.app/tools/",
+        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search",
+        "https://taaft-deploy-18xw.vercel.app/tools/wayin-ai",
+        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search/keyword-search",
+        # "*",  # For development and testing (remove in production)
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -388,6 +391,56 @@ async def handle_email_verification(token: str):
         </html>
         """,
             status_code=500,
+        )
+
+
+# Handle password reset link from emails
+@app.get("/reset-password", include_in_schema=False)
+async def handle_password_reset(token: str = None):
+    """
+    Handle password reset links from emails.
+    This route validates the token and redirects to the frontend reset page or error page.
+    """
+    # Get frontend URLs from environment
+    frontend_url = os.getenv("FRONTEND_URL", "https://taaft-deploy-18xw.vercel.app")
+    if frontend_url.endswith("/"):
+        frontend_url = frontend_url.rstrip("/")
+
+    reset_page_url = f"{frontend_url}/reset-password"
+    error_page_url = f"{frontend_url}/auth/error"
+
+    # If no token provided, redirect to error page
+    if not token:
+        return RedirectResponse(
+            f"{error_page_url}?error=missing_token&message=Reset+token+is+required"
+        )
+
+    try:
+        # Import token validation function
+        from .auth.utils import decode_token
+
+        # Validate the token
+        token_data = decode_token(token)
+
+        # If token is invalid or expired
+        if token_data is None:
+            return RedirectResponse(
+                f"{error_page_url}?error=invalid_token&message=The+reset+link+is+invalid+or+has+expired"
+            )
+
+        # Verify token purpose is for password reset
+        if not hasattr(token_data, "purpose") or token_data.purpose != "password_reset":
+            return RedirectResponse(
+                f"{error_page_url}?error=invalid_purpose&message=Invalid+reset+link+purpose"
+            )
+
+        # Token is valid, redirect to the reset password page with the token
+        return RedirectResponse(f"{reset_page_url}?token={token}")
+
+    except Exception as e:
+        logger.error(f"Error handling password reset link: {str(e)}")
+        return RedirectResponse(
+            f"{error_page_url}?error=server_error&message=An+error+occurred+while+processing+your+request"
         )
 
 
@@ -654,13 +707,14 @@ async def get_all_tools(
     category: Optional[str] = Query(None, description="Filter by category"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
 ):
     """
     List all tools with pagination, filtering and sorting.
     This endpoint is publicly accessible without authentication.
+    Default sorting is by created_at in descending order (newest first).
     """
     from .tools.tools_service import get_tools
 

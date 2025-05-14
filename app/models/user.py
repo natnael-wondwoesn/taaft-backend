@@ -45,6 +45,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     full_name: Optional[str] = None
+    username: Optional[str] = None
     subscribeToNewsletter: bool = False
 
     @validator("password")
@@ -62,8 +63,11 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
+    username: Optional[str] = None
     service_tier: Optional[ServiceTier] = None
     subscribeToNewsletter: Optional[bool] = None
+    bio: Optional[str] = None
+    profile_image: Optional[str] = None
 
 
 class OAuthProvider(str, Enum):
@@ -80,6 +84,9 @@ class UserInDB(BaseModel):
     email: EmailStr
     hashed_password: str
     full_name: Optional[str] = None
+    username: Optional[str] = None
+    bio: Optional[str] = None
+    profile_image: Optional[str] = None
     service_tier: ServiceTier = ServiceTier.FREE
     is_active: bool = True
     is_verified: bool = False
@@ -88,9 +95,6 @@ class UserInDB(BaseModel):
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     last_login: Optional[datetime.datetime] = None
     oauth_providers: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
-    saved_tools: List[str] = Field(
-        default_factory=list
-    )  # List of tool unique_ids saved by the user
     usage: dict = Field(
         default_factory=lambda: {
             "requests_today": 0,
@@ -109,6 +113,9 @@ class UserResponse(BaseModel):
     id: str
     email: EmailStr
     full_name: Optional[str] = None
+    username: Optional[str] = None
+    bio: Optional[str] = None
+    profile_image: Optional[str] = None
     service_tier: ServiceTier
     is_active: bool
     is_verified: bool
@@ -116,7 +123,6 @@ class UserResponse(BaseModel):
     created_at: datetime.datetime
     oauth_providers: Dict[str, Dict[str, Any]] = {}
     usage: dict
-    saved_tools: List[str] = []
 
     model_config = {"json_encoders": {ObjectId: lambda oid: str(oid)}}
 
@@ -126,5 +132,9 @@ class TokenData(BaseModel):
 
     sub: str  # User ID
     exp: datetime.datetime
-    service_tier: ServiceTier
-    is_verified: bool
+    service_tier: ServiceTier = ServiceTier.FREE
+    is_verified: bool = False
+    saved_tools: List[str] = []  # List of saved tool IDs
+    purpose: Optional[str] = (
+        None  # Token purpose (e.g., "password_reset", "email_verification")
+    )

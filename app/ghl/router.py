@@ -212,7 +212,12 @@ async def get_auth_url(
     Get the URL for GHL OAuth authentication (admin only)
     """
     client_id = os.getenv("GHL_CLIENT_ID")
-    redirect_uri = os.getenv("GHL_REDIRECT_URI")
+    redirect_uri = os.getenv(
+        "GHL_REDIRECT_URI",
+        "http://taaf-backend.onrender.com/api/integrations/ghl/oauth-callback",
+    )
+    print(client_id)
+    print(redirect_uri)
 
     if not client_id or not redirect_uri:
         raise HTTPException(
@@ -235,7 +240,10 @@ async def oauth_callback(
     """
     client_id = os.getenv("GHL_CLIENT_ID")
     client_secret = os.getenv("GHL_CLIENT_SECRET")
-    redirect_uri = os.getenv("GHL_REDIRECT_URI")
+    redirect_uri = os.getenv(
+        "GHL_REDIRECT_URI",
+        "http://taaf-backend.onrender.com/api/integrations/ghl/oauth-callback",
+    )
 
     if not all([client_id, client_secret, redirect_uri]):
         raise HTTPException(

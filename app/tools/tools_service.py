@@ -330,6 +330,13 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
             categories=tool.get("categories"),
+            logo_url=tool.get("logo_url", ""),
+            user_reviews=tool.get("user_reviews"),
+            feature_list=tool.get("feature_list"),
+            referral_allow=tool.get("referral_allow"),
+            generated_description=tool.get("generated_description"),
+            industry=tool.get("industry"),
+            image_url=tool.get("image_url"),
         )
     except Exception as e:
         logger.error(f"Error creating tool response: {str(e)}")
@@ -342,21 +349,23 @@ async def get_tools(
     count_only: bool = False,
     filters: Optional[Dict[str, Any]] = None,
     sort_by: Optional[str] = None,
-    sort_order: Optional[str] = "asc",
+    sort_order: Optional[str] = "desc",
+    user_id: Optional[str] = None,
 ) -> Union[List[ToolResponse], int]:
     """
-    Retrieve a list of tools with pagination, filtering and sorting.
+    Get tools with pagination, filtering and sorting.
 
     Args:
-        skip: Number of items to skip for pagination
+        skip: Number of items to skip
         limit: Maximum number of items to return
-        count_only: If True, returns only the count of tools
-        filters: Dictionary of field-value pairs for filtering
+        count_only: Return only the count
+        filters: Additional filters to apply
         sort_by: Field to sort by
-        sort_order: Sort order ('asc' or 'desc')
+        sort_order: Sort order (asc or desc)
+        user_id: ID of the user, used to check if tools are in user's favorites
 
     Returns:
-        Either a list of tools or the total count
+        List of tools or count
     """
     # Build the query
     query = {}
@@ -418,13 +427,7 @@ async def get_tools(
 
     # Create the cursor with efficient sorting in MongoDB
     # Use aggregation pipeline for more complex sorting logic
-    pipeline = [{"$match": query}, {"$skip": skip}, {"$limit": limit}]
-
-    # Add sorting stages to the pipeline
-    if sort_by:
-        # First sort by the requested field
-        sort_direction = -1 if sort_order.lower() == "desc" else 1
-        pipeline.append({"$sort": {sort_by: sort_direction}})
+    pipeline = [{"$match": query}]
 
     # Add a stage to create a new field indicating if description is empty
     pipeline.append(
@@ -446,9 +449,20 @@ async def get_tools(
         }
     )
 
-    # Sort by the has_description field (prioritize tools with descriptions)
-    # Always sort in descending order (1 = has description comes first)
-    pipeline.append({"$sort": {"has_description": -1}})
+    # Create a sort object that combines both sorts
+    sort_obj = {"has_description": -1}  # Always prioritize tools with descriptions
+
+    # Add the requested sort if provided
+    if sort_by:
+        sort_direction = -1 if sort_order.lower() == "desc" else 1
+        sort_obj[sort_by] = sort_direction
+
+    # Apply the combined sort in a single stage
+    pipeline.append({"$sort": sort_obj})
+
+    # Apply pagination after sorting
+    pipeline.append({"$skip": skip})
+    pipeline.append({"$limit": limit})
 
     # Log the pipeline for debugging
     logger.debug(f"MongoDB aggregation pipeline: {pipeline}")
@@ -458,70 +472,129 @@ async def get_tools(
 
     # Process results
     tools_list = []
+    saved_tools_list = []
+
+    # If user_id is provided, get the user's saved tools
+    if user_id and not count_only:
+        # Check if the user exists and has saved tools
+        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        if user and "saved_tools" in user:
+            # Convert all items to strings for consistent comparison
+            saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
+        else:
+            # If user doesn't have saved_tools field, check favorites collection
+            fav_cursor = favorites.find({"user_id": str(user_id)})
+            saved_tools_list = []
+            async for favorite in fav_cursor:
+                saved_tools_list.append(str(favorite["tool_unique_id"]))
+
+        # For debugging
+        logger.info(f"User {user_id} has saved tools: {saved_tools_list}")
+
     async for tool in cursor:
         tool_response = await create_tool_response(tool)
         if tool_response:
+            # Check if this tool is saved by the user
+            if user_id and not count_only:
+                unique_id = str(tool.get("unique_id", ""))
+                tool_response.saved_by_user = unique_id in saved_tools_list
+                # logger.info(
+                #     f"Tool {unique_id} saved status: {tool_response.saved_by_user}"
+                # )
             tools_list.append(tool_response)
 
     return tools_list
 
 
-async def get_tool_by_id(tool_id: UUID) -> Optional[ToolResponse]:
+async def get_tool_by_id(
+    tool_id: UUID, user_id: Optional[str] = None
+) -> Optional[ToolResponse]:
     """
-    Retrieve a tool by its UUID.
+    Get a tool by UUID.
 
-    First tries to find a document where id=tool_id.
-    If that fails, checks if the tool_id might be a UUID derived from an ObjectId,
-    and attempts to find the document by its _id.
+    Args:
+        tool_id: The UUID of the tool to retrieve
+        user_id: Optional ID of the user, to check if tool is saved
+
+    Returns:
+        Tool if found, None otherwise
     """
-    # First try: Query by string representation of UUID in 'id' field
     tool = await tools.find_one({"id": str(tool_id)})
-
-    if tool:
-        return await create_tool_response(tool)
-
-    # Try an approach that doesn't require loading all tools
-    # Get all tools without an 'id' field to check if they match after conversion
-    tools_without_id = await tools.find({"id": {"$exists": False}}).to_list(length=None)
-
-    for db_tool in tools_without_id:
-        if "_id" in db_tool:
-            objectid = db_tool.get("_id")
-            derived_uuid = objectid_to_uuid(objectid)
-
-            # If the derived UUID matches the requested one, we found our tool
-            if str(derived_uuid) == str(tool_id):
-                logger.info(
-                    f"Found tool via derived UUID conversion: {db_tool.get('name')}"
-                )
-
-                # Update the tool with the derived UUID to avoid future conversion
-                try:
-                    await tools.update_one(
-                        {"_id": objectid}, {"$set": {"id": str(derived_uuid)}}
-                    )
-                    logger.info(
-                        f"Updated tool {db_tool.get('name')} with derived UUID {derived_uuid}"
-                    )
-                except Exception as e:
-                    logger.error(f"Failed to update tool with derived UUID: {e}")
-
-                return await create_tool_response(db_tool)
-
-    # If we get here, the tool wasn't found by either method
-    return None
-
-
-async def get_tool_by_unique_id(unique_id: str) -> Optional[ToolResponse]:
-    """
-    Retrieve a tool by its unique_id.
-    """
-    tool = await tools.find_one({"unique_id": unique_id})
-
     if not tool:
         return None
 
-    return await create_tool_response(tool)
+    tool_response = await create_tool_response(tool)
+
+    # If user_id is provided, check if the tool is saved by the user
+    if user_id and tool_response:
+        # Check if user has saved_tools array
+        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        if user and "saved_tools" in user:
+            # Convert to strings for consistent comparison
+            saved_tools = [str(t) for t in user["saved_tools"]]
+            unique_id = str(tool.get("unique_id", ""))
+            tool_response.saved_by_user = unique_id in saved_tools
+            logger.info(
+                f"Tool {unique_id} saved status for user {user_id}: {tool_response.saved_by_user}"
+            )
+        else:
+            # Check favorites collection
+            favorite = await favorites.find_one(
+                {
+                    "user_id": str(user_id),
+                    "tool_unique_id": str(tool.get("unique_id", "")),
+                }
+            )
+            tool_response.saved_by_user = favorite is not None
+            logger.info(
+                f"Tool saved status from favorites: {tool_response.saved_by_user}"
+            )
+
+    return tool_response
+
+
+async def get_tool_by_unique_id(
+    unique_id: str, user_id: Optional[str] = None
+) -> Optional[ToolResponse]:
+    """
+    Get a tool by its unique_id.
+
+    Args:
+        unique_id: The unique_id of the tool to retrieve
+        user_id: Optional ID of the user, to check if tool is saved
+
+    Returns:
+        Tool if found, None otherwise
+    """
+    tool = await tools.find_one({"unique_id": unique_id})
+    if not tool:
+        return None
+
+    tool_response = await create_tool_response(tool)
+
+    # If user_id is provided, check if the tool is saved by the user
+    if user_id and tool_response:
+        # Check if user has saved_tools array
+        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        if user and "saved_tools" in user:
+            # Convert to strings for consistent comparison
+            saved_tools = [str(t) for t in user["saved_tools"]]
+            unique_id_str = str(unique_id)
+            tool_response.saved_by_user = unique_id_str in saved_tools
+            logger.info(
+                f"Tool {unique_id_str} saved status for user {user_id}: {tool_response.saved_by_user}"
+            )
+        else:
+            # Check favorites collection
+            favorite = await favorites.find_one(
+                {"user_id": str(user_id), "tool_unique_id": str(unique_id)}
+            )
+            tool_response.saved_by_user = favorite is not None
+            logger.info(
+                f"Tool {unique_id} saved status from favorites: {tool_response.saved_by_user}"
+            )
+
+    return tool_response
 
 
 async def create_tool(tool_data: ToolCreate) -> ToolResponse:
@@ -773,12 +846,24 @@ async def delete_tool(tool_id: UUID) -> bool:
 
 
 async def search_tools(
-    query: str, skip: int = 0, limit: int = 100, count_only: bool = False
+    query: str,
+    skip: int = 0,
+    limit: int = 100,
+    count_only: bool = False,
+    user_id: Optional[str] = None,
 ) -> Union[List[ToolResponse], int]:
     """
     Search for tools by name or description.
-    Uses Algolia search when available, falls back to MongoDB text search.
-    If count_only is True, returns only the total count of matching tools.
+
+    Args:
+        query: The search query
+        skip: Number of items to skip
+        limit: Maximum number of items to return
+        count_only: Return only the count
+        user_id: ID of the user, used to check if tools are in user's favorites
+
+    Returns:
+        List of tools or count
     """
     from ..algolia.config import algolia_config
     from ..algolia.search import algolia_search
@@ -798,6 +883,25 @@ async def search_tools(
             if count_only:
                 return search_result.total
 
+            # Get saved tools if user is provided
+            saved_tools_list = []
+            if user_id:
+                # Check if the user exists and has saved tools
+                user = await database.users.find_one({"_id": ObjectId(user_id)})
+                if user and "saved_tools" in user:
+                    # Convert all items to strings for consistent comparison
+                    saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
+                else:
+                    # If user doesn't have saved_tools field, check favorites collection
+                    fav_cursor = favorites.find({"user_id": str(user_id)})
+                    async for favorite in fav_cursor:
+                        saved_tools_list.append(str(favorite["tool_unique_id"]))
+
+                # For debugging
+                logger.info(
+                    f"User {user_id} has saved tools (Algolia search): {saved_tools_list}"
+                )
+
             # Convert Algolia results to ToolResponse objects
             tools_list = []
             for tool in search_result.tools:
@@ -807,14 +911,22 @@ async def search_tools(
                     "price": tool.price or "",
                     "name": tool.name,
                     "description": tool.description,
-                    "link": tool.website or "",
-                    "unique_id": tool.slug or "",
+                    "link": tool.link,
+                    "unique_id": tool.unique_id,
                     "rating": None,  # Will be handled by create_tool_response
-                    "saved_numbers": None,
+                    "saved_numbers": tool.saved_numbers,
                     "created_at": tool.created_at,
                     "updated_at": tool.updated_at,
                     "features": tool.features,
                     "is_featured": tool.is_featured,
+                    "keywords": tool.keywords,
+                    "categories": tool.categories,
+                    "logo_url": tool.logo_url,
+                    "user_reviews": tool.user_reviews,
+                    "feature_list": tool.feature_list,
+                    "referral_allow": tool.referral_allow,
+                    "generated_description": tool.generated_description,
+                    "industry": tool.industry,
                 }
 
                 # Add categories if available
@@ -827,6 +939,14 @@ async def search_tools(
 
                 tool_response = await create_tool_response(tool_dict)
                 if tool_response:
+                    # Check if this tool is saved by the user
+                    if user_id:
+                        # Make sure both are strings for consistent comparison
+                        tool_unique_id = str(tool.unique_id or "")
+                        tool_response.saved_by_user = tool_unique_id in saved_tools_list
+                        logger.info(
+                            f"Tool {tool_unique_id} saved status (Algolia): {tool_response.saved_by_user}"
+                        )
                     tools_list.append(tool_response)
             return tools_list
         except Exception as e:
@@ -842,9 +962,36 @@ async def search_tools(
     cursor = tools.find({"$text": {"$search": query}}).skip(skip).limit(limit)
 
     tools_list = []
+    saved_tools_list = []
+
+    # If user_id is provided, get the user's saved tools
+    if user_id:
+        # Check if the user exists and has saved tools
+        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        if user and "saved_tools" in user:
+            # Convert all items to strings for consistent comparison
+            saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
+        else:
+            # If user doesn't have saved_tools field, check favorites collection
+            fav_cursor = favorites.find({"user_id": str(user_id)})
+            async for favorite in fav_cursor:
+                saved_tools_list.append(str(favorite["tool_unique_id"]))
+
+        # For debugging
+        logger.info(
+            f"User {user_id} has saved tools (MongoDB search): {saved_tools_list}"
+        )
+
     async for tool in cursor:
         tool_response = await create_tool_response(tool)
         if tool_response:
+            # Check if this tool is saved by the user
+            if user_id:
+                unique_id = str(tool.get("unique_id", ""))
+                tool_response.saved_by_user = unique_id in saved_tools_list
+                logger.info(
+                    f"Tool {unique_id} saved status (MongoDB search): {tool_response.saved_by_user}"
+                )
             tools_list.append(tool_response)
 
     return tools_list
@@ -1010,6 +1157,7 @@ async def keyword_search_tools(
     limit: int = 100,
     count_only: bool = False,
     filters: Optional[Dict[str, Any]] = None,
+    user_id: Optional[str] = None,
 ) -> Union[List[ToolResponse], int]:
     """
     Search for tools by exact keywords match.
@@ -1021,6 +1169,7 @@ async def keyword_search_tools(
         limit: Maximum number of items to return
         count_only: Whether to return only the count of matching tools
         filters: Additional filters to apply to the search query
+        user_id: Optional ID of the user, to check if tools are saved
 
     Returns:
         Either a list of matching tools or the count of matching tools
@@ -1048,11 +1197,37 @@ async def keyword_search_tools(
     # Find matching tools with pagination
     cursor = tools.find(query).skip(skip).limit(limit)
 
+    # Get saved tools if user is provided
+    saved_tools_list = []
+    if user_id:
+        # Check if the user exists and has saved tools
+        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        if user and "saved_tools" in user:
+            # Convert all items to strings for consistent comparison
+            saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
+        else:
+            # If user doesn't have saved_tools field, check favorites collection
+            fav_cursor = favorites.find({"user_id": str(user_id)})
+            async for favorite in fav_cursor:
+                saved_tools_list.append(str(favorite["tool_unique_id"]))
+
+        # For debugging
+        logger.info(
+            f"User {user_id} has saved tools (keyword search): {saved_tools_list}"
+        )
+
     # Process results
     tools_list = []
     async for tool in cursor:
         tool_response = await create_tool_response(tool)
         if tool_response:
+            # Check if this tool is saved by the user
+            if user_id:
+                unique_id = str(tool.get("unique_id", ""))
+                tool_response.saved_by_user = unique_id in saved_tools_list
+                logger.info(
+                    f"Tool {unique_id} saved status (keyword search): {tool_response.saved_by_user}"
+                )
             tools_list.append(tool_response)
 
     return tools_list
@@ -1065,7 +1240,7 @@ async def get_tool_with_favorite_status(
     Get a tool by ID and include whether it's favorited by the user.
 
     Args:
-        tool_id: ID of the tool
+        tool_unique_id: Unique ID of the tool
         user_id: ID of the user
 
     Returns:
@@ -1081,9 +1256,21 @@ async def get_tool_with_favorite_status(
         {"user_id": str(user_id), "tool_unique_id": str(tool_unique_id)}
     )
 
+    # Also check saved_tools array in user document
+    user = await database.users.find_one({"_id": ObjectId(user_id)})
+    saved_in_user = False
+    if user and "saved_tools" in user:
+        saved_tools = [str(t) for t in user["saved_tools"]]
+        saved_in_user = str(tool_unique_id) in saved_tools
+
+    # Log the findings for debugging
+    logger.info(
+        f"Tool {tool_unique_id} favorite status for user {user_id}: favorite={favorite is not None}, saved_in_user={saved_in_user}"
+    )
+
     # Convert to dict to modify
     tool_dict = tool.dict()
-    tool_dict["saved_by_user"] = favorite is not None
+    tool_dict["saved_by_user"] = favorite is not None or saved_in_user
 
     # Convert back to response model
     return ToolResponse(**tool_dict)

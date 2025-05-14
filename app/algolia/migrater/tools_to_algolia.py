@@ -128,32 +128,28 @@ def prepare_algolia_object(mongo_tool):
     algolia_tool = {}
 
     # Use unique_id or _id as Algolia objectID
-    algolia_tool["object_id"] = str(
-        mongo_tool.get("unique_id") or mongo_tool.get("id") or mongo_tool.get("_id")
-    )
+    algolia_tool["objectID"] = str(mongo_tool.get("id") or mongo_tool.get("_id"))
 
     # Include essential tool attributes
     attributes_to_include = [
+        "price",
         "name",
         "description",
-        "summary",
         "link",
-        "url",
-        "logo_url",
-        "keywords",
-        "category_id",
         "unique_id",
+        "rating",
+        "saved_numbers",
         "category",
         "features",
-        "pricing_type",
-        "pricing_url",
         "is_featured",
-        "created_at",
-        "updated_at",
-        "tags",
-        "price",
-        "is_featured",
-        "rating",
+        "keywords",
+        "categories",
+        "logo_url",
+        "user_reviews",
+        "feature_list",
+        "referral_allow",
+        "generated_description",
+        "industry",
     ]
 
     for attr in attributes_to_include:
@@ -213,12 +209,11 @@ def configure_algolia_index(client, index_name):
             ],
             "attributesForFaceting": [
                 "category",
-                "is_featured",
-                "rating",
                 "keywords",
-                "category_id",
                 "unique_id",
                 "description",
+                "name",
+                "features_list",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -239,6 +234,20 @@ def configure_algolia_index(client, index_name):
                 "rating",
                 "saved_numbers",
                 "keywords",
+                "industry",
+                "referral_allow",
+                "feature_list",
+                "generated_description",
+                "user_reviews",
+                "categories",
+                "logo_url",
+                "created_at",
+                "updated_at",
+                "tags",
+                "price",
+                "is_featured",
+                "rating",
+                "saved_numbers",
             ],
             "ranking": [
                 "typo",
@@ -253,7 +262,7 @@ def configure_algolia_index(client, index_name):
             "customRanking": ["desc(is_featured)", "desc(updated_at)"],
             "ignorePlurals": True,
             "advancedSyntax": True,
-            "typoTolerance": True,
+            "typoTolerance": False,
         },
     )
     print("Algolia index configured successfully")

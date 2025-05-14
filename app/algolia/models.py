@@ -60,31 +60,26 @@ class AlgoliaToolRecord(BaseModel):
     """Model for a tool record to be indexed in Algolia"""
 
     objectID: str  # Required by Algolia, will be the MongoDB _id
-    name: str
-    description: str
-    slug: str
-    long_description: Optional[str] = None
-    logo_url: Optional[str] = None
-    image_url: Optional[str] = None
-    website: Optional[str] = None
+    price: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
     link: Optional[str] = None
     unique_id: Optional[str] = None
-    categories: Optional[List[ToolCategory]] = None
-    category_id: Optional[str] = None
+    rating: Optional[str] = None
+    saved_numbers: Optional[int] = None
+    category: Optional[str] = None
     features: Optional[List[str]] = None
-    use_cases: Optional[List[str]] = None
-    keywords: Optional[List[str]] = None  # Keywords for searching
-    pricing: Optional[ToolPricing] = None
-    price: Optional[str] = None  # String representation of price
-    pricing_url: Optional[str] = None
-    ratings: Optional[ToolRatings] = None
-    rating: Optional[float] = None  # Direct rating value
-    saved_numbers: Optional[int] = None  # Number of times saved
-    trending_score: Optional[float] = None
+    is_featured: Optional[bool] = None
+    keywords: Optional[List[str]] = None
+    categories: Optional[List[Dict[str, Any]]] = None
+    logo_url: Optional[str] = None
+    user_reviews: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None
+    feature_list: Optional[List[str]] = None
+    referral_allow: Optional[bool] = None
+    generated_description: Optional[str] = None
+    industry: Optional[str] = None
     created_at: Optional[datetime.datetime] = None
     updated_at: Optional[datetime.datetime] = None
-    is_featured: bool = False
-    is_sponsored: bool = False
 
     model_config = {
         "allow_population_by_field_name": True,

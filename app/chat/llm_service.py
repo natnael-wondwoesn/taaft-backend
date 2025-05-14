@@ -88,7 +88,7 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
    - Using the profile, create a list of keywords for AI tools that match the user's needs.
 
    - When recommending keywords for user searches, only suggest from this list of validated keywords:
-   ["42signals", "ads", "agent", "aigpt", "ailancer", "aiter", "aliexpress", "allegro", "amazon", "anyone", "apply", "art", "artistic", "artwork", "assist", "assistant", "audio-to-audio", "automation", "automina", "avumi", "beautygence", "bladerunner", "bounding boxes", "brainstroming", "branchbob", "business automation", "chaibar", "chat model", "chatbot", "chatbots", "collaboration", "color match", "commercial licensing", "communication", "Content creation", "copymonkey", "copysmith", "costumeplay", "creative", "custom AI", "Data Analysis", "DeepSeek", "depikt", "descrb", "describely", "description", "designs", "document", "dressme", "drive", "easylist", "easylisting", "estate", "examgenie", "faishion", "fashion", "fashn", "fitting", "free", "generator", "gliastudio", "Google", "gpt", "gremlin", "helpjuice", "heybeauty", "heygen", "hyperwrite", "hyrable", "image generation", "image processing", "image segmentation", "imagine", "job", "kaiber", "knowbase", "kome", "korbit", "language model", "leadscripts", "lista", "listing", "listingcopy", "Llama-3", "loom", "magickpen", "magicx", "manga", "manus", "Marketing", "mask creation", "mcp", "memfree", "mentor", "mitra", "model", "monai", "multimodal", "NLP", "Nous Research", "object detection", "oner", "open-source", "openai", "optimization", "optimyzee", "outfit", "pangea", "paperclip", "phonepi", "photoflux", "playground", "prodescription", "produced", "product", "real", "reality", "resume", "roastlinkedin", "room", "saveday", "screensnapai", "seekmydomain", "sellerpic", "shopgpt", "simplified", "smartscout", "Social media", "sora", "speech synthesis", "storipress", "strategy", "studio", "studios", "stylist", "supercreator", "sus", "T4 GPU", "taskade", "tenali", "text generation", "text-to-image", "that", "thesify", "tiaviz", "url", "videogen", "virtual", "web", "Well-being", "word", "writing", "AI", "AI art", "AI images", "AI interaction", "AI journals", "AI memes", "AI model", "AI models", "AI tools", "AI voice generation", "AI workloads", "AI-generated faces", "Babes 2.0", "DRAGON", "Entertainment", "Gemma 3", "Gmail", "HiDream-I1", "Journaling", "Kimi-VL", "LKM technology", "LLMs", "Llama 3.3", "Meme battles", "MoE", "Ollama", "Outlook", "PhoBERT", "Vietnamese NLP", "3D model"]
+   {keywords}
 
    - Present the keywords clearly, followed by a final set of options.
 
@@ -134,10 +134,6 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 - **Assistant:** "What industry is your business in? `options = ['Technology', 'Healthcare', 'Finance', 'Retail', 'Other']`"
 
 - **User:** "Retail"
-
-- **Assistant:** "What is the size of your business? `options = ['Small', 'Medium', 'Large', 'Startup']`"
-
-- **User:** "Small"
 
 - **Assistant:** "What challenges are you hoping AI can solve? `options = ['Content Creation', 'Data Analysis', 'Customer Service', 'Marketing', 'Other']`"
 
@@ -281,7 +277,14 @@ class LLMService:
                 {"role": "system", "content": system_prompt}
             ] + messages
         else:
-            formatted_messages = messages
+            # Dynamically populate keywords in the default system prompt
+            keywords = await get_keywords()
+            dynamic_system_prompt = DEFAULT_SYSTEM_PROMPT.format(
+                keywords=json.dumps(keywords)
+            )
+            formatted_messages = [
+                {"role": "system", "content": dynamic_system_prompt}
+            ] + messages
 
         logger.info(f"Getting LLM response with model: {model_type}")
 
@@ -322,9 +325,14 @@ class LLMService:
     ):
         """Get a streaming response from the LLM service, yielding chunks as they arrive"""
         # Include system prompt if provided
-        print(f"system_prompt: {system_prompt}")
         system_prompt = DEFAULT_SYSTEM_PROMPT
+        # print(f"system_prompt: {system_prompt}")
         if system_prompt:
+            keywords = await get_keywords()
+            dynamic_system_prompt = DEFAULT_SYSTEM_PROMPT.format(
+                keywords=json.dumps(keywords)
+            )
+            print(f"dynamic_system_prompt: {dynamic_system_prompt}")
             formatted_messages = [
                 {
                     "role": "system",
@@ -333,7 +341,19 @@ class LLMService:
                 }
             ] + messages
         else:
-            formatted_messages = messages
+            # Dynamically populate keywords in the default system prompt
+            keywords = await get_keywords()
+            dynamic_system_prompt = DEFAULT_SYSTEM_PROMPT.format(
+                keywords=json.dumps(keywords)
+            )
+            print(f"dynamic_system_prompt: {dynamic_system_prompt}")
+            formatted_messages = [
+                {
+                    "role": "system",
+                    "content": dynamic_system_prompt,
+                    "output_schema": ChatResponse,
+                }
+            ] + messages
 
         logger.info(f"Getting streaming LLM response with model: {model_type}")
 
@@ -385,7 +405,7 @@ class LLMService:
         """Get a streaming response from OpenAI"""
         try:
             client = openai.AsyncOpenAI(api_key=self.openai_api_key)
-            print(f"messages: {messages}")
+            # print(f"messages: {messages}")
 
             response = await client.chat.completions.create(
                 model=model,
@@ -520,7 +540,13 @@ class LLMService:
             formatted_messages = []
 
             # Add system prompt if provided, otherwise use default
-            sys_prompt = system_prompt if system_prompt else DEFAULT_SYSTEM_PROMPT
+            if system_prompt:
+                sys_prompt = system_prompt
+            else:
+                # Dynamically populate keywords in the default system prompt
+                keywords = await get_keywords()
+                sys_prompt = DEFAULT_SYSTEM_PROMPT.format(keywords=json.dumps(keywords))
+
             formatted_messages.append({"role": "system", "content": sys_prompt})
 
             # Add the chat history
@@ -817,6 +843,9 @@ You are an AI-powered assistant designed to help users discover AI tools tailore
 - Offer clarification or additional options if the user requests it.
 
 """
+
+        # Format the detect_prompt with the keywords
+        detect_prompt = detect_prompt.format(keywords=json.dumps(keywords))
 
         # Combine system prompts if provided
         if system_prompt:

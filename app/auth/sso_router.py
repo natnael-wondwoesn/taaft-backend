@@ -62,15 +62,32 @@ async def auth_callback(request: Request, provider: str):
 
         # Get the token
         if provider == OAuthProvider.GOOGLE:
-            token = await google.authorize_access_token(request)
-            email, provider_user_id, name, provider_data = await get_google_user(
-                token["access_token"]
-            )
+            try:
+                token = await google.authorize_access_token(request)
+                email, provider_user_id, name, provider_data = await get_google_user(
+                    token["access_token"]
+                )
+            except Exception as e:
+                logger.error(f"Error getting Google user data: {str(e)}")
+                return RedirectResponse(
+                    f"{FRONTEND_ERROR_URL}?error=google_auth_failed&message=Failed+to+authenticate+with+Google"
+                )
         elif provider == OAuthProvider.GITHUB:
-            token = await github.authorize_access_token(request)
-            email, provider_user_id, name, provider_data = await get_github_user(
-                token["access_token"]
-            )
+            try:
+                token = await github.authorize_access_token(request)
+                email, provider_user_id, name, provider_data = await get_github_user(
+                    token["access_token"]
+                )
+            except HTTPException as e:
+                logger.error(f"GitHub authentication error: {e.detail}")
+                return RedirectResponse(
+                    f"{FRONTEND_ERROR_URL}?error=github_auth_failed&message={e.detail.replace(' ', '+')}"
+                )
+            except Exception as e:
+                logger.error(f"Error getting GitHub user data: {str(e)}")
+                return RedirectResponse(
+                    f"{FRONTEND_ERROR_URL}?error=github_auth_failed&message=Failed+to+authenticate+with+GitHub"
+                )
         else:
             logger.error(f"Unsupported provider in callback: {provider}")
             return RedirectResponse(
@@ -104,7 +121,7 @@ async def auth_callback(request: Request, provider: str):
     except Exception as e:
         logger.error(f"Error in OAuth callback: {str(e)}")
         return RedirectResponse(
-            f"{FRONTEND_ERROR_URL}?error=server_error&message=Authentication+failed"
+            f"{FRONTEND_ERROR_URL}?error=server_error&message=Authentication+failed.+Please+try+again."
         )
 
 

@@ -15,10 +15,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "supersecretkey")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(
-    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
-)  # 1 hour by default
+    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080")
+)  # 1 week by default
 REFRESH_TOKEN_EXPIRE_DAYS = int(
-    os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7")
+    os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "14")
 )  # 7 days by default
 
 
@@ -71,12 +71,16 @@ def decode_token(token: str) -> Optional[TokenData]:
         exp = payload.get("exp")
         service_tier = payload.get("service_tier", ServiceTier.FREE)
         is_verified = payload.get("is_verified", False)
+        saved_tools = payload.get("saved_tools", [])
+        purpose = payload.get("purpose")
 
         token_data = TokenData(
             sub=user_id,
             exp=datetime.fromtimestamp(exp),
             service_tier=service_tier,
             is_verified=is_verified,
+            saved_tools=saved_tools,
+            purpose=purpose,
         )
         return token_data
     except JWTError:

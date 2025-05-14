@@ -2,11 +2,14 @@
 Public routes for tools, accessible without authentication
 """
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import Optional, List
+
+from app.models.user import UserResponse
 
 from .models import PaginatedToolsResponse
 from .tools_service import get_tools, keyword_search_tools, search_tools
+from ..auth.dependencies import get_current_active_user, get_admin_user
 
 public_router = APIRouter(prefix="/public/tools", tags=["public_tools"])
 
@@ -18,13 +21,14 @@ async def list_public_tools(
     category: Optional[str] = Query(None, description="Filter by category"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
 ):
     """
     List all tools with pagination, filtering and sorting.
     This endpoint is publicly accessible without authentication.
+    Default sorting is by created_at in descending order (newest first).
     """
     # Build filters dictionary from query parameters
     filters = {}
@@ -46,6 +50,12 @@ async def list_public_tools(
         raise HTTPException(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
+
+    # Ensure we're returning the latest tools first by default
+    if not sort_by or sort_by == "created_at":
+        # If sort_by is not specified or is created_at, default to descending order (newest first)
+        if not sort_order or sort_order.lower() != "asc":
+            sort_order = "desc"
 
     # Get the tools with filtering and sorting
     tools = await get_tools(
@@ -70,12 +80,13 @@ async def get_featured_tools(
     category: Optional[str] = Query(None, description="Filter by category"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
 ):
     """
     Get a list of featured tools. This endpoint is publicly accessible without authentication.
+    Default sorting is by created_at in descending order (newest first).
 
     - **search**: Optional search term to filter tools by name, description, or keywords
     - **category**: Optional category filter
@@ -153,13 +164,14 @@ async def get_sponsored_tools(
     category: Optional[str] = Query(None, description="Filter by category"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
 ):
     """
     Get a list of sponsored tools (identical to featured tools).
     This endpoint is publicly accessible without authentication.
+    Default sorting is by created_at in descending order (newest first).
 
     - **search**: Optional search term to filter tools by name, description, or keywords
     - **category**: Optional category filter
