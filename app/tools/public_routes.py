@@ -24,7 +24,6 @@ async def list_public_tools(
         "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
     sort_order: str = Query("desc", description="Sort order (asc or desc)"),
-    current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     List all tools with pagination, filtering and sorting.
@@ -65,7 +64,6 @@ async def list_public_tools(
         filters=filters if filters else None,
         sort_by=sort_by,
         sort_order=sort_order,
-        user_id=str(current_user.id),
     )
 
     # Get total count with the same filters
