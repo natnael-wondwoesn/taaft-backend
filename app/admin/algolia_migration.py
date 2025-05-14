@@ -1,15 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body, BackgroundTasks
-from typing import List, Dict, Any, Optional
+from fastapi import APIRouter, Depends, status, BackgroundTasks
+from typing import Dict, Any
+from datetime import datetime
+
 from ..auth.dependencies import get_admin_user
 from ..models.user import UserInDB
-from ..database import database
 from ..logger import logger
-import datetime
-from bson import ObjectId
 
-router = APIRouter(prefix="/admin", tags=["admin"])
-
-# ... existing code ...
+router = APIRouter(tags=["admin"])
 
 
 @router.post("/migrate-tools-to-algolia", status_code=status.HTTP_202_ACCEPTED)
@@ -35,5 +32,5 @@ async def migrate_tools_to_algolia(
         "status": "accepted",
         "message": "Migration process started in the background",
         "initiated_by": current_user.email,
-        "timestamp": datetime.datetime.utcnow(),
+        "timestamp": datetime.utcnow(),
     }
