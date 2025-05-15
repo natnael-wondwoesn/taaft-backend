@@ -5,7 +5,8 @@ import os
 
 from ..auth.dependencies import get_admin_user
 from ..models.user import UserInDB
-from ..logger import logger
+
+# from ..logger import logger
 
 router = APIRouter(tags=["admin"])
 
@@ -37,7 +38,7 @@ async def migrate_tools_to_algolia(
     background_tasks.add_task(run_migration)
 
     # Log the migration request
-    logger.info(f"Tools to Algolia migration started by admin: {current_user.email}")
+    # logger.info(f"Tools to Algolia migration started by admin: {current_user.email}")
 
     return {
         "status": "accepted",
