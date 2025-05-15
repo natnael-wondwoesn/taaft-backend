@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, status, BackgroundTasks
+from fastapi import APIRouter, Depends, status, BackgroundTasks, HTTPException
 from typing import Dict, Any
 from datetime import datetime
+import os
 
 from ..auth.dependencies import get_admin_user
 from ..models.user import UserInDB
@@ -19,6 +20,16 @@ async def migrate_tools_to_algolia(
     This endpoint is only accessible to admin users.
     The migration is executed as a background task.
     """
+    # Check for required environment variables before starting
+    required_vars = ["ALGOLIA_APP_ID", "ALGOLIA_ADMIN_KEY", "MONGODB_URL"]
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+
+    if missing_vars:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Migration cannot start: Missing environment variables: {', '.join(missing_vars)}. Please configure these in your environment.",
+        )
+
     # Import the migration function
     from app.algolia.migrater.tools_to_algolia import main as run_migration
 
