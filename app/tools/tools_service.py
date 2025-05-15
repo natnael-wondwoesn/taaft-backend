@@ -326,7 +326,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             updated_at=tool.get("updated_at") or datetime.utcnow(),
             category=tool.get("category"),
             features=tool.get("features"),
-            is_featured=tool.get("is_featured", False),
+            is_featured=tool.get("is_featured"),
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
             categories=tool.get("categories"),

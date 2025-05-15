@@ -477,13 +477,13 @@ class AlgoliaSearch:
                         saved_numbers=getattr(hit, "saved_numbers", None),
                         category=getattr(hit, "category", None),
                         features=getattr(hit, "features", None),
-                        is_featured=getattr(hit, "is_featured", None),
+                        is_featured=getattr(hit, "is_featured", False),
                         keywords=getattr(hit, "keywords", None),
                         categories=getattr(hit, "categories", None),
                         logo_url=getattr(hit, "logo_url", None),
                         user_reviews=getattr(hit, "user_reviews", None),
                         feature_list=getattr(hit, "feature_list", None),
-                        referral_allow=getattr(hit, "referral_allow", None),
+                        referral_allow=getattr(hit, "referral_allow", False),
                         generated_description=getattr(
                             hit, "generated_description", None
                         ),
