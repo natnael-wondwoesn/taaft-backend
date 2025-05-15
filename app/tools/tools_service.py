@@ -326,14 +326,14 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             updated_at=tool.get("updated_at") or datetime.utcnow(),
             category=tool.get("category"),
             features=tool.get("features"),
-            is_featured=tool.get("is_featured"),
+            is_featured=tool.get("is_featured", False),
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
             categories=tool.get("categories"),
             logo_url=tool.get("logo_url", ""),
             user_reviews=tool.get("user_reviews"),
             feature_list=tool.get("feature_list"),
-            referral_allow=tool.get("referral_allow"),
+            referral_allow=tool.get("referral_allow", False),
             generated_description=tool.get("generated_description"),
             industry=tool.get("industry"),
             image_url=tool.get("image_url"),

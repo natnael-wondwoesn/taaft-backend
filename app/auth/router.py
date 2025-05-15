@@ -587,57 +587,57 @@ async def resend_verification_email(
     }
 
 
-@router.get("/saved-tools", response_model=List[str])
-async def get_saved_tools(token: str = Depends(oauth2_scheme)):
-    """Get the user's saved tools directly from the token."""
-    token_data = decode_token(token)
-    if token_data is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+# @router.get("/saved-tools", response_model=List[str])
+# async def get_saved_tools(token: str = Depends(oauth2_scheme)):
+#     """Get the user's saved tools directly from the token."""
+#     token_data = decode_token(token)
+#     if token_data is None:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Could not validate credentials",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
 
-    return token_data.saved_tools
+#     return token_data.saved_tools
 
 
-@router.post("/update-saved-tools", response_model=Dict[str, str])
-async def update_saved_tools(
-    tools: List[str] = Body(...), current_user: UserInDB = Depends(get_current_user)
-):
-    """Update the user's saved tools and return new tokens with updated data."""
+# @router.post("/update-saved-tools", response_model=Dict[str, str])
+# async def update_saved_tools(
+#     tools: List[str] = Body(...), current_user: UserInDB = Depends(get_current_user)
+# ):
+#     """Update the user's saved tools and return new tokens with updated data."""
 
-    # Update saved tools in a separate collection
-    await database.user_saved_tools.update_one(
-        {"user_id": current_user.id},
-        {
-            "$set": {
-                "tools": tools,
-                "updated_at": datetime.datetime.utcnow(),
-            }
-        },
-        upsert=True,
-    )
+#     # Update saved tools in a separate collection
+#     await database.user_saved_tools.update_one(
+#         {"user_id": current_user.id},
+#         {
+#             "$set": {
+#                 "tools": tools,
+#                 "updated_at": datetime.datetime.utcnow(),
+#             }
+#         },
+#         upsert=True,
+#     )
 
-    # Create new token data with updated saved tools
-    token_data = {
-        "sub": str(current_user.id),
-        "service_tier": current_user.service_tier,
-        "is_verified": current_user.is_verified,
-        "saved_tools": tools,
-    }
+#     # Create new token data with updated saved tools
+#     token_data = {
+#         "sub": str(current_user.id),
+#         "service_tier": current_user.service_tier,
+#         "is_verified": current_user.is_verified,
+#         "saved_tools": tools,
+#     }
 
-    # Create new access and refresh tokens
-    access_token = create_access_token(data=token_data)
-    refresh_token = create_refresh_token(data=token_data)
+#     # Create new access and refresh tokens
+#     access_token = create_access_token(data=token_data)
+#     refresh_token = create_refresh_token(data=token_data)
 
-    logger.info(f"User {current_user.email} updated saved tools")
+#     logger.info(f"User {current_user.email} updated saved tools")
 
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer",
-    }
+#     return {
+#         "access_token": access_token,
+#         "refresh_token": refresh_token,
+#         "token_type": "bearer",
+#     }
 
 
 @router.post("/update-profile", response_model=UserResponse)
