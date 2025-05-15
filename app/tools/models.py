@@ -46,7 +46,7 @@ class ToolBase(BaseModel):
     categories: Optional[List[Dict[str, Any]]] = None
 
     # New Fields
-    logo_url: str
+    logo_url: Optional[str] = ""
     user_reviews: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None
     feature_list: Optional[List[str]] = []
     referral_allow: Optional[bool] = False

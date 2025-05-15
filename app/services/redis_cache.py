@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Dict, Type
 import redis
 from ..logger import logger
 from functools import wraps
@@ -80,6 +80,45 @@ def serialize_for_cache(obj: Any) -> str:
         return json.dumps(str(obj))
 
 
+def deserialize_from_cache(data: str, return_type_hint: Optional[Type] = None) -> Any:
+    """
+    Deserialize data from cache, reconstructing Pydantic models if needed
+
+    Args:
+        data: The JSON string from cache
+        return_type_hint: Optional type hint for the return value
+
+    Returns:
+        Deserialized object, possibly reconstructed as a Pydantic model
+    """
+    try:
+        # First parse the JSON
+        parsed_data = json.loads(data)
+
+        # If we have a type hint and it's a Pydantic model, try to reconstruct it
+        if return_type_hint and issubclass(return_type_hint, BaseModel):
+            # Handle list of models
+            if (
+                isinstance(parsed_data, list)
+                and hasattr(return_type_hint, "__origin__")
+                and return_type_hint.__origin__ is list
+            ):
+                # Get the type of items in the list
+                item_type = return_type_hint.__args__[0]
+                if issubclass(item_type, BaseModel):
+                    return [item_type(**item) for item in parsed_data]
+
+            # Handle single model
+            return return_type_hint(**parsed_data)
+
+        # For other types, return the parsed data as is
+        return parsed_data
+    except Exception as e:
+        logger.error(f"Error deserializing from cache: {str(e)}")
+        # Return the parsed data as is if reconstruction fails
+        return json.loads(data)
+
+
 def redis_cache(prefix: str, ttl: int = REDIS_CACHE_TTL):
     """
     Decorator to cache function results in Redis
@@ -104,9 +143,15 @@ def redis_cache(prefix: str, ttl: int = REDIS_CACHE_TTL):
 
             if cached_result:
                 try:
-                    # Return cached result if available
+                    # Get return type hint if available
+                    return_type_hint = None
+                    signature = inspect.signature(func)
+                    if signature.return_annotation != inspect.Signature.empty:
+                        return_type_hint = signature.return_annotation
+
+                    # Return cached result if available, properly deserialized
                     logger.info(f"Cache hit for {func.__name__} with key {cache_key}")
-                    return json.loads(cached_result)
+                    return deserialize_from_cache(cached_result, return_type_hint)
                 except json.JSONDecodeError:
                     logger.error(f"Failed to decode cached result for {cache_key}")
 

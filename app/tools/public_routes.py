@@ -71,15 +71,6 @@ async def list_public_tools(
     # Get total count with the same filters
     total = await get_tools(count_only=True, filters=filters if filters else None)
 
-    # Convert cached dict responses to ToolResponse objects if needed
-    if (
-        tools_list
-        and isinstance(tools_list, list)
-        and len(tools_list) > 0
-        and isinstance(tools_list[0], dict)
-    ):
-        tools_list = [ToolResponse(**tool) for tool in tools_list]
-
     return {"tools": tools_list, "total": total, "skip": skip, "limit": limit}
 
 
@@ -134,15 +125,6 @@ async def get_featured_tools(
         # Use search_tools, then filter for featured tools in memory
         search_results = await search_tools(query=search, skip=0, limit=1000)
 
-        # Convert cached dict responses to ToolResponse objects if needed
-        if (
-            search_results
-            and isinstance(search_results, list)
-            and len(search_results) > 0
-            and isinstance(search_results[0], dict)
-        ):
-            search_results = [ToolResponse(**tool) for tool in search_results]
-
         # Filter to only include featured tools
         filtered_tools = [tool for tool in search_results if tool.is_featured]
 
@@ -168,15 +150,6 @@ async def get_featured_tools(
             sort_by=sort_by,
             sort_order=sort_order,
         )
-
-        # Convert cached dict responses to ToolResponse objects if needed
-        if (
-            tools
-            and isinstance(tools, list)
-            and len(tools) > 0
-            and isinstance(tools[0], dict)
-        ):
-            tools = [ToolResponse(**tool) for tool in tools]
 
         total = await get_tools(count_only=True, filters=filters)
 
@@ -239,15 +212,6 @@ async def get_sponsored_tools(
         # Use search_tools, then filter for featured tools in memory
         search_results = await search_tools(query=search, skip=0, limit=1000)
 
-        # Convert cached dict responses to ToolResponse objects if needed
-        if (
-            search_results
-            and isinstance(search_results, list)
-            and len(search_results) > 0
-            and isinstance(search_results[0], dict)
-        ):
-            search_results = [ToolResponse(**tool) for tool in search_results]
-
         # Filter to only include featured tools
         filtered_tools = [tool for tool in search_results if tool.is_featured]
 
@@ -273,15 +237,6 @@ async def get_sponsored_tools(
             sort_by=sort_by,
             sort_order=sort_order,
         )
-
-        # Convert cached dict responses to ToolResponse objects if needed
-        if (
-            tools
-            and isinstance(tools, list)
-            and len(tools) > 0
-            and isinstance(tools[0], dict)
-        ):
-            tools = [ToolResponse(**tool) for tool in tools]
 
         total = await get_tools(count_only=True, filters=filters)
 

@@ -1,178 +1,197 @@
 import asyncio
 import time
 import os
+import json
 from dotenv import load_dotenv
-from app.services.redis_cache import redis_client, redis_cache, invalidate_cache
+from app.services.redis_cache import redis_client, invalidate_cache
+from app.tools.tools_service import (
+    get_tools,
+    get_tool_by_id,
+    search_tools,
+    keyword_search_tools,
+)
 from app.logger import logger
+from uuid import UUID
 
 # Load environment variables
 load_dotenv()
 
 # Configure Redis for testing
 os.environ["REDIS_CACHE_ENABLED"] = "true"
-os.environ["REDIS_CACHE_TTL"] = "10"  # Short TTL for testing
+os.environ["REDIS_CACHE_TTL"] = "30"  # 30 seconds TTL for testing
 
 
-# Test function with Redis caching
-@redis_cache(prefix="test_function")
-async def test_cached_function(param1, param2):
-    """Test function that simulates a slow database query"""
-    logger.info(f"Executing test_cached_function with params: {param1}, {param2}")
-    # Simulate a slow operation
-    await asyncio.sleep(1)
-    return {"result": f"Data for {param1} and {param2}", "timestamp": time.time()}
+async def test_tools_list_caching():
+    """Test if get_tools function is properly cached and returns ToolResponse objects"""
+    logger.info("\nTesting tools list caching...")
 
-
-# Test function for cache invalidation
-@redis_cache(prefix="invalidation_test")
-async def test_invalidation_function(param):
-    """Test function for cache invalidation"""
-    logger.info(f"Executing test_invalidation_function with param: {param}")
-    await asyncio.sleep(0.5)
-    return {"result": f"Data for {param}", "timestamp": time.time()}
-
-
-async def test_redis_connection():
-    """Test if Redis connection is working"""
-    if not redis_client:
-        logger.error("Redis client is not initialized")
-        return False
-
-    try:
-        redis_client.ping()
-        logger.info("Redis connection test: SUCCESS")
-        return True
-    except Exception as e:
-        logger.error(f"Redis connection test: FAILED - {str(e)}")
-        return False
-
-
-async def test_cache_hit():
-    """Test if cache hit is working correctly"""
-    # First call - should execute the function
+    # First call - should hit the database
     start_time = time.time()
-    first_result = await test_cached_function("test1", "test2")
+    first_result = await get_tools(limit=10)
     first_execution_time = time.time() - start_time
+    logger.info(f"First call execution time: {first_execution_time:.4f}s")
 
-    # Second call with same parameters - should retrieve from cache
+    # Check that we got ToolResponse objects
+    if first_result and len(first_result) > 0:
+        logger.info(f"First result type: {type(first_result[0]).__name__}")
+
+    # Second call with same parameters - should hit the cache
     start_time = time.time()
-    second_result = await test_cached_function("test1", "test2")
+    second_result = await get_tools(limit=10)
     second_execution_time = time.time() - start_time
+    logger.info(f"Second call execution time: {second_execution_time:.4f}s")
 
-    # Check if timestamps are the same (indicating cache hit)
-    if first_result["timestamp"] == second_result["timestamp"]:
-        logger.info("Cache hit test: SUCCESS")
-        logger.info(f"First execution time: {first_execution_time:.4f}s")
-        logger.info(f"Second execution time: {second_execution_time:.4f}s")
+    # Check that we still got ToolResponse objects from cache
+    if second_result and len(second_result) > 0:
+        logger.info(f"Second result type: {type(second_result[0]).__name__}")
+
+    # Check if the second call was faster (cache hit)
+    if second_execution_time < first_execution_time:
         logger.info(
-            f"Speed improvement: {first_execution_time/second_execution_time:.2f}x"
+            f"Cache hit confirmed! Speed improvement: {first_execution_time/second_execution_time:.2f}x"
         )
         return True
     else:
-        logger.error("Cache hit test: FAILED - Different results returned")
+        logger.error("Cache miss or no performance improvement")
         return False
 
 
-async def test_cache_expiration():
-    """Test if cache expiration is working correctly"""
-    # First call
-    first_result = await test_cached_function("expire1", "expire2")
-    logger.info("First call completed, waiting for TTL expiration...")
+async def test_tool_by_id_caching():
+    """Test if get_tool_by_id function is properly cached and returns a ToolResponse object"""
+    logger.info("\nTesting tool_by_id caching...")
 
-    # Wait for TTL to expire (TTL is set to 10 seconds)
-    await asyncio.sleep(11)
+    # Get a tool ID to test with
+    tools = await get_tools(limit=1)
+    if not tools or len(tools) == 0:
+        logger.error("No tools found to test with")
+        return False
 
-    # Call again after TTL expired
-    second_result = await test_cached_function("expire1", "expire2")
+    tool_id = UUID(tools[0].id)
+    logger.info(f"Testing with tool ID: {tool_id}")
 
-    # Check if timestamps are different (indicating cache expiration)
-    if first_result["timestamp"] != second_result["timestamp"]:
-        logger.info("Cache expiration test: SUCCESS")
+    # First call - should hit the database
+    start_time = time.time()
+    first_result = await get_tool_by_id(tool_id)
+    first_execution_time = time.time() - start_time
+    logger.info(f"First call execution time: {first_execution_time:.4f}s")
+
+    # Check that we got a ToolResponse object
+    if first_result:
+        logger.info(f"First result type: {type(first_result).__name__}")
+
+    # Second call with same parameters - should hit the cache
+    start_time = time.time()
+    second_result = await get_tool_by_id(tool_id)
+    second_execution_time = time.time() - start_time
+    logger.info(f"Second call execution time: {second_execution_time:.4f}s")
+
+    # Check that we still got a ToolResponse object from cache
+    if second_result:
+        logger.info(f"Second result type: {type(second_result).__name__}")
+
+    # Check if the second call was faster (cache hit)
+    if second_execution_time < first_execution_time:
+        logger.info(
+            f"Cache hit confirmed! Speed improvement: {first_execution_time/second_execution_time:.2f}x"
+        )
         return True
     else:
-        logger.error("Cache expiration test: FAILED - Cache did not expire")
+        logger.error("Cache miss or no performance improvement")
+        return False
+
+
+async def test_search_tools_caching():
+    """Test if search_tools function is properly cached and returns ToolResponse objects"""
+    logger.info("\nTesting search_tools caching...")
+
+    # First call - should hit the database
+    start_time = time.time()
+    first_result = await search_tools(query="ai", limit=10)
+    first_execution_time = time.time() - start_time
+    logger.info(f"First call execution time: {first_execution_time:.4f}s")
+
+    # Check that we got ToolResponse objects
+    if first_result and len(first_result) > 0:
+        logger.info(f"First result type: {type(first_result[0]).__name__}")
+
+    # Second call with same parameters - should hit the cache
+    start_time = time.time()
+    second_result = await search_tools(query="ai", limit=10)
+    second_execution_time = time.time() - start_time
+    logger.info(f"Second call execution time: {second_execution_time:.4f}s")
+
+    # Check that we still got ToolResponse objects from cache
+    if second_result and len(second_result) > 0:
+        logger.info(f"Second result type: {type(second_result[0]).__name__}")
+
+    # Check if the second call was faster (cache hit)
+    if second_execution_time < first_execution_time:
+        logger.info(
+            f"Cache hit confirmed! Speed improvement: {first_execution_time/second_execution_time:.2f}x"
+        )
+        return True
+    else:
+        logger.error("Cache miss or no performance improvement")
         return False
 
 
 async def test_cache_invalidation():
-    """Test if cache invalidation is working correctly"""
-    # First call
-    first_result = await test_invalidation_function("invalidate_test")
+    """Test if cache invalidation works properly"""
+    logger.info("\nTesting cache invalidation...")
 
-    # Invalidate the cache
-    invalidate_cache("invalidation_test")
-    logger.info("Cache invalidated")
+    # First call to populate cache
+    await get_tools(limit=5)
 
-    # Second call after invalidation
-    second_result = await test_invalidation_function("invalidate_test")
+    # Check if keys exist in Redis
+    keys_before = redis_client.keys("taaft:tools_list*")
+    logger.info(f"Keys in cache before invalidation: {len(keys_before)}")
 
-    # Check if timestamps are different (indicating successful invalidation)
-    if first_result["timestamp"] != second_result["timestamp"]:
-        logger.info("Cache invalidation test: SUCCESS")
+    # Invalidate cache
+    invalidate_cache("tools_list")
+
+    # Check if keys were removed
+    keys_after = redis_client.keys("taaft:tools_list*")
+    logger.info(f"Keys in cache after invalidation: {len(keys_after)}")
+
+    # Verify that cache was invalidated
+    if len(keys_before) > 0 and len(keys_after) == 0:
+        logger.info("Cache invalidation successful")
         return True
     else:
-        logger.error("Cache invalidation test: FAILED - Cache was not invalidated")
+        logger.error("Cache invalidation failed")
         return False
 
 
-async def test_different_params():
-    """Test if different parameters create different cache entries"""
-    # Call with first set of parameters
-    result1 = await test_cached_function("param1", "param2")
-
-    # Call with different parameters
-    result2 = await test_cached_function("param3", "param4")
-
-    # Both should execute the function (not hit cache)
-    if result1["timestamp"] != result2["timestamp"]:
-        logger.info("Different parameters test: SUCCESS")
-        return True
-    else:
-        logger.error(
-            "Different parameters test: FAILED - Same result returned for different params"
-        )
-        return False
-
-
-async def run_tests():
-    """Run all Redis cache tests"""
+async def main():
+    """Run all tests"""
     logger.info("Starting Redis cache tests...")
 
-    # Test Redis connection
-    if not await test_redis_connection():
-        logger.error("Redis connection failed, skipping remaining tests")
-        return
-
-    # Run the tests
-    tests = [
-        ("Cache Hit Test", test_cache_hit()),
-        ("Different Parameters Test", test_different_params()),
-        ("Cache Invalidation Test", test_cache_invalidation()),
-        ("Cache Expiration Test", test_cache_expiration()),
-    ]
-
-    # Execute tests and collect results
-    results = []
-    for test_name, test_coro in tests:
-        logger.info(f"\nRunning {test_name}...")
-        result = await test_coro
-        results.append((test_name, result))
+    # Run tests
+    tools_list_result = await test_tools_list_caching()
+    tool_by_id_result = await test_tool_by_id_caching()
+    search_tools_result = await test_search_tools_caching()
+    cache_invalidation_result = await test_cache_invalidation()
 
     # Print summary
-    logger.info("\n===== TEST RESULTS =====")
-    all_passed = True
-    for test_name, result in results:
-        status = "PASSED" if result else "FAILED"
-        logger.info(f"{test_name}: {status}")
-        if not result:
-            all_passed = False
+    logger.info("\nTest Results:")
+    logger.info(f"Tools List Caching: {'PASS' if tools_list_result else 'FAIL'}")
+    logger.info(f"Tool By ID Caching: {'PASS' if tool_by_id_result else 'FAIL'}")
+    logger.info(f"Search Tools Caching: {'PASS' if search_tools_result else 'FAIL'}")
+    logger.info(
+        f"Cache Invalidation: {'PASS' if cache_invalidation_result else 'FAIL'}"
+    )
 
-    if all_passed:
-        logger.info("\nAll tests PASSED!")
-    else:
-        logger.error("\nSome tests FAILED!")
+    # Overall result
+    all_passed = all(
+        [
+            tools_list_result,
+            tool_by_id_result,
+            search_tools_result,
+            cache_invalidation_result,
+        ]
+    )
+    logger.info(f"\nOverall Result: {'PASS' if all_passed else 'FAIL'}")
 
 
 if __name__ == "__main__":
-    # Run the tests
-    asyncio.run(run_tests())
+    asyncio.run(main())

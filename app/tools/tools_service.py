@@ -314,6 +314,11 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             # Add the keywords to the response
             tool["keywords"] = keywords
 
+        # Ensure logo_url is a string
+        logo_url = tool.get("logo_url")
+        if logo_url is None:
+            logo_url = ""
+
         return ToolResponse(
             id=tool_id,  # Use the determined ID (valid UUID string)
             price=tool.get("price") or "",
@@ -331,7 +336,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
             categories=tool.get("categories"),
-            logo_url=tool.get("logo_url", "None"),
+            logo_url=logo_url,
             user_reviews=tool.get("user_reviews"),
             feature_list=tool.get("feature_list"),
             referral_allow=tool.get("referral_allow", False),
@@ -504,9 +509,9 @@ async def get_tools(
 
     # Convert to dict for proper serialization in cache
     if not count_only:
-        tools_list = [tool.model_dump() for tool in tools_list]
+        return tools_list
 
-    return tools_list
+    # return tools_list
 
 
 @redis_cache(prefix="tool_by_id")
@@ -554,10 +559,7 @@ async def get_tool_by_id(
                 f"Tool saved status from favorites: {tool_response.saved_by_user}"
             )
 
-    # Convert to dict for proper serialization in cache
-    if tool_response:
-        return tool_response.model_dump()
-    return None
+    return tool_response
 
 
 @redis_cache(prefix="tool_by_unique_id")
@@ -602,10 +604,7 @@ async def get_tool_by_unique_id(
                 f"Tool {unique_id} saved status from favorites: {tool_response.saved_by_user}"
             )
 
-    # Convert to dict for proper serialization in cache
-    if tool_response:
-        return tool_response.model_dump()
-    return None
+    return tool_response
 
 
 async def create_tool(tool_data: ToolCreate) -> ToolResponse:
@@ -992,8 +991,6 @@ async def search_tools(
                         )
                     tools_list.append(tool_response)
 
-            # Convert to dict for proper serialization in cache
-            tools_list = [tool.model_dump() for tool in tools_list]
             return tools_list
         except Exception as e:
             # Log the error and fall back to MongoDB
@@ -1040,8 +1037,6 @@ async def search_tools(
                 )
             tools_list.append(tool_response)
 
-    # Convert to dict for proper serialization in cache
-    tools_list = [tool.model_dump() for tool in tools_list]
     return tools_list
 
 
@@ -1287,8 +1282,6 @@ async def keyword_search_tools(
                 )
             tools_list.append(tool_response)
 
-    # Convert to dict for proper serialization in cache
-    tools_list = [tool.model_dump() for tool in tools_list]
     return tools_list
 
 
@@ -1328,14 +1321,7 @@ async def get_tool_with_favorite_status(
         f"Tool {tool_unique_id} favorite status for user {user_id}: favorite={favorite is not None}, saved_in_user={saved_in_user}"
     )
 
-    # If tool is already a dict (from cache), convert it to ToolResponse
-    if isinstance(tool, dict):
-        tool_dict = tool
-    else:
-        # Convert to dict to modify
-        tool_dict = tool.model_dump()
+    # Update the saved_by_user field
+    tool.saved_by_user = favorite is not None or saved_in_user
 
-    tool_dict["saved_by_user"] = favorite is not None or saved_in_user
-
-    # Return the dict for proper serialization in cache
-    return tool_dict
+    return tool
