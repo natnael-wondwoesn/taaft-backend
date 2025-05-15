@@ -21,7 +21,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from algoliasearch.search.client import SearchClientSync as SearchClient
 from pymongo import MongoClient
-from logger import logger
+from ...logger import logger
 
 # Load environment variables
 load_dotenv()
