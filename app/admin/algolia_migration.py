@@ -18,7 +18,7 @@ async def migrate_tools_to_algolia(
     """
     Migrate tools from MongoDB to Algolia index.
     This endpoint is only accessible to admin users.
-    The migration is executed as a background task.
+    The migration is executed as a background d.
     """
     # Check for required environment variables before starting
     required_vars = ["ALGOLIA_APP_ID", "ALGOLIA_ADMIN_KEY", "MONGODB_URL"]
