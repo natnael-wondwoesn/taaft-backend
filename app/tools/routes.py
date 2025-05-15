@@ -26,7 +26,7 @@ router = APIRouter(prefix="/tools", tags=["tools"])
 @router.get("/", response_model=PaginatedToolsResponse)
 async def list_tools(
     skip: int = Query(0, ge=0),
-    limit: int = Query(500, ge=1, le=1000),
+    limit: int = Query(500, ge=1, le=10000),
     category: Optional[str] = Query(None, description="Filter by category"),
     is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),

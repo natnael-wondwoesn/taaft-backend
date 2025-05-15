@@ -36,6 +36,9 @@ from .algolia.models import (
     PricingType,
 )
 
+# Import Redis cache service
+from .services.redis_cache import redis_client, REDIS_CACHE_ENABLED
+
 # Import the chat router
 from .chat import router as chat_router
 
@@ -109,6 +112,12 @@ async def lifespan(app: FastAPI):
             logger.info("Setting up database...")
             await setup_database()
             logger.info("Database setup completed")
+
+            # Check Redis connection
+            if REDIS_CACHE_ENABLED and redis_client:
+                logger.info("Redis cache is enabled and connected")
+            else:
+                logger.warning("Redis cache is disabled or not connected")
 
             # Seed glossary terms
             logger.info("Seeding glossary terms...")

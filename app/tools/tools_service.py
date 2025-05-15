@@ -10,6 +10,7 @@ from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
 from ..categories.service import categories_service
 from collections import Counter
+from ..services.redis_cache import redis_cache, invalidate_cache
 
 from ..logger import logger
 
@@ -330,7 +331,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             saved_by_user=False,  # Default value, will be set per-user when implemented
             keywords=tool.get("keywords", []),  # Include keywords in the response
             categories=tool.get("categories"),
-            logo_url=tool.get("logo_url", ""),
+            logo_url=tool.get("logo_url", "None"),
             user_reviews=tool.get("user_reviews"),
             feature_list=tool.get("feature_list"),
             referral_allow=tool.get("referral_allow", False),
@@ -343,6 +344,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
         return None
 
 
+@redis_cache(prefix="tools_list")
 async def get_tools(
     skip: int = 0,
     limit: int = 100,
@@ -353,19 +355,19 @@ async def get_tools(
     user_id: Optional[str] = None,
 ) -> Union[List[ToolResponse], int]:
     """
-    Get tools with pagination, filtering and sorting.
+    Get a list of tools with pagination, filtering and sorting.
 
     Args:
         skip: Number of items to skip
         limit: Maximum number of items to return
-        count_only: Return only the count
-        filters: Additional filters to apply
+        count_only: If True, return only the count of items
+        filters: Dictionary of filters to apply
         sort_by: Field to sort by
-        sort_order: Sort order (asc or desc)
-        user_id: ID of the user, used to check if tools are in user's favorites
+        sort_order: Sort order ('asc' or 'desc')
+        user_id: Optional user ID to check favorite status
 
     Returns:
-        List of tools or count
+        List of tools or count of tools
     """
     # Build the query
     query = {}
@@ -498,26 +500,28 @@ async def get_tools(
             if user_id and not count_only:
                 unique_id = str(tool.get("unique_id", ""))
                 tool_response.saved_by_user = unique_id in saved_tools_list
-                # logger.info(
-                #     f"Tool {unique_id} saved status: {tool_response.saved_by_user}"
-                # )
             tools_list.append(tool_response)
+
+    # Convert to dict for proper serialization in cache
+    if not count_only:
+        tools_list = [tool.model_dump() for tool in tools_list]
 
     return tools_list
 
 
+@redis_cache(prefix="tool_by_id")
 async def get_tool_by_id(
     tool_id: UUID, user_id: Optional[str] = None
 ) -> Optional[ToolResponse]:
     """
-    Get a tool by UUID.
+    Get a tool by its UUID.
 
     Args:
-        tool_id: The UUID of the tool to retrieve
-        user_id: Optional ID of the user, to check if tool is saved
+        tool_id: The UUID of the tool
+        user_id: Optional user ID to check favorite status
 
     Returns:
-        Tool if found, None otherwise
+        Tool object or None if not found
     """
     tool = await tools.find_one({"id": str(tool_id)})
     if not tool:
@@ -550,9 +554,13 @@ async def get_tool_by_id(
                 f"Tool saved status from favorites: {tool_response.saved_by_user}"
             )
 
-    return tool_response
+    # Convert to dict for proper serialization in cache
+    if tool_response:
+        return tool_response.model_dump()
+    return None
 
 
+@redis_cache(prefix="tool_by_unique_id")
 async def get_tool_by_unique_id(
     unique_id: str, user_id: Optional[str] = None
 ) -> Optional[ToolResponse]:
@@ -560,11 +568,11 @@ async def get_tool_by_unique_id(
     Get a tool by its unique_id.
 
     Args:
-        unique_id: The unique_id of the tool to retrieve
-        user_id: Optional ID of the user, to check if tool is saved
+        unique_id: The unique_id of the tool
+        user_id: Optional user ID to check favorite status
 
     Returns:
-        Tool if found, None otherwise
+        Tool object or None if not found
     """
     tool = await tools.find_one({"unique_id": unique_id})
     if not tool:
@@ -594,12 +602,21 @@ async def get_tool_by_unique_id(
                 f"Tool {unique_id} saved status from favorites: {tool_response.saved_by_user}"
             )
 
-    return tool_response
+    # Convert to dict for proper serialization in cache
+    if tool_response:
+        return tool_response.model_dump()
+    return None
 
 
 async def create_tool(tool_data: ToolCreate) -> ToolResponse:
     """
     Create a new tool.
+
+    Args:
+        tool_data: The data for the tool to create
+
+    Returns:
+        The created tool
     """
     try:
         # Check if a tool with the unique_id already exists
@@ -694,17 +711,27 @@ async def create_tool(tool_data: ToolCreate) -> ToolResponse:
             raise HTTPException(
                 status_code=500, detail="Failed to create tool response"
             )
+
+        # Invalidate cache after creating a new tool
+        invalidate_cache("tools_list")
+
         return tool_response
     except Exception as e:
         # Log the error for debugging
-
         logger.error(f"Tool creation error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to create tool: {str(e)}")
 
 
 async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolResponse]:
     """
-    Update a tool by UUID.
+    Update a tool.
+
+    Args:
+        tool_id: The UUID of the tool to update
+        tool_update: The data to update
+
+    Returns:
+        The updated tool or None if not found
     """
     # Check if the tool exists
     existing_tool = await tools.find_one({"id": str(tool_id)})
@@ -823,13 +850,23 @@ async def update_tool(tool_id: UUID, tool_update: ToolUpdate) -> Optional[ToolRe
     # Update in Algolia
     await algolia_indexer.index_tool(updated_tool)
 
-    # Create and return the response
+    # Invalidate caches after updating a tool
+    invalidate_cache("tools_list")
+    invalidate_cache("tool_by_id")
+    invalidate_cache("tool_by_unique_id")
+
     return await create_tool_response(updated_tool)
 
 
 async def delete_tool(tool_id: UUID) -> bool:
     """
-    Delete a tool by UUID.
+    Delete a tool.
+
+    Args:
+        tool_id: The UUID of the tool to delete
+
+    Returns:
+        True if deleted, False otherwise
     """
     # Check if the tool exists
     existing_tool = await tools.find_one({"id": str(tool_id)})
@@ -842,9 +879,15 @@ async def delete_tool(tool_id: UUID) -> bool:
     # Delete from MongoDB
     result = await tools.delete_one({"id": str(tool_id)})
 
+    # Invalidate caches after deleting a tool
+    invalidate_cache("tools_list")
+    invalidate_cache("tool_by_id")
+    invalidate_cache("tool_by_unique_id")
+
     return result.deleted_count > 0
 
 
+@redis_cache(prefix="search_tools")
 async def search_tools(
     query: str,
     skip: int = 0,
@@ -859,11 +902,11 @@ async def search_tools(
         query: The search query
         skip: Number of items to skip
         limit: Maximum number of items to return
-        count_only: Return only the count
-        user_id: ID of the user, used to check if tools are in user's favorites
+        count_only: If True, return only the count of items
+        user_id: Optional user ID to check favorite status
 
     Returns:
-        List of tools or count
+        List of tools or count of tools
     """
     from ..algolia.config import algolia_config
     from ..algolia.search import algolia_search
@@ -948,6 +991,9 @@ async def search_tools(
                             f"Tool {tool_unique_id} saved status (Algolia): {tool_response.saved_by_user}"
                         )
                     tools_list.append(tool_response)
+
+            # Convert to dict for proper serialization in cache
+            tools_list = [tool.model_dump() for tool in tools_list]
             return tools_list
         except Exception as e:
             # Log the error and fall back to MongoDB
@@ -994,9 +1040,12 @@ async def search_tools(
                 )
             tools_list.append(tool_response)
 
+    # Convert to dict for proper serialization in cache
+    tools_list = [tool.model_dump() for tool in tools_list]
     return tools_list
 
 
+@redis_cache(prefix="keywords")
 async def get_keywords(
     skip: int = 0,
     limit: int = 100,
@@ -1004,16 +1053,16 @@ async def get_keywords(
     sort_by_frequency: bool = True,
 ) -> List[Dict[str, Any]]:
     """
-    Retrieve keywords from the keywords collection.
+    Get a list of keywords with their frequency.
 
     Args:
-        skip: Number of items to skip for pagination
+        skip: Number of items to skip
         limit: Maximum number of items to return
-        min_frequency: Minimum frequency threshold for keywords
-        sort_by_frequency: Whether to sort by frequency (descending)
+        min_frequency: Minimum frequency to include
+        sort_by_frequency: Whether to sort by frequency
 
     Returns:
-        List of keyword documents with their associated tools and frequency
+        List of keywords with their frequency
     """
     query = {}
 
@@ -1049,10 +1098,10 @@ async def toggle_tool_featured_status(
 
     Args:
         tool_id: The UUID of the tool
-        is_featured: Boolean indicating whether the tool should be featured
+        is_featured: Whether the tool should be featured
 
     Returns:
-        Updated tool response or None if tool not found
+        The updated tool or None if not found
     """
     logger.info(f"Setting tool {tool_id} featured status to {is_featured}")
 
@@ -1087,6 +1136,10 @@ async def toggle_tool_featured_status(
         # Log the error but don't fail the request
         logger.error(f"Failed to update Algolia index: {str(e)}")
 
+    # Invalidate caches after toggling featured status
+    invalidate_cache("tools_list")
+    invalidate_cache("tool_by_id")
+
     # Return the updated tool as a ToolResponse
     return await create_tool_response(updated_tool)
 
@@ -1099,10 +1152,10 @@ async def toggle_tool_featured_status_by_unique_id(
 
     Args:
         unique_id: The unique_id of the tool
-        is_featured: Boolean indicating whether the tool should be featured
+        is_featured: Whether the tool should be featured
 
     Returns:
-        Updated tool response or None if tool not found
+        The updated tool or None if not found
     """
     logger.info(
         f"Setting tool with unique_id={unique_id} featured status to {is_featured}"
@@ -1147,10 +1200,15 @@ async def toggle_tool_featured_status_by_unique_id(
         # Log the error but don't fail the request
         logger.error(f"Failed to update Algolia index: {str(e)}")
 
+    # Invalidate caches after toggling featured status
+    invalidate_cache("tools_list")
+    invalidate_cache("tool_by_unique_id")
+
     # Return the updated tool as a ToolResponse
     return await create_tool_response(updated_tool)
 
 
+@redis_cache(prefix="keyword_search")
 async def keyword_search_tools(
     keywords: List[str],
     skip: int = 0,
@@ -1160,19 +1218,18 @@ async def keyword_search_tools(
     user_id: Optional[str] = None,
 ) -> Union[List[ToolResponse], int]:
     """
-    Search for tools by exact keywords match.
-    This function performs a direct MongoDB query without using LLM or Algolia.
+    Search for tools by keywords.
 
     Args:
-        keywords: List of search keywords
-        skip: Number of items to skip for pagination
+        keywords: List of keywords to search for
+        skip: Number of items to skip
         limit: Maximum number of items to return
-        count_only: Whether to return only the count of matching tools
-        filters: Additional filters to apply to the search query
-        user_id: Optional ID of the user, to check if tools are saved
+        count_only: If True, return only the count of items
+        filters: Dictionary of filters to apply
+        user_id: Optional user ID to check favorite status
 
     Returns:
-        Either a list of matching tools or the count of matching tools
+        List of tools or count of tools
     """
     # Create a query to find tools where any of the provided keywords match
     # Look in name, description, keywords array, and category fields
@@ -1230,21 +1287,24 @@ async def keyword_search_tools(
                 )
             tools_list.append(tool_response)
 
+    # Convert to dict for proper serialization in cache
+    tools_list = [tool.model_dump() for tool in tools_list]
     return tools_list
 
 
+@redis_cache(prefix="tool_with_favorite")
 async def get_tool_with_favorite_status(
     tool_unique_id: str, user_id: str
 ) -> Optional[ToolResponse]:
     """
-    Get a tool by ID and include whether it's favorited by the user.
+    Get a tool with its favorite status for a specific user.
 
     Args:
-        tool_unique_id: Unique ID of the tool
-        user_id: ID of the user
+        tool_unique_id: The unique_id of the tool
+        user_id: The ID of the user
 
     Returns:
-        Tool with favorite status if found, None otherwise
+        Tool object with favorite status or None if not found
     """
     tool = await get_tool_by_unique_id(tool_unique_id)
 
@@ -1268,9 +1328,14 @@ async def get_tool_with_favorite_status(
         f"Tool {tool_unique_id} favorite status for user {user_id}: favorite={favorite is not None}, saved_in_user={saved_in_user}"
     )
 
-    # Convert to dict to modify
-    tool_dict = tool.dict()
+    # If tool is already a dict (from cache), convert it to ToolResponse
+    if isinstance(tool, dict):
+        tool_dict = tool
+    else:
+        # Convert to dict to modify
+        tool_dict = tool.model_dump()
+
     tool_dict["saved_by_user"] = favorite is not None or saved_in_user
 
-    # Convert back to response model
-    return ToolResponse(**tool_dict)
+    # Return the dict for proper serialization in cache
+    return tool_dict

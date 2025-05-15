@@ -7,14 +7,16 @@ from typing import Optional, List
 
 from app.models.user import UserResponse
 
-from .models import PaginatedToolsResponse
+from .models import PaginatedToolsResponse, ToolResponse
 from .tools_service import get_tools, keyword_search_tools, search_tools
 from ..auth.dependencies import get_current_active_user, get_admin_user
+from ..services.redis_cache import redis_cache
 
 public_router = APIRouter(prefix="/public/tools", tags=["public_tools"])
 
 
 @public_router.get("/", response_model=PaginatedToolsResponse)
+@redis_cache(prefix="public_tools_list")
 async def list_public_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(500, ge=1, le=1000),
@@ -58,7 +60,7 @@ async def list_public_tools(
             sort_order = "desc"
 
     # Get the tools with filtering and sorting
-    tools = await get_tools(
+    tools_list = await get_tools(
         skip=skip,
         limit=limit,
         filters=filters if filters else None,
@@ -69,10 +71,20 @@ async def list_public_tools(
     # Get total count with the same filters
     total = await get_tools(count_only=True, filters=filters if filters else None)
 
-    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+    # Convert cached dict responses to ToolResponse objects if needed
+    if (
+        tools_list
+        and isinstance(tools_list, list)
+        and len(tools_list) > 0
+        and isinstance(tools_list[0], dict)
+    ):
+        tools_list = [ToolResponse(**tool) for tool in tools_list]
+
+    return {"tools": tools_list, "total": total, "skip": skip, "limit": limit}
 
 
 @public_router.get("/featured", response_model=PaginatedToolsResponse)
+@redis_cache(prefix="public_featured_tools")
 async def get_featured_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -122,6 +134,15 @@ async def get_featured_tools(
         # Use search_tools, then filter for featured tools in memory
         search_results = await search_tools(query=search, skip=0, limit=1000)
 
+        # Convert cached dict responses to ToolResponse objects if needed
+        if (
+            search_results
+            and isinstance(search_results, list)
+            and len(search_results) > 0
+            and isinstance(search_results[0], dict)
+        ):
+            search_results = [ToolResponse(**tool) for tool in search_results]
+
         # Filter to only include featured tools
         filtered_tools = [tool for tool in search_results if tool.is_featured]
 
@@ -147,6 +168,16 @@ async def get_featured_tools(
             sort_by=sort_by,
             sort_order=sort_order,
         )
+
+        # Convert cached dict responses to ToolResponse objects if needed
+        if (
+            tools
+            and isinstance(tools, list)
+            and len(tools) > 0
+            and isinstance(tools[0], dict)
+        ):
+            tools = [ToolResponse(**tool) for tool in tools]
+
         total = await get_tools(count_only=True, filters=filters)
 
     # Ensure tools is always a list, even if None is returned
@@ -157,6 +188,7 @@ async def get_featured_tools(
 
 
 @public_router.get("/sponsored", response_model=PaginatedToolsResponse)
+@redis_cache(prefix="public_sponsored_tools")
 async def get_sponsored_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -207,6 +239,15 @@ async def get_sponsored_tools(
         # Use search_tools, then filter for featured tools in memory
         search_results = await search_tools(query=search, skip=0, limit=1000)
 
+        # Convert cached dict responses to ToolResponse objects if needed
+        if (
+            search_results
+            and isinstance(search_results, list)
+            and len(search_results) > 0
+            and isinstance(search_results[0], dict)
+        ):
+            search_results = [ToolResponse(**tool) for tool in search_results]
+
         # Filter to only include featured tools
         filtered_tools = [tool for tool in search_results if tool.is_featured]
 
@@ -232,6 +273,16 @@ async def get_sponsored_tools(
             sort_by=sort_by,
             sort_order=sort_order,
         )
+
+        # Convert cached dict responses to ToolResponse objects if needed
+        if (
+            tools
+            and isinstance(tools, list)
+            and len(tools) > 0
+            and isinstance(tools[0], dict)
+        ):
+            tools = [ToolResponse(**tool) for tool in tools]
+
         total = await get_tools(count_only=True, filters=filters)
 
     # Ensure tools is always a list, even if None is returned

@@ -31,6 +31,14 @@ class Settings(BaseSettings):
     EMAIL_FROM: str = os.getenv("EMAIL_FROM", "noreply@example.com")
     EMAIL_ENABLED: bool = os.getenv("EMAIL_ENABLED", "False").lower() == "true"
 
+    # Redis cache settings
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+    REDIS_PASSWORD: str = os.getenv("REDIS_PASSWORD", None)
+    REDIS_CACHE_ENABLED: bool = (
+        os.getenv("REDIS_CACHE_ENABLED", "true").lower() == "true"
+    )
+    REDIS_CACHE_TTL: int = int(os.getenv("REDIS_CACHE_TTL", "300"))  # 5 minutes default
+
     # API settings
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "TAAFT Backend"
