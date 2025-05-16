@@ -457,8 +457,8 @@ async def keyword_search_endpoint(
     # Extract unique carriers from all tools
     all_carriers = set()
     for tool in tools:
-        if tool["carriers"]:
-            all_carriers.update(tool["carriers"])
+        if tool.get("carriers"):
+            all_carriers.update(tool.get("carriers"))
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))

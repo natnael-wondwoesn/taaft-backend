@@ -138,13 +138,13 @@ class AlgoliaSearch:
                     "query": f"{search_query}",
                     "attributesToRetrieve": ["*"],
                     "advancedSyntax": True,
-                    "typoTolerance": True,
+                    "typoTolerance": False,
                     "removeWordsIfNoResults": "allOptional",
                     "hitsPerPage": 1000,  # Increase to get all available hits
                 },
             )
 
-            print(f"results: {results.nb_hits}")
+            # print(f"results: {results.nb_hits}")
 
             # Process the response based on its actual structure
             # The response contains direct search results without a "results" field
