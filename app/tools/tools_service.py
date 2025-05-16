@@ -1331,65 +1331,65 @@ async def keyword_search_tools(
                 f"Error searching with Algolia, falling back to MongoDB: {str(e)}"
             )
 
-    # Fall back to MongoDB if Algolia is not configured or search fails
-    # Create a query to find tools where any of the provided keywords match
-    query = {
-        "$or": [
-            {"carriers": {"$in": keywords}},
-            {"name": {"$regex": "|".join(keywords), "$options": "i"}},
-            {"description": {"$regex": "|".join(keywords), "$options": "i"}},
-            {"keywords": {"$in": keywords}},
-            {"category": {"$regex": "|".join(keywords), "$options": "i"}},
-            {"generated_description": {"$regex": "|".join(keywords), "$options": "i"}},
-        ]
-    }
+    # # Fall back to MongoDB if Algolia is not configured or search fails
+    # # Create a query to find tools where any of the provided keywords match
+    # query = {
+    #     "$or": [
+    #         {"carriers": {"$in": keywords}},
+    #         {"name": {"$regex": "|".join(keywords), "$options": "i"}},
+    #         {"description": {"$regex": "|".join(keywords), "$options": "i"}},
+    #         {"keywords": {"$in": keywords}},
+    #         {"category": {"$regex": "|".join(keywords), "$options": "i"}},
+    #         {"generated_description": {"$regex": "|".join(keywords), "$options": "i"}},
+    #     ]
+    # }
 
-    # Apply additional filters if provided
-    if filters and isinstance(filters, dict):
-        for key, value in filters.items():
-            query[key] = value
+    # # Apply additional filters if provided
+    # if filters and isinstance(filters, dict):
+    #     for key, value in filters.items():
+    #         query[key] = value
 
-    # If only count is needed, return the count
-    if count_only:
-        return await tools.count_documents(query)
+    # # If only count is needed, return the count
+    # if count_only:
+    #     return await tools.count_documents(query)
 
-    # Find matching tools with pagination
-    cursor = tools.find(query).skip(skip).limit(limit)
+    # # Find matching tools with pagination
+    # cursor = tools.find(query).skip(skip).limit(limit)
 
-    # Get saved tools if user is provided
-    saved_tools_list = []
-    if user_id:
-        # Check if the user exists and has saved tools
-        user = await database.users.find_one({"_id": ObjectId(user_id)})
-        if user and "saved_tools" in user:
-            # Convert all items to strings for consistent comparison
-            saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
-        else:
-            # If user doesn't have saved_tools field, check favorites collection
-            fav_cursor = favorites.find({"user_id": str(user_id)})
-            async for favorite in fav_cursor:
-                saved_tools_list.append(str(favorite["tool_unique_id"]))
+    # # Get saved tools if user is provided
+    # saved_tools_list = []
+    # if user_id:
+    #     # Check if the user exists and has saved tools
+    #     user = await database.users.find_one({"_id": ObjectId(user_id)})
+    #     if user and "saved_tools" in user:
+    #         # Convert all items to strings for consistent comparison
+    #         saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
+    #     else:
+    #         # If user doesn't have saved_tools field, check favorites collection
+    #         fav_cursor = favorites.find({"user_id": str(user_id)})
+    #         async for favorite in fav_cursor:
+    #             saved_tools_list.append(str(favorite["tool_unique_id"]))
 
-        # For debugging
-        logger.info(
-            f"User {user_id} has saved tools (MongoDB keyword search): {saved_tools_list}"
-        )
+    #     # For debugging
+    #     logger.info(
+    #         f"User {user_id} has saved tools (MongoDB keyword search): {saved_tools_list}"
+    #     )
 
-    # Process results
-    tools_list = []
-    async for tool in cursor:
-        tool_response = await create_tool_response(tool)
-        if tool_response:
-            # Check if this tool is saved by the user
-            if user_id:
-                unique_id = str(tool.get("unique_id", ""))
-                tool_response.saved_by_user = unique_id in saved_tools_list
-                logger.info(
-                    f"Tool {unique_id} saved status (MongoDB keyword search): {tool_response.saved_by_user}"
-                )
-            tools_list.append(tool_response)
+    # # Process results
+    # tools_list = []
+    # async for tool in cursor:
+    #     tool_response = await create_tool_response(tool)
+    #     if tool_response:
+    #         # Check if this tool is saved by the user
+    #         if user_id:
+    #             unique_id = str(tool.get("unique_id", ""))
+    #             tool_response.saved_by_user = unique_id in saved_tools_list
+    #             logger.info(
+    #                 f"Tool {unique_id} saved status (MongoDB keyword search): {tool_response.saved_by_user}"
+    #             )
+    #         tools_list.append(tool_response)
 
-    return tools_list
+    # return tools_list
 
 
 @redis_cache(prefix="tool_with_favorite")
