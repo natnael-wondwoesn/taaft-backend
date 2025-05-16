@@ -53,6 +53,7 @@ class ToolBase(BaseModel):
     generated_description: Optional[str] = None
     industry: Optional[str] = None
     image_url: Optional[str] = None
+    carriers: Optional[List[str]] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -112,6 +113,7 @@ class ToolUpdate(BaseModel):
     referral_allow: Optional[bool] = None
     generated_description: Optional[str] = None
     industry: Optional[str] = None
+    carriers: Optional[List[str]] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -143,6 +145,7 @@ class PaginatedToolsResponse(BaseModel):
     total: int
     skip: int
     limit: int
+    carriers: Optional[List[str]] = []
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,

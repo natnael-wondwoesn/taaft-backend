@@ -490,6 +490,7 @@ class AlgoliaSearch:
                         industry=getattr(hit, "industry", None),
                         created_at=getattr(hit, "created_at", None),
                         updated_at=getattr(hit, "updated_at", None),
+                        carriers=getattr(hit, "carriers", None),
                     )
                     # print(f"tool_record: {tool_record}")
                     tools.append(tool_record)

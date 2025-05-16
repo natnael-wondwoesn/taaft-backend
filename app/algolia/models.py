@@ -78,6 +78,7 @@ class AlgoliaToolRecord(BaseModel):
     referral_allow: Optional[bool] = None
     generated_description: Optional[str] = None
     industry: Optional[str] = None
+    carriers: Optional[List[str]] = None
     created_at: Optional[datetime.datetime] = None
     updated_at: Optional[datetime.datetime] = None
 

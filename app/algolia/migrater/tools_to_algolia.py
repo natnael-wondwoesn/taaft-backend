@@ -155,6 +155,7 @@ def prepare_algolia_object(mongo_tool):
         "referral_allow",
         "generated_description",
         "industry",
+        "carriers",
     ]
 
     for attr in attributes_to_include:
@@ -211,6 +212,8 @@ def configure_algolia_index(client, index_name):
                 "name",
                 "description",
                 "keywords",
+                "carriers",
+                "industry",
             ],
             "attributesForFaceting": [
                 "category",
@@ -253,6 +256,7 @@ def configure_algolia_index(client, index_name):
                 "is_featured",
                 "rating",
                 "saved_numbers",
+                "carriers",
             ],
             "ranking": [
                 "typo",

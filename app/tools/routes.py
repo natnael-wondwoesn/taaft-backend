@@ -17,6 +17,7 @@ from .tools_service import (
     toggle_tool_featured_status_by_unique_id,
     keyword_search_tools,
     get_tool_with_favorite_status,
+    get_keywords,
 )
 from ..logger import logger
 
@@ -37,7 +38,7 @@ async def list_tools(
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
-    List all tools with pagination, filtering and sorting.
+    Get a list of all tools with pagination, filtering and sorting.
     Default sorting is by created_at in descending order (newest first).
     """
     # Build filters dictionary from query parameters
@@ -46,10 +47,6 @@ async def list_tools(
         filters["category"] = category
     if is_featured is not None:
         filters["is_featured"] = is_featured
-        # Log for debugging
-        logger.info(
-            f"Setting is_featured filter to {is_featured}, type: {type(is_featured)}"
-        )
     if price_type:
         filters["price"] = price_type
 
@@ -74,13 +71,28 @@ async def list_tools(
         filters=filters if filters else None,
         sort_by=sort_by,
         sort_order=sort_order,
-        user_id=str(current_user.id),  # Pass the user_id to check saved state
+        user_id=str(current_user.id),
     )
 
     # Get total count with the same filters
     total = await get_tools(count_only=True, filters=filters if filters else None)
 
-    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+    # Extract unique carriers from all tools
+    all_carriers = set()
+    for tool in tools:
+        if tool.carriers:
+            all_carriers.update(tool.carriers)
+
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
+
+    return {
+        "tools": tools,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+    }
 
 
 @router.get("/search", response_model=PaginatedToolsResponse)
@@ -97,7 +109,25 @@ async def search_tools_endpoint(
         query=q, skip=skip, limit=limit, user_id=str(current_user.id)
     )
     total = await search_tools(query=q, count_only=True)
-    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+
+    # Extract unique carriers from all tools
+
+    # logger.info(f"Tools: {tools}")
+    all_carriers = set()
+    for tool in tools:
+        if tool.get("carriers"):
+            all_carriers.update(tool.get("carriers"))
+
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
+
+    return {
+        "tools": tools,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+    }
 
 
 @router.get("/{tool_id}", response_model=ToolResponse)
@@ -210,101 +240,110 @@ async def get_tools_by_category(
     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
 
 
-# @router.get("/featured", response_model=PaginatedToolsResponse)
-# async def get_featured_tools(
-#     skip: int = Query(0, ge=0),
-#     limit: int = Query(100, ge=1, le=1000),
-#     sort_by: Optional[str] = Query(
-#         None, description="Field to sort by (name, created_at, updated_at)"
-#     ),
-#     sort_order: str = Query("asc", description="Sort order (asc or desc)"),
-# ):
-#     """
-#     Get a list of featured tools. This endpoint is publicly accessible without authentication.
-#     """
-#     # Apply filter for featured tools only
-#     filters = {"is_featured": True}
+@router.get("/featured", response_model=PaginatedToolsResponse)
+async def get_featured_tools(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    sort_by: Optional[str] = Query(
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
+    ),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Get a list of featured tools.
+    """
+    # Apply filter for featured tools only
+    filters = {"is_featured": True}
 
-#     # Validate sort_by field if provided
-#     valid_sort_fields = ["name", "created_at", "updated_at", "price"]
-#     if sort_by and sort_by not in valid_sort_fields:
-#         raise HTTPException(
-#             status_code=400,
-#             detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
-#         )
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
 
-#     # Validate sort_order
-#     if sort_order.lower() not in ["asc", "desc"]:
-#         raise HTTPException(
-#             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
-#         )
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
 
-#     # Get the featured tools with sorting
-#     tools = await get_tools(
-#         skip=skip,
-#         limit=limit,
-#         filters=filters,
-#         sort_by=sort_by,
-#         sort_order=sort_order,
-#     )
+    # Get the featured tools with sorting
+    tools = await get_tools(
+        skip=skip,
+        limit=limit,
+        filters=filters,
+        sort_by=sort_by,
+        sort_order=sort_order,
+        user_id=str(current_user.id),
+    )
 
-#     # Get total count of featured tools
-#     total = await get_tools(count_only=True, filters=filters)
+    # Get total count of featured tools
+    total = await get_tools(count_only=True, filters=filters)
 
-#     # Ensure tools is always a list, even if None is returned
-#     if tools is None:
-#         tools = []
+    # Ensure tools is always a list, even if None is returned
+    if tools is None:
+        tools = []
 
-#     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+    # Extract unique carriers from all tools
+    all_carriers = set()
+    for tool in tools:
+        if tool.carriers:
+            all_carriers.update(tool.carriers)
+
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
+
+    return {
+        "tools": tools,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+    }
 
 
-# @router.get("/sponsored", response_model=PaginatedToolsResponse)
-# async def get_sponsored_tools(
-#     skip: int = Query(0, ge=0),
-#     limit: int = Query(100, ge=1, le=1000),
-#     sort_by: Optional[str] = Query(
-#         None, description="Field to sort by (name, created_at, updated_at)"
-#     ),
-#     sort_order: str = Query("asc", description="Sort order (asc or desc)"),
-# ):
-#     """
-#     Get a list of sponsored tools (identical to featured tools).
-#     This endpoint is publicly accessible without authentication.
-#     """
-#     # Apply filter for featured tools only (reusing the same field)
-#     filters = {"is_featured": True}
+@router.get("/featured/search", response_model=PaginatedToolsResponse)
+async def search_featured_tools(
+    q: str,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Search for featured tools by name or description.
+    """
+    # First search for tools matching the query
+    tools = await search_tools(
+        query=q, skip=0, limit=1000, user_id=str(current_user.id)
+    )
 
-#     # Validate sort_by field if provided
-#     valid_sort_fields = ["name", "created_at", "updated_at", "price"]
-#     if sort_by and sort_by not in valid_sort_fields:
-#         raise HTTPException(
-#             status_code=400,
-#             detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
-#         )
+    # Filter the results to include only featured tools
+    featured_tools = [tool for tool in tools if tool.get("is_featured", False)]
 
-#     # Validate sort_order
-#     if sort_order.lower() not in ["asc", "desc"]:
-#         raise HTTPException(
-#             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
-#         )
+    # Apply pagination
+    start_idx = min(skip, len(featured_tools))
+    end_idx = min(skip + limit, len(featured_tools))
+    paginated_tools = featured_tools[start_idx:end_idx]
 
-#     # Get the featured tools with sorting
-#     tools = await get_tools(
-#         skip=skip,
-#         limit=limit,
-#         filters=filters,
-#         sort_by=sort_by,
-#         sort_order=sort_order,
-#     )
+    # Extract unique carriers from all featured tools
+    all_carriers = set()
+    for tool in featured_tools:
+        if tool.carriers:
+            all_carriers.update(tool.carriers)
 
-#     # Get total count of featured tools
-#     total = await get_tools(count_only=True, filters=filters)
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
 
-#     # Ensure tools is always a list, even if None is returned
-#     if tools is None:
-#         tools = []
-
-#     return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+    return {
+        "tools": paginated_tools,
+        "total": len(featured_tools),
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+    }
 
 
 @router.put("/{tool_id}/featured", response_model=ToolResponse)
@@ -414,7 +453,23 @@ async def keyword_search_endpoint(
     # Get total count with the same keywords
     total = await keyword_search_tools(keywords=keywords, count_only=True)
 
-    return {"tools": tools, "total": total, "skip": skip, "limit": limit}
+    logger.info(f"Total tools: {total}")
+    # Extract unique carriers from all tools
+    all_carriers = set()
+    for tool in tools:
+        if tool["carriers"]:
+            all_carriers.update(tool["carriers"])
+
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
+
+    return {
+        "tools": tools,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+    }
 
 
 @router.get("/unique/{unique_id}/with-favorite", response_model=ToolResponse)
@@ -429,3 +484,33 @@ async def get_tool_with_favorite_by_unique_id(
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
     return tool
+
+
+@router.get("/keywords", response_model=List[str])
+async def get_all_keywords(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(1000, ge=1, le=10000),
+    min_frequency: int = Query(0, ge=0),
+    sort_by_frequency: bool = Query(True),
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Get a list of all keywords in the database.
+
+    Args:
+        skip: Number of items to skip
+        limit: Maximum number of items to return
+        min_frequency: Minimum frequency to include
+        sort_by_frequency: Whether to sort by frequency
+
+    Returns:
+        List of unique keywords
+    """
+    keywords = await get_keywords(
+        skip=skip,
+        limit=limit,
+        min_frequency=min_frequency,
+        sort_by_frequency=sort_by_frequency,
+    )
+
+    return keywords

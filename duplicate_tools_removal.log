@@ -1,0 +1,152 @@
+2025-05-16 13:11:47,414 - duplicate_tools_remover - INFO - Starting duplicate tools removal script
+2025-05-16 13:11:47,415 - duplicate_tools_remover - INFO - Starting duplicate tools removal at 2025-05-16 13:11:47.415547
+2025-05-16 13:12:04,985 - duplicate_tools_remover - INFO - Found 1215 total tools in database
+2025-05-16 13:12:04,991 - duplicate_tools_remover - INFO - Found 145 sets of duplicates with a total of 226 duplicate tools to remove
+2025-05-16 13:12:05,165 - duplicate_tools_remover - INFO - Kept tool 'Scourhead' (ID: 68242796314b48ef94280044) and removed 1 duplicates
+2025-05-16 13:12:05,449 - duplicate_tools_remover - INFO - Kept tool 'Airparser' (ID: 6822ae3c314b48ef9427fd40) and removed 1 duplicates
+2025-05-16 13:12:05,644 - duplicate_tools_remover - INFO - Kept tool 'Korbit' (ID: 6816422d314b48ef9427fac3) and removed 38 duplicates
+2025-05-16 13:12:06,063 - duplicate_tools_remover - INFO - Kept tool 'Business Idea Generator AI' (ID: 6822944c314b48ef9427fcb2) and removed 1 duplicates
+2025-05-16 13:12:06,429 - duplicate_tools_remover - INFO - Kept tool 'AI Finder' (ID: 6823e62e314b48ef9427ff2b) and removed 1 duplicates
+2025-05-16 13:12:06,605 - duplicate_tools_remover - INFO - Kept tool 'Automateed' (ID: 6823b1e8314b48ef9427fe55) and removed 1 duplicates
+2025-05-16 13:12:06,900 - duplicate_tools_remover - INFO - Kept tool 'Fixkey' (ID: 6822d6e5314b48ef9427fe16) and removed 2 duplicates
+2025-05-16 13:12:07,091 - duplicate_tools_remover - INFO - Kept tool 'MarketAlerts.ai' (ID: 6823c180314b48ef9427fe93) and removed 1 duplicates
+2025-05-16 13:12:07,454 - duplicate_tools_remover - INFO - Kept tool 'HoopsAI' (ID: 6823beff314b48ef9427fe87) and removed 1 duplicates
+2025-05-16 13:12:07,619 - duplicate_tools_remover - INFO - Kept tool 'Toolblox' (ID: 68242005314b48ef9428001d) and removed 1 duplicates
+2025-05-16 13:12:07,938 - duplicate_tools_remover - INFO - Kept tool 'Kimi-VL-A3B-Instruct' (ID: 680a36eba40b1de891a1417f) and removed 1 duplicates
+2025-05-16 13:12:08,112 - duplicate_tools_remover - INFO - Kept tool 'MV Adapter Text2Texture' (ID: 680a3717a40b1de891a1418f) and removed 1 duplicates
+2025-05-16 13:12:08,410 - duplicate_tools_remover - INFO - Kept tool 'Lido Document Processing' (ID: 68164231314b48ef9427fac4) and removed 1 duplicates
+2025-05-16 13:12:08,585 - duplicate_tools_remover - INFO - Kept tool 'Zyro' (ID: 68164654314b48ef9427facb) and removed 1 duplicates
+2025-05-16 13:12:08,858 - duplicate_tools_remover - INFO - Kept tool 'iKapture' (ID: 68164658314b48ef9427facc) and removed 1 duplicates
+2025-05-16 13:12:09,023 - duplicate_tools_remover - INFO - Kept tool 'AIAM by Geeklab' (ID: 6816465e314b48ef9427facf) and removed 2 duplicates
+2025-05-16 13:12:09,194 - duplicate_tools_remover - INFO - Kept tool 'BeGenieUs' (ID: 68164660314b48ef9427fad0) and removed 1 duplicates
+2025-05-16 13:12:09,365 - duplicate_tools_remover - INFO - Kept tool 'ClipMove' (ID: 68164662314b48ef9427fad1) and removed 1 duplicates
+2025-05-16 13:12:09,529 - duplicate_tools_remover - INFO - Kept tool 'Copy Pastor' (ID: 68164663314b48ef9427fad2) and removed 1 duplicates
+2025-05-16 13:12:09,700 - duplicate_tools_remover - INFO - Kept tool 'OCR-GPT' (ID: 68164665314b48ef9427fad3) and removed 1 duplicates
+2025-05-16 13:12:09,913 - duplicate_tools_remover - INFO - Kept tool 'NotesXP - AI Study Guides' (ID: 68225669314b48ef9427fb60) and removed 11 duplicates
+2025-05-16 13:12:10,083 - duplicate_tools_remover - INFO - Kept tool 'Motiff' (ID: 68225c1a314b48ef9427fb77) and removed 1 duplicates
+2025-05-16 13:12:10,404 - duplicate_tools_remover - INFO - Kept tool 'Paxo' (ID: 68225c80314b48ef9427fb7c) and removed 2 duplicates
+2025-05-16 13:12:10,568 - duplicate_tools_remover - INFO - Kept tool 'Summify' (ID: 68225d10314b48ef9427fb82) and removed 1 duplicates
+2025-05-16 13:12:10,902 - duplicate_tools_remover - INFO - Kept tool 'WavTool' (ID: 68225d30314b48ef9427fb83) and removed 1 duplicates
+2025-05-16 13:12:11,063 - duplicate_tools_remover - INFO - Kept tool 'AI Girls by aiAllure' (ID: 68225d8d314b48ef9427fb85) and removed 3 duplicates
+2025-05-16 13:12:11,350 - duplicate_tools_remover - INFO - Kept tool '2short.ai' (ID: 68226333314b48ef9427fba3) and removed 1 duplicates
+2025-05-16 13:12:11,523 - duplicate_tools_remover - INFO - Kept tool 'ProseAble' (ID: 68226362314b48ef9427fba5) and removed 1 duplicates
+2025-05-16 13:12:11,715 - duplicate_tools_remover - INFO - Kept tool 'EssayFlow' (ID: 682263e2314b48ef9427fba8) and removed 2 duplicates
+2025-05-16 13:12:11,881 - duplicate_tools_remover - INFO - Kept tool 'RolePlai' (ID: 68226644314b48ef9427fbb0) and removed 1 duplicates
+2025-05-16 13:12:12,050 - duplicate_tools_remover - INFO - Kept tool 'Maroofy' (ID: 6822665e314b48ef9427fbb1) and removed 1 duplicates
+2025-05-16 13:12:12,251 - duplicate_tools_remover - INFO - Kept tool 'PhotoHero' (ID: 6822670a314b48ef9427fbb3) and removed 1 duplicates
+2025-05-16 13:12:12,425 - duplicate_tools_remover - INFO - Kept tool 'TheLibrarian.io' (ID: 6822679a314b48ef9427fbb7) and removed 2 duplicates
+2025-05-16 13:12:12,592 - duplicate_tools_remover - INFO - Kept tool 'Picsart' (ID: 68226979314b48ef9427fbc3) and removed 1 duplicates
+2025-05-16 13:12:12,858 - duplicate_tools_remover - INFO - Kept tool 'InfoGPT' (ID: 682269c6314b48ef9427fbc5) and removed 1 duplicates
+2025-05-16 13:12:13,026 - duplicate_tools_remover - INFO - Kept tool 'APOB' (ID: 68226b46314b48ef9427fbcc) and removed 1 duplicates
+2025-05-16 13:12:13,208 - duplicate_tools_remover - INFO - Kept tool 'Apex - X Reply AI' (ID: 68226c3d314b48ef9427fbd2) and removed 2 duplicates
+2025-05-16 13:12:13,395 - duplicate_tools_remover - INFO - Kept tool 'AI web page translator by pagesection.com' (ID: 68226dca314b48ef9427fbda) and removed 4 duplicates
+2025-05-16 13:12:13,568 - duplicate_tools_remover - INFO - Kept tool 'Storytell.ai' (ID: 68226f8b314b48ef9427fbe1) and removed 1 duplicates
+2025-05-16 13:12:13,732 - duplicate_tools_remover - INFO - Kept tool 'Puppetry' (ID: 68227043314b48ef9427fbe5) and removed 1 duplicates
+2025-05-16 13:12:13,954 - duplicate_tools_remover - INFO - Kept tool 'Taplio' (ID: 68227332314b48ef9427fbf7) and removed 1 duplicates
+2025-05-16 13:12:14,160 - duplicate_tools_remover - INFO - Kept tool 'LangBuddy.ai' (ID: 682274b0314b48ef9427fbff) and removed 1 duplicates
+2025-05-16 13:12:14,345 - duplicate_tools_remover - INFO - Kept tool 'Remove Background by Picsart' (ID: 68227526314b48ef9427fc01) and removed 1 duplicates
+2025-05-16 13:12:14,615 - duplicate_tools_remover - INFO - Kept tool 'Watermelon' (ID: 68227ce5314b48ef9427fc2f) and removed 4 duplicates
+2025-05-16 13:12:15,148 - duplicate_tools_remover - INFO - Kept tool 'Univerbal' (ID: 68227d33314b48ef9427fc32) and removed 1 duplicates
+2025-05-16 13:12:15,573 - duplicate_tools_remover - INFO - Kept tool 'Musicfy' (ID: 68227e02314b48ef9427fc38) and removed 1 duplicates
+2025-05-16 13:12:16,100 - duplicate_tools_remover - INFO - Kept tool 'ARCHITEChTURES' (ID: 68227e17314b48ef9427fc39) and removed 1 duplicates
+2025-05-16 13:12:16,431 - duplicate_tools_remover - INFO - Kept tool 'HomeDesignsAI' (ID: 68228032314b48ef9427fc44) and removed 1 duplicates
+2025-05-16 13:12:16,762 - duplicate_tools_remover - INFO - Kept tool 'The Scarlet Letter By Nathaniel Hawthorne GPT' (ID: 682284dc314b48ef9427fc58) and removed 2 duplicates
+2025-05-16 13:12:17,095 - duplicate_tools_remover - INFO - Kept tool 'Wix AI Website Builder' (ID: 682284f6314b48ef9427fc59) and removed 1 duplicates
+2025-05-16 13:12:17,480 - duplicate_tools_remover - INFO - Kept tool 'Sitescanner.ai' (ID: 68228513314b48ef9427fc5a) and removed 1 duplicates
+2025-05-16 13:12:17,789 - duplicate_tools_remover - INFO - Kept tool 'Kopage - White-Label AI Website Builder' (ID: 68228527314b48ef9427fc5b) and removed 1 duplicates
+2025-05-16 13:12:18,067 - duplicate_tools_remover - INFO - Kept tool 'PandaExtract Website to Text Converter' (ID: 68228581314b48ef9427fc5e) and removed 1 duplicates
+2025-05-16 13:12:18,365 - duplicate_tools_remover - INFO - Kept tool 'College Tools' (ID: 682285a4314b48ef9427fc5f) and removed 1 duplicates
+2025-05-16 13:12:18,546 - duplicate_tools_remover - INFO - Kept tool 'Relume Site Builder' (ID: 682285c9314b48ef9427fc60) and removed 1 duplicates
+2025-05-16 13:12:18,902 - duplicate_tools_remover - INFO - Kept tool 'Aiter – Marketing Content, Strategy and Ads Generator' (ID: 682286b4314b48ef9427fc61) and removed 1 duplicates
+2025-05-16 13:12:19,163 - duplicate_tools_remover - INFO - Kept tool 'Breezemail' (ID: 6822892d314b48ef9427fc70) and removed 1 duplicates
+2025-05-16 13:12:19,426 - duplicate_tools_remover - INFO - Kept tool 'AetheriumAI' (ID: 68228b3f314b48ef9427fc81) and removed 1 duplicates
+2025-05-16 13:12:19,703 - duplicate_tools_remover - INFO - Kept tool 'InstaWebAI' (ID: 68228be2314b48ef9427fc84) and removed 2 duplicates
+2025-05-16 13:12:19,979 - duplicate_tools_remover - INFO - Kept tool 'AI-O' (ID: 68228d52314b48ef9427fc8d) and removed 1 duplicates
+2025-05-16 13:12:20,154 - duplicate_tools_remover - INFO - Kept tool 'Branded' (ID: 68228dae314b48ef9427fc8e) and removed 1 duplicates
+2025-05-16 13:12:20,363 - duplicate_tools_remover - INFO - Kept tool 'Wonderin AI' (ID: 68228de4314b48ef9427fc90) and removed 1 duplicates
+2025-05-16 13:12:20,529 - duplicate_tools_remover - INFO - Kept tool 'Clippie AI' (ID: 68228ea7314b48ef9427fc93) and removed 1 duplicates
+2025-05-16 13:12:20,707 - duplicate_tools_remover - INFO - Kept tool 'DomainsGPT' (ID: 68228ee4314b48ef9427fc95) and removed 1 duplicates
+2025-05-16 13:12:20,890 - duplicate_tools_remover - INFO - Kept tool 'GirlfriendGPT' (ID: 68229051314b48ef9427fc9e) and removed 2 duplicates
+2025-05-16 13:12:21,053 - duplicate_tools_remover - INFO - Kept tool 'Displayr AI' (ID: 682290ea314b48ef9427fca1) and removed 1 duplicates
+2025-05-16 13:12:21,217 - duplicate_tools_remover - INFO - Kept tool 'aiPDF' (ID: 682295d5314b48ef9427fcb9) and removed 1 duplicates
+2025-05-16 13:12:21,378 - duplicate_tools_remover - INFO - Kept tool 'Synthflow AI' (ID: 682295ec314b48ef9427fcba) and removed 1 duplicates
+2025-05-16 13:12:21,553 - duplicate_tools_remover - INFO - Kept tool 'UI Bakery AI Apps' (ID: 682296d3314b48ef9427fcc1) and removed 1 duplicates
+2025-05-16 13:12:21,721 - duplicate_tools_remover - INFO - Kept tool 'Bito AI' (ID: 68229886314b48ef9427fccc) and removed 1 duplicates
+2025-05-16 13:12:21,910 - duplicate_tools_remover - INFO - Kept tool 'Qypt AI' (ID: 68229b72314b48ef9427fcdc) and removed 1 duplicates
+2025-05-16 13:12:22,100 - duplicate_tools_remover - INFO - Kept tool 'ChromaForgeAI' (ID: 68229dc1314b48ef9427fce4) and removed 1 duplicates
+2025-05-16 13:12:22,272 - duplicate_tools_remover - INFO - Kept tool 'CreativAI' (ID: 6822a1a8314b48ef9427fcf8) and removed 1 duplicates
+2025-05-16 13:12:22,465 - duplicate_tools_remover - INFO - Kept tool 'VideoGen' (ID: 6822a223314b48ef9427fcfa) and removed 1 duplicates
+2025-05-16 13:12:22,790 - duplicate_tools_remover - INFO - Kept tool 'Photo AI' (ID: 6822a439314b48ef9427fd03) and removed 5 duplicates
+2025-05-16 13:12:23,221 - duplicate_tools_remover - INFO - Kept tool 'AI Blog Articles' (ID: 6822a498314b48ef9427fd06) and removed 1 duplicates
+2025-05-16 13:12:23,462 - duplicate_tools_remover - INFO - Kept tool 'Wraithscribe' (ID: 6822a50f314b48ef9427fd09) and removed 1 duplicates
+2025-05-16 13:12:23,640 - duplicate_tools_remover - INFO - Kept tool 'Coral AI' (ID: 6822a832314b48ef9427fd1b) and removed 1 duplicates
+2025-05-16 13:12:23,816 - duplicate_tools_remover - INFO - Kept tool 'Raena AI' (ID: 6822a86a314b48ef9427fd1d) and removed 1 duplicates
+2025-05-16 13:12:23,992 - duplicate_tools_remover - INFO - Kept tool 'Sider AI' (ID: 6822a89c314b48ef9427fd1f) and removed 1 duplicates
+2025-05-16 13:12:24,213 - duplicate_tools_remover - INFO - Kept tool 'Engage AI' (ID: 6822a99b314b48ef9427fd25) and removed 1 duplicates
+2025-05-16 13:12:24,552 - duplicate_tools_remover - INFO - Kept tool 'ResolveAI' (ID: 6822a9ec314b48ef9427fd28) and removed 1 duplicates
+2025-05-16 13:12:24,861 - duplicate_tools_remover - INFO - Kept tool 'ImgToVideoAI' (ID: 6822aa75314b48ef9427fd2a) and removed 1 duplicates
+2025-05-16 13:12:25,207 - duplicate_tools_remover - INFO - Kept tool 'Hexoloop' (ID: 6822ac3b314b48ef9427fd35) and removed 1 duplicates
+2025-05-16 13:12:25,597 - duplicate_tools_remover - INFO - Kept tool 'Raizer' (ID: 6822af1e314b48ef9427fd45) and removed 1 duplicates
+2025-05-16 13:12:26,003 - duplicate_tools_remover - INFO - Kept tool 'Box AI' (ID: 6822afdd314b48ef9427fd4a) and removed 1 duplicates
+2025-05-16 13:12:26,371 - duplicate_tools_remover - INFO - Kept tool 'LetzAI' (ID: 6822b037314b48ef9427fd4b) and removed 1 duplicates
+2025-05-16 13:12:26,676 - duplicate_tools_remover - INFO - Kept tool 'Kaiber' (ID: 6822b178314b48ef9427fd51) and removed 1 duplicates
+2025-05-16 13:12:26,956 - duplicate_tools_remover - INFO - Kept tool 'Marketing Assistant (Elsa AI)' (ID: 6822b50a314b48ef9427fd60) and removed 1 duplicates
+2025-05-16 13:12:27,206 - duplicate_tools_remover - INFO - Kept tool 'Ren AI | Leadership & Accountability Platform' (ID: 6822b57d314b48ef9427fd62) and removed 10 duplicates
+2025-05-16 13:12:27,503 - duplicate_tools_remover - INFO - Kept tool 'Mumble Note: AI Notetaker On The Go' (ID: 6822b60b314b48ef9427fd64) and removed 1 duplicates
+2025-05-16 13:12:27,902 - duplicate_tools_remover - INFO - Kept tool 'Docs to WP Pro' (ID: 6822b623314b48ef9427fd65) and removed 1 duplicates
+2025-05-16 13:12:28,323 - duplicate_tools_remover - INFO - Kept tool 'Notedly' (ID: 6822b6e0314b48ef9427fd69) and removed 1 duplicates
+2025-05-16 13:12:28,631 - duplicate_tools_remover - INFO - Kept tool 'ReachifyMe' (ID: 6822b712314b48ef9427fd6b) and removed 1 duplicates
+2025-05-16 13:12:28,795 - duplicate_tools_remover - INFO - Kept tool 'Hal9' (ID: 6822b75c314b48ef9427fd6d) and removed 1 duplicates
+2025-05-16 13:12:28,969 - duplicate_tools_remover - INFO - Kept tool 'CodeRabbit' (ID: 6822b7f3314b48ef9427fd71) and removed 2 duplicates
+2025-05-16 13:12:29,160 - duplicate_tools_remover - INFO - Kept tool 'Itemery' (ID: 6822b916314b48ef9427fd7a) and removed 1 duplicates
+2025-05-16 13:12:29,327 - duplicate_tools_remover - INFO - Kept tool 'Kavout' (ID: 6822ba04314b48ef9427fd7e) and removed 1 duplicates
+2025-05-16 13:12:29,489 - duplicate_tools_remover - INFO - Kept tool 'PDFGPT.IO' (ID: 6822bb29314b48ef9427fd85) and removed 1 duplicates
+2025-05-16 13:12:29,649 - duplicate_tools_remover - INFO - Kept tool 'Links & Briefs' (ID: 6822bc7f314b48ef9427fd8b) and removed 1 duplicates
+2025-05-16 13:12:29,814 - duplicate_tools_remover - INFO - Kept tool 'BooSum' (ID: 6822bd29314b48ef9427fd92) and removed 1 duplicates
+2025-05-16 13:12:29,981 - duplicate_tools_remover - INFO - Kept tool 'Reliv' (ID: 6822bd40314b48ef9427fd93) and removed 2 duplicates
+2025-05-16 13:12:30,142 - duplicate_tools_remover - INFO - Kept tool 'Excel Master' (ID: 6822bd57314b48ef9427fd94) and removed 1 duplicates
+2025-05-16 13:12:30,313 - duplicate_tools_remover - INFO - Kept tool 'UniJump' (ID: 6822be43314b48ef9427fd9a) and removed 1 duplicates
+2025-05-16 13:12:30,505 - duplicate_tools_remover - INFO - Kept tool 'LoveStudy.ai' (ID: 6822c08f314b48ef9427fd9e) and removed 1 duplicates
+2025-05-16 13:12:30,668 - duplicate_tools_remover - INFO - Kept tool 'ChatPDF.ae' (ID: 6822c15d314b48ef9427fda4) and removed 1 duplicates
+2025-05-16 13:12:30,848 - duplicate_tools_remover - INFO - Kept tool 'Sparkle' (ID: 6822c300314b48ef9427fdad) and removed 1 duplicates
+2025-05-16 13:12:31,016 - duplicate_tools_remover - INFO - Kept tool 'Picture To Text Converter' (ID: 6822c42a314b48ef9427fdb5) and removed 1 duplicates
+2025-05-16 13:12:31,182 - duplicate_tools_remover - INFO - Kept tool 'B12.io' (ID: 6822c493314b48ef9427fdb8) and removed 1 duplicates
+2025-05-16 13:12:31,367 - duplicate_tools_remover - INFO - Kept tool 'Edit-Videos-Online' (ID: 6822c4f1314b48ef9427fdba) and removed 1 duplicates
+2025-05-16 13:12:31,534 - duplicate_tools_remover - INFO - Kept tool 'StockImagery' (ID: 6822c546314b48ef9427fdbb) and removed 1 duplicates
+2025-05-16 13:12:31,709 - duplicate_tools_remover - INFO - Kept tool 'GravityWrite' (ID: 6822c55b314b48ef9427fdbc) and removed 1 duplicates
+2025-05-16 13:12:31,872 - duplicate_tools_remover - INFO - Kept tool 'AIEasyPic' (ID: 6822c5bd314b48ef9427fdbe) and removed 2 duplicates
+2025-05-16 13:12:32,032 - duplicate_tools_remover - INFO - Kept tool 'Arthemy' (ID: 6822c643314b48ef9427fdc0) and removed 1 duplicates
+2025-05-16 13:12:32,193 - duplicate_tools_remover - INFO - Kept tool 'Postuby' (ID: 6822c6e3314b48ef9427fdc3) and removed 1 duplicates
+2025-05-16 13:12:32,370 - duplicate_tools_remover - INFO - Kept tool 'ToolBaz' (ID: 6822c81a314b48ef9427fdc8) and removed 1 duplicates
+2025-05-16 13:12:32,543 - duplicate_tools_remover - INFO - Kept tool 'Krater.ai' (ID: 6822c8db314b48ef9427fdcd) and removed 1 duplicates
+2025-05-16 13:12:32,718 - duplicate_tools_remover - INFO - Kept tool 'Enwrite' (ID: 6822cc02314b48ef9427fdda) and removed 1 duplicates
+2025-05-16 13:12:32,876 - duplicate_tools_remover - INFO - Kept tool 'Visuali' (ID: 6822cca4314b48ef9427fddd) and removed 1 duplicates
+2025-05-16 13:12:33,041 - duplicate_tools_remover - INFO - Kept tool 'Shopia' (ID: 6822cccb314b48ef9427fdde) and removed 1 duplicates
+2025-05-16 13:12:33,203 - duplicate_tools_remover - INFO - Kept tool 'Humata' (ID: 6822cdbc314b48ef9427fde2) and removed 1 duplicates
+2025-05-16 13:12:33,370 - duplicate_tools_remover - INFO - Kept tool 'Askpot' (ID: 6822cdd0314b48ef9427fde3) and removed 1 duplicates
+2025-05-16 13:12:33,548 - duplicate_tools_remover - INFO - Kept tool 'Chatbit' (ID: 6822ce55314b48ef9427fde5) and removed 2 duplicates
+2025-05-16 13:12:33,712 - duplicate_tools_remover - INFO - Kept tool 'Fabric' (ID: 6822ce82314b48ef9427fde6) and removed 1 duplicates
+2025-05-16 13:12:33,874 - duplicate_tools_remover - INFO - Kept tool 'PrayGen' (ID: 6822cfd1314b48ef9427fdec) and removed 1 duplicates
+2025-05-16 13:12:34,033 - duplicate_tools_remover - INFO - Kept tool 'NoteGPT' (ID: 6822d030314b48ef9427fdef) and removed 1 duplicates
+2025-05-16 13:12:34,198 - duplicate_tools_remover - INFO - Kept tool 'Link Whisper' (ID: 6822d0fb314b48ef9427fdf6) and removed 1 duplicates
+2025-05-16 13:12:34,362 - duplicate_tools_remover - INFO - Kept tool 'Abacus.AI' (ID: 6822d25f314b48ef9427fdfd) and removed 1 duplicates
+2025-05-16 13:12:34,533 - duplicate_tools_remover - INFO - Kept tool 'Granola' (ID: 6822d2d9314b48ef9427fe00) and removed 1 duplicates
+2025-05-16 13:12:34,694 - duplicate_tools_remover - INFO - Kept tool 'Lovable' (ID: 6822d3eb314b48ef9427fe07) and removed 1 duplicates
+2025-05-16 13:12:34,853 - duplicate_tools_remover - INFO - Kept tool 'Chatize' (ID: 6822d57e314b48ef9427fe10) and removed 1 duplicates
+2025-05-16 13:12:35,023 - duplicate_tools_remover - INFO - Kept tool 'Victoria AI' (ID: 6822d771314b48ef9427fe1b) and removed 1 duplicates
+2025-05-16 13:12:35,185 - duplicate_tools_remover - INFO - Kept tool 'BypassGPT' (ID: 6822d786314b48ef9427fe1c) and removed 1 duplicates
+2025-05-16 13:12:35,458 - duplicate_tools_remover - INFO - Kept tool 'TeamPal' (ID: 6822d8f2314b48ef9427fe23) and removed 1 duplicates
+2025-05-16 13:12:35,631 - duplicate_tools_remover - INFO - Kept tool 'RivalOut' (ID: 6822d99c314b48ef9427fe26) and removed 1 duplicates
+2025-05-16 13:12:35,809 - duplicate_tools_remover - INFO - Kept tool 'Flowpoint' (ID: 6822da3b314b48ef9427fe29) and removed 1 duplicates
+2025-05-16 13:12:36,023 - duplicate_tools_remover - INFO - Kept tool 'SeaArt' (ID: 6823a83a314b48ef9427fe30) and removed 1 duplicates
+2025-05-16 13:12:36,187 - duplicate_tools_remover - INFO - Kept tool 'Pansophic' (ID: 6823b096314b48ef9427fe4d) and removed 1 duplicates
+2025-05-16 13:12:36,440 - duplicate_tools_remover - INFO - Kept tool 'Mixart' (ID: 6823b332314b48ef9427fe5a) and removed 1 duplicates
+2025-05-16 13:12:36,608 - duplicate_tools_remover - INFO - Kept tool 'ChatHub' (ID: 6823ba07314b48ef9427fe72) and removed 1 duplicates
+2025-05-16 13:12:36,782 - duplicate_tools_remover - INFO - Kept tool 'PoddyHost.com' (ID: 6823bc3c314b48ef9427fe7b) and removed 1 duplicates
+2025-05-16 13:12:36,955 - duplicate_tools_remover - INFO - Kept tool 'Historie obce Markvartice' (ID: 6823c475314b48ef9427fea2) and removed 1 duplicates
+2025-05-16 13:12:37,127 - duplicate_tools_remover - INFO - Kept tool 'WinDispute.pro' (ID: 68240389314b48ef9427ff9b) and removed 1 duplicates
+2025-05-16 13:12:37,293 - duplicate_tools_remover - INFO - Kept tool 'Recall' (ID: 68241493314b48ef9427ffe7) and removed 1 duplicates
+2025-05-16 13:12:37,489 - duplicate_tools_remover - INFO - Kept tool 'InShot' (ID: 68244680314b48ef94280062) and removed 1 duplicates
+2025-05-16 13:12:37,491 - duplicate_tools_remover - INFO - Duplicate tools removal completed in 50.08 seconds
+2025-05-16 13:12:37,491 - duplicate_tools_remover - INFO - Removed 226 duplicate tools
+2025-05-16 13:12:37,493 - duplicate_tools_remover - INFO - Duplicate tools removal completed successfully
