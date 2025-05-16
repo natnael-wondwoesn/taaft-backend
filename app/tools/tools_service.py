@@ -5,6 +5,8 @@ import asyncio
 from typing import List, Optional, Union, Dict, Any
 from bson import ObjectId
 
+from app.algolia.models import AlgoliaToolRecord
+
 from ..database.database import tools, database, favorites
 from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
@@ -952,44 +954,53 @@ async def search_tools(
                 # logger.info(f"Tool: {tool}")
                 # Convert Algolia result to a dictionary format compatible with our helper
                 tool_dict = {
-                    "id": tool.objectID,
-                    "price": tool.price or "",
-                    "name": tool.name,
-                    "description": tool.description,
-                    "link": tool.link,
-                    "unique_id": tool.unique_id,
-                    "rating": None,  # Will be handled by create_tool_response
-                    "saved_numbers": tool.saved_numbers,
-                    "created_at": tool.created_at,
-                    "updated_at": tool.updated_at,
-                    "features": tool.features,
-                    "is_featured": tool.is_featured,
-                    "keywords": tool.keywords,
-                    "categories": tool.categories,
-                    "logo_url": tool.logo_url,
-                    "user_reviews": tool.user_reviews,
-                    "feature_list": tool.feature_list,
-                    "referral_allow": tool.referral_allow,
-                    "generated_description": tool.generated_description,
-                    "industry": tool.industry,
-                    "carriers": tool.carriers,
+                    "id": getattr(tool, "objectID", ""),
+                    "price": getattr(tool, "price", ""),
+                    "name": getattr(tool, "name", ""),
+                    "description": getattr(tool, "description", ""),
+                    "link": getattr(tool, "link", ""),
+                    "unique_id": getattr(tool, "unique_id", ""),
+                    "rating": getattr(tool, "rating", None),
+                    "saved_numbers": getattr(tool, "saved_numbers", None),
+                    "created_at": getattr(tool, "created_at", None),
+                    "updated_at": getattr(tool, "updated_at", None),
+                    "features": getattr(tool, "features", None),
+                    "is_featured": getattr(tool, "is_featured", False),
+                    "keywords": getattr(tool, "keywords", []),
+                    "categories": getattr(tool, "categories", None),
+                    "logo_url": getattr(tool, "logo_url", ""),
+                    "user_reviews": getattr(tool, "user_reviews", None),
+                    "feature_list": getattr(tool, "feature_list", []),
+                    "referral_allow": getattr(tool, "referral_allow", False),
+                    "generated_description": getattr(
+                        tool, "generated_description", None
+                    ),
+                    "industry": getattr(tool, "industry", None),
+                    "carriers": getattr(tool, "carriers", []),
                 }
                 logger.info(f"Tool dict: {tool_dict}")
 
                 # Add categories if available
-                if tool.categories:
-                    if isinstance(tool.categories, list) and len(tool.categories) > 0:
-                        if isinstance(tool.categories[0], dict):
-                            tool_dict["category"] = tool.categories[0].get("id")
-                        elif hasattr(tool.categories[0], "id"):
-                            tool_dict["category"] = tool.categories[0].id
+                if getattr(tool, "categories", None):
+                    if (
+                        isinstance(getattr(tool, "categories", None), list)
+                        and len(getattr(tool, "categories", None)) > 0
+                    ):
+                        if isinstance(getattr(tool, "categories", None)[0], dict):
+                            tool_dict["category"] = getattr(tool, "categories", None)[
+                                0
+                            ].get("id")
+                        elif hasattr(getattr(tool, "categories", None)[0], "id"):
+                            tool_dict["category"] = getattr(tool, "categories", None)[
+                                0
+                            ].id
 
                 tool_response = await create_tool_response(tool_dict)
                 if tool_response:
                     # Check if this tool is saved by the user
                     if user_id:
                         # Make sure both are strings for consistent comparison
-                        tool_unique_id = str(tool.unique_id or "")
+                        tool_unique_id = str(getattr(tool, "unique_id", "") or "")
                         tool_response.saved_by_user = tool_unique_id in saved_tools_list
                         logger.info(
                             f"Tool {tool_unique_id} saved status (Algolia): {tool_response.saved_by_user}"
@@ -1249,6 +1260,8 @@ async def keyword_search_tools(
                 ),  # Get all results if counting
             )
 
+            logger.info(f"Search result: {search_result}")
+
             # If only count is needed, return the total hits
             if count_only:
                 return search_result.get("nbHits", 0)
@@ -1276,47 +1289,62 @@ async def keyword_search_tools(
             tools_list = []
             hits = search_result.get("hits", [])
             for hit in hits:
-                # Convert Algolia hit to a dictionary format compatible with create_tool_response
-                tool_dict = {
-                    "id": hit.get("objectID"),
-                    "price": hit.get("price", ""),
-                    "name": hit.get("name", ""),
-                    "description": hit.get("description", ""),
-                    "link": hit.get("link", ""),
-                    "unique_id": hit.get("unique_id", ""),
-                    "rating": hit.get("rating"),
-                    "saved_numbers": hit.get("saved_numbers"),
-                    "created_at": hit.get("created_at"),
-                    "updated_at": hit.get("updated_at"),
-                    "features": hit.get("features"),
-                    "is_featured": hit.get("is_featured", False),
-                    "keywords": hit.get("keywords", []),
-                    "categories": hit.get("categories"),
-                    "logo_url": hit.get("logo_url", ""),
-                    "user_reviews": hit.get("user_reviews"),
-                    "feature_list": hit.get("feature_list", []),
-                    "referral_allow": hit.get("referral_allow", False),
-                    "generated_description": hit.get("generated_description"),
-                    "industry": hit.get("industry"),
-                    "carriers": hit.get("carriers", []),
-                }
+                try:
+                    # Create AlgoliaToolRecord from each hit
+                    tool_dict = {
+                        "id": getattr(hit, "objectID", ""),
+                        "price": getattr(hit, "price", ""),
+                        "name": getattr(hit, "name", ""),
+                        "description": getattr(hit, "description", ""),
+                        "link": getattr(hit, "link", ""),
+                        "unique_id": getattr(hit, "unique_id", ""),
+                        "rating": getattr(hit, "rating", None),
+                        "saved_numbers": getattr(hit, "saved_numbers", None),
+                        "created_at": getattr(hit, "created_at", None),
+                        "updated_at": getattr(hit, "updated_at", None),
+                        "features": getattr(hit, "features", None),
+                        "is_featured": getattr(hit, "is_featured", False),
+                        "keywords": getattr(hit, "keywords", []),
+                        "categories": getattr(hit, "categories", None),
+                        "logo_url": getattr(hit, "logo_url", ""),
+                        "user_reviews": getattr(hit, "user_reviews", None),
+                        "feature_list": getattr(hit, "feature_list", []),
+                        "referral_allow": getattr(hit, "referral_allow", False),
+                        "generated_description": getattr(
+                            hit, "generated_description", None
+                        ),
+                        "industry": getattr(hit, "industry", None),
+                        "carriers": getattr(hit, "carriers", []),
+                    }
 
-                # Add category if available
-                if hit.get("category"):
-                    tool_dict["category"] = hit.get("category")
-                elif (
-                    hit.get("categories")
-                    and isinstance(hit.get("categories"), list)
-                    and len(hit.get("categories")) > 0
-                ):
-                    if isinstance(hit.get("categories")[0], dict):
-                        tool_dict["category"] = hit.get("categories")[0].get("id")
+                    print(f"tool_dict: {tool_dict}")
+
+                except Exception as e:
+                    logger.error(f"Error converting hit to AlgoliaToolRecord: {str(e)}")
+                    continue
+            print(f"tools: {tools}")
+            # Convert Algolia hit to a dictionary format compatible with create_tool_response
+
+            logger.info(f"Tool dictnnnnnnnnn: {tool_dict}")
+
+            # Add category if available
+            if hit.get("category"):
+                tool_dict["category"] = hit.get("category")
+            elif (
+                hit.get("categories")
+                and isinstance(hit.get("categories"), list)
+                and len(hit.get("categories")) > 0
+            ):
+                if isinstance(hit.get("categories")[0], dict):
+                    tool_dict["category"] = hit.get("categories")[0].get("id")
+                elif hasattr(hit.get("categories")[0], "id"):
+                    tool_dict["category"] = hit.get("categories")[0].id
 
                 tool_response = await create_tool_response(tool_dict)
                 if tool_response:
                     # Check if this tool is saved by the user
                     if user_id:
-                        unique_id = str(hit.get("unique_id", ""))
+                        unique_id = str(tool_dict.get("unique_id", ""))
                         tool_response.saved_by_user = unique_id in saved_tools_list
                         logger.info(
                             f"Tool {unique_id} saved status (Algolia keyword search): {tool_response.saved_by_user}"

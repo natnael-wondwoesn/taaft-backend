@@ -457,6 +457,7 @@ async def keyword_search_endpoint(
     # Extract unique carriers from all tools
     all_carriers = set()
     for tool in tools:
+        logger.info(f"Tool: {tool}")
         if tool.get("carriers"):
             all_carriers.update(tool.get("carriers"))
 
