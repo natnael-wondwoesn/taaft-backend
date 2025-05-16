@@ -177,6 +177,8 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app/"
+        "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app"
         "http://localhost:3000",  # Frontend development server
         "https://taaft-deploy-18xw.vercel.app",  # Production frontend
         "https://taaft-deploy-18xw.vercel.app/",
