@@ -1242,29 +1242,196 @@ async def keyword_search_tools(
     Returns:
         List of tools or count of tools
     """
+    # Initialize empty list for tools
+    tools_list = []
+
     from ..algolia.config import algolia_config
     from ..algolia.search import algolia_search
 
-    # Try using Algolia first if configured
-    if algolia_config.is_configured():
-        try:
-            # Convert skip/limit to page/per_page for Algolia
-            page = skip // limit if limit > 0 else 0
+    try:
+        # Try using Algolia first if configured
+        if algolia_config.is_configured():
+            logger.info(f"Algolia is configured")
+            try:
+                # Convert skip/limit to page/per_page for Algolia
+                page = skip // limit if limit > 0 else 0
 
-            # Use the perform_keyword_search function
-            search_result = await algolia_search.perform_keyword_search(
-                keywords=keywords,
-                page=page,
-                per_page=(
-                    limit if not count_only else 1000
-                ),  # Get all results if counting
-            )
+                # Use the perform_keyword_search function
+                search_result = await algolia_search.perform_keyword_search(
+                    keywords=keywords,
+                    page=page,
+                    per_page=(
+                        limit if not count_only else 1000
+                    ),  # Get all results if counting
+                )
 
-            logger.info(f"Search result: {search_result}")
+                logger.info(f"Search result type: {type(search_result)}")
 
-            # If only count is needed, return the total hits
+                # If only count is needed, return the total hits
+                if count_only:
+                    # Handle different result formats
+                    if hasattr(search_result, "total"):
+                        return search_result.total
+                    elif hasattr(search_result, "nbHits"):
+                        return search_result.nbHits
+                    elif isinstance(search_result, dict):
+                        return search_result.get("nbHits", 0)
+                    else:
+                        return 0
+
+                # Get saved tools if user is provided
+                saved_tools_list = []
+                if user_id:
+                    # Check if the user exists and has saved tools
+                    user = await database.users.find_one({"_id": ObjectId(user_id)})
+                    if user and "saved_tools" in user:
+                        # Convert all items to strings for consistent comparison
+                        saved_tools_list = [
+                            str(tool_id) for tool_id in user["saved_tools"]
+                        ]
+                    else:
+                        # If user doesn't have saved_tools field, check favorites collection
+                        fav_cursor = favorites.find({"user_id": str(user_id)})
+                        async for favorite in fav_cursor:
+                            saved_tools_list.append(str(favorite["tool_unique_id"]))
+
+                    # For debugging
+                    logger.info(
+                        f"User {user_id} has saved tools (Algolia keyword search): {saved_tools_list}"
+                    )
+
+                # Convert Algolia results to ToolResponse objects
+                tools_list = []
+
+                # Handle different result formats
+                if hasattr(search_result, "tools") and search_result.tools:
+                    # Handle SearchResult object
+                    tools_to_process = search_result.tools
+                    logger.info(
+                        f"Processing SearchResult.tools: {len(tools_to_process)} items"
+                    )
+                elif hasattr(search_result, "hits") and search_result.hits:
+                    # Handle Algolia response object
+                    tools_to_process = search_result.hits
+                    logger.info(
+                        f"Processing search_result.hits: {len(tools_to_process)} items"
+                    )
+                elif isinstance(search_result, dict) and "hits" in search_result:
+                    # Handle dictionary response
+                    tools_to_process = search_result["hits"]
+                    logger.info(
+                        f"Processing search_result['hits']: {len(tools_to_process)} items"
+                    )
+                else:
+                    # No results found
+                    logger.warning("No search results found in Algolia response")
+                    tools_to_process = []
+
+                for tool in tools_to_process:
+                    try:
+                        logger.info(f"Processing tool: {tool}")
+
+                        # Create a dictionary from the tool object, handling both object and dict formats
+                        tool_dict = {}
+
+                        # Helper function to safely get attribute from either object or dict
+                        def get_attr(obj, attr, default=None):
+                            if isinstance(obj, dict):
+                                return obj.get(attr, default)
+                            return getattr(obj, attr, default)
+
+                        # Build the tool dictionary
+                        tool_dict = {
+                            "id": get_attr(tool, "objectID", ""),
+                            "price": get_attr(tool, "price", ""),
+                            "name": get_attr(tool, "name", ""),
+                            "description": get_attr(tool, "description", ""),
+                            "link": get_attr(tool, "link", ""),
+                            "unique_id": get_attr(tool, "unique_id", ""),
+                            "rating": get_attr(tool, "rating", None),
+                            "saved_numbers": get_attr(tool, "saved_numbers", None),
+                            "created_at": get_attr(tool, "created_at", None),
+                            "updated_at": get_attr(tool, "updated_at", None),
+                            "features": get_attr(tool, "features", None),
+                            "is_featured": get_attr(tool, "is_featured", False),
+                            "keywords": get_attr(tool, "keywords", []),
+                            "categories": get_attr(tool, "categories", None),
+                            "logo_url": get_attr(tool, "logo_url", ""),
+                            "user_reviews": get_attr(tool, "user_reviews", None),
+                            "feature_list": get_attr(tool, "feature_list", []),
+                            "referral_allow": get_attr(tool, "referral_allow", False),
+                            "generated_description": get_attr(
+                                tool, "generated_description", None
+                            ),
+                            "industry": get_attr(tool, "industry", None),
+                            "carriers": get_attr(tool, "carriers", []),
+                        }
+
+                        # Add category if available
+                        categories = get_attr(tool, "categories", None)
+                        if categories:
+                            if isinstance(categories, list) and len(categories) > 0:
+                                if isinstance(categories[0], dict):
+                                    tool_dict["category"] = categories[0].get("id")
+                                elif hasattr(categories[0], "id"):
+                                    tool_dict["category"] = categories[0].id
+
+                        # Create tool response
+                        tool_response = await create_tool_response(tool_dict)
+                        if tool_response:
+                            # Check if this tool is saved by the user
+                            if user_id:
+                                unique_id = str(get_attr(tool, "unique_id", "") or "")
+                                tool_response.saved_by_user = (
+                                    unique_id in saved_tools_list
+                                )
+
+                            tools_list.append(tool_response)
+                    except Exception as e:
+                        logger.error(f"Error processing tool: {str(e)}")
+                        continue
+
+                logger.info(f"Final tools list length: {len(tools_list)}")
+                return tools_list
+
+            except Exception as e:
+                # Log the error and fall back to MongoDB
+                logger.error(
+                    f"Error searching with Algolia, falling back to MongoDB: {str(e)}"
+                )
+                # Continue to MongoDB fallback
+        else:
+            logger.info(f"Algolia is not configured, falling back to MongoDB")
+
+            # Fall back to MongoDB if Algolia is not configured or search fails
+            # Create a query to find tools where any of the provided keywords match
+            query = {
+                "$or": [
+                    {"carriers": {"$in": keywords}},
+                    {"name": {"$regex": "|".join(keywords), "$options": "i"}},
+                    {"description": {"$regex": "|".join(keywords), "$options": "i"}},
+                    {"keywords": {"$in": keywords}},
+                    {"category": {"$regex": "|".join(keywords), "$options": "i"}},
+                    {
+                        "generated_description": {
+                            "$regex": "|".join(keywords),
+                            "$options": "i",
+                        }
+                    },
+                ]
+            }
+
+            # Apply additional filters if provided
+            if filters and isinstance(filters, dict):
+                for key, value in filters.items():
+                    query[key] = value
+
+            # If only count is needed, return the count
             if count_only:
-                return search_result.get("nbHits", 0)
+                return await tools.count_documents(query)
+
+            # Find matching tools with pagination
+            cursor = tools.find(query).skip(skip).limit(limit)
 
             # Get saved tools if user is provided
             saved_tools_list = []
@@ -1280,144 +1447,21 @@ async def keyword_search_tools(
                     async for favorite in fav_cursor:
                         saved_tools_list.append(str(favorite["tool_unique_id"]))
 
-                # For debugging
-                logger.info(
-                    f"User {user_id} has saved tools (Algolia keyword search): {saved_tools_list}"
-                )
-
-            # Convert Algolia results to ToolResponse objects
-            tools_list = []
-            hits = search_result.get("hits", [])
-            for hit in hits:
-                try:
-                    # Create AlgoliaToolRecord from each hit
-                    tool_dict = {
-                        "id": getattr(hit, "objectID", ""),
-                        "price": getattr(hit, "price", ""),
-                        "name": getattr(hit, "name", ""),
-                        "description": getattr(hit, "description", ""),
-                        "link": getattr(hit, "link", ""),
-                        "unique_id": getattr(hit, "unique_id", ""),
-                        "rating": getattr(hit, "rating", None),
-                        "saved_numbers": getattr(hit, "saved_numbers", None),
-                        "created_at": getattr(hit, "created_at", None),
-                        "updated_at": getattr(hit, "updated_at", None),
-                        "features": getattr(hit, "features", None),
-                        "is_featured": getattr(hit, "is_featured", False),
-                        "keywords": getattr(hit, "keywords", []),
-                        "categories": getattr(hit, "categories", None),
-                        "logo_url": getattr(hit, "logo_url", ""),
-                        "user_reviews": getattr(hit, "user_reviews", None),
-                        "feature_list": getattr(hit, "feature_list", []),
-                        "referral_allow": getattr(hit, "referral_allow", False),
-                        "generated_description": getattr(
-                            hit, "generated_description", None
-                        ),
-                        "industry": getattr(hit, "industry", None),
-                        "carriers": getattr(hit, "carriers", []),
-                    }
-
-                    print(f"tool_dict: {tool_dict}")
-
-                except Exception as e:
-                    logger.error(f"Error converting hit to AlgoliaToolRecord: {str(e)}")
-                    continue
-            print(f"tools: {tools}")
-            # Convert Algolia hit to a dictionary format compatible with create_tool_response
-
-            logger.info(f"Tool dictnnnnnnnnn: {tool_dict}")
-
-            # Add category if available
-            if hit.get("category"):
-                tool_dict["category"] = hit.get("category")
-            elif (
-                hit.get("categories")
-                and isinstance(hit.get("categories"), list)
-                and len(hit.get("categories")) > 0
-            ):
-                if isinstance(hit.get("categories")[0], dict):
-                    tool_dict["category"] = hit.get("categories")[0].get("id")
-                elif hasattr(hit.get("categories")[0], "id"):
-                    tool_dict["category"] = hit.get("categories")[0].id
-
-                tool_response = await create_tool_response(tool_dict)
+            # Process results
+            async for tool in cursor:
+                tool_response = await create_tool_response(tool)
                 if tool_response:
                     # Check if this tool is saved by the user
                     if user_id:
-                        unique_id = str(tool_dict.get("unique_id", ""))
+                        unique_id = str(tool.get("unique_id", ""))
                         tool_response.saved_by_user = unique_id in saved_tools_list
-                        logger.info(
-                            f"Tool {unique_id} saved status (Algolia keyword search): {tool_response.saved_by_user}"
-                        )
                     tools_list.append(tool_response)
 
-            return tools_list
+    except Exception as e:
+        # Log any errors but return an empty list instead of failing
+        logger.error(f"Error in keyword_search_tools: {str(e)}")
 
-        except Exception as e:
-            # Log the error and fall back to MongoDB
-            logger.error(
-                f"Error searching with Algolia, falling back to MongoDB: {str(e)}"
-            )
-
-    # # Fall back to MongoDB if Algolia is not configured or search fails
-    # # Create a query to find tools where any of the provided keywords match
-    # query = {
-    #     "$or": [
-    #         {"carriers": {"$in": keywords}},
-    #         {"name": {"$regex": "|".join(keywords), "$options": "i"}},
-    #         {"description": {"$regex": "|".join(keywords), "$options": "i"}},
-    #         {"keywords": {"$in": keywords}},
-    #         {"category": {"$regex": "|".join(keywords), "$options": "i"}},
-    #         {"generated_description": {"$regex": "|".join(keywords), "$options": "i"}},
-    #     ]
-    # }
-
-    # # Apply additional filters if provided
-    # if filters and isinstance(filters, dict):
-    #     for key, value in filters.items():
-    #         query[key] = value
-
-    # # If only count is needed, return the count
-    # if count_only:
-    #     return await tools.count_documents(query)
-
-    # # Find matching tools with pagination
-    # cursor = tools.find(query).skip(skip).limit(limit)
-
-    # # Get saved tools if user is provided
-    # saved_tools_list = []
-    # if user_id:
-    #     # Check if the user exists and has saved tools
-    #     user = await database.users.find_one({"_id": ObjectId(user_id)})
-    #     if user and "saved_tools" in user:
-    #         # Convert all items to strings for consistent comparison
-    #         saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
-    #     else:
-    #         # If user doesn't have saved_tools field, check favorites collection
-    #         fav_cursor = favorites.find({"user_id": str(user_id)})
-    #         async for favorite in fav_cursor:
-    #             saved_tools_list.append(str(favorite["tool_unique_id"]))
-
-    #     # For debugging
-    #     logger.info(
-    #         f"User {user_id} has saved tools (MongoDB keyword search): {saved_tools_list}"
-    #     )
-
-    # # Process results
-    # tools_list = []
-    # async for tool in cursor:
-    #     tool_response = await create_tool_response(tool)
-    #     if tool_response:
-    #         # Check if this tool is saved by the user
-    #         if user_id:
-    #             unique_id = str(tool.get("unique_id", ""))
-    #             tool_response.saved_by_user = unique_id in saved_tools_list
-    #             logger.info(
-    #                 f"Tool {unique_id} saved status (MongoDB keyword search): {tool_response.saved_by_user}"
-    #             )
-    #         tools_list.append(tool_response)
-
-    # return tools_list
+    return tools_list
 
 
 @redis_cache(prefix="tool_with_favorite")

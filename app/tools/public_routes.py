@@ -385,16 +385,17 @@ async def public_keyword_search_endpoint(
 
     # Extract unique carriers from all tools
     all_carriers = set()
-    for tool in tools:
-        if tool.carriers:
-            all_carriers.update(tool.carriers)
+    if tools:
+        for tool in tools:
+            if hasattr(tool, "carriers") and tool.carriers:
+                all_carriers.update(tool.carriers)
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
 
     return {
-        "tools": tools,
-        "total": total,
+        "tools": tools or [],  # Ensure we always return a list
+        "total": total if isinstance(total, int) else 0,  # Ensure total is an integer
         "skip": skip,
         "limit": limit,
         "carriers": unique_carriers,

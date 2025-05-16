@@ -78,7 +78,7 @@ class AlgoliaSearch:
         index_name: str = None,
         page: int = 0,
         per_page: int = 20,
-    ) -> Dict[str, Any]:
+    ) -> SearchResult:
         """
         Perform a search using keywords from chat conversation
 
@@ -120,65 +120,78 @@ class AlgoliaSearch:
             # Convert the search query to the specified format with a placeholder popularity value
             # Using a fixed popularity value of 2.5658 as specified in the instructions
             # search_query = list(search_query.join())
-            print(f"search_index: {search_query}")
-            params = {
-                "params": {
-                    "index_name": search_index,
-                    "query": search_query,
-                    "page": page,
-                    "hitsPerPage": per_page,
-                    "attributesToRetrieve": ["*"],
-                }
-            }
-
             # Execute search using Algolia client
-            results = self.config.client.search_single_index(
-                index_name=search_index,
-                search_params={
-                    "query": f"{search_query}",
-                    "attributesToRetrieve": ["*"],
-                    "advancedSyntax": True,
-                    "typoTolerance": False,
-                    "removeWordsIfNoResults": "allOptional",
-                    "hitsPerPage": 1000,  # Increase to get all available hits
-                },
+            search_params = {
+                "query": search_query,
+                "page": page,
+                "hitsPerPage": per_page,
+                "typoTolerance": False,  # Allow for typos in search
+                "advancedSyntax": True,
+                "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
+            }
+            index_name = self.config.tools_index_name
+            search_response = self.config.client.search_single_index(
+                index_name=index_name, search_params=search_params
             )
 
-            # print(f"results: {results.nb_hits}")
-
-            # Process the response based on its actual structure
-            # The response contains direct search results without a "results" field
-            if results:
-                # Extract the relevant search result fields
-                return {
-                    "hits": results.hits,
-                    "nbHits": results.nb_hits,
-                    "page": results.page,
-                    "nbPages": results.nb_pages,
-                    "processingTimeMS": results.processing_time_ms,
-                    "query": results.query,
-                    "params": results.params,
-                }
-            else:
-                logger.warning("No results found or invalid response format.")
-                return {
-                    "hits": [],
-                    "nbHits": 0,
-                    "page": page,
-                    "nbPages": 0,
-                    "processingTimeMS": 0,
-                }
-
+            # Convert results to tool records
+            tools = []
+            for hit in search_response.hits:
+                print(f"hit: {hit}")
+                try:
+                    # Create AlgoliaToolRecord from each hit
+                    tool_record = AlgoliaToolRecord(
+                        objectID=getattr(hit, "objectID", ""),
+                        price=getattr(hit, "price", None),
+                        name=getattr(hit, "name", None),
+                        description=getattr(hit, "description", None),
+                        link=getattr(hit, "link", None),
+                        unique_id=getattr(hit, "unique_id", None),
+                        rating=getattr(hit, "rating", None),
+                        saved_numbers=getattr(hit, "saved_numbers", None),
+                        category=getattr(hit, "category", None),
+                        features=getattr(hit, "features", None),
+                        is_featured=getattr(hit, "is_featured", False),
+                        keywords=getattr(hit, "keywords", None),
+                        categories=getattr(hit, "categories", None),
+                        logo_url=getattr(hit, "logo_url", None),
+                        user_reviews=getattr(hit, "user_reviews", None),
+                        feature_list=getattr(hit, "feature_list", None),
+                        referral_allow=getattr(hit, "referral_allow", False),
+                        generated_description=getattr(
+                            hit, "generated_description", None
+                        ),
+                        industry=getattr(hit, "industry", None),
+                        created_at=getattr(hit, "created_at", None),
+                        updated_at=getattr(hit, "updated_at", None),
+                        carriers=getattr(hit, "carriers", None),
+                    )
+                    # print(f"tool_record: {tool_record}")
+                    tools.append(tool_record)
+                    print(f"tools: {tools}")
+                except Exception as e:
+                    logger.error(f"Error converting hit to AlgoliaToolRecord: {str(e)}")
+                    continue
+            print(f"tools: {tools}")
+            # Create and return SearchResult
+            return SearchResult(
+                tools=tools,
+                total=search_response.nb_hits,
+                page=search_response.page,
+                per_page=per_page,
+                pages=search_response.nb_pages,
+                processing_time_ms=search_response.processing_time_ms,
+            )
         except Exception as e:
             logger.error(f"Error performing keyword search: {str(e)}")
-            return {
-                "hits": [],
-                "nbHits": 0,
-                "page": page,
-                "nbPages": 0,
-                "processingTimeMS": 0,
-                "error": str(e),
-            }
+            return SearchResult(
+                tools=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                pages=0,
+                processing_time_ms=0,
+            )
 
     def extract_keywords_from_chat(self, messages: List[Dict[str, Any]]) -> List[str]:
         """
