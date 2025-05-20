@@ -89,6 +89,9 @@ from .shares import router as shares_router
 # Import the bidirectional linking router
 from .bidirectional_linking import router as bidirectional_linking_router
 
+# Import the new job impacts router
+from .routers import job_impacts as job_impacts_router
+
 # Import the glossary seed script
 from .seed_glossary import seed_glossary_terms
 
@@ -227,6 +230,7 @@ app.include_router(blog_router)  # Include blog router
 app.include_router(favorites_router)  # Include favorites router
 app.include_router(shares_router)  # Include shares router
 app.include_router(bidirectional_linking_router)  # Include bidirectional linking router
+app.include_router(job_impacts_router.router)  # Include job impacts router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
