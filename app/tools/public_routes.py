@@ -10,6 +10,7 @@ from app.models.user import UserResponse
 
 from .models import PaginatedToolsResponse, ToolResponse
 from .tools_service import (
+    create_tool_response,
     get_tools,
     get_tool_by_id,
     get_tool_by_unique_id,
@@ -79,9 +80,10 @@ async def list_public_tools(
 
     # Extract unique carriers from all tools
     all_carriers = set()
-    for tool in tools:
-        if tool.carriers:
-            all_carriers.update(tool.carriers)
+    if tools:
+        for tool in tools:
+            if hasattr(tool, "carriers") and tool.carriers:
+                all_carriers.update(tool.carriers)
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
@@ -102,27 +104,32 @@ async def search_public_tools(
     limit: int = Query(100, ge=1, le=1000),
 ):
     """
-    Search for tools by name or description.
+    Search for tools by name or description using MongoDB directly.
     This endpoint is publicly accessible without authentication.
     """
-    tools = await search_tools(query=q, skip=skip, limit=limit)
-    total = await search_tools(query=q, count_only=True)
+    from ..database.database import tools
 
-    # Extract unique carriers from all tools
-    all_carriers = set()
-    for tool in tools:
-        if tool.carriers:
-            all_carriers.update(tool.carriers)
+    # Create a MongoDB text search query
+    query = {"$text": {"$search": q}}
 
-    # Convert to sorted list
-    unique_carriers = sorted(list(all_carriers))
+    # Get tools with pagination
+    cursor = tools.find(query).skip(skip).limit(limit)
+
+    # Convert MongoDB documents to ToolResponse objects
+    tools_list = []
+    async for tool in cursor:
+        tool_response = await create_tool_response(tool)
+        if tool_response:
+            tools_list.append(tool_response)
+
+    # Get total count with the same query
+    total = await tools.count_documents(query)
 
     return {
-        "tools": tools,
+        "tools": tools_list,
         "total": total,
         "skip": skip,
         "limit": limit,
-        "carriers": unique_carriers,
     }
 
 
@@ -172,27 +179,33 @@ async def get_featured_tools(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
-    # If search term is provided, use search_tools
+    # If search term is provided, use direct MongoDB search
     if search and search.strip():
-        # Use search_tools, then filter for featured tools in memory
-        search_results = await search_tools(query=search, skip=0, limit=1000)
+        from ..database.database import tools
 
-        # Filter to only include featured tools
-        filtered_tools = [tool for tool in search_results if tool.is_featured]
+        # Create a query that combines search term with featured filter
+        query = {"$text": {"$search": search}, "is_featured": True}
 
-        # Apply other filters
+        # Add additional filters if provided
         if category:
-            filtered_tools = [
-                tool for tool in filtered_tools if tool.category == category
-            ]
+            query["category"] = category
         if price_type:
-            filtered_tools = [
-                tool for tool in filtered_tools if tool.price == price_type
-            ]
+            query["price"] = price_type
 
-        # Apply pagination
-        total = len(filtered_tools)
-        tools = filtered_tools[skip : skip + limit]
+        # Get tools with pagination
+        cursor = tools.find(query).skip(skip).limit(limit)
+
+        # Convert MongoDB documents to ToolResponse objects
+        tools_list = []
+        async for tool in cursor:
+            tool_response = await create_tool_response(tool)
+            if tool_response:
+                tools_list.append(tool_response)
+
+        # Get total count with the same query
+        total = await tools.count_documents(query)
+
+        tools = tools_list
     else:
         # No search term, use regular get_tools with filters
         tools = await get_tools(
@@ -211,9 +224,10 @@ async def get_featured_tools(
 
     # Extract unique carriers from all tools
     all_carriers = set()
-    for tool in tools:
-        if tool.carriers:
-            all_carriers.update(tool.carriers)
+    if tools:
+        for tool in tools:
+            if hasattr(tool, "carriers") and tool.carriers:
+                all_carriers.update(tool.carriers)
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
@@ -234,35 +248,32 @@ async def search_public_featured_tools(
     limit: int = Query(100, ge=1, le=1000),
 ):
     """
-    Search for featured tools by name or description.
+    Search for featured tools by name or description using MongoDB directly.
     This endpoint is publicly accessible without authentication.
     """
-    # First search for tools matching the query
-    tools = await search_tools(query=q, skip=0, limit=1000)
+    from ..database.database import tools
 
-    # Filter the results to include only featured tools
-    featured_tools = [tool for tool in tools if tool.get("is_featured", False)]
+    # Create a MongoDB text search query that also filters for featured tools
+    query = {"$text": {"$search": q}, "is_featured": True}
 
-    # Apply pagination
-    start_idx = min(skip, len(featured_tools))
-    end_idx = min(skip + limit, len(featured_tools))
-    paginated_tools = featured_tools[start_idx:end_idx]
+    # Get tools with pagination
+    cursor = tools.find(query).skip(skip).limit(limit)
 
-    # Extract unique carriers from all featured tools
-    all_carriers = set()
-    for tool in featured_tools:
-        if tool.carriers:
-            all_carriers.update(tool.carriers)
+    # Convert MongoDB documents to ToolResponse objects
+    tools_list = []
+    async for tool in cursor:
+        tool_response = await create_tool_response(tool)
+        if tool_response:
+            tools_list.append(tool_response)
 
-    # Convert to sorted list
-    unique_carriers = sorted(list(all_carriers))
+    # Get total count with the same query
+    total = await tools.count_documents(query)
 
     return {
-        "tools": paginated_tools,
-        "total": len(featured_tools),
+        "tools": tools_list,
+        "total": total,
         "skip": skip,
         "limit": limit,
-        "carriers": unique_carriers,
     }
 
 
@@ -313,27 +324,33 @@ async def get_sponsored_tools(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
-    # If search term is provided, use search_tools
+    # If search term is provided, use direct MongoDB search
     if search and search.strip():
-        # Use search_tools, then filter for featured tools in memory
-        search_results = await search_tools(query=search, skip=0, limit=1000)
+        from ..database.database import tools
 
-        # Filter to only include featured tools
-        filtered_tools = [tool for tool in search_results if tool.is_featured]
+        # Create a query that combines search term with featured filter
+        query = {"$text": {"$search": search}, "is_featured": True}
 
-        # Apply other filters
+        # Add additional filters if provided
         if category:
-            filtered_tools = [
-                tool for tool in filtered_tools if tool.category == category
-            ]
+            query["category"] = category
         if price_type:
-            filtered_tools = [
-                tool for tool in filtered_tools if tool.price == price_type
-            ]
+            query["price"] = price_type
 
-        # Apply pagination
-        total = len(filtered_tools)
-        tools = filtered_tools[skip : skip + limit]
+        # Get tools with pagination
+        cursor = tools.find(query).skip(skip).limit(limit)
+
+        # Convert MongoDB documents to ToolResponse objects
+        tools_list = []
+        async for tool in cursor:
+            tool_response = await create_tool_response(tool)
+            if tool_response:
+                tools_list.append(tool_response)
+
+        # Get total count with the same query
+        total = await tools.count_documents(query)
+
+        tools = tools_list
     else:
         # No search term, use regular get_tools with filters
         tools = await get_tools(
@@ -374,31 +391,41 @@ async def public_keyword_search_endpoint(
     limit: int = Query(100, ge=1, le=1000),
 ):
     """
-    Search for tools by exact keywords match.
+    Search for tools by exact keywords match using MongoDB directly.
     This endpoint is publicly accessible without authentication.
     """
-    # Get tools that match any of the provided keywords
-    tools = await keyword_search_tools(keywords=keywords, skip=skip, limit=limit)
+    from ..database.database import tools
 
-    # Get total count with the same keywords
-    total = await keyword_search_tools(keywords=keywords, count_only=True)
+    # Create a query to find tools where any of the provided keywords match
+    query = {
+        "$or": [
+            {"carriers": {"$in": keywords}},
+            {"name": {"$regex": "|".join(keywords), "$options": "i"}},
+            {"description": {"$regex": "|".join(keywords), "$options": "i"}},
+            {"keywords": {"$in": keywords}},
+            {"category": {"$regex": "|".join(keywords), "$options": "i"}},
+            {"generated_description": {"$regex": "|".join(keywords), "$options": "i"}},
+        ]
+    }
 
-    # Extract unique carriers from all tools
-    all_carriers = set()
-    if tools:
-        for tool in tools:
-            if hasattr(tool, "carriers") and tool.carriers:
-                all_carriers.update(tool.carriers)
+    # Find matching tools with pagination
+    cursor = tools.find(query).skip(skip).limit(limit)
 
-    # Convert to sorted list
-    unique_carriers = sorted(list(all_carriers))
+    # Convert MongoDB documents to ToolResponse objects
+    tools_list = []
+    async for tool in cursor:
+        tool_response = await create_tool_response(tool)
+        if tool_response:
+            tools_list.append(tool_response)
+
+    # Get total count with the same query
+    total = await tools.count_documents(query)
 
     return {
-        "tools": tools or [],  # Ensure we always return a list
-        "total": total if isinstance(total, int) else 0,  # Ensure total is an integer
+        "tools": tools_list,
+        "total": total,
         "skip": skip,
         "limit": limit,
-        "carriers": unique_carriers,
     }
 
 
