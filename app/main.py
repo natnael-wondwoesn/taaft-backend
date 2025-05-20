@@ -182,6 +182,9 @@ app.add_middleware(
     allow_origins=[
         "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app",
         "https://taaft-development.vercel.app",
+        "https://taaft-development.vercel.app/",
+        "https://taaft-development.vercel.app/tools/",
+        "https://taaft-development.vercel.app/tools/keyword-search",
         "http://localhost:3000",  # Frontend development server
         "https://taaft-deploy-18xw.vercel.app",  # Production frontend
         "https://taaft-deploy-18xw.vercel.app/",
@@ -189,7 +192,6 @@ app.add_middleware(
         "https://taaft-deploy-18xw.vercel.app/tools/keyword-search",
         "https://taaft-deploy-18xw.vercel.app/tools/wayin-ai",
         "https://taaft-deploy-18xw.vercel.app/tools/keyword-search/keyword-search",
-        # "*",  # For development and testing (remove in production)
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
