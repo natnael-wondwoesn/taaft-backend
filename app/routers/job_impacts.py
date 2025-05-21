@@ -138,3 +138,50 @@ async def get_job_impact_details(
     if not job:
         raise HTTPException(status_code=404, detail="Job impact analysis not found")
     return job  # Will be serialized by JobImpact model
+
+
+@router.post("/admin/generate-slugs", status_code=200)
+async def generate_missing_slugs():
+    """
+    Admin utility endpoint to generate and save slugs for all job entries that have null slugs.
+    Returns the count of updated records.
+    """
+    # Find all jobs without slugs
+    cursor = database[COLLECTION_NAME].find({"slug": None})
+    jobs_without_slugs = await cursor.to_list(length=1000)
+
+    update_count = 0
+    slug_collisions = 0
+
+    # Generate and update slugs
+    for job in jobs_without_slugs:
+        if not job.get("job_title"):
+            continue  # Skip if no job_title to generate slug from
+
+        slug = generate_slug(job["job_title"])
+
+        # Check for duplicate slugs
+        existing_with_slug = await database[COLLECTION_NAME].find_one(
+            {"slug": slug, "_id": {"$ne": job["_id"]}}
+        )
+        if existing_with_slug:
+            # If collision, append object id suffix
+            suffix = str(job["_id"])[-6:]  # Use last 6 chars of ObjectId
+            slug = f"{slug}-{suffix}"
+            slug_collisions += 1
+
+        # Update the record
+        result = await database[COLLECTION_NAME].update_one(
+            {"_id": job["_id"]},
+            {"$set": {"slug": slug, "updated_at": datetime.utcnow()}},
+        )
+
+        if result.modified_count > 0:
+            update_count += 1
+
+    return {
+        "message": f"Successfully updated {update_count} job records with missing slugs",
+        "updated_count": update_count,
+        "slug_collisions": slug_collisions,
+        "total_processed": len(jobs_without_slugs),
+    }
