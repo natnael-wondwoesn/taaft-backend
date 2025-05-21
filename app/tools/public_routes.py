@@ -82,8 +82,12 @@ async def list_public_tools(
     all_carriers = set()
     if tools:
         for tool in tools:
-            if hasattr(tool, "carriers") and tool.carriers:
-                all_carriers.update(tool.carriers)
+            if type(tool) == dict:
+                if tool.get("carriers"):
+                    all_carriers.update(tool.get("carriers"))
+            else:
+                if tool.carriers:
+                    all_carriers.update(tool.carriers)
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
@@ -226,8 +230,12 @@ async def get_featured_tools(
     all_carriers = set()
     if tools:
         for tool in tools:
-            if hasattr(tool, "carriers") and tool.carriers:
-                all_carriers.update(tool.carriers)
+            if type(tool) == dict:
+                if tool.get("carriers"):
+                    all_carriers.update(tool.get("carriers"))
+            else:
+                if tool.carriers:
+                    all_carriers.update(tool.carriers)
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
