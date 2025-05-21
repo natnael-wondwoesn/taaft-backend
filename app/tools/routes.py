@@ -6,6 +6,7 @@ from ..auth.dependencies import get_current_active_user, get_admin_user
 from .models import ToolCreate, ToolUpdate, ToolResponse, PaginatedToolsResponse
 from ..models.user import UserResponse
 from .tools_service import (
+    create_tool_response,
     get_tools,
     get_tool_by_id,
     get_tool_by_unique_id,
@@ -180,6 +181,120 @@ async def get_featured_tools(
 
     # Get total count of featured tools
     total = await get_tools(count_only=True, filters=filters)
+
+    # Ensure tools is always a list, even if None is returned
+    if tools is None:
+        tools = []
+
+    # Extract unique carriers from all tools
+    all_carriers = set()
+    for tool in tools:
+        if type(tool) == dict:
+            if tool.get("carriers"):
+                all_carriers.update(tool.get("carriers"))
+        else:
+            if tool.carriers:
+                all_carriers.update(tool.carriers)
+
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
+
+    return {
+        "tools": tools,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+    }
+
+
+@router.get("/sponsored", response_model=PaginatedToolsResponse)
+async def get_sponsored_tools_authenticated(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    search: Optional[str] = Query(None, description="Search term for filtering tools"),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    price_type: Optional[str] = Query(None, description="Filter by price type"),
+    sort_by: Optional[str] = Query(
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
+    ),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
+    current_user: UserResponse = Depends(get_current_active_user),
+):
+    """
+    Get a list of sponsored tools (identical to featured tools) for authenticated users.
+    Default sorting is by created_at in descending order (newest first).
+
+    - **search**: Optional search term to filter tools by name, description, or keywords
+    - **category**: Optional category filter
+    - **price_type**: Optional price type filter
+    - **sort_by**: Field to sort by
+    - **sort_order**: Sort order (asc or desc)
+    """
+    # Apply filter for featured tools only (reusing the same field)
+    filters = {"is_featured": True}
+
+    # Add additional filters if provided
+    if category:
+        filters["category"] = category
+    if price_type:
+        filters["price"] = price_type
+
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    # If search term is provided, use direct MongoDB search
+    if search and search.strip():
+        from ..database.database import tools
+
+        # Create a query that combines search term with featured filter
+        query = {"$text": {"$search": search}, "is_featured": True}
+
+        # Add additional filters if provided
+        if category:
+            query["category"] = category
+        if price_type:
+            query["price"] = price_type
+
+        # Get tools with pagination
+        cursor = tools.find(query).skip(skip).limit(limit)
+
+        # Convert MongoDB documents to ToolResponse objects
+        tools_list = []
+        async for tool in cursor:
+            tool_response = await create_tool_response(
+                tool, user_id=str(current_user.id)
+            )
+            if tool_response:
+                tools_list.append(tool_response)
+
+        # Get total count with the same query
+        total = await tools.count_documents(query)
+
+        tools = tools_list
+    else:
+        # No search term, use regular get_tools with filters
+        tools = await get_tools(
+            skip=skip,
+            limit=limit,
+            filters=filters,
+            sort_by=sort_by,
+            sort_order=sort_order,
+            user_id=str(current_user.id),
+        )
+
+        total = await get_tools(count_only=True, filters=filters)
 
     # Ensure tools is always a list, even if None is returned
     if tools is None:
