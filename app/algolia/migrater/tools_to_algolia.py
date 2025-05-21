@@ -271,7 +271,7 @@ def configure_algolia_index(client, index_name):
             "customRanking": ["desc(is_featured)", "desc(updated_at)"],
             "ignorePlurals": True,
             "advancedSyntax": True,
-            "typoTolerance": False,
+            "typoTolerance": "strict",
         },
     )
     logger.info("Algolia index configured successfully")

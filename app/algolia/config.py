@@ -182,11 +182,10 @@ class AlgoliaConfig:
                 "attributesToHighlight": ["term", "definition"],
                 # Configure snippeting
                 "attributesToSnippet": ["definition:50"],
-                "typoTolerance": False,
+                "typoTolerance": "strict",
                 # Configure pagination
                 "hitsPerPage": 50,
                 # Additional settings
-                "typoTolerance": True,
                 "distinct": True,
                 "queryLanguages": ["en"],
             }

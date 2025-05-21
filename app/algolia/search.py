@@ -125,7 +125,7 @@ class AlgoliaSearch:
                 "query": search_query,
                 "page": page,
                 "hitsPerPage": per_page,
-                "typoTolerance": False,  # Allow for typos in search
+                "typoTolerance": "strict",  # Allow for typos in search
                 "advancedSyntax": True,
                 "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
             }
@@ -462,7 +462,7 @@ class AlgoliaSearch:
                 "restrictSearchableAttributes": ["name", "description"],
                 "page": page,
                 "hitsPerPage": per_page,
-                "typoTolerance": False,  # Allow for typos in search
+                "typoTolerance": "strict",  # Allow for typos in search
                 "advancedSyntax": True,
                 "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
             }
