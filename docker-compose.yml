@@ -10,6 +10,13 @@ services:
       - REDIS_URL=redis://redis:6379
       - REDIS_CACHE_ENABLED=true
       - REDIS_CACHE_TTL=300
+      - ALGOLIA_APP_ID=${ALGOLIA_APP_ID}
+      - ALGOLIA_API_KEY=${ALGOLIA_API_KEY}
+      - ALGOLIA_SEARCH_ONLY_API_KEY=${ALGOLIA_SEARCH_ONLY_API_KEY}
+      - ALGOLIA_WRITE_API_KEY=${ALGOLIA_WRITE_API_KEY}
+      - ALGOLIA_TOOLS_INDEX=${ALGOLIA_TOOLS_INDEX:-tools_index}
+      - ALGOLIA_GLOSSARY_INDEX=${ALGOLIA_GLOSSARY_INDEX:-taaft_glossary}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       mongo:
         condition: service_healthy
