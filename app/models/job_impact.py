@@ -91,7 +91,7 @@ class Tool(BaseModel):
 
 class Task(BaseModel):
     name: str
-    ai_impact_score: Optional[str] = (
+    task_ai_impact_score: Optional[str] = (
         None  # Make optional as it appears to be missing in some cases
     )
     tools: List[Tool] = []
@@ -101,7 +101,7 @@ class Task(BaseModel):
         json_schema_extra={
             "example": {
                 "name": "Whole body image generation",
-                "ai_impact_score": "80%",
+                "task_ai_impact_score": "80%",
                 "tools": [
                     {
                         "tool_name": "Generated Photos",
@@ -117,7 +117,7 @@ class JobImpactBase(BaseModel):
     detail_page_link: str
     job_title: str
     slug: Optional[str] = None
-    ai_impact_score: str
+    task_ai_impact_score: str
     description: str
     ai_impact_summary: Optional[str] = None
     detailed_analysis: Optional[str] = None
@@ -136,9 +136,9 @@ class JobImpactBase(BaseModel):
             if not isinstance(task_data, dict):
                 continue
 
-            # Handle ai_impact_score if missing
-            if "ai_impact_score" not in task_data:
-                task_data["ai_impact_score"] = None
+            # Handle task_ai_impact_score if missing
+            if "task_ai_impact_score" not in task_data:
+                task_data["task_ai_impact_score"] = None
 
             # Process tools
             if "tools" in task_data and isinstance(task_data["tools"], list):
@@ -186,35 +186,39 @@ class JobImpact(JobImpactBase):
                 "tasks": [
                     {
                         "name": "Whole body image generation",
-                        "ai_impact_score": "80%",
+                        "task_ai_impact_score": "80%",
                         "tools": [
                             {
                                 "tool_name": "Generated Photos",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://generatedphotos.com/",
                             }
                         ],
                     },
                     {
                         "name": "Viral marketing photos",
-                        "ai_impact_score": "80%",
+                        "task_ai_impact_score": "80%",
                         "tools": [
                             {
                                 "tool_name": "Assembo",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://assemblo.ai/",
                             }
                         ],
                     },
                     {
                         "name": "Social media bios",
-                        "ai_impact_score": "80%",
+                        "task_ai_impact_score": "80%",
                         "tools": [
                             {
                                 "tool_name": "AI Social Bio",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://aisocialbio.com/",
                             },
                             {
                                 "tool_name": "Twitter Bio Generator",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://www.twitterbio.com/",
                             },
                         ],
                     },
@@ -260,8 +264,8 @@ class JobImpactInDB(JobImpact):
                 task_copy = dict(task)
 
                 # Ensure ai_impact_score exists
-                if "ai_impact_score" not in task_copy:
-                    task_copy["ai_impact_score"] = None
+                if "task_ai_impact_score" not in task_copy:
+                    task_copy["task_ai_impact_score"] = None
 
                 # Process tools
                 if "tools" in task_copy and isinstance(task_copy["tools"], list):
@@ -460,9 +464,9 @@ def preprocess_job_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
             # Create a processed task
             processed_task = dict(task)
 
-            # Ensure ai_impact_score exists
-            if "ai_impact_score" not in processed_task:
-                processed_task["ai_impact_score"] = None
+            # Ensure task_ai_impact_score exists
+            if "task_ai_impact_score" not in processed_task:
+                processed_task["task_ai_impact_score"] = None
 
             # Process tools if they exist
             if "tools" in processed_task and isinstance(processed_task["tools"], list):
