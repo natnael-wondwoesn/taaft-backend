@@ -29,12 +29,15 @@ async def create_job_impact_in_db(job_impact_data: JobImpactCreate) -> JobImpact
     slug = generate_slug(job_impact_data.job_title)
     now = datetime.utcnow()
 
-    # Check for existing slug to avoid duplicates, if necessary
-    # existing_job = await database[COLLECTION_NAME].find_one({"slug": slug})
-    # if existing_job:
-    #     raise HTTPException(status_code=400, detail=f"Job with slug '{slug}' already exists.")
+    # Check for existing slug to avoid duplicates
+    existing_job = await database[COLLECTION_NAME].find_one({"slug": slug})
+    if existing_job:
+        # Append a short suffix to make the slug unique
+        suffix = str(uuid.uuid4())[:6]
+        slug = f"{slug}-{suffix}"
 
-    job_doc = job_impact_data.dict()
+    # Convert Pydantic model to dict for MongoDB insertion
+    job_doc = job_impact_data.dict(by_alias=True)
     job_doc["slug"] = slug
     job_doc["created_at"] = now
     job_doc["updated_at"] = now
