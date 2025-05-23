@@ -75,8 +75,9 @@ class PyObjectId(ObjectId):
 
 
 class Tool(BaseModel):
-    tool_name: str
+    name: str = Field(alias="tool_name")
     logo_url: Optional[str] = None
+    link: Optional[str] = None
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,7 @@ class Tool(BaseModel):
             "example": {
                 "tool_name": "Generated Photos",
                 "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                "link": "https://www.generatedphotos.com/",
             }
         },
     )
@@ -106,6 +108,7 @@ class Task(BaseModel):
                     {
                         "tool_name": "Generated Photos",
                         "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                        "link": "https://www.generatedphotos.com/",
                     }
                 ],
             }
@@ -145,10 +148,22 @@ class JobImpactBase(BaseModel):
                 processed_tools = []
                 for tool_data in task_data["tools"]:
                     if isinstance(tool_data, dict):
-                        # Map tool_name field if needed
-                        if "name" not in tool_data and "tool_name" in tool_data:
-                            tool_data["name"] = tool_data["tool_name"]
-                        processed_tools.append(tool_data)
+                        # Create a copy of the tool data
+                        tool_copy = dict(tool_data)
+
+                        # Ensure tool_name exists (required by the Tool model)
+                        if "name" in tool_copy and "tool_name" not in tool_copy:
+                            tool_copy["tool_name"] = tool_copy["name"]
+                        elif "tool_name" in tool_copy and "name" not in tool_copy:
+                            tool_copy["name"] = tool_copy["tool_name"]
+
+                        # Handle logo_url mapping
+                        if "tool_logo_url" in tool_copy and "logo_url" not in tool_copy:
+                            tool_copy["logo_url"] = tool_copy["tool_logo_url"]
+                        if "tool_link" in tool_copy and "link" not in tool_copy:
+                            tool_copy["link"] = tool_copy["tool_link"]
+
+                        processed_tools.append(tool_copy)
                 task_data["tools"] = processed_tools
 
             processed_tasks.append(task_data)
@@ -282,16 +297,18 @@ class JobImpactInDB(JobImpact):
                         # Create tool copy
                         tool_copy = dict(tool)
 
-                        # Handle tool_name mapping
-                        if "tool_name" in tool_copy:
+                        # Handle field mappings to ensure both name and tool_name exist
+                        if "name" in tool_copy and "tool_name" not in tool_copy:
+                            tool_copy["tool_name"] = tool_copy["name"]
+                        elif "tool_name" in tool_copy and "name" not in tool_copy:
                             tool_copy["name"] = tool_copy["tool_name"]
 
                         # Handle tool_link mapping
-                        if "tool_link" in tool_copy:
+                        if "tool_link" in tool_copy and "link" not in tool_copy:
                             tool_copy["link"] = tool_copy["tool_link"]
 
                         # Handle tool_logo_url mapping
-                        if "tool_logo_url" in tool_copy:
+                        if "tool_logo_url" in tool_copy and "logo_url" not in tool_copy:
                             tool_copy["logo_url"] = tool_copy["tool_logo_url"]
 
                         processed_tools.append(tool_copy)
@@ -477,6 +494,10 @@ def preprocess_job_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
             processed_task = dict(task)
 
             # Ensure ai_impact_score exists
+            if "ai_impact_score" not in processed_task:
+                processed_task["ai_impact_score"] = None
+
+            # Ensure task_ai_impact_score exists
             if "task_ai_impact_score" not in processed_task:
                 processed_task["task_ai_impact_score"] = None
 
@@ -489,16 +510,22 @@ def preprocess_job_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
                         continue
 
                     processed_tool = dict(tool)
-                    # Map tool_name to name if needed
-                    if "tool_name" in processed_tool and "name" not in processed_tool:
+
+                    # Ensure both name and tool_name exist
+                    if "name" in processed_tool and "tool_name" not in processed_tool:
+                        processed_tool["tool_name"] = processed_tool["name"]
+                    elif "tool_name" in processed_tool and "name" not in processed_tool:
                         processed_tool["name"] = processed_tool["tool_name"]
 
                     # Handle tool_link mapping
-                    if "tool_link" in processed_tool:
+                    if "tool_link" in processed_tool and "link" not in processed_tool:
                         processed_tool["link"] = processed_tool["tool_link"]
 
                     # Handle tool_logo_url mapping
-                    if "tool_logo_url" in processed_tool:
+                    if (
+                        "tool_logo_url" in processed_tool
+                        and "logo_url" not in processed_tool
+                    ):
                         processed_tool["logo_url"] = processed_tool["tool_logo_url"]
 
                     processed_tools.append(processed_tool)
