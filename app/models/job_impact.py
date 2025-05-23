@@ -186,35 +186,39 @@ class JobImpact(JobImpactBase):
                 "tasks": [
                     {
                         "name": "Whole body image generation",
-                        "ai_impact_score": "80%",
+                        "task_ai_impact_score": "80%",
                         "tools": [
                             {
                                 "tool_name": "Generated Photos",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://www.generatedphotos.com/",
                             }
                         ],
                     },
                     {
                         "name": "Viral marketing photos",
-                        "ai_impact_score": "80%",
+                        "task_ai_impact_score": "80%",
                         "tools": [
                             {
                                 "tool_name": "Assembo",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://www.assemble.ai/",
                             }
                         ],
                     },
                     {
                         "name": "Social media bios",
-                        "ai_impact_score": "80%",
+                        "task_ai_impact_score": "80%",
                         "tools": [
                             {
                                 "tool_name": "AI Social Bio",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://www.aisocialbio.com/",
                             },
                             {
                                 "tool_name": "Twitter Bio Generator",
-                                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                                "tool_link": "https://www.twitterbio.com/",
                             },
                         ],
                     },
@@ -263,6 +267,10 @@ class JobImpactInDB(JobImpact):
                 if "ai_impact_score" not in task_copy:
                     task_copy["ai_impact_score"] = None
 
+                # Ensure task_ai_impact_score exists
+                if "task_ai_impact_score" not in task_copy:
+                    task_copy["task_ai_impact_score"] = None
+
                 # Process tools
                 if "tools" in task_copy and isinstance(task_copy["tools"], list):
                     processed_tools = []
@@ -277,6 +285,14 @@ class JobImpactInDB(JobImpact):
                         # Handle tool_name mapping
                         if "tool_name" in tool_copy:
                             tool_copy["name"] = tool_copy["tool_name"]
+
+                        # Handle tool_link mapping
+                        if "tool_link" in tool_copy:
+                            tool_copy["link"] = tool_copy["tool_link"]
+
+                        # Handle tool_logo_url mapping
+                        if "tool_logo_url" in tool_copy:
+                            tool_copy["logo_url"] = tool_copy["tool_logo_url"]
 
                         processed_tools.append(tool_copy)
 
@@ -461,8 +477,8 @@ def preprocess_job_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
             processed_task = dict(task)
 
             # Ensure ai_impact_score exists
-            if "ai_impact_score" not in processed_task:
-                processed_task["ai_impact_score"] = None
+            if "task_ai_impact_score" not in processed_task:
+                processed_task["task_ai_impact_score"] = None
 
             # Process tools if they exist
             if "tools" in processed_task and isinstance(processed_task["tools"], list):
@@ -476,6 +492,14 @@ def preprocess_job_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
                     # Map tool_name to name if needed
                     if "tool_name" in processed_tool and "name" not in processed_tool:
                         processed_tool["name"] = processed_tool["tool_name"]
+
+                    # Handle tool_link mapping
+                    if "tool_link" in processed_tool:
+                        processed_tool["link"] = processed_tool["tool_link"]
+
+                    # Handle tool_logo_url mapping
+                    if "tool_logo_url" in processed_tool:
+                        processed_tool["logo_url"] = processed_tool["tool_logo_url"]
 
                     processed_tools.append(processed_tool)
 
