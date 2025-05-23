@@ -1,6 +1,13 @@
-from pydantic import BaseModel, Field, validator, ConfigDict
+from pydantic import (
+    BaseModel,
+    Field,
+    validator,
+    ConfigDict,
+    field_validator,
+    model_validator,
+)
 from pydantic_core import core_schema  # Import for Pydantic v2
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Dict, Union, ClassVar
 import uuid
 from datetime import datetime
 from bson import ObjectId  # Import ObjectId
@@ -68,14 +75,42 @@ class PyObjectId(ObjectId):
 
 
 class Tool(BaseModel):
-    name: str
+    tool_name: str
     logo_url: Optional[str] = None
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        json_schema_extra={
+            "example": {
+                "tool_name": "Generated Photos",
+                "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+            }
+        },
+    )
 
 
 class Task(BaseModel):
     name: str
-    ai_impact_score: str
+    ai_impact_score: Optional[str] = (
+        None  # Make optional as it appears to be missing in some cases
+    )
     tools: List[Tool] = []
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        json_schema_extra={
+            "example": {
+                "name": "Whole body image generation",
+                "ai_impact_score": "80%",
+                "tools": [
+                    {
+                        "tool_name": "Generated Photos",
+                        "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
+                    }
+                ],
+            }
+        },
+    )
 
 
 class JobImpactBase(BaseModel):
@@ -88,6 +123,37 @@ class JobImpactBase(BaseModel):
     detailed_analysis: Optional[str] = None
     job_category: Optional[str] = None
     tasks: List[Task]
+
+    # Field validator to preprocess tasks from DB format to model format
+    @field_validator("tasks", mode="before")
+    @classmethod
+    def preprocess_tasks(cls, v: Any) -> List[Dict[str, Any]]:
+        if not isinstance(v, list):
+            return v
+
+        processed_tasks = []
+        for task_data in v:
+            if not isinstance(task_data, dict):
+                continue
+
+            # Handle ai_impact_score if missing
+            if "ai_impact_score" not in task_data:
+                task_data["ai_impact_score"] = None
+
+            # Process tools
+            if "tools" in task_data and isinstance(task_data["tools"], list):
+                processed_tools = []
+                for tool_data in task_data["tools"]:
+                    if isinstance(tool_data, dict):
+                        # Map tool_name field if needed
+                        if "name" not in tool_data and "tool_name" in tool_data:
+                            tool_data["name"] = tool_data["tool_name"]
+                        processed_tools.append(tool_data)
+                task_data["tools"] = processed_tools
+
+            processed_tasks.append(task_data)
+
+        return processed_tasks
 
 
 class JobImpactCreate(JobImpactBase):
@@ -123,7 +189,7 @@ class JobImpact(JobImpactBase):
                         "ai_impact_score": "80%",
                         "tools": [
                             {
-                                "name": "Generated Photos",
+                                "tool_name": "Generated Photos",
                                 "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
                             }
                         ],
@@ -133,7 +199,7 @@ class JobImpact(JobImpactBase):
                         "ai_impact_score": "80%",
                         "tools": [
                             {
-                                "name": "Assembo",
+                                "tool_name": "Assembo",
                                 "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
                             }
                         ],
@@ -143,11 +209,11 @@ class JobImpact(JobImpactBase):
                         "ai_impact_score": "80%",
                         "tools": [
                             {
-                                "name": "AI Social Bio",
+                                "tool_name": "AI Social Bio",
                                 "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
                             },
                             {
-                                "name": "Twitter Bio Generator",
+                                "tool_name": "Twitter Bio Generator",
                                 "logo_url": "https://media.theresanaiforthat.com/assets/favicon-large.png",
                             },
                         ],
@@ -160,7 +226,263 @@ class JobImpact(JobImpactBase):
     )
 
 
-class JobImpactInDB(
-    JobImpact
-):  # This will represent data as stored in DB, including _id
-    pass
+class JobImpactInDB(JobImpact):
+    """
+    This class represents a JobImpact as stored in the MongoDB database.
+    It includes additional functionality for handling MongoDB-specific operations and field formats.
+    """
+
+    # MongoDB collection name used for this model
+    collection_name: ClassVar[str] = "tools_Job_impacts"
+
+    @model_validator(mode="before")
+    @classmethod
+    def preprocess_db_document(cls, data: Any) -> Any:
+        """
+        Preprocess the MongoDB document before validation.
+        Handles tool_name to name mapping and other DB-specific conversions.
+        """
+        if not isinstance(data, dict):
+            return data
+
+        # Make a copy to avoid modifying original data
+        data_copy = dict(data)
+
+        # Process tasks if they exist
+        if "tasks" in data_copy and isinstance(data_copy["tasks"], list):
+            processed_tasks = []
+
+            for task in data_copy["tasks"]:
+                if not isinstance(task, dict):
+                    continue
+
+                # Create a task copy
+                task_copy = dict(task)
+
+                # Ensure ai_impact_score exists
+                if "ai_impact_score" not in task_copy:
+                    task_copy["ai_impact_score"] = None
+
+                # Process tools
+                if "tools" in task_copy and isinstance(task_copy["tools"], list):
+                    processed_tools = []
+
+                    for tool in task_copy["tools"]:
+                        if not isinstance(tool, dict):
+                            continue
+
+                        # Create tool copy
+                        tool_copy = dict(tool)
+
+                        # Handle tool_name mapping
+                        if "tool_name" in tool_copy:
+                            tool_copy["name"] = tool_copy["tool_name"]
+
+                        processed_tools.append(tool_copy)
+
+                    task_copy["tools"] = processed_tools
+
+                processed_tasks.append(task_copy)
+
+            data_copy["tasks"] = processed_tasks
+
+        return data_copy
+
+    @classmethod
+    async def get_by_id(cls, db, id: Union[str, ObjectId]) -> Optional["JobImpactInDB"]:
+        """
+        Retrieve a job impact by ID from the database.
+
+        Args:
+            db: MongoDB database connection
+            id: ObjectId or string representation of ObjectId
+
+        Returns:
+            JobImpactInDB instance or None if not found
+        """
+        if isinstance(id, str):
+            if not ObjectId.is_valid(id):
+                return None
+            id = ObjectId(id)
+
+        result = await db[cls.collection_name].find_one({"_id": id})
+        if result:
+            return cls(**result)
+        return None
+
+    @classmethod
+    async def get_by_slug(cls, db, slug: str) -> Optional["JobImpactInDB"]:
+        """
+        Retrieve a job impact by slug from the database.
+
+        Args:
+            db: MongoDB database connection
+            slug: URL-friendly job slug
+
+        Returns:
+            JobImpactInDB instance or None if not found
+        """
+        result = await db[cls.collection_name].find_one({"slug": slug})
+        if result:
+            return cls(**result)
+        return None
+
+    @classmethod
+    async def get_all(
+        cls,
+        db,
+        skip: int = 0,
+        limit: int = 20,
+        sort_by: str = "job_title",
+        sort_order: int = 1,
+    ) -> List["JobImpactInDB"]:
+        """
+        Retrieve all job impacts with pagination.
+
+        Args:
+            db: MongoDB database connection
+            skip: Number of items to skip
+            limit: Maximum number of items to return
+            sort_by: Field to sort by
+            sort_order: 1 for ascending, -1 for descending
+
+        Returns:
+            List of JobImpactInDB instances
+        """
+        cursor = (
+            db[cls.collection_name]
+            .find()
+            .sort(sort_by, sort_order)
+            .skip(skip)
+            .limit(limit)
+        )
+        results = await cursor.to_list(length=limit)
+
+        jobs = []
+        for doc in results:
+            try:
+                jobs.append(cls(**doc))
+            except Exception as e:
+                # Log error but continue processing
+                print(f"Error processing job {doc.get('_id')}: {str(e)}")
+                continue
+
+        return jobs
+
+    @classmethod
+    async def search(
+        cls, db, query: str, skip: int = 0, limit: int = 20
+    ) -> List["JobImpactInDB"]:
+        """
+        Search for job impacts by job title.
+
+        Args:
+            db: MongoDB database connection
+            query: Search query string
+            skip: Number of items to skip
+            limit: Maximum number of items to return
+
+        Returns:
+            List of JobImpactInDB instances matching the search
+        """
+        import re
+
+        regex_query = re.compile(f".*{re.escape(query)}.*", re.IGNORECASE)
+        cursor = (
+            db[cls.collection_name]
+            .find({"job_title": regex_query})
+            .skip(skip)
+            .limit(limit)
+        )
+        results = await cursor.to_list(length=limit)
+
+        jobs = []
+        for doc in results:
+            try:
+                jobs.append(cls(**doc))
+            except Exception as e:
+                # Log error but continue processing
+                print(f"Error processing job {doc.get('_id')}: {str(e)}")
+                continue
+
+        return jobs
+
+    async def save(self, db) -> bool:
+        """
+        Save the current job impact to the database.
+        Updates if _id exists, otherwise creates a new document.
+
+        Args:
+            db: MongoDB database connection
+
+        Returns:
+            True if operation was successful, False otherwise
+        """
+        now = datetime.utcnow()
+        self.updated_at = now
+
+        data = self.model_dump(by_alias=True)
+
+        if hasattr(self, "id") and self.id:
+            # Update existing document
+            result = await db[self.collection_name].update_one(
+                {"_id": self.id}, {"$set": data}
+            )
+            return result.modified_count > 0
+        else:
+            # Insert new document
+            self.created_at = now
+            result = await db[self.collection_name].insert_one(data)
+            self.id = result.inserted_id
+            return bool(result.inserted_id)
+
+
+# Helper function to preprocess job data from database before model validation
+def preprocess_job_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Preprocess job data from database to ensure it can be validated by the model.
+    This helps handle mismatches between database and model structure.
+    """
+    if not job_data:
+        return job_data
+
+    # Make a copy to avoid modifying the original
+    job_data = dict(job_data)
+
+    # Process tasks if they exist
+    if "tasks" in job_data and isinstance(job_data["tasks"], list):
+        processed_tasks = []
+
+        for task in job_data["tasks"]:
+            if not isinstance(task, dict):
+                continue
+
+            # Create a processed task
+            processed_task = dict(task)
+
+            # Ensure ai_impact_score exists
+            if "ai_impact_score" not in processed_task:
+                processed_task["ai_impact_score"] = None
+
+            # Process tools if they exist
+            if "tools" in processed_task and isinstance(processed_task["tools"], list):
+                processed_tools = []
+
+                for tool in processed_task["tools"]:
+                    if not isinstance(tool, dict):
+                        continue
+
+                    processed_tool = dict(tool)
+                    # Map tool_name to name if needed
+                    if "tool_name" in processed_tool and "name" not in processed_tool:
+                        processed_tool["name"] = processed_tool["tool_name"]
+
+                    processed_tools.append(processed_tool)
+
+                processed_task["tools"] = processed_tools
+
+            processed_tasks.append(processed_task)
+
+        job_data["tasks"] = processed_tasks
+
+    return job_data

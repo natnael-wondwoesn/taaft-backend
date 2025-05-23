@@ -6,7 +6,13 @@ from datetime import datetime
 from bson import ObjectId
 import re  # For case-insensitive search regex
 
-from app.models.job_impact import JobImpact, JobImpactCreate, JobImpactInDB, PyObjectId
+from app.models.job_impact import (
+    JobImpact,
+    JobImpactCreate,
+    JobImpactInDB,
+    PyObjectId,
+    preprocess_job_data,
+)
 from app.database import database  # Import the database instance
 
 router = APIRouter(
@@ -14,7 +20,7 @@ router = APIRouter(
     tags=["Job Impacts"],
 )
 
-COLLECTION_NAME = "tools_Job_impacts"
+COLLECTION_NAME = JobImpactInDB.collection_name
 
 
 # Helper to generate slug (can be moved to a utility module)
@@ -36,57 +42,43 @@ async def create_job_impact_in_db(job_impact_data: JobImpactCreate) -> JobImpact
         suffix = str(uuid.uuid4())[:6]
         slug = f"{slug}-{suffix}"
 
-    # Convert Pydantic model to dict for MongoDB insertion
-    job_doc = job_impact_data.dict(by_alias=True)
-    job_doc["slug"] = slug
-    job_doc["created_at"] = now
-    job_doc["updated_at"] = now
+    # Create a new JobImpactInDB instance
+    job_impact = JobImpactInDB(
+        **job_impact_data.model_dump(), slug=slug, created_at=now, updated_at=now
+    )
 
-    result = await database[COLLECTION_NAME].insert_one(job_doc)
-    created_job = await database[COLLECTION_NAME].find_one({"_id": result.inserted_id})
-    if created_job:
-        return JobImpactInDB(**created_job)
+    # Save to database using the model's save method
+    success = await job_impact.save(database)
+    if success:
+        return job_impact
+
     raise HTTPException(
         status_code=500, detail="Failed to create job impact record after insert."
     )
 
 
 async def get_job_impact_by_id_from_db(job_id: PyObjectId) -> Optional[JobImpactInDB]:
-    job = await database[COLLECTION_NAME].find_one({"_id": job_id})
-    if job:
-        return JobImpactInDB(**job)
-    return None
+    # Using the model's get_by_id class method
+    return await JobImpactInDB.get_by_id(database, job_id)
 
 
 async def get_job_impact_by_slug_from_db(slug: str) -> Optional[JobImpactInDB]:
-    job = await database[COLLECTION_NAME].find_one({"slug": slug})
-    if job:
-        return JobImpactInDB(**job)
-    return None
+    # Using the model's get_by_slug class method
+    return await JobImpactInDB.get_by_slug(database, slug)
 
 
 async def get_all_job_impacts_from_db(
     skip: int = 0, limit: int = 20
 ) -> List[JobImpactInDB]:
-    jobs_cursor = database[COLLECTION_NAME].find().skip(skip).limit(limit)
-    jobs_list = await jobs_cursor.to_list(length=limit)
-    return [JobImpactInDB(**job) for job in jobs_list]
+    # Using the model's get_all class method
+    return await JobImpactInDB.get_all(database, skip=skip, limit=limit)
 
 
 async def search_job_impacts_in_db(
     query: str, skip: int = 0, limit: int = 20
 ) -> List[JobImpactInDB]:
-    # Case-insensitive regex search for job_title
-    # For more advanced search, consider MongoDB text indexes or a dedicated search engine
-    regex_query = re.compile(f".*{re.escape(query)}.*", re.IGNORECASE)
-    jobs_cursor = (
-        database[COLLECTION_NAME]
-        .find({"job_title": regex_query})
-        .skip(skip)
-        .limit(limit)
-    )
-    jobs_list = await jobs_cursor.to_list(length=limit)
-    return [JobImpactInDB(**job) for job in jobs_list]
+    # Using the model's search class method
+    return await JobImpactInDB.search(database, query=query, skip=skip, limit=limit)
 
 
 # --- API Endpoints ---
@@ -108,12 +100,18 @@ async def list_job_impacts(
     page: int = Query(1, ge=1, description="Page number"),
     limit: int = Query(20, ge=1, le=100, description="Items per page"),
     search: Optional[str] = Query(None, description="Search query for job titles"),
+    sort_by: str = Query("job_title", description="Field to sort by"),
+    sort_order: int = Query(
+        1, ge=-1, le=1, description="Sort order: 1 for ascending, -1 for descending"
+    ),
 ):
     skip = (page - 1) * limit
     if search:
         jobs = await search_job_impacts_in_db(query=search, skip=skip, limit=limit)
     else:
-        jobs = await get_all_job_impacts_from_db(skip=skip, limit=limit)
+        jobs = await JobImpactInDB.get_all(
+            database, skip=skip, limit=limit, sort_by=sort_by, sort_order=sort_order
+        )
     return jobs  # List of JobImpactInDB, will be serialized by List[JobImpact]
 
 
@@ -125,22 +123,66 @@ async def get_job_impact_details(
 ):
     job: Optional[JobImpactInDB] = None
     if ObjectId.is_valid(id_or_slug):
-        try:
-            # Ensure it's an ObjectId if it's a valid string representation
-            obj_id = (
-                PyObjectId(id_or_slug) if isinstance(id_or_slug, str) else id_or_slug
-            )
-            job = await get_job_impact_by_id_from_db(job_id=obj_id)
-        except (
-            ValueError
-        ):  # Handle cases where string is not a valid ObjectId but was attempted
-            job = await get_job_impact_by_slug_from_db(slug=str(id_or_slug))
+        # Use the id-based lookup
+        job = await JobImpactInDB.get_by_id(database, id_or_slug)
+
+        if not job:
+            # Fallback to slug-based lookup
+            job = await JobImpactInDB.get_by_slug(database, str(id_or_slug))
     else:
-        job = await get_job_impact_by_slug_from_db(slug=str(id_or_slug))
+        # Use slug-based lookup
+        job = await JobImpactInDB.get_by_slug(database, str(id_or_slug))
 
     if not job:
         raise HTTPException(status_code=404, detail="Job impact analysis not found")
     return job  # Will be serialized by JobImpact model
+
+
+@router.put("/{id}", response_model=JobImpact)
+async def update_job_impact(id: PyObjectId, job_update: JobImpactCreate):
+    """
+    Update an existing job impact record by ID.
+    """
+    # First get the existing job
+    existing_job = await JobImpactInDB.get_by_id(database, id)
+    if not existing_job:
+        raise HTTPException(status_code=404, detail="Job impact analysis not found")
+
+    # Update fields from the request
+    for field, value in job_update.model_dump(
+        exclude={"id", "created_at", "updated_at"}
+    ).items():
+        setattr(existing_job, field, value)
+
+    # Save changes
+    success = await existing_job.save(database)
+    if not success:
+        raise HTTPException(
+            status_code=500, detail="Failed to update job impact record"
+        )
+
+    return existing_job
+
+
+@router.delete("/{id}", status_code=204)
+async def delete_job_impact(id: PyObjectId):
+    """
+    Delete a job impact record by ID.
+    """
+    # Check if job exists first
+    existing_job = await JobImpactInDB.get_by_id(database, id)
+    if not existing_job:
+        raise HTTPException(status_code=404, detail="Job impact analysis not found")
+
+    # Delete the job
+    result = await database[COLLECTION_NAME].delete_one({"_id": id})
+    if result.deleted_count != 1:
+        raise HTTPException(
+            status_code=500, detail="Failed to delete job impact record"
+        )
+
+    # No content returned for successful delete
+    return None
 
 
 @router.post("/admin/generate-slugs", status_code=200)
