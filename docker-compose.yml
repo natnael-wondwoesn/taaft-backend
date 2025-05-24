@@ -17,6 +17,7 @@ services:
       - ALGOLIA_TOOLS_INDEX=${ALGOLIA_TOOLS_INDEX:-tools_index}
       - ALGOLIA_GLOSSARY_INDEX=${ALGOLIA_GLOSSARY_INDEX:-taaft_glossary}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ALGOLIA_ADMIN_KEY=${ALGOLIA_ADMIN_KEY}
     depends_on:
       mongo:
         condition: service_healthy
