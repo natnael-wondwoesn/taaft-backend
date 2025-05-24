@@ -105,22 +105,46 @@ async def search_tools_endpoint(
     q: str,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    sort_by: Optional[str] = Query(
+        "created_at",
+        description="Field to sort by (name, created_at, updated_at, price)",
+    ),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Search for tools by name or description.
     """
-    tools = await search_tools(
-        query=q, skip=skip, limit=limit, user_id=str(current_user.id)
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    result = await search_tools(
+        search_term=q,
+        skip=skip,
+        limit=limit,
+        sort_by=sort_by,
+        sort_order=sort_order,
+        user_id=str(current_user.id),
     )
-    total = await search_tools(query=q, count_only=True)
+
+    tools = result.get("tools", [])
+    total = result.get("total", 0)
 
     # Extract unique carriers from all tools
-
-    # logger.info(f"Tools: {tools}")
     all_carriers = set()
     for tool in tools:
-        if type(tool) == dict:
+        if isinstance(tool, dict):
             if tool.get("carriers"):
                 all_carriers.update(tool.get("carriers"))
         else:
@@ -327,28 +351,48 @@ async def search_featured_tools(
     q: str,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    sort_by: Optional[str] = Query(
+        "created_at",
+        description="Field to sort by (name, created_at, updated_at, price)",
+    ),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Search for featured tools by name or description.
     """
-    # First search for tools matching the query
-    tools = await search_tools(
-        query=q, skip=0, limit=1000, user_id=str(current_user.id)
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    # Search for tools matching the query with featured filter
+    result = await search_tools(
+        search_term=q,
+        skip=skip,
+        limit=limit,
+        sort_by=sort_by,
+        sort_order=sort_order,
+        additional_filters={"is_featured": True},
+        user_id=str(current_user.id),
     )
 
-    # Filter the results to include only featured tools
-    featured_tools = [tool for tool in tools if tool.get("is_featured", False)]
+    tools = result.get("tools", [])
+    total = result.get("total", 0)
 
-    # Apply pagination
-    start_idx = min(skip, len(featured_tools))
-    end_idx = min(skip + limit, len(featured_tools))
-    paginated_tools = featured_tools[start_idx:end_idx]
-
-    # Extract unique carriers from all featured tools
+    # Extract unique carriers from all tools
     all_carriers = set()
-    for tool in featured_tools:
-        if type(tool) == dict:
+    for tool in tools:
+        if isinstance(tool, dict):
             if tool.get("carriers"):
                 all_carriers.update(tool.get("carriers"))
         else:
@@ -359,8 +403,8 @@ async def search_featured_tools(
     unique_carriers = sorted(list(all_carriers))
 
     return {
-        "tools": paginated_tools,
-        "total": len(featured_tools),
+        "tools": tools,
+        "total": total,
         "skip": skip,
         "limit": limit,
         "carriers": unique_carriers,

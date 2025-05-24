@@ -346,6 +346,7 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             industry=tool.get("industry"),
             image_url=tool.get("image_url"),
             carriers=tool.get("carriers"),
+            task=tool.get("task"),
         )
     except Exception as e:
         logger.error(f"Error creating tool response: {str(e)}")
@@ -891,24 +892,30 @@ async def delete_tool(tool_id: UUID) -> bool:
 
 @redis_cache(prefix="search_tools")
 async def search_tools(
-    query: str,
+    search_term: str,
     skip: int = 0,
     limit: int = 100,
     count_only: bool = False,
+    additional_filters: Optional[Dict[str, Any]] = None,
+    sort_by: Optional[str] = "created_at",
+    sort_order: Optional[str] = "desc",
     user_id: Optional[str] = None,
-) -> Union[List[ToolResponse], int]:
+) -> Union[Dict[str, Any], int]:
     """
     Search for tools by name or description.
 
     Args:
-        query: The search query
+        search_term: The search query
         skip: Number of items to skip
         limit: Maximum number of items to return
         count_only: If True, return only the count of items
+        additional_filters: Additional MongoDB filters to apply
+        sort_by: Field to sort by
+        sort_order: Sort order (asc or desc)
         user_id: Optional user ID to check favorite status
 
     Returns:
-        List of tools or count of tools
+        Dictionary with tools list and total count, or just count if count_only is True
     """
     from ..algolia.config import algolia_config
     from ..algolia.search import algolia_search
@@ -918,11 +925,12 @@ async def search_tools(
         try:
             # Use the direct search function for more flexible name/description search
             search_result = await algolia_search.direct_search_tools(
-                query=query,
+                query=search_term,
                 page=(skip // limit) if limit > 0 else 0,  # Convert skip/limit to page
                 per_page=(
                     limit if not count_only else 1
                 ),  # Only need one result if just counting
+                filters=additional_filters,  # Pass additional filters to Algolia
             )
 
             if count_only:
@@ -1007,7 +1015,7 @@ async def search_tools(
                         )
                     tools_list.append(tool_response)
 
-            return tools_list
+            return {"tools": tools_list, "total": search_result.total}
         except Exception as e:
             # Log the error and fall back to MongoDB
             logger.error(
@@ -1015,10 +1023,24 @@ async def search_tools(
             )
 
     # Fall back to MongoDB text search
-    if count_only:
-        return await tools.count_documents({"$text": {"$search": query}})
+    # Create the base query for text search
+    query = {"$text": {"$search": search_term}}
 
-    cursor = tools.find({"$text": {"$search": query}}).skip(skip).limit(limit)
+    # Add additional filters if provided
+    if additional_filters:
+        query.update(additional_filters)
+
+    if count_only:
+        return await tools.count_documents(query)
+
+    # Determine sort direction
+    sort_direction = -1 if sort_order.lower() == "desc" else 1
+
+    # Create cursor with sorting
+    if sort_by:
+        cursor = tools.find(query).skip(skip).limit(limit).sort(sort_by, sort_direction)
+    else:
+        cursor = tools.find(query).skip(skip).limit(limit)
 
     tools_list = []
     saved_tools_list = []
@@ -1053,7 +1075,10 @@ async def search_tools(
                 )
             tools_list.append(tool_response)
 
-    return tools_list
+    # Get total count with the same query
+    total = await tools.count_documents(query)
+
+    return {"tools": tools_list, "total": total}
 
 
 @redis_cache(prefix="keywords")

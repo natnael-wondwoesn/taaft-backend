@@ -54,6 +54,7 @@ class ToolBase(BaseModel):
     industry: Optional[str] = None
     image_url: Optional[str] = None
     carriers: Optional[List[str]] = None
+    task: Optional[str] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -114,6 +115,7 @@ class ToolUpdate(BaseModel):
     generated_description: Optional[str] = None
     industry: Optional[str] = None
     carriers: Optional[List[str]] = None
+    task: Optional[str] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
