@@ -156,6 +156,7 @@ def prepare_algolia_object(mongo_tool):
         "generated_description",
         "industry",
         "carriers",
+        "task",
     ]
 
     for attr in attributes_to_include:
@@ -214,6 +215,7 @@ def configure_algolia_index(client, index_name):
                 "keywords",
                 "carriers",
                 "industry",
+                "task",
             ],
             "attributesForFaceting": [
                 "category",
@@ -222,6 +224,7 @@ def configure_algolia_index(client, index_name):
                 "description",
                 "name",
                 "features_list",
+                "task",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -257,11 +260,12 @@ def configure_algolia_index(client, index_name):
                 "rating",
                 "saved_numbers",
                 "carriers",
+                "task",
             ],
             "ranking": [
+                "words",
                 "typo",
                 "geo",
-                "words",
                 "filters",
                 "proximity",
                 "attribute",
@@ -271,7 +275,7 @@ def configure_algolia_index(client, index_name):
             "customRanking": ["desc(is_featured)", "desc(updated_at)"],
             "ignorePlurals": True,
             "advancedSyntax": True,
-            "typoTolerance": "strict",
+            "typoTolerance": "min",
         },
     )
     logger.info("Algolia index configured successfully")

@@ -262,24 +262,100 @@ async def handle_email_verification(token: str):
         if token_data is None:
             return HTMLResponse(
                 content=f"""
-            <html>
-            <head>
-                <title>Email Verification Failed</title>
-                <style>
-                    body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                    .container {{ max-width: 600px; margin: 0 auto; }}
-                    .error {{ color: #dc3545; }}
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1 class="error">Verification Failed</h1>
-                    <p>The verification link is invalid or has expired.</p>
-                    <p>Please request a new verification link from the login page.</p>
-                </div>
-            </body>
-            </html>
-            """,
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Verification Failed</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {{
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                            background-color: #f8f9fa;
+                            margin: 0;
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                        }}
+                        .modal {{
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                            width: 90%;
+                            max-width: 500px;
+                            padding: 30px;
+                            text-align: center;
+                            position: relative;
+                        }}
+                        .close-btn {{
+                            position: absolute;
+                            top: 20px;
+                            right: 20px;
+                            font-size: 24px;
+                            color: #aaa;
+                            cursor: pointer;
+                            text-decoration: none;
+                        }}
+                        .icon-container {{
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto 20px;
+                            background-color: #fff3f0;
+                            border-radius: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }}
+                        .icon-error {{
+                            color: #e53935;
+                            font-size: 40px;
+                            font-weight: bold;
+                        }}
+                        h1 {{
+                            font-size: 28px;
+                            color: #333;
+                            margin-bottom: 16px;
+                        }}
+                        p {{
+                            font-size: 16px;
+                            color: #666;
+                            margin-bottom: 30px;
+                            line-height: 1.5;
+                        }}
+                        .button {{
+                            display: inline-block;
+                            background-color: #7e3ff2;
+                            color: white;
+                            font-weight: 500;
+                            font-size: 16px;
+                            padding: 12px 24px;
+                            border-radius: 8px;
+                            text-decoration: none;
+                            transition: background-color 0.2s;
+                            width: 100%;
+                            box-sizing: border-box;
+                            border: none;
+                            cursor: pointer;
+                        }}
+                        .button:hover {{
+                            background-color: #6930c3;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="modal">
+                        <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                        <div class="icon-container">
+                            <div class="icon-error">i</div>
+                        </div>
+                        <h1>Verification Failed</h1>
+                        <p>We couldn't verify your email. The link may have expired or is invalid</p>
+                        <a href="https://taaft-deploy-18xw.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
+                    </div>
+                </body>
+                </html>
+                """,
                 status_code=400,
             )
 
@@ -287,24 +363,100 @@ async def handle_email_verification(token: str):
         if token_data.purpose != "email_verification":
             return HTMLResponse(
                 content=f"""
-            <html>
-            <head>
-                <title>Email Verification Failed</title>
-                <style>
-                    body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                    .container {{ max-width: 600px; margin: 0 auto; }}
-                    .error {{ color: #dc3545; }}
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1 class="error">Verification Failed</h1>
-                    <p>Invalid token purpose.</p>
-                    <p>Please request a new verification link from the login page.</p>
-                </div>
-            </body>
-            </html>
-            """,
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Verification Failed</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {{
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                            background-color: #f8f9fa;
+                            margin: 0;
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                        }}
+                        .modal {{
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                            width: 90%;
+                            max-width: 500px;
+                            padding: 30px;
+                            text-align: center;
+                            position: relative;
+                        }}
+                        .close-btn {{
+                            position: absolute;
+                            top: 20px;
+                            right: 20px;
+                            font-size: 24px;
+                            color: #aaa;
+                            cursor: pointer;
+                            text-decoration: none;
+                        }}
+                        .icon-container {{
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto 20px;
+                            background-color: #fff3f0;
+                            border-radius: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }}
+                        .icon-error {{
+                            color: #e53935;
+                            font-size: 40px;
+                            font-weight: bold;
+                        }}
+                        h1 {{
+                            font-size: 28px;
+                            color: #333;
+                            margin-bottom: 16px;
+                        }}
+                        p {{
+                            font-size: 16px;
+                            color: #666;
+                            margin-bottom: 30px;
+                            line-height: 1.5;
+                        }}
+                        .button {{
+                            display: inline-block;
+                            background-color: #7e3ff2;
+                            color: white;
+                            font-weight: 500;
+                            font-size: 16px;
+                            padding: 12px 24px;
+                            border-radius: 8px;
+                            text-decoration: none;
+                            transition: background-color 0.2s;
+                            width: 100%;
+                            box-sizing: border-box;
+                            border: none;
+                            cursor: pointer;
+                        }}
+                        .button:hover {{
+                            background-color: #6930c3;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="modal">
+                        <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                        <div class="icon-container">
+                            <div class="icon-error">i</div>
+                        </div>
+                        <h1>Verification Failed</h1>
+                        <p>We couldn't verify your email. The link may have expired or is invalid</p>
+                        <a href="https://taaft-deploy-18xw.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
+                    </div>
+                </body>
+                </html>
+                """,
                 status_code=400,
             )
 
@@ -320,93 +472,397 @@ async def handle_email_verification(token: str):
             if user and user.get("is_verified", False):
                 return HTMLResponse(
                     content=f"""
-                <html>
-                <head>
-                    <title>Email Already Verified</title>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                        .container {{ max-width: 600px; margin: 0 auto; }}
-                        .success {{ color: #28a745; }}
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1 class="success">Already Verified</h1>
-                        <p>Your email has already been verified.</p>
-                        <p>You can now login to your account.</p>
-                    </div>
-                </body>
-                </html>
-                """
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Email Already Verified</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body {{
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                background-color: #f8f9fa;
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                            }}
+                            .modal {{
+                                background: white;
+                                border-radius: 12px;
+                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                                width: 90%;
+                                max-width: 500px;
+                                padding: 30px;
+                                text-align: center;
+                                position: relative;
+                            }}
+                            .close-btn {{
+                                position: absolute;
+                                top: 20px;
+                                right: 20px;
+                                font-size: 24px;
+                                color: #aaa;
+                                cursor: pointer;
+                                text-decoration: none;
+                            }}
+                            .icon-container {{
+                                width: 80px;
+                                height: 80px;
+                                margin: 0 auto 20px;
+                                background-color: #f0f9eb;
+                                border-radius: 50%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }}
+                            .icon-success {{
+                                color: #52c41a;
+                                font-size: 40px;
+                                font-weight: bold;
+                            }}
+                            h1 {{
+                                font-size: 28px;
+                                color: #333;
+                                margin-bottom: 16px;
+                            }}
+                            p {{
+                                font-size: 16px;
+                                color: #666;
+                                margin-bottom: 30px;
+                                line-height: 1.5;
+                            }}
+                            .button {{
+                                display: inline-block;
+                                background-color: #7e3ff2;
+                                color: white;
+                                font-weight: 500;
+                                font-size: 16px;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                text-decoration: none;
+                                transition: background-color 0.2s;
+                                width: 100%;
+                                box-sizing: border-box;
+                                border: none;
+                                cursor: pointer;
+                            }}
+                            .button:hover {{
+                                background-color: #6930c3;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="modal">
+                            <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                            <div class="icon-container">
+                                <div class="icon-success">✓</div>
+                            </div>
+                            <h1>Email Verified!</h1>
+                            <p>Your email has been successfully verified. You can now access all features of your account.</p>
+                            <a href="https://taaft-deploy-18xw.vercel.app/auth/login" class="button">Login To Continue</a>
+                        </div>
+                    </body>
+                    </html>
+                    """
                 )
             else:
                 return HTMLResponse(
                     content=f"""
-                <html>
-                <head>
-                    <title>Email Verification Failed</title>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                        .container {{ max-width: 600px; margin: 0 auto; }}
-                        .error {{ color: #dc3545; }}
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1 class="error">Verification Failed</h1>
-                        <p>User not found or verification failed.</p>
-                        <p>Please contact support if this issue persists.</p>
-                    </div>
-                </body>
-                </html>
-                """,
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Verification Failed</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body {{
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                background-color: #f8f9fa;
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                            }}
+                            .modal {{
+                                background: white;
+                                border-radius: 12px;
+                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                                width: 90%;
+                                max-width: 500px;
+                                padding: 30px;
+                                text-align: center;
+                                position: relative;
+                            }}
+                            .close-btn {{
+                                position: absolute;
+                                top: 20px;
+                                right: 20px;
+                                font-size: 24px;
+                                color: #aaa;
+                                cursor: pointer;
+                                text-decoration: none;
+                            }}
+                            .icon-container {{
+                                width: 80px;
+                                height: 80px;
+                                margin: 0 auto 20px;
+                                background-color: #fff3f0;
+                                border-radius: 50%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }}
+                            .icon-error {{
+                                color: #e53935;
+                                font-size: 40px;
+                                font-weight: bold;
+                            }}
+                            h1 {{
+                                font-size: 28px;
+                                color: #333;
+                                margin-bottom: 16px;
+                            }}
+                            p {{
+                                font-size: 16px;
+                                color: #666;
+                                margin-bottom: 30px;
+                                line-height: 1.5;
+                            }}
+                            .button {{
+                                display: inline-block;
+                                background-color: #7e3ff2;
+                                color: white;
+                                font-weight: 500;
+                                font-size: 16px;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                text-decoration: none;
+                                transition: background-color 0.2s;
+                                width: 100%;
+                                box-sizing: border-box;
+                                border: none;
+                                cursor: pointer;
+                            }}
+                            .button:hover {{
+                                background-color: #6930c3;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="modal">
+                            <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                            <div class="icon-container">
+                                <div class="icon-error">i</div>
+                            </div>
+                            <h1>Verification Failed</h1>
+                            <p>We couldn't verify your email. The user was not found or verification failed.</p>
+                            <a href="https://taaft-deploy-18xw.vercel.app/auth/contact-support" class="button">Contact Support</a>
+                        </div>
+                    </body>
+                    </html>
+                    """,
                     status_code=400,
                 )
 
         # Return success page
         return HTMLResponse(
             content=f"""
-        <html>
-        <head>
-            <title>Email Verified</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                .container {{ max-width: 600px; margin: 0 auto; }}
-                .success {{ color: #28a745; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1 class="success">Email Verified</h1>
-                <p>Your email has been successfully verified.</p>
-                <p>You can now login to your account and access all features.</p>
-            </div>
-        </body>
-        </html>
-        """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verified</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }}
+                    .modal {{
+                        background: white;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        width: 90%;
+                        max-width: 500px;
+                        padding: 30px;
+                        text-align: center;
+                        position: relative;
+                    }}
+                    .close-btn {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #aaa;
+                        cursor: pointer;
+                        text-decoration: none;
+                    }}
+                    .icon-container {{
+                        width: 80px;
+                        height: 80px;
+                        margin: 0 auto 20px;
+                        background-color: #f0f9eb;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }}
+                    .icon-success {{
+                        color: #52c41a;
+                        font-size: 40px;
+                        font-weight: bold;
+                    }}
+                    h1 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 16px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        margin-bottom: 30px;
+                        line-height: 1.5;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #7e3ff2;
+                        color: white;
+                        font-weight: 500;
+                        font-size: 16px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        transition: background-color 0.2s;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border: none;
+                        cursor: pointer;
+                    }}
+                    .button:hover {{
+                        background-color: #6930c3;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="modal">
+                    <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                    <div class="icon-container">
+                        <div class="icon-success">✓</div>
+                    </div>
+                    <h1>Email Verified!</h1>
+                    <p>Your email has been successfully verified. You can now access all features of your account.</p>
+                    <a href="https://taaft-deploy-18xw.vercel.app/auth/login" class="button">Login To Continue</a>
+                </div>
+            </body>
+            </html>
+            """
         )
     except Exception as e:
         logger.error(f"Error verifying email: {str(e)}")
         return HTMLResponse(
             content=f"""
-        <html>
-        <head>
-            <title>Email Verification Error</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                .container {{ max-width: 600px; margin: 0 auto; }}
-                .error {{ color: #dc3545; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1 class="error">Verification Error</h1>
-                <p>An error occurred during verification.</p>
-                <p>Please try again or contact support if this issue persists.</p>
-            </div>
-        </body>
-        </html>
-        """,
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Verification Error</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }}
+                    .modal {{
+                        background: white;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        width: 90%;
+                        max-width: 500px;
+                        padding: 30px;
+                        text-align: center;
+                        position: relative;
+                    }}
+                    .close-btn {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #aaa;
+                        cursor: pointer;
+                        text-decoration: none;
+                    }}
+                    .icon-container {{
+                        width: 80px;
+                        height: 80px;
+                        margin: 0 auto 20px;
+                        background-color: #fff3f0;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }}
+                    .icon-error {{
+                        color: #e53935;
+                        font-size: 40px;
+                        font-weight: bold;
+                    }}
+                    h1 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 16px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        margin-bottom: 30px;
+                        line-height: 1.5;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #7e3ff2;
+                        color: white;
+                        font-weight: 500;
+                        font-size: 16px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        transition: background-color 0.2s;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border: none;
+                        cursor: pointer;
+                    }}
+                    .button:hover {{
+                        background-color: #6930c3;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="modal">
+                    <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                    <div class="icon-container">
+                        <div class="icon-error">i</div>
+                    </div>
+                    <h1>Verification Error</h1>
+                    <p>An error occurred during the verification process. Please try again or contact support.</p>
+                    <a href="https://taaft-deploy-18xw.vercel.app/auth/contact-support" class="button">Contact Support</a>
+                </div>
+            </body>
+            </html>
+            """,
             status_code=500,
         )
 
