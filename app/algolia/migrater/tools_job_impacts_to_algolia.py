@@ -113,19 +113,67 @@ def get_mongodb_job_impacts():
     try:
         # Create MongoDB client
         mongo_client = MongoClient(mongodb_url)
+
         # Get database instance
         mongo_database = mongo_client[mongodb_db]
-        # Get collection instance
-        mongo_collection = mongo_database[mongodb_collection]
+
+        # List all collections to debug
+        collection_names = mongo_database.list_collection_names()
+        logger.info(f"Available collections in database: {collection_names}")
+
+        # Get collection instance - ensure it's using the right name
+        collection_name = "tools_job_impacts"
+        if collection_name not in collection_names:
+            # Try alternative collection names that might contain job impacts
+            possible_alternatives = [
+                name
+                for name in collection_names
+                if "job" in name.lower() or "impact" in name.lower()
+            ]
+            if possible_alternatives:
+                collection_name = possible_alternatives[0]
+                logger.warning(
+                    f"Collection 'tools_job_impacts' not found, using '{collection_name}' instead"
+                )
+            else:
+                logger.error(
+                    f"Could not find tools_job_impacts collection or any alternatives"
+                )
+                raise ValueError("tools_job_impacts collection not found in database")
+
+        mongo_collection = mongo_database[collection_name]
+
+        # Retrieve all job impacts from collection with debug count
+        count = mongo_collection.count_documents({})
+        logger.info(f"Found {count} documents in the {collection_name} collection")
+
+        if count == 0:
+            # Try to retrieve at least one document to see structure
+            sample_doc = mongo_collection.find_one({})
+            if sample_doc:
+                logger.info(f"Sample document structure: {list(sample_doc.keys())}")
+            else:
+                logger.warning("Collection exists but is empty")
 
         # Retrieve all job impacts from collection
         job_impacts_cursor = mongo_collection.find({})
         job_impacts = list(job_impacts_cursor)
 
+        if not job_impacts:
+            logger.warning(
+                "No job impacts found in MongoDB. The collection may be empty."
+            )
+            # Return empty list so the rest of the process can continue
+            return []
+
         logger.info(f"Retrieved {len(job_impacts)} job impacts from MongoDB")
         return job_impacts
     except Exception as e:
         logger.error(f"Error connecting to MongoDB: {str(e)}")
+        # Print full exception details for debugging
+        import traceback
+
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise
 
 
@@ -313,6 +361,12 @@ def main():
         logger.info("Retrieving job impacts from MongoDB...")
         mongodb_job_impacts = get_mongodb_job_impacts()
 
+        if not mongodb_job_impacts:
+            logger.warning(
+                "No job impact data found in MongoDB. Migration will create an empty index."
+            )
+            # Continue with empty data - it will just create an empty index
+
         # Step 3: Configure Algolia index
         logger.info("Configuring Algolia index...")
         configure_algolia_index(algolia_client, algolia_index_name)
@@ -325,20 +379,28 @@ def main():
         # Clear the index first to remove any outdated objects
         algolia_client.clear_objects(algolia_index_name)
 
-        # Split into batches of 1000 records to avoid size limits
-        batch_size = 1000
-        for i in range(0, len(algolia_objects), batch_size):
-            batch = algolia_objects[i : i + batch_size]
-            logger.info(
-                f"Uploading batch {i//batch_size + 1} of {(len(algolia_objects) + batch_size - 1) // batch_size}..."
-            )
-            algolia_client.save_objects(algolia_index_name, batch)
+        # Only proceed with upload if we have objects
+        if algolia_objects:
+            # Split into batches of 1000 records to avoid size limits
+            batch_size = 1000
+            for i in range(0, len(algolia_objects), batch_size):
+                batch = algolia_objects[i : i + batch_size]
+                logger.info(
+                    f"Uploading batch {i//batch_size + 1} of {(len(algolia_objects) + batch_size - 1) // batch_size}..."
+                )
+                algolia_client.save_objects(algolia_index_name, batch)
+        else:
+            logger.info("No objects to upload. Created an empty index.")
 
         logger.info("Migration completed successfully!")
         return {"status": "success", "message": "Migration completed successfully"}
 
     except Exception as e:
         logger.error(f"Migration failed: {str(e)}")
+        # Print full exception details for debugging
+        import traceback
+
+        logger.error(f"Traceback: {traceback.format_exc()}")
         return {"status": "error", "message": f"Migration failed: {str(e)}"}
 
 
