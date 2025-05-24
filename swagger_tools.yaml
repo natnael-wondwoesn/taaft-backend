@@ -268,6 +268,160 @@ paths:
         '404':
           description: Tool not found
 
+  /public/tools/category/{category_slug}:
+    get:
+      tags:
+        - Public Tools
+      summary: Get public tools by category with search
+      description: Get a list of tools filtered by category slug with search and pagination. This endpoint is publicly accessible without authentication.
+      operationId: getPublicToolsByCategory
+      parameters:
+        - name: category_slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The slug of the category to filter by (e.g. 'ai-tools')
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search term for filtering tools
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Maximum number of items to return
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [name, created_at, updated_at, price]
+            default: created_at
+          description: Field to sort by
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order (asc or desc)
+        - name: price_type
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by price type
+        - name: is_featured
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter featured tools
+      responses:
+        '200':
+          description: List of tools in the specified category with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedToolsResponse'
+        '400':
+          description: Invalid input parameters
+        '404':
+          description: Category with this slug not found
+
+  /public/categories/slug/{slug}/tools:
+    get:
+      tags:
+        - Public Categories
+      summary: Get public tools by category slug with search
+      description: Get a list of tools for a specific category with search and pagination. This endpoint is publicly accessible without authentication.
+      operationId: getPublicToolsByCategorySlug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The slug of the category to fetch tools for
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search term for filtering tools
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Maximum number of items to return
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [name, created_at, updated_at, price]
+            default: created_at
+          description: Field to sort by
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order (asc or desc)
+        - name: price_type
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by price type
+        - name: is_featured
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter featured tools
+      responses:
+        '200':
+          description: List of tools in the specified category with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedToolsResponse'
+        '400':
+          description: Invalid input parameters
+        '404':
+          description: Category with this slug not found
+
 components:
   schemas:
     ToolCreate:
@@ -488,4 +642,21 @@ components:
           description: Number of items skipped
         limit:
           type: integer
-          description: Maximum number of items returned 
+          description: Maximum number of items returned
+        carriers:
+          type: array
+          items:
+            type: string
+          description: List of unique carriers from the tools
+        search_term:
+          type: string
+          nullable: true
+          description: Search term used for filtering tools
+        current_page:
+          type: integer
+          nullable: true
+          description: Current page number
+        total_pages:
+          type: integer
+          nullable: true
+          description: Total number of pages 

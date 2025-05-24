@@ -47,6 +47,11 @@ def get_glossary_collection() -> AsyncIOMotorCollection:
     return database.client.get_database("taaft_db").get_collection("glossary")
 
 
+def get_job_impacts_collection() -> AsyncIOMotorCollection:
+    """Get the job impacts collection"""
+    return database.client.get_database("taaft_db").get_collection("tools_job_impacts")
+
+
 @router.post("/index/tools", status_code=status.HTTP_202_ACCEPTED)
 async def index_tools(
     background_tasks: BackgroundTasks,
@@ -112,6 +117,43 @@ async def index_glossary(
     return {
         "status": "processing",
         "message": "Indexing glossary to Algolia in the background",
+    }
+
+
+@router.post("/index/job-impacts", status_code=status.HTTP_202_ACCEPTED)
+async def index_job_impacts(
+    background_tasks: BackgroundTasks,
+    batch_size: int = Query(100, ge=1, le=1000),
+    job_impacts_collection: AsyncIOMotorCollection = Depends(
+        get_job_impacts_collection
+    ),
+):
+    """
+    Index all job impacts in MongoDB to Algolia (asynchronous operation)
+
+    Args:
+        background_tasks: FastAPI background tasks
+        batch_size: Number of job impacts to index in each batch
+        job_impacts_collection: MongoDB collection containing job impacts
+
+    Returns:
+        Status message
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    # Schedule the indexing task in the background
+    background_tasks.add_task(
+        algolia_indexer.index_job_impacts, job_impacts_collection, batch_size
+    )
+
+    return {
+        "status": "processing",
+        "message": "Indexing job impacts to Algolia in the background",
     }
 
 

@@ -270,6 +270,40 @@ paths:
         '503':
           description: Search service is not configured
 
+  /api/search/index/job-impacts:
+    post:
+      tags:
+        - Search
+      summary: Index job impacts
+      description: Index all job impacts in MongoDB to Algolia (asynchronous operation)
+      operationId: indexJobImpacts
+      parameters:
+        - name: batch_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Number of job impacts to index in each batch
+      responses:
+        '202':
+          description: Indexing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "processing"
+                  message:
+                    type: string
+                    example: "Indexing job impacts to Algolia in the background"
+        '503':
+          description: Search service is not configured
+
   /api/search/index/tool/{tool_id}:
     post:
       tags:

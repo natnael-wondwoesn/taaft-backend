@@ -148,6 +148,9 @@ class PaginatedToolsResponse(BaseModel):
     skip: int
     limit: int
     carriers: Optional[List[str]] = []
+    search_term: Optional[str] = None
+    current_page: Optional[int] = None
+    total_pages: Optional[int] = None
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,

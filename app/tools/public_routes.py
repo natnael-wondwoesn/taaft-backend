@@ -30,6 +30,7 @@ public_router = APIRouter(prefix="/public/tools", tags=["public_tools"])
 async def list_public_tools(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    search: Optional[str] = Query(None, description="Search term for filtering tools"),
     category: Optional[str] = Query(None, description="Filter by category"),
     is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
@@ -66,17 +67,31 @@ async def list_public_tools(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
-    # Get the tools with filtering and sorting
-    tools = await get_tools(
-        skip=skip,
-        limit=limit,
-        filters=filters if filters else None,
-        sort_by=sort_by,
-        sort_order=sort_order,
-    )
+    # If search term is provided, use search_tools function
+    if search and search.strip():
+        result = await search_tools(
+            search_term=search,
+            skip=skip,
+            limit=limit,
+            additional_filters=filters,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
 
-    # Get total count with the same filters
-    total = await get_tools(count_only=True, filters=filters if filters else None)
+        tools = result.get("tools", [])
+        total = result.get("total", 0)
+    else:
+        # Otherwise, use get_tools with filters
+        tools = await get_tools(
+            skip=skip,
+            limit=limit,
+            filters=filters if filters else None,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
+
+        # Get total count with the same filters
+        total = await get_tools(count_only=True, filters=filters if filters else None)
 
     # Extract unique carriers from all tools
     all_carriers = set()
@@ -92,12 +107,19 @@ async def list_public_tools(
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
 
+    # Calculate pagination metadata
+    current_page = skip // limit + 1 if limit > 0 else 1
+    total_pages = (total + limit - 1) // limit if limit > 0 else 1
+
     return {
         "tools": tools,
         "total": total,
         "skip": skip,
         "limit": limit,
         "carriers": unique_carriers,
+        "search_term": search,
+        "current_page": current_page,
+        "total_pages": total_pages,
     }
 
 
@@ -466,3 +488,130 @@ async def get_public_keywords(
     )
 
     return keywords
+
+
+@public_router.get("/category/{category_slug}", response_model=PaginatedToolsResponse)
+@redis_cache(prefix="public_category_tools")
+async def get_public_tools_by_category(
+    category_slug: str,
+    search: Optional[str] = Query(None, description="Search term for filtering tools"),
+    skip: int = Query(0, ge=0, description="Number of items to skip"),
+    limit: int = Query(
+        20, ge=1, le=100, description="Maximum number of items to return"
+    ),
+    sort_by: Optional[str] = Query(
+        "created_at",
+        description="Field to sort by (name, created_at, updated_at, price)",
+    ),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
+    price_type: Optional[str] = Query(None, description="Filter by price type"),
+    is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
+):
+    """
+    Get tools by category slug with search and pagination.
+    This endpoint is publicly accessible without authentication.
+
+    Args:
+        category_slug: Slug of the category to fetch tools for
+        search: Optional search term to filter tools
+        skip: Number of items to skip for pagination
+        limit: Maximum number of items to return
+        sort_by: Field to sort by
+        sort_order: Sort order (asc or desc)
+        price_type: Filter by price type
+        is_featured: Filter featured tools
+
+    Returns:
+        Paginated list of tools in the specified category
+    """
+    # Import categories_service to get the category ID from the slug
+    from ..categories.service import categories_service
+
+    # Get the category by slug
+    category = await categories_service.get_category_by_slug(category_slug)
+    if not category:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Category with slug '{category_slug}' not found",
+        )
+
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
+
+    # Build filters dictionary
+    filters = {"categories.id": category.id}
+
+    if price_type:
+        filters["price"] = price_type
+
+    if is_featured is not None:
+        filters["is_featured"] = is_featured
+
+    # If search term is provided, use search_tools function
+    if search and search.strip():
+        result = await search_tools(
+            search_term=search,
+            skip=skip,
+            limit=limit,
+            additional_filters=filters,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
+
+        tools = result.get("tools", [])
+        total = result.get("total", 0)
+    else:
+        # Otherwise, use get_tools with filters
+        tools = await get_tools(
+            skip=skip,
+            limit=limit,
+            filters=filters,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
+
+        total = await get_tools(count_only=True, filters=filters)
+
+    # Ensure tools is always a list, even if None is returned
+    if tools is None:
+        tools = []
+
+    # Extract unique carriers from all tools
+    all_carriers = set()
+    if tools:
+        for tool in tools:
+            if isinstance(tool, dict):
+                if tool.get("carriers"):
+                    all_carriers.update(tool.get("carriers"))
+            else:
+                if tool.carriers:
+                    all_carriers.update(tool.carriers)
+
+    # Convert to sorted list
+    unique_carriers = sorted(list(all_carriers))
+
+    # Calculate pagination metadata
+    current_page = skip // limit + 1 if limit > 0 else 1
+    total_pages = (total + limit - 1) // limit if limit > 0 else 1
+
+    return {
+        "tools": tools,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "carriers": unique_carriers,
+        "search_term": search,
+        "current_page": current_page,
+        "total_pages": total_pages,
+    }

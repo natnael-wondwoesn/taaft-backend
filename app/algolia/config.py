@@ -19,6 +19,7 @@ class AlgoliaSettings(BaseSettings):
     write_api_key: str
     tools_index_name: str = "tools_index"
     glossary_index_name: str = "taaft_glossary"
+    tools_job_impacts_index_name: str = "tools_job_impacts_index"
 
     model_config = {
         "env_prefix": "ALGOLIA_",
@@ -41,6 +42,7 @@ except Exception as e:
         write_api_key="",
         tools_index_name="tools_index",
         glossary_index_name="taaft_glossary",
+        tools_job_impacts_index_name="tools_job_impacts_index",
     )
 
 
@@ -64,6 +66,7 @@ class AlgoliaConfig:
         self.write_api_key = settings.write_api_key
         self.tools_index_name = settings.tools_index_name
         self.glossary_index_name = settings.glossary_index_name
+        self.tools_job_impacts_index_name = settings.tools_job_impacts_index_name
 
         # Initialize client only if credentials are provided
         self.client = None
@@ -195,6 +198,64 @@ class AlgoliaConfig:
             logger.info("Algolia glossary index configured successfully")
         except Exception as e:
             logger.error(f"Failed to configure Algolia glossary index: {str(e)}")
+
+    def configure_tools_job_impacts_index(self):
+        """Configure the tools job impacts index with proper settings"""
+        if not self.is_configured():
+            logger.warning(
+                "Algolia not configured. Skipping tools job impacts index configuration."
+            )
+            return
+
+        try:
+            # Configure searchable attributes using the updated API structure
+            settings = {
+                "searchableAttributes": [
+                    "job_title",
+                    "impact_description",
+                    "job_category",
+                    "industry",
+                    "skills_required",
+                    "keywords",
+                ],
+                # Configure custom ranking
+                "customRanking": ["desc(impact_score)", "desc(updated_at)"],
+                # Configure facets for filtering
+                "attributesForFaceting": [
+                    "job_title",
+                    "job_category",
+                    "industry",
+                    "automation_potential",
+                    "impact_score",
+                    "tool_id",
+                    "ai_generated",
+                ],
+                # Configure highlighting
+                "attributesToHighlight": [
+                    "job_title",
+                    "impact_description",
+                    "skills_required",
+                ],
+                # Configure snippeting
+                "attributesToSnippet": ["impact_description:50"],
+                # Configure pagination
+                "hitsPerPage": 20,
+                # Additional settings
+                "typoTolerance": True,
+                "distinct": True,
+                "queryLanguages": ["en"],
+                "removeWordsIfNoResults": "allOptional",
+            }
+
+            # Use the correct format for set_settings
+            response = self.client.set_settings(
+                self.tools_job_impacts_index_name, settings
+            )
+            logger.info("Algolia tools job impacts index configured successfully")
+        except Exception as e:
+            logger.error(
+                f"Failed to configure Algolia tools job impacts index: {str(e)}"
+            )
 
     def save_object(
         self,

@@ -12,7 +12,7 @@ from fastapi import (
 )
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .websocket import manager
 from .database import database
@@ -70,6 +70,7 @@ from .glossary import router as glossary_router
 
 # Import the categories router
 from .categories import router as categories_router
+from .categories.routes import public_router as public_categories_router
 
 # Import the terms router
 from .terms import router as terms_router
@@ -132,6 +133,7 @@ async def lifespan(app: FastAPI):
                 logger.info("Configuring Algolia indexes...")
                 algolia_config.configure_tools_index()
                 algolia_config.configure_glossary_index()
+                algolia_config.configure_tools_job_impacts_index()
                 logger.info("Algolia indexes configured successfully")
             else:
                 logger.warning(
@@ -221,6 +223,7 @@ app.include_router(algolia_router)
 app.include_router(auth_router)  # Include auth router with prefix
 app.include_router(tools_router)  # Include tools router
 app.include_router(public_tools_router)  # Include public tools router
+app.include_router(public_categories_router)  # Include public categories router
 app.include_router(site_queue_router)  # Include site queue router
 app.include_router(site_dashboard_router)  # Include site dashboard router
 app.include_router(glossary_router)  # Include glossary router
