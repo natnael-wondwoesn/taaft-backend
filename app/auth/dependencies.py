@@ -320,6 +320,8 @@ class AdminControlMiddleware:
         self.unrestricted_prefixes.append("/favorites")
         # Share endpoint should be accessible to all authenticated users
         self.unrestricted_prefixes.append("/share")
+        # Search endpoints should be accessible to all users
+        self.unrestricted_prefixes.append("/api/search")
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -367,6 +369,10 @@ class AdminControlMiddleware:
             "/api/sso/providers",
             # Category endpoints
             "/api/categories/recalculate",  # Public endpoint for recalculating category counts
+            # Algolia indexing endpoints
+            "/api/search/index/tools",
+            "/api/search/index/glossary",
+            "/api/search/index/job-impacts",
         ]
 
         # If it's a public endpoint, skip auth checks
