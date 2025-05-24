@@ -22,7 +22,7 @@ from .indexer import algolia_indexer
 from ..database import database
 from ..logger import logger
 from ..auth.dependencies import get_admin_user
-from ..auth.models import UserInDB
+from ..models.user import UserInDB
 
 # Create the router before importing middleware that might use it
 router = APIRouter(
