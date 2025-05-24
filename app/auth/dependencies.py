@@ -173,6 +173,8 @@ class RateLimitMiddleware:
             or request.url.path.startswith("/share/")
             or request.url.path == "/api/auth/reset-password"
             or request.url.path == "/tools"  # Allow direct access to /tools endpoint
+            or request.url.path
+            == "/api/categories/recalculate"  # Allow recalculating category counts
         ):
             return await self.app(scope, receive, send)
 
@@ -363,6 +365,8 @@ class AdminControlMiddleware:
             "/api/sso/callback/google",
             "/api/sso/callback/github",
             "/api/sso/providers",
+            # Category endpoints
+            "/api/categories/recalculate",  # Public endpoint for recalculating category counts
         ]
 
         # If it's a public endpoint, skip auth checks
