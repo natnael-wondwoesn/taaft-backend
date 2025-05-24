@@ -28,6 +28,13 @@ from .models import (
     ProcessedQuery,
     PricingType,
     AlgoliaToolRecord,
+    JobImpactSearchResult,
+    AlgoliaJobImpactRecord,
+    JobImpactToolsSearchResult,
+    JobImpactWithTools,
+    TaskToolsSearchResult,
+    JobToolsRecommendation,
+    TaskWithTools,
 )
 from ..logger import logger
 
@@ -531,6 +538,472 @@ class AlgoliaSearch:
                 page=page,
                 per_page=per_page,
                 pages=0,
+                processing_time_ms=0,
+            )
+
+    async def direct_search_job_impacts(
+        self,
+        query: Optional[str] = None,
+        job_title: Optional[str] = None,
+        job_category: Optional[str] = None,
+        industry: Optional[str] = None,
+        min_impact_score: Optional[float] = None,
+        task_name: Optional[str] = None,
+        tool_name: Optional[str] = None,
+        page: int = 0,
+        per_page: int = 20,
+        sort_by: str = "impact_score",
+    ) -> JobImpactSearchResult:
+        """
+        Search for job impacts directly using Algolia.
+        
+        This search allows filtering by job title, category, and other fields.
+
+        Args:
+            query: The search query text
+            job_title: Filter by job title
+            job_category: Filter by job category
+            industry: Filter by industry
+            min_impact_score: Minimum impact score (0-100)
+            task_name: Filter by task name
+            tool_name: Filter by tool name
+            page: Page number (0-based for Algolia)
+            per_page: Number of results per page
+            sort_by: Sort order (impact_score, relevance, date)
+
+        Returns:
+            JobImpactSearchResult object containing the search results
+        """
+        # Check if Algolia is configured
+        if not self.config.is_configured():
+            logger.warning("Algolia not configured. Returning empty search results.")
+            return JobImpactSearchResult(
+                job_impacts=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                pages=0,
+                processing_time_ms=0,
+            )
+
+        try:
+            # Build filters
+            filters = []
+            if job_title:
+                filters.append(f"job_title:{job_title}")
+            if job_category:
+                filters.append(f"job_category:{job_category}")
+            if industry:
+                filters.append(f"industry:{industry}")
+            if min_impact_score is not None:
+                filters.append(f"numeric_impact_score >= {min_impact_score}")
+            if task_name:
+                filters.append(f"task_names:{task_name}")
+            if tool_name:
+                filters.append(f"tool_names:{tool_name}")
+
+            filter_str = " AND ".join(filters) if filters else ""
+
+            # Determine sort order
+            if sort_by == "impact_score":
+                ranking = ["desc(numeric_impact_score)"]
+            elif sort_by == "date":
+                ranking = ["desc(created_at)"]
+            else:  # relevance - use default Algolia ranking
+                ranking = []
+
+            # Set up search parameters
+            search_params = {
+                "query":query,
+                "page": page,
+                "hitsPerPage": per_page,
+                # "filters": filter_str,
+                "typoTolerance": "strict",  # Allow for typos in search
+                "advancedSyntax": True,
+                "removeWordsIfNoResults": "allOptional",  # Makes search more flexible
+            }
+
+            # if ranking:
+            #     search_params["customRanking"] = ranking
+
+            # Execute search using Algolia client
+            index_name = self.config.tools_job_impacts_index_name
+            search_response = self.config.client.search_single_index(
+                index_name=index_name, 
+                # query=query, 
+                search_params=search_params
+            )
+
+            # Convert results to job impact records
+            job_impacts = []
+            for hit in search_response.hits:
+                try:
+                    # Create AlgoliaJobImpactRecord from each hit
+                    job_impact_record = AlgoliaJobImpactRecord(
+                        objectID=getattr(hit, "objectID", ""),
+                        job_title=getattr(hit, "job_title", None),
+                        job_category=getattr(hit, "job_category", None),
+                        industry=getattr(hit, "industry", None),
+                        description=getattr(hit, "description", None),
+                        ai_impact_score=getattr(hit, "ai_impact_score", None),
+                        numeric_impact_score=getattr(hit, "numeric_impact_score", None),
+                        ai_impact_summary=getattr(hit, "ai_impact_summary", None),
+                        detailed_analysis=getattr(hit, "detailed_analysis", None),
+                        tasks=getattr(hit, "tasks", None),
+                        task_names=getattr(hit, "task_names", None),
+                        tool_names=getattr(hit, "tool_names", None),
+                        keywords=getattr(hit, "keywords", None),
+                        created_at=getattr(hit, "created_at", None),
+                        updated_at=getattr(hit, "updated_at", None),
+                        source_date=getattr(hit, "source_date", None),
+                        detail_page_link=getattr(hit, "detail_page_link", None),
+                    )
+                    job_impacts.append(job_impact_record)
+                except Exception as e:
+                    logger.error(f"Error converting hit to AlgoliaJobImpactRecord: {str(e)}")
+                    continue
+
+            # Create and return JobImpactSearchResult
+            return JobImpactSearchResult(
+                job_impacts=job_impacts,
+                total=search_response.nb_hits,
+                page=search_response.page,
+                per_page=per_page,
+                pages=search_response.nb_pages,
+                processing_time_ms=search_response.processing_time_ms,
+            )
+
+        except Exception as e:
+            logger.error(f"Error performing job impact search: {str(e)}")
+            # Return empty results on error
+            return JobImpactSearchResult(
+                job_impacts=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                pages=0,
+                processing_time_ms=0,
+            )
+
+    async def search_job_impacts_with_tools(
+        self,
+        job_title: str,
+        job_category: Optional[str] = None,
+        industry: Optional[str] = None,
+        min_impact_score: Optional[float] = None,
+        page: int = 0,
+        per_page: int = 10,
+        sort_by: str = "impact_score",
+    ) -> JobImpactToolsSearchResult:
+        """
+        Perform a multi-step search from job title to tasks to tools.
+        
+        This search flow:
+        1. Searches job impacts by job title
+        2. For each job impact, extracts task names
+        3. For each task name, searches tools that are relevant to that task
+        4. Returns job impacts with associated tools grouped by task
+        
+        Args:
+            job_title: Job title to search for
+            job_category: Optional filter for job category
+            industry: Optional filter for industry
+            min_impact_score: Minimum impact score (0-100)
+            page: Page number (0-based for Algolia)
+            per_page: Number of job impacts per page
+            sort_by: Sort order (impact_score, relevance, date)
+            
+        Returns:
+            JobImpactToolsSearchResult containing job impacts with tools grouped by task
+        """
+        # Check if Algolia is configured
+        if not self.config.is_configured():
+            logger.warning("Algolia not configured. Returning empty search results.")
+            return JobImpactToolsSearchResult(
+                results=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                job_title=job_title,
+                processing_time_ms=0,
+            )
+            
+        try:
+            # Step 1: Search for job impacts related to the job title
+            job_impacts_result = await self.direct_search_job_impacts(
+                query=None,  # We'll use job_title as a filter instead
+                job_title=job_title,
+                job_category=job_category,
+                industry=industry,
+                min_impact_score=min_impact_score,
+                page=page,
+                per_page=per_page,
+                sort_by=sort_by,
+            )
+            
+            # If no job impacts found, return empty result
+            if not job_impacts_result.job_impacts:
+                return JobImpactToolsSearchResult(
+                    results=[],
+                    total=0,
+                    page=page,
+                    per_page=per_page,
+                    job_title=job_title,
+                    processing_time_ms=job_impacts_result.processing_time_ms,
+                )
+                
+            # Step 2 & 3: For each job impact, find tools for each task
+            results = []
+            start_time = datetime.datetime.now()
+            
+            for job_impact in job_impacts_result.job_impacts:
+                # Initialize the job impact with tools result
+                job_impact_with_tools = JobImpactWithTools(
+                    job_impact=job_impact,
+                    tools_by_task={}
+                )
+                
+                # Extract unique task names from the job impact
+                task_names = job_impact.task_names or []
+                
+                # For each task, search for relevant tools
+                for task_name in task_names:
+                    # Skip empty task names
+                    if not task_name:
+                        continue
+                        
+                    # Search for tools related to this task
+                    tools_result = await self.direct_search_tools(
+                        query=task_name,
+                        page=0,  # Always get first page for tasks
+                        per_page=5,  # Limit to 5 tools per task to avoid overwhelming results
+                    )
+                    
+                    # Add tools to the result if any were found
+                    if tools_result.tools:
+                        job_impact_with_tools.tools_by_task[task_name] = tools_result.tools
+                
+                # Add the job impact with its tools to the results
+                results.append(job_impact_with_tools)
+                
+            # Calculate total processing time
+            end_time = datetime.datetime.now()
+            total_processing_time = (end_time - start_time).total_seconds() * 1000
+                
+            # Return the combined results
+            return JobImpactToolsSearchResult(
+                results=results,
+                total=job_impacts_result.total,
+                page=job_impacts_result.page,
+                per_page=job_impacts_result.per_page,
+                job_title=job_title,
+                processing_time_ms=int(total_processing_time + job_impacts_result.processing_time_ms),
+            )
+            
+        except Exception as e:
+            logger.error(f"Error performing job impacts with tools search: {str(e)}")
+            # Return empty results on error
+            return JobImpactToolsSearchResult(
+                results=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                job_title=job_title,
+                processing_time_ms=0,
+            )
+
+    async def search_tools_by_task(
+        self,
+        task_name: str,
+        page: int = 0,
+        per_page: int = 10,
+    ) -> TaskToolsSearchResult:
+        """
+        Search for tools relevant to a specific task name.
+        
+        Args:
+            task_name: Name of the task to find tools for
+            page: Page number (0-based for Algolia)
+            per_page: Number of tools per page
+            
+        Returns:
+            TaskToolsSearchResult containing the tools related to the task
+        """
+        # Check if Algolia is configured
+        if not self.config.is_configured():
+            logger.warning("Algolia not configured. Returning empty search results.")
+            return TaskToolsSearchResult(
+                task_name=task_name,
+                tools=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                processing_time_ms=0,
+            )
+            
+        try:
+            # Search for tools related to this task
+            start_time = datetime.datetime.now()
+            
+            tools_result = await self.direct_search_tools(
+                query=task_name,
+                page=page,
+                per_page=per_page,
+            )
+            
+            # Calculate processing time
+            end_time = datetime.datetime.now()
+            processing_time_ms = int((end_time - start_time).total_seconds() * 1000) + tools_result.processing_time_ms
+            
+            # Return the result
+            return TaskToolsSearchResult(
+                task_name=task_name,
+                tools=tools_result.tools,
+                total=tools_result.total,
+                page=tools_result.page,
+                per_page=tools_result.per_page,
+                processing_time_ms=processing_time_ms,
+            )
+            
+        except Exception as e:
+            logger.error(f"Error searching tools by task: {str(e)}")
+            # Return empty results on error
+            return TaskToolsSearchResult(
+                task_name=task_name,
+                tools=[],
+                total=0,
+                page=page,
+                per_page=per_page,
+                processing_time_ms=0,
+            )
+
+    async def get_job_tools_recommendation(
+        self,
+        job_title: str,
+        max_tasks: int = 5,
+        max_tools_per_task: int = 3,
+    ) -> JobToolsRecommendation:
+        """
+        Get a simplified job-to-tools recommendation.
+        
+        This method provides a streamlined workflow that:
+        1. Finds the most relevant job impact for the job title
+        2. Extracts the most important tasks
+        3. Finds the most relevant tools for each task
+        4. Returns a flat structure with tasks and their tools
+        
+        Args:
+            job_title: Job title to search for
+            max_tasks: Maximum number of tasks to include
+            max_tools_per_task: Maximum number of tools per task
+            
+        Returns:
+            JobToolsRecommendation with tasks and their recommended tools
+        """
+        # Check if Algolia is configured
+        if not self.config.is_configured():
+            logger.warning("Algolia not configured. Returning empty recommendation.")
+            return JobToolsRecommendation(
+                job_title=job_title,
+                tasks_with_tools=[],
+                task_count=0,
+                total_tool_count=0,
+                processing_time_ms=0,
+            )
+            
+        try:
+            start_time = datetime.datetime.now()
+            
+            # Step 1: Get the most relevant job impact for this job title
+            job_impacts_result = await self.direct_search_job_impacts(
+                query=None,
+                job_title=job_title,
+                page=0,
+                per_page=1,  # Just get the most relevant one
+                sort_by="impact_score",
+            )
+            
+            # If no job impacts found, return empty result
+            if not job_impacts_result.job_impacts:
+                end_time = datetime.datetime.now()
+                processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+                
+                return JobToolsRecommendation(
+                    job_title=job_title,
+                    tasks_with_tools=[],
+                    task_count=0,
+                    total_tool_count=0,
+                    processing_time_ms=processing_time_ms,
+                )
+                
+            # Get the best matching job impact
+            job_impact = job_impacts_result.job_impacts[0]
+            
+            # Initialize the recommendation object
+            recommendation = JobToolsRecommendation(
+                job_title=job_title,
+                job_category=job_impact.job_category,
+                industry=job_impact.industry,
+                ai_impact_score=job_impact.ai_impact_score,
+                ai_impact_summary=job_impact.ai_impact_summary,
+                tasks_with_tools=[],
+                task_count=0,
+                total_tool_count=0,
+            )
+            
+            # Step 2: Extract task names and limit to max_tasks
+            task_names = job_impact.task_names or []
+            if len(task_names) > max_tasks:
+                task_names = task_names[:max_tasks]
+                
+            # For tracking counts
+            total_tools = 0
+            tasks_with_tools_count = 0
+                
+            # Step 3: For each task, get tools
+            for task_name in task_names:
+                if not task_name:
+                    continue
+                    
+                # Get tools for this task
+                tools_result = await self.direct_search_tools(
+                    query=task_name,
+                    page=0,
+                    per_page=max_tools_per_task,
+                )
+                
+                # Only add tasks that have tools
+                if tools_result.tools:
+                    tool_count = len(tools_result.tools)
+                    task_with_tools = TaskWithTools(
+                        task_name=task_name,
+                        tools=tools_result.tools,
+                        tool_count=tool_count,
+                    )
+                    recommendation.tasks_with_tools.append(task_with_tools)
+                    
+                    # Update counters
+                    tasks_with_tools_count += 1
+                    total_tools += tool_count
+            
+            # Set the count fields
+            recommendation.task_count = tasks_with_tools_count
+            recommendation.total_tool_count = total_tools
+            
+            # Calculate processing time
+            end_time = datetime.datetime.now()
+            recommendation.processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+            
+            return recommendation
+            
+        except Exception as e:
+            logger.error(f"Error getting job tools recommendation: {str(e)}")
+            # Return a basic result on error
+            return JobToolsRecommendation(
+                job_title=job_title,
+                tasks_with_tools=[],
+                task_count=0,
+                total_tool_count=0,
                 processing_time_ms=0,
             )
 

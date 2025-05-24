@@ -17,6 +17,7 @@ Prerequisites:
 
 import os
 import sys
+import argparse
 from datetime import datetime
 from dotenv import load_dotenv
 from algoliasearch.search.client import SearchClientSync as SearchClient
@@ -38,6 +39,13 @@ mongodb_url = os.getenv("MONGODB_URL")
 mongodb_db = os.getenv("MONGODB_DB", "taaft_db")
 mongodb_collection = "tools_job_impacts"
 
+# Function to parse command-line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(description="Migrate job impacts from MongoDB to Algolia")
+    parser.add_argument("--fix-record", type=str, help="Fix a specific record by ID")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    parser.add_argument("--check-size", action="store_true", help="Check record sizes without uploading")
+    return parser.parse_args()
 
 # Initialize Algolia client (only when needed)
 def get_algolia_client():
@@ -267,6 +275,91 @@ def prepare_algolia_object(mongo_job_impact):
         if keywords:
             algolia_job_impact["keywords"] = list(set(keywords))
 
+    # Ensure the record size is within Algolia's limits (10KB)
+    # Truncate large text fields if necessary
+    import json
+    
+    # First attempt: Check if the record is already within size limits
+    record_size = len(json.dumps(algolia_job_impact).encode('utf-8'))
+    
+    # If the record is too large, start truncating fields
+    if record_size > 9500:  # Leave some buffer
+        logger.warning(f"Record {algolia_job_impact['objectID']} is too large ({record_size} bytes). Truncating fields...")
+        
+        # Fields to truncate (in order of priority, least important first)
+        fields_to_truncate = [
+            # Long text fields that are less critical
+            "detailed_analysis", 
+            "ai_impact_summary", 
+            "description",
+            # Task details can be large
+            "tasks"
+        ]
+        
+        for field in fields_to_truncate:
+            if field in algolia_job_impact:
+                if field == "tasks" and algolia_job_impact.get(field):
+                    # For tasks, keep only essential task information
+                    simplified_tasks = []
+                    for task in algolia_job_impact[field]:
+                        simplified_task = {
+                            "name": task.get("name", ""),
+                            "impact": task.get("impact", "")
+                        }
+                        # Keep tool names but simplify tool objects
+                        if "tools" in task and task["tools"]:
+                            simplified_task["tools"] = [
+                                {"tool_name": tool.get("tool_name", "")} 
+                                for tool in task["tools"] if tool.get("tool_name")
+                            ]
+                        simplified_tasks.append(simplified_task)
+                    algolia_job_impact[field] = simplified_tasks
+                elif isinstance(algolia_job_impact[field], str):
+                    # Truncate text fields
+                    if len(algolia_job_impact[field]) > 1000:
+                        algolia_job_impact[field] = algolia_job_impact[field][:1000] + "..."
+                
+                # Check if we're now under the limit
+                record_size = len(json.dumps(algolia_job_impact).encode('utf-8'))
+                if record_size <= 9500:
+                    break
+        
+        # If still too large, remove non-essential fields
+        if record_size > 9500:
+            non_essential_fields = [
+                "ai_generated_text", 
+                "raw_data",
+                "full_analysis", 
+                "source_data",
+                "gpt_response"
+            ]
+            
+            for field in non_essential_fields:
+                if field in algolia_job_impact:
+                    del algolia_job_impact[field]
+                    # Check if we're now under the limit
+                    record_size = len(json.dumps(algolia_job_impact).encode('utf-8'))
+                    if record_size <= 9500:
+                        break
+        
+        # Final check - if still too large, keep only the most essential fields
+        if record_size > 9500:
+            logger.warning(f"Record {algolia_job_impact['objectID']} is still too large after truncation. Keeping only essential fields.")
+            essential_fields = [
+                "objectID", "job_title", "job_category", "industry",
+                "ai_impact_score", "numeric_impact_score", "task_names", "tool_names",
+                "keywords", "created_at", "updated_at"
+            ]
+            
+            # Create a new record with only essential fields
+            essential_record = {}
+            for field in essential_fields:
+                if field in algolia_job_impact:
+                    essential_record[field] = algolia_job_impact[field]
+            
+            # Replace the record with the essential-only version
+            algolia_job_impact = essential_record
+
     return algolia_job_impact
 
 
@@ -347,9 +440,145 @@ def configure_algolia_index(client, index_name):
     logger.info("Algolia index configured successfully")
 
 
+def fix_record_by_id(mongo_collection, record_id):
+    """
+    Retrieve and fix a specific record by ID
+    """
+    from bson.objectid import ObjectId
+    
+    try:
+        # Try to convert the string ID to ObjectId
+        obj_id = None
+        try:
+            obj_id = ObjectId(record_id)
+        except Exception:
+            # If conversion fails, use the string ID as is
+            pass
+            
+        # Try to find the record by ID
+        record = None
+        if obj_id:
+            record = mongo_collection.find_one({"_id": obj_id})
+        
+        # If not found with ObjectId, try with string ID
+        if not record:
+            record = mongo_collection.find_one({"_id": record_id})
+            
+        if not record:
+            logger.error(f"Record with ID {record_id} not found")
+            return False
+            
+        # Prepare the record for Algolia
+        algolia_record = prepare_algolia_object(record)
+        
+        # Get the size of the record
+        import json
+        record_size = len(json.dumps(algolia_record).encode('utf-8'))
+        logger.info(f"Record {record_id} size: {record_size} bytes")
+        
+        if record_size > 10000:
+            logger.warning(f"Record {record_id} is too large ({record_size} bytes)")
+            logger.info("Fields and their sizes:")
+            
+            # Print fields and their sizes
+            for key, value in algolia_record.items():
+                field_size = len(json.dumps(value).encode('utf-8'))
+                logger.info(f"  {key}: {field_size} bytes")
+                
+            # The prepare_algolia_object function should have already fixed the size issue
+            algolia_client = get_algolia_client()
+            
+            # Upload the fixed record
+            try:
+                algolia_client.save_objects(algolia_index_name, [algolia_record])
+                logger.info(f"Successfully uploaded fixed record {record_id}")
+                return True
+            except Exception as e:
+                logger.error(f"Failed to upload fixed record {record_id}: {str(e)}")
+                return False
+        else:
+            logger.info(f"Record {record_id} is within size limits")
+            algolia_client = get_algolia_client()
+            
+            # Upload the record
+            try:
+                algolia_client.save_objects(algolia_index_name, [algolia_record])
+                logger.info(f"Successfully uploaded record {record_id}")
+                return True
+            except Exception as e:
+                logger.error(f"Failed to upload record {record_id}: {str(e)}")
+                return False
+    except Exception as e:
+        logger.error(f"Error fixing record {record_id}: {str(e)}")
+        return False
+
+
+def check_record_sizes(mongodb_job_impacts):
+    """Check the size of each record and report any that exceed Algolia's limit"""
+    import json
+    
+    logger.info("Checking record sizes...")
+    oversized_records = []
+    
+    for job_impact in mongodb_job_impacts:
+        # Prepare the record for Algolia
+        algolia_record = prepare_algolia_object(job_impact)
+        
+        # Get the size of the record
+        record_size = len(json.dumps(algolia_record).encode('utf-8'))
+        
+        # If the record is too large, add it to the list
+        if record_size > 10000:
+            record_id = str(job_impact.get("_id"))
+            oversized_records.append({
+                "id": record_id,
+                "size": record_size,
+                "job_title": job_impact.get("job_title", "Unknown")
+            })
+            
+    # Report the results
+    if oversized_records:
+        logger.warning(f"Found {len(oversized_records)} oversized records:")
+        for record in oversized_records:
+            logger.warning(f"  {record['id']}: {record['size']} bytes - {record['job_title']}")
+    else:
+        logger.info("All records are within Algolia's size limits")
+        
+    return oversized_records
+        
+
 def main():
     """Main function to orchestrate the migration process"""
+    args = parse_args()
+    
     try:
+        # Get MongoDB connection for specific record fix if needed
+        if args.fix_record or args.check_size:
+            # Create MongoDB client
+            mongo_client = MongoClient(mongodb_url)
+            mongo_database = mongo_client[mongodb_db]
+            mongo_collection = mongo_database[mongodb_collection]
+            
+            # If fixing a specific record
+            if args.fix_record:
+                logger.info(f"Fixing record with ID {args.fix_record}...")
+                success = fix_record_by_id(mongo_collection, args.fix_record)
+                return {
+                    "status": "success" if success else "error",
+                    "message": f"Record fix {'succeeded' if success else 'failed'}"
+                }
+                
+            # If checking record sizes
+            if args.check_size:
+                mongodb_job_impacts = get_mongodb_job_impacts()
+                oversized_records = check_record_sizes(mongodb_job_impacts)
+                return {
+                    "status": "success",
+                    "message": f"Found {len(oversized_records)} oversized records" if oversized_records else "All records are within size limits",
+                    "oversized_count": len(oversized_records)
+                }
+        
+        # Regular migration process
         # Get the Algolia client (this will validate environment variables)
         algolia_client = get_algolia_client()
 
@@ -381,19 +610,58 @@ def main():
 
         # Only proceed with upload if we have objects
         if algolia_objects:
-            # Split into batches of 1000 records to avoid size limits
-            batch_size = 1000
+            # Use a smaller batch size to avoid size limit issues
+            batch_size = 50  # Reduced from 1000
+            failed_records = []
+            success_count = 0
+            
             for i in range(0, len(algolia_objects), batch_size):
                 batch = algolia_objects[i : i + batch_size]
-                logger.info(
-                    f"Uploading batch {i//batch_size + 1} of {(len(algolia_objects) + batch_size - 1) // batch_size}..."
-                )
-                algolia_client.save_objects(algolia_index_name, batch)
+                batch_num = i // batch_size + 1
+                total_batches = (len(algolia_objects) + batch_size - 1) // batch_size
+                
+                logger.info(f"Uploading batch {batch_num} of {total_batches}...")
+                
+                try:
+                    algolia_client.save_objects(algolia_index_name, batch)
+                    success_count += len(batch)
+                    logger.info(f"Successfully uploaded batch {batch_num} ({len(batch)} records)")
+                except Exception as e:
+                    logger.error(f"Error uploading batch {batch_num}: {str(e)}")
+                    
+                    # If batch fails, try uploading records individually
+                    if len(batch) > 1:
+                        logger.info("Attempting to upload records individually...")
+                        for record in batch:
+                            try:
+                                algolia_client.save_objects(algolia_index_name, [record])
+                                success_count += 1
+                            except Exception as individual_error:
+                                logger.error(f"Failed to upload record {record.get('objectID')}: {str(individual_error)}")
+                                failed_records.append({
+                                    "objectID": record.get("objectID"),
+                                    "error": str(individual_error)
+                                })
+            
+            # Report results
+            if failed_records:
+                logger.warning(f"Migration completed with {len(failed_records)} failed records out of {len(algolia_objects)}")
+                logger.warning(f"Failed record IDs: {', '.join([r['objectID'] for r in failed_records[:10]])}")
+                if len(failed_records) > 10:
+                    logger.warning(f"... and {len(failed_records) - 10} more")
+            else:
+                logger.info(f"All {success_count} records successfully uploaded to Algolia")
         else:
             logger.info("No objects to upload. Created an empty index.")
 
-        logger.info("Migration completed successfully!")
-        return {"status": "success", "message": "Migration completed successfully"}
+        logger.info("Migration completed!")
+        return {
+            "status": "success", 
+            "message": "Migration completed successfully",
+            "total_records": len(algolia_objects) if algolia_objects else 0,
+            "successful_records": success_count if algolia_objects else 0,
+            "failed_records": len(failed_records) if algolia_objects else 0
+        }
 
     except Exception as e:
         logger.error(f"Migration failed: {str(e)}")

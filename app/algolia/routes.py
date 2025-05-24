@@ -16,7 +16,18 @@ from typing import Dict, List, Optional, Any
 from motor.motor_asyncio import AsyncIOMotorCollection
 import datetime
 
-from .models import SearchParams, SearchResult, NaturalLanguageQuery, ProcessedQuery
+from .models import (
+    SearchParams, 
+    SearchResult, 
+    NaturalLanguageQuery, 
+    ProcessedQuery,
+    JobImpactSearchResult,
+    JobImpactSearchParams,
+    JobImpactToolsSearchResult,
+    JobImpactToolsSearchParams,
+    TaskToolsSearchResult,
+    JobToolsRecommendation
+)
 from .config import algolia_config
 from .indexer import algolia_indexer
 from ..database import database
@@ -133,6 +144,8 @@ async def index_job_impacts(
     """
     Index all job impacts in MongoDB to Algolia (asynchronous operation)
 
+    After indexing, job impacts can be searched using the /direct-search/job-impacts endpoint.
+
     Args:
         background_tasks: FastAPI background tasks
         batch_size: Number of job impacts to index in each batch
@@ -156,6 +169,7 @@ async def index_job_impacts(
     return {
         "status": "processing",
         "message": "Indexing job impacts to Algolia in the background",
+        "search_endpoint": "/api/search/direct-search/job-impacts",
     }
 
 
@@ -241,6 +255,7 @@ async def get_search_config():
         "search_api_key": algolia_config.search_only_api_key,
         "tools_index_name": algolia_config.tools_index_name,
         "glossary_index_name": algolia_config.glossary_index_name,
+        "tools_job_impacts_index_name": algolia_config.tools_job_impacts_index_name,
         "is_configured": algolia_config.is_configured(),
     }
 
@@ -611,4 +626,350 @@ async def search_job_impacts(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error searching job impacts: {str(e)}",
+        )
+
+
+@router.get("/direct-search/job-impacts", response_model=JobImpactSearchResult)
+async def direct_search_job_impacts(
+    query: Optional[str] = Query(None, description="Search query"),
+    job_title: Optional[str] = Query(None, description="Filter by job title"),
+    job_category: Optional[str] = Query(None, description="Filter by job category"),
+    industry: Optional[str] = Query(None, description="Filter by industry"),
+    min_impact_score: Optional[float] = Query(
+        None, ge=0, le=100, description="Minimum impact score"
+    ),
+    task_name: Optional[str] = Query(None, description="Filter by task name"),
+    tool_name: Optional[str] = Query(None, description="Filter by tool name"),
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(20, ge=1, le=100, description="Results per page"),
+    sort_by: str = Query(
+        "impact_score",
+        description="Sort order",
+    ),
+):
+    """
+    Direct search for job impacts in the Algolia index.
+    
+    This endpoint allows searching and filtering job impacts data by various criteria,
+    similar to the /job-impacts endpoint but using the new direct search implementation.
+    
+    Args:
+        query: General search query
+        job_title: Filter by job title
+        job_category: Filter by job category
+        industry: Filter by industry
+        min_impact_score: Filter by minimum impact score
+        task_name: Filter by task name
+        tool_name: Filter by tool name
+        page: Page number (0-based)
+        per_page: Number of results per page
+        sort_by: Sort order (impact_score, relevance, date)
+        
+    Returns:
+        JobImpactSearchResult with search results and pagination
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the search using the new direct search method
+        search_result = await algolia_search.direct_search_job_impacts(
+            query=query,
+            job_title=job_title,
+            job_category=job_category, 
+            industry=industry,
+            min_impact_score=min_impact_score,
+            task_name=task_name,
+            tool_name=tool_name,
+            page=page,
+            per_page=per_page,
+            sort_by=sort_by,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching job impacts: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching job impacts: {str(e)}",
+        )
+
+
+@router.post("/direct-search/job-impacts", response_model=JobImpactSearchResult)
+async def direct_search_job_impacts_post(
+    search_params: JobImpactSearchParams,
+):
+    """
+    Direct search for job impacts with POST request.
+    
+    This endpoint is the POST version of the direct-search/job-impacts endpoint,
+    allowing for more complex search parameters to be passed in the request body.
+    
+    Args:
+        search_params: JobImpactSearchParams object containing search parameters
+        
+    Returns:
+        JobImpactSearchResult with search results and pagination
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the search using the new direct search method
+        search_result = await algolia_search.direct_search_job_impacts(
+            query=search_params.query,
+            job_title=search_params.job_title,
+            job_category=search_params.job_category,
+            industry=search_params.industry,
+            min_impact_score=search_params.min_impact_score,
+            task_name=search_params.task_name,
+            tool_name=search_params.tool_name,
+            page=search_params.page - 1,  # Convert from 1-based to 0-based for Algolia
+            per_page=search_params.per_page,
+            sort_by=search_params.sort_by,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching job impacts: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching job impacts: {str(e)}",
+        )
+
+
+@router.get("/job-impact-tools", response_model=JobImpactToolsSearchResult)
+async def search_job_impacts_with_tools(
+    job_title: str = Query(..., description="Job title to search for"),
+    job_category: Optional[str] = Query(None, description="Filter by job category"),
+    industry: Optional[str] = Query(None, description="Filter by industry"),
+    min_impact_score: Optional[float] = Query(
+        None, ge=0, le=100, description="Minimum impact score"
+    ),
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(10, ge=1, le=20, description="Results per page"),
+    sort_by: str = Query(
+        "impact_score",
+        description="Sort order (impact_score, relevance, date)",
+    ),
+):
+    """
+    Search for job impacts by job title and find relevant tools for each task.
+    
+    This endpoint implements a multi-step search flow:
+    1. Find job impacts related to the specified job title
+    2. For each job impact, extract the tasks
+    3. For each task, find relevant tools from the tools index
+    4. Return a combined result with job impacts and tools grouped by task
+    
+    Args:
+        job_title: Job title to search for (e.g., "Software Engineer")
+        job_category: Optional filter for job category
+        industry: Optional filter for industry
+        min_impact_score: Minimum impact score (0-100)
+        page: Page number (0-based)
+        per_page: Number of job impacts per page
+        sort_by: Sort order (impact_score, relevance, date)
+        
+    Returns:
+        JobImpactToolsSearchResult with job impacts and their associated tools
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the multi-step search
+        search_result = await algolia_search.search_job_impacts_with_tools(
+            job_title=job_title,
+            job_category=job_category,
+            industry=industry,
+            min_impact_score=min_impact_score,
+            page=page,
+            per_page=per_page,
+            sort_by=sort_by,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching job impacts with tools: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching job impacts with tools: {str(e)}",
+        )
+
+
+@router.post("/job-impact-tools", response_model=JobImpactToolsSearchResult)
+async def search_job_impacts_with_tools_post(
+    search_params: JobImpactToolsSearchParams,
+):
+    """
+    POST endpoint for searching job impacts with tools.
+    
+    This endpoint is the POST version of /job-impact-tools, accepting
+    the search parameters in the request body instead of as query parameters.
+    
+    Args:
+        search_params: JobImpactToolsSearchParams containing search parameters
+        
+    Returns:
+        JobImpactToolsSearchResult with job impacts and their associated tools
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the multi-step search
+        search_result = await algolia_search.search_job_impacts_with_tools(
+            job_title=search_params.job_title,
+            job_category=search_params.job_category,
+            industry=search_params.industry,
+            min_impact_score=search_params.min_impact_score,
+            page=search_params.page - 1,  # Convert from 1-based to 0-based
+            per_page=search_params.per_page,
+            sort_by=search_params.sort_by,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching job impacts with tools: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching job impacts with tools: {str(e)}",
+        )
+
+
+@router.get("/task-tools/{task_name}", response_model=TaskToolsSearchResult)
+async def search_tools_by_task(
+    task_name: str,
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(10, ge=1, le=50, description="Results per page"),
+):
+    """
+    Search for tools relevant to a specific task name.
+    
+    This endpoint allows finding tools that are relevant to a specific task,
+    which is useful when users want to find tools for specific tasks without
+    going through the job impacts.
+    
+    Args:
+        task_name: Name of the task to find tools for
+        page: Page number (0-based)
+        per_page: Number of tools per page
+        
+    Returns:
+        TaskToolsSearchResult containing the tools related to the task
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the search
+        search_result = await algolia_search.search_tools_by_task(
+            task_name=task_name,
+            page=page,
+            per_page=per_page,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching tools by task: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching tools by task: {str(e)}",
+        )
+
+
+@router.get("/recommend-tools/{job_title}", response_model=JobToolsRecommendation)
+async def recommend_tools_for_job(
+    job_title: str,
+    max_tasks: int = Query(5, ge=1, le=10, description="Maximum number of tasks to include"),
+    max_tools_per_task: int = Query(3, ge=1, le=10, description="Maximum number of tools per task"),
+):
+    """
+    One-stop endpoint for job-to-tasks-to-tools recommendations.
+    
+    This streamlined endpoint provides a complete workflow that:
+    1. Takes a job title as input
+    2. Finds AI impact information for that job
+    3. Identifies key tasks affected by AI
+    4. Recommends tools for each task
+    5. Returns everything in a single, easy-to-use structure
+    
+    The response includes:
+    - Job title, category, and industry
+    - AI impact summary
+    - Tasks with recommended tools for each
+    - Counts of tasks and tools found
+    
+    Args:
+        job_title: Job title to get tool recommendations for (e.g., "Software Engineer")
+        max_tasks: Maximum number of tasks to include in the results
+        max_tools_per_task: Maximum number of tools to recommend per task
+        
+    Returns:
+        JobToolsRecommendation containing job information and recommended tools by task
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Get the job tools recommendation
+        recommendation = await algolia_search.get_job_tools_recommendation(
+            job_title=job_title,
+            max_tasks=max_tasks,
+            max_tools_per_task=max_tools_per_task,
+        )
+        
+        # If no tasks found, provide a helpful error
+        if not recommendation.tasks_with_tools:
+            if job_title.strip():
+                detail = f"No tasks or tools found for job title '{job_title}'. Try a different job title or check if the job impacts have been indexed."
+            else:
+                detail = "Job title cannot be empty. Please provide a valid job title."
+                
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=detail,
+            )
+        
+        return recommendation
+    
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    
+    except Exception as e:
+        logger.error(f"Error recommending tools for job: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error recommending tools for job: {str(e)}",
         )
