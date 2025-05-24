@@ -16,7 +16,7 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: 60
+        value: 10080
       - key: REFRESH_TOKEN_EXPIRE_DAYS
         value: 7
       - key: PORT

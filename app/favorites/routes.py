@@ -85,8 +85,12 @@ async def list_favorite_tools(
     for favorite in favorites:
         tool = await get_tool_by_unique_id(favorite.tool_unique_id)
         if tool:
-            # Convert to dict and add favorite information
-            tool_dict = tool.dict()
+            # Check if tool is a Pydantic model or a dict and handle accordingly
+            if hasattr(tool, "dict"):
+                tool_dict = tool.dict()
+            else:
+                tool_dict = dict(tool)
+
             tool_dict["favorited_at"] = favorite.created_at
             tool_dict["favorite_id"] = favorite.id
             tool_dict["saved_by_user"] = True

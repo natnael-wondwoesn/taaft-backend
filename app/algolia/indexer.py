@@ -428,6 +428,153 @@ class AlgoliaIndexer:
             logger.error(f"Error deleting glossary term from Algolia: {str(e)}")
             return False
 
+    async def index_job_impacts(
+        self, job_impacts_collection: AsyncIOMotorCollection, batch_size: int = 100
+    ) -> Dict[str, Any]:
+        """
+        Index all job impacts from MongoDB to Algolia
+
+        Args:
+            job_impacts_collection: MongoDB collection containing job impacts
+            batch_size: Number of job impacts to index in each batch
+
+        Returns:
+            Dictionary with indexing statistics
+        """
+        if not self.config.is_configured():
+            logger.warning("Algolia not configured. Skipping job impacts indexing.")
+            return {
+                "success": False,
+                "message": "Algolia not configured",
+                "indexed": 0,
+                "errors": 0,
+            }
+
+        stats = {
+            "success": True,
+            "started_at": datetime.datetime.utcnow(),
+            "indexed": 0,
+            "errors": 0,
+            "batches": 0,
+        }
+
+        try:
+            # Get total count for progress tracking
+            total_count = await job_impacts_collection.count_documents({})
+            logger.info(f"Starting indexing of {total_count} job impacts to Algolia")
+
+            # Process job impacts in batches
+            skip = 0
+            while True:
+                # Get batch of job impacts
+                cursor = job_impacts_collection.find({}).skip(skip).limit(batch_size)
+                job_impacts = await cursor.to_list(length=batch_size)
+
+                if not job_impacts:
+                    break  # No more job impacts to process
+
+                # Convert job impacts to Algolia records
+                algolia_records = []
+                for job_impact in job_impacts:
+                    try:
+                        # Convert MongoDB _id to Algolia objectID
+                        job_impact["objectID"] = str(job_impact.pop("_id"))
+
+                        # Simplify datetime objects for JSON serialization
+                        if "created_at" in job_impact and isinstance(
+                            job_impact["created_at"], datetime.datetime
+                        ):
+                            job_impact["created_at"] = job_impact[
+                                "created_at"
+                            ].isoformat()
+                        if "updated_at" in job_impact and isinstance(
+                            job_impact["updated_at"], datetime.datetime
+                        ):
+                            job_impact["updated_at"] = job_impact[
+                                "updated_at"
+                            ].isoformat()
+                        if "source_date" in job_impact and isinstance(
+                            job_impact["source_date"], datetime.datetime
+                        ):
+                            job_impact["source_date"] = job_impact[
+                                "source_date"
+                            ].isoformat()
+
+                        # Generate keywords if not present
+                        if "keywords" not in job_impact or not job_impact["keywords"]:
+                            keywords = []
+
+                            # Add job_title as keyword if available
+                            if "job_title" in job_impact and job_impact["job_title"]:
+                                job_title = job_impact["job_title"]
+                                if isinstance(job_title, str):
+                                    keywords.extend(job_title.lower().split())
+
+                            # Add job_category as keyword if available
+                            if (
+                                "job_category" in job_impact
+                                and job_impact["job_category"]
+                            ):
+                                job_category = job_impact["job_category"]
+                                if isinstance(job_category, str):
+                                    keywords.append(job_category.lower())
+
+                            # Add industry as keyword if available
+                            if "industry" in job_impact and job_impact["industry"]:
+                                industry = job_impact["industry"]
+                                if isinstance(industry, str):
+                                    keywords.append(industry.lower())
+
+                            # Remove duplicates
+                            if keywords:
+                                job_impact["keywords"] = list(set(keywords))
+
+                        algolia_records.append(job_impact)
+                    except Exception as e:
+                        logger.error(
+                            f"Error processing job impact for Algolia: {str(e)}"
+                        )
+                        stats["errors"] += 1
+
+                # Send batch to Algolia
+                if algolia_records:
+                    try:
+                        # Use v4 client syntax to save objects
+                        result = self.config.client.save_objects(
+                            self.config.tools_job_impacts_index_name,
+                            algolia_records,
+                            {"wait_for_task": True},
+                        )
+                        stats["indexed"] += len(algolia_records)
+                        stats["batches"] += 1
+                        logger.info(
+                            f"Indexed batch of {len(algolia_records)} job impacts to Algolia. "
+                            + f"Progress: {stats['indexed']}/{total_count}"
+                        )
+                    except Exception as e:
+                        logger.error(f"Error indexing batch to Algolia: {str(e)}")
+                        stats["errors"] += len(algolia_records)
+
+                # Move to next batch
+                skip += batch_size
+
+            # Complete the indexing stats
+            stats["completed_at"] = datetime.datetime.utcnow()
+            stats["duration_seconds"] = (
+                stats["completed_at"] - stats["started_at"]
+            ).total_seconds()
+            logger.info(
+                f"Completed indexing {stats['indexed']} job impacts to Algolia in {stats['duration_seconds']} seconds"
+            )
+
+            return stats
+
+        except Exception as e:
+            logger.error(f"Error during Algolia indexing of job impacts: {str(e)}")
+            stats["success"] = False
+            stats["message"] = str(e)
+            return stats
+
 
 # Create a singleton instance of AlgoliaIndexer
 algolia_indexer = AlgoliaIndexer()

@@ -270,6 +270,40 @@ paths:
         '503':
           description: Search service is not configured
 
+  /api/search/index/job-impacts:
+    post:
+      tags:
+        - Search
+      summary: Index job impacts
+      description: Index all job impacts in MongoDB to Algolia (asynchronous operation)
+      operationId: indexJobImpacts
+      parameters:
+        - name: batch_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Number of job impacts to index in each batch
+      responses:
+        '202':
+          description: Indexing started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "processing"
+                  message:
+                    type: string
+                    example: "Indexing job impacts to Algolia in the background"
+        '503':
+          description: Search service is not configured
+
   /api/search/index/tool/{tool_id}:
     post:
       tags:
@@ -439,6 +473,108 @@ paths:
         '503':
           description: Search service is not configured
 
+  /api/search/job-impacts:
+    get:
+      tags:
+        - Search
+      summary: Search job impacts
+      description: Search for job impacts in the Algolia index with various filters. This endpoint requires admin authentication.
+      operationId: searchJobImpacts
+      security:
+        - AdminAuth: []
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search query
+        - name: job_title
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by job title
+        - name: job_category
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by job category
+        - name: min_impact_score
+          in: query
+          required: false
+          schema:
+            type: number
+            minimum: 0
+            maximum: 100
+          description: Filter by minimum impact score
+        - name: task_name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by task name
+        - name: tool_name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by tool name
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number (1-based)
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Results per page
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [impact_score, relevance, date]
+            default: impact_score
+          description: Sort order
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JobImpactResult'
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+                  total_hits:
+                    type: integer
+                  total_pages:
+                    type: integer
+                  processing_time_ms:
+                    type: integer
+                  query:
+                    type: string
+                  filters:
+                    type: string
+        '503':
+          description: Search service is not configured
+
 components:
   schemas:
     SearchParams:
@@ -538,4 +674,93 @@ components:
           description: Pricing type name
       required:
         - id
-        - name 
+        - name
+
+    JobImpactResult:
+      type: object
+      properties:
+        objectID:
+          type: string
+          description: Unique identifier for the job impact
+        job_title:
+          type: string
+          description: Title of the job
+        job_category:
+          type: string
+          description: Category of the job
+        ai_impact_score:
+          type: string
+          description: AI impact score as a percentage
+        numeric_impact_score:
+          type: number
+          description: Numeric representation of the AI impact score
+        description:
+          type: string
+          description: Description of the job
+        ai_impact_summary:
+          type: string
+          description: Summary of AI impact on the job
+        detailed_analysis:
+          type: string
+          description: Detailed analysis of AI impact on the job
+        tasks:
+          type: array
+          description: List of tasks associated with the job
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the task
+              task_ai_impact_score:
+                type: string
+                description: AI impact score for the specific task
+              tools:
+                type: array
+                description: Tools that can assist with the task
+                items:
+                  type: object
+                  properties:
+                    tool_name:
+                      type: string
+                      description: Name of the tool
+                    tool_logo_url:
+                      type: string
+                      description: URL to the tool's logo
+                    tool_link:
+                      type: string
+                      description: URL to the tool's page
+        task_names:
+          type: array
+          description: Extracted list of task names for faceting
+          items:
+            type: string
+        tool_names:
+          type: array
+          description: Extracted list of tool names for faceting
+          items:
+            type: string
+        keywords:
+          type: array
+          description: Keywords for improved search
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        detail_page_link:
+          type: string
+          description: Link to the detailed page for this job
+
+# Security Definitions
+securityDefinitions:
+  AdminAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: JWT token for admin authentication. Use format 'Bearer {token}' 

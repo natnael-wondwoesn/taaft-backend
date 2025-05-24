@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "your-secret-key")
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
-        os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+        os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080")
     )
 
     # Chat settings
@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = os.getenv("hxndgvqecwvpvigo", "hxndgvqecwvpvigo")
     EMAIL_FROM: str = os.getenv("EMAIL_FROM", "noreply@example.com")
     EMAIL_ENABLED: bool = os.getenv("EMAIL_ENABLED", "False").lower() == "true"
+
+    # Redis cache settings
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+    REDIS_PASSWORD: str = os.getenv("REDIS_PASSWORD", None)
+    REDIS_CACHE_ENABLED: bool = (
+        os.getenv("REDIS_CACHE_ENABLED", "true").lower() == "true"
+    )
+    REDIS_CACHE_TTL: int = int(os.getenv("REDIS_CACHE_TTL", "300"))  # 5 minutes default
 
     # API settings
     API_V1_STR: str = "/api/v1"

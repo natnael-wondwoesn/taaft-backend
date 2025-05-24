@@ -1,0 +1,18 @@
+2025-05-16 12:52:18,177 - duplicate_tools_remover - INFO - Starting duplicate tools removal script
+2025-05-16 12:52:18,178 - duplicate_tools_remover - INFO - Starting duplicate tools removal at 2025-05-16 12:52:18.178380
+2025-05-16 12:52:28,734 - duplicate_tools_remover - INFO - Found 1221 total tools in database
+2025-05-16 12:52:28,739 - duplicate_tools_remover - INFO - Found 151 sets of duplicates with a total of 232 duplicate tools to remove
+2025-05-16 12:52:28,913 - duplicate_tools_remover - INFO - Kept tool 'Voice to Notion' (ID: 68093417a40b1de891a13f91) and removed 1 duplicates
+2025-05-16 12:52:29,073 - duplicate_tools_remover - INFO - Kept tool 'Wan2.1' (ID: 6809456fa40b1de891a140d1) and removed 1 duplicates
+2025-05-16 12:52:29,253 - duplicate_tools_remover - INFO - Kept tool 'FetchFox' (ID: 680a29f5a40b1de891a14103) and removed 1 duplicates
+2025-05-16 12:52:29,429 - duplicate_tools_remover - INFO - Kept tool 'WebscrapeAi' (ID: 680a29f8a40b1de891a14105) and removed 1 duplicates
+2025-05-16 12:52:29,600 - duplicate_tools_remover - INFO - Kept tool 'Kadoa' (ID: 680a29faa40b1de891a14106) and removed 1 duplicates
+2025-05-16 12:52:29,770 - duplicate_tools_remover - INFO - Kept tool 'Simplescraper' (ID: 680a2a00a40b1de891a14109) and removed 1 duplicates
+2025-05-16 12:52:29,771 - duplicate_tools_remover - ERROR - Error removing duplicate tools: '<' not supported between instances of 'datetime.datetime' and 'str'
+2025-05-16 12:52:29,771 - duplicate_tools_remover - ERROR - Error during duplicate tools removal: '<' not supported between instances of 'datetime.datetime' and 'str'
+2025-05-16 12:54:32,071 - duplicate_tools_remover - INFO - Starting duplicate tools removal script
+2025-05-16 12:54:32,072 - duplicate_tools_remover - INFO - Starting duplicate tools removal at 2025-05-16 12:54:32.072119
+2025-05-16 12:54:42,251 - duplicate_tools_remover - INFO - Found 1215 total tools in database
+2025-05-16 12:54:42,256 - duplicate_tools_remover - INFO - Found 145 sets of duplicates with a total of 226 duplicate tools to remove
+2025-05-16 12:54:42,258 - duplicate_tools_remover - ERROR - Error removing duplicate tools: can't compare offset-naive and offset-aware datetimes
+2025-05-16 12:54:42,258 - duplicate_tools_remover - ERROR - Error during duplicate tools removal: can't compare offset-naive and offset-aware datetimes

@@ -21,6 +21,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from algoliasearch.search.client import SearchClientSync as SearchClient
 from pymongo import MongoClient
+from ...logger import logger
 
 # Load environment variables
 load_dotenv()
@@ -35,14 +36,18 @@ mongodb_url = os.getenv("MONGODB_URL")
 mongodb_db = os.getenv("MONGODB_DB", "taaft_db")
 mongodb_collection = "tools"
 
-# Validate required environment variables
-if not all([algolia_app_id, algolia_admin_key, mongodb_url]):
-    print("Missing required environment variables. Please check your .env file.")
-    print("Required: ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY, MONGODB_URL")
-    sys.exit(1)
 
-# Initialize Algolia client
-algolia_client = SearchClient(algolia_app_id, algolia_admin_key)
+# Initialize Algolia client (only when needed)
+def get_algolia_client():
+    # Validate required environment variables
+    if not all([algolia_app_id, algolia_admin_key, mongodb_url]):
+        raise ValueError(
+            "Missing required environment variables. Please check your .env file.\n"
+            "Required: ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY, MONGODB_URL"
+        )
+
+    # Initialize and return client
+    return SearchClient(algolia_app_id, algolia_admin_key)
 
 
 def test_algolia_index(client, index_name):
@@ -62,7 +67,7 @@ def test_algolia_index(client, index_name):
     # Clear all items again to clear our test record
     # client.clear_objects(index_name)
 
-    print(f"search_response: {search_response}")
+    logger.info(f"search_response: {search_response}")
 
     # Verify the search response has hits
     # In v4, the response might be an object with attributes instead of a dict
@@ -70,8 +75,8 @@ def test_algolia_index(client, index_name):
         # Try accessing as attributes first
         hits = search_response.hits if hasattr(search_response, "hits") else []
         if len(hits) == 1:
-            print(f"hits: {hits}")
-            print("Algolia index test successful")
+            logger.info(f"hits: {hits}")
+            logger.info("Algolia index test successful")
             return
     except Exception:
         pass
@@ -82,7 +87,7 @@ def test_algolia_index(client, index_name):
             search_response.get("hits", []) if hasattr(search_response, "get") else []
         )
         if len(hits) == 1 and hits[0].get("object_id"):
-            print("Algolia index test successful")
+            logger.info("Algolia index test successful")
             return
     except Exception:
         pass
@@ -91,7 +96,7 @@ def test_algolia_index(client, index_name):
         # Last attempt - treat as dictionary directly
         hits = search_response["hits"] if "hits" in search_response else []
         if len(hits) == 1 and hits[0]["object_id"]:
-            print("Algolia index test successful")
+            logger.info("Algolia index test successful")
             return
     except Exception:
         pass
@@ -115,11 +120,11 @@ def get_mongodb_tools():
         tools_cursor = mongo_collection.find({})
         tools = list(tools_cursor)
 
-        print(f"Retrieved {len(tools)} tools from MongoDB")
+        logger.info(f"Retrieved {len(tools)} tools from MongoDB")
         return tools
     except Exception as e:
-        print(f"Error connecting to MongoDB: {str(e)}")
-        sys.exit(1)
+        logger.error(f"Error connecting to MongoDB: {str(e)}")
+        raise
 
 
 def prepare_algolia_object(mongo_tool):
@@ -128,32 +133,30 @@ def prepare_algolia_object(mongo_tool):
     algolia_tool = {}
 
     # Use unique_id or _id as Algolia objectID
-    algolia_tool["object_id"] = str(
-        mongo_tool.get("unique_id") or mongo_tool.get("id") or mongo_tool.get("_id")
-    )
+    algolia_tool["objectID"] = str(mongo_tool.get("id") or mongo_tool.get("_id"))
 
     # Include essential tool attributes
     attributes_to_include = [
+        "price",
         "name",
         "description",
-        "summary",
         "link",
-        "url",
-        "logo_url",
-        "keywords",
-        "category_id",
         "unique_id",
+        "rating",
+        "saved_numbers",
         "category",
         "features",
-        "pricing_type",
-        "pricing_url",
         "is_featured",
-        "created_at",
-        "updated_at",
-        "tags",
-        "price",
-        "is_featured",
-        "rating",
+        "keywords",
+        "categories",
+        "logo_url",
+        "user_reviews",
+        "feature_list",
+        "referral_allow",
+        "generated_description",
+        "industry",
+        "carriers",
+        "task",
     ]
 
     for attr in attributes_to_include:
@@ -210,15 +213,18 @@ def configure_algolia_index(client, index_name):
                 "name",
                 "description",
                 "keywords",
+                "carriers",
+                "industry",
+                "task",
             ],
             "attributesForFaceting": [
                 "category",
-                "is_featured",
-                "rating",
                 "keywords",
-                "category_id",
                 "unique_id",
                 "description",
+                "name",
+                "features_list",
+                "task",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -239,11 +245,27 @@ def configure_algolia_index(client, index_name):
                 "rating",
                 "saved_numbers",
                 "keywords",
+                "industry",
+                "referral_allow",
+                "feature_list",
+                "generated_description",
+                "user_reviews",
+                "categories",
+                "logo_url",
+                "created_at",
+                "updated_at",
+                "tags",
+                "price",
+                "is_featured",
+                "rating",
+                "saved_numbers",
+                "carriers",
+                "task",
             ],
             "ranking": [
+                "words",
                 "typo",
                 "geo",
-                "words",
                 "filters",
                 "proximity",
                 "attribute",
@@ -253,44 +275,53 @@ def configure_algolia_index(client, index_name):
             "customRanking": ["desc(is_featured)", "desc(updated_at)"],
             "ignorePlurals": True,
             "advancedSyntax": True,
-            "typoTolerance": True,
+            "typoTolerance": "min",
         },
     )
-    print("Algolia index configured successfully")
+    logger.info("Algolia index configured successfully")
 
 
 def main():
     """Main function to orchestrate the migration process"""
-    # Step 1: Test Algolia connection
-    print("Testing Algolia connection...")
-    test_algolia_index(algolia_client, algolia_index_name)
+    try:
+        # Get the Algolia client (this will validate environment variables)
+        algolia_client = get_algolia_client()
 
-    # Step 2: Retrieve tools from MongoDB
-    print("Retrieving tools from MongoDB...")
-    mongodb_tools = get_mongodb_tools()
+        # Step 1: Test Algolia connection
+        logger.info("Testing Algolia connection...")
+        test_algolia_index(algolia_client, algolia_index_name)
 
-    # Step 3: Configure Algolia index
-    print("Configuring Algolia index...")
-    configure_algolia_index(algolia_client, algolia_index_name)
+        # Step 2: Retrieve tools from MongoDB
+        logger.info("Retrieving tools from MongoDB...")
+        mongodb_tools = get_mongodb_tools()
 
-    # Step 4: Prepare and upload tools to Algolia
-    print("Preparing tools for Algolia...")
-    algolia_objects = list(map(prepare_algolia_object, mongodb_tools))
+        # Step 3: Configure Algolia index
+        logger.info("Configuring Algolia index...")
+        configure_algolia_index(algolia_client, algolia_index_name)
 
-    print(f"Uploading {len(algolia_objects)} tools to Algolia...")
-    # Clear the index first to remove any outdated objects
-    algolia_client.clear_objects(algolia_index_name)
+        # Step 4: Prepare and upload tools to Algolia
+        logger.info("Preparing tools for Algolia...")
+        algolia_objects = list(map(prepare_algolia_object, mongodb_tools))
 
-    # Split into batches of 1000 records to avoid size limits
-    batch_size = 1000
-    for i in range(0, len(algolia_objects), batch_size):
-        batch = algolia_objects[i : i + batch_size]
-        print(
-            f"Uploading batch {i//batch_size + 1} of {(len(algolia_objects) + batch_size - 1) // batch_size}..."
-        )
-        algolia_client.save_objects(algolia_index_name, batch)
+        logger.info(f"Uploading {len(algolia_objects)} tools to Algolia...")
+        # Clear the index first to remove any outdated objects
+        algolia_client.clear_objects(algolia_index_name)
 
-    print("Migration completed successfully!")
+        # Split into batches of 1000 records to avoid size limits
+        batch_size = 1000
+        for i in range(0, len(algolia_objects), batch_size):
+            batch = algolia_objects[i : i + batch_size]
+            logger.info(
+                f"Uploading batch {i//batch_size + 1} of {(len(algolia_objects) + batch_size - 1) // batch_size}..."
+            )
+            algolia_client.save_objects(algolia_index_name, batch)
+
+        logger.info("Migration completed successfully!")
+        return {"status": "success", "message": "Migration completed successfully"}
+
+    except Exception as e:
+        logger.error(f"Migration failed: {str(e)}")
+        return {"status": "error", "message": f"Migration failed: {str(e)}"}
 
 
 if __name__ == "__main__":

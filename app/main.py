@@ -12,7 +12,7 @@ from fastapi import (
 )
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .websocket import manager
 from .database import database
@@ -35,6 +35,9 @@ from .algolia.models import (
     ToolRatings,
     PricingType,
 )
+
+# Import Redis cache service
+from .services.redis_cache import redis_client, REDIS_CACHE_ENABLED
 
 # Import the chat router
 from .chat import router as chat_router
@@ -67,6 +70,7 @@ from .glossary import router as glossary_router
 
 # Import the categories router
 from .categories import router as categories_router
+from .categories.routes import public_router as public_categories_router
 
 # Import the terms router
 from .terms import router as terms_router
@@ -85,6 +89,9 @@ from .shares import router as shares_router
 
 # Import the bidirectional linking router
 from .bidirectional_linking import router as bidirectional_linking_router
+
+# Import the new job impacts router
+from .routers import job_impacts as job_impacts_router
 
 # Import the glossary seed script
 from .seed_glossary import seed_glossary_terms
@@ -110,6 +117,12 @@ async def lifespan(app: FastAPI):
             await setup_database()
             logger.info("Database setup completed")
 
+            # Check Redis connection
+            if REDIS_CACHE_ENABLED and redis_client:
+                logger.info("Redis cache is enabled and connected")
+            else:
+                logger.warning("Redis cache is disabled or not connected")
+
             # Seed glossary terms
             logger.info("Seeding glossary terms...")
             await seed_glossary_terms()
@@ -120,6 +133,7 @@ async def lifespan(app: FastAPI):
                 logger.info("Configuring Algolia indexes...")
                 algolia_config.configure_tools_index()
                 algolia_config.configure_glossary_index()
+                algolia_config.configure_tools_job_impacts_index()
                 logger.info("Algolia indexes configured successfully")
             else:
                 logger.warning(
@@ -168,11 +182,18 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app",
+        "https://taaft-development.vercel.app",
+        "https://taaft-development.vercel.app/",
+        "https://taaft-development.vercel.app/tools/",
+        "https://taaft-development.vercel.app/tools/keyword-search",
         "http://localhost:3000",  # Frontend development server
-        "https://taaft.ai",  # Production frontend
-        "https://www.taaft.ai",
+        "https://taaft-deploy-18xw.vercel.app",  # Production frontend
         "https://taaft-deploy-18xw.vercel.app/",
-        "*",  # For development and testing (remove in production)
+        "https://taaft-deploy-18xw.vercel.app/tools/",
+        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search",
+        "https://taaft-deploy-18xw.vercel.app/tools/wayin-ai",
+        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search/keyword-search",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -202,6 +223,7 @@ app.include_router(algolia_router)
 app.include_router(auth_router)  # Include auth router with prefix
 app.include_router(tools_router)  # Include tools router
 app.include_router(public_tools_router)  # Include public tools router
+app.include_router(public_categories_router)  # Include public categories router
 app.include_router(site_queue_router)  # Include site queue router
 app.include_router(site_dashboard_router)  # Include site dashboard router
 app.include_router(glossary_router)  # Include glossary router
@@ -213,6 +235,7 @@ app.include_router(blog_router)  # Include blog router
 app.include_router(favorites_router)  # Include favorites router
 app.include_router(shares_router)  # Include shares router
 app.include_router(bidirectional_linking_router)  # Include bidirectional linking router
+app.include_router(job_impacts_router.router)  # Include job impacts router
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -242,24 +265,100 @@ async def handle_email_verification(token: str):
         if token_data is None:
             return HTMLResponse(
                 content=f"""
-            <html>
-            <head>
-                <title>Email Verification Failed</title>
-                <style>
-                    body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                    .container {{ max-width: 600px; margin: 0 auto; }}
-                    .error {{ color: #dc3545; }}
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1 class="error">Verification Failed</h1>
-                    <p>The verification link is invalid or has expired.</p>
-                    <p>Please request a new verification link from the login page.</p>
-                </div>
-            </body>
-            </html>
-            """,
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Verification Failed</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {{
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                            background-color: #f8f9fa;
+                            margin: 0;
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                        }}
+                        .modal {{
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                            width: 90%;
+                            max-width: 500px;
+                            padding: 30px;
+                            text-align: center;
+                            position: relative;
+                        }}
+                        .close-btn {{
+                            position: absolute;
+                            top: 20px;
+                            right: 20px;
+                            font-size: 24px;
+                            color: #aaa;
+                            cursor: pointer;
+                            text-decoration: none;
+                        }}
+                        .icon-container {{
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto 20px;
+                            background-color: #fff3f0;
+                            border-radius: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }}
+                        .icon-error {{
+                            color: #e53935;
+                            font-size: 40px;
+                            font-weight: bold;
+                        }}
+                        h1 {{
+                            font-size: 28px;
+                            color: #333;
+                            margin-bottom: 16px;
+                        }}
+                        p {{
+                            font-size: 16px;
+                            color: #666;
+                            margin-bottom: 30px;
+                            line-height: 1.5;
+                        }}
+                        .button {{
+                            display: inline-block;
+                            background-color: #7e3ff2;
+                            color: white;
+                            font-weight: 500;
+                            font-size: 16px;
+                            padding: 12px 24px;
+                            border-radius: 8px;
+                            text-decoration: none;
+                            transition: background-color 0.2s;
+                            width: 100%;
+                            box-sizing: border-box;
+                            border: none;
+                            cursor: pointer;
+                        }}
+                        .button:hover {{
+                            background-color: #6930c3;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="modal">
+                        <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                        <div class="icon-container">
+                            <div class="icon-error">i</div>
+                        </div>
+                        <h1>Verification Failed</h1>
+                        <p>We couldn't verify your email. The link may have expired or is invalid</p>
+                        <a href="https://taaft-deploy-18xw.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
+                    </div>
+                </body>
+                </html>
+                """,
                 status_code=400,
             )
 
@@ -267,24 +366,100 @@ async def handle_email_verification(token: str):
         if token_data.purpose != "email_verification":
             return HTMLResponse(
                 content=f"""
-            <html>
-            <head>
-                <title>Email Verification Failed</title>
-                <style>
-                    body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                    .container {{ max-width: 600px; margin: 0 auto; }}
-                    .error {{ color: #dc3545; }}
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1 class="error">Verification Failed</h1>
-                    <p>Invalid token purpose.</p>
-                    <p>Please request a new verification link from the login page.</p>
-                </div>
-            </body>
-            </html>
-            """,
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Verification Failed</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {{
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                            background-color: #f8f9fa;
+                            margin: 0;
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                        }}
+                        .modal {{
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                            width: 90%;
+                            max-width: 500px;
+                            padding: 30px;
+                            text-align: center;
+                            position: relative;
+                        }}
+                        .close-btn {{
+                            position: absolute;
+                            top: 20px;
+                            right: 20px;
+                            font-size: 24px;
+                            color: #aaa;
+                            cursor: pointer;
+                            text-decoration: none;
+                        }}
+                        .icon-container {{
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto 20px;
+                            background-color: #fff3f0;
+                            border-radius: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }}
+                        .icon-error {{
+                            color: #e53935;
+                            font-size: 40px;
+                            font-weight: bold;
+                        }}
+                        h1 {{
+                            font-size: 28px;
+                            color: #333;
+                            margin-bottom: 16px;
+                        }}
+                        p {{
+                            font-size: 16px;
+                            color: #666;
+                            margin-bottom: 30px;
+                            line-height: 1.5;
+                        }}
+                        .button {{
+                            display: inline-block;
+                            background-color: #7e3ff2;
+                            color: white;
+                            font-weight: 500;
+                            font-size: 16px;
+                            padding: 12px 24px;
+                            border-radius: 8px;
+                            text-decoration: none;
+                            transition: background-color 0.2s;
+                            width: 100%;
+                            box-sizing: border-box;
+                            border: none;
+                            cursor: pointer;
+                        }}
+                        .button:hover {{
+                            background-color: #6930c3;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="modal">
+                        <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                        <div class="icon-container">
+                            <div class="icon-error">i</div>
+                        </div>
+                        <h1>Verification Failed</h1>
+                        <p>We couldn't verify your email. The link may have expired or is invalid</p>
+                        <a href="https://taaft-deploy-18xw.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
+                    </div>
+                </body>
+                </html>
+                """,
                 status_code=400,
             )
 
@@ -300,94 +475,448 @@ async def handle_email_verification(token: str):
             if user and user.get("is_verified", False):
                 return HTMLResponse(
                     content=f"""
-                <html>
-                <head>
-                    <title>Email Already Verified</title>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                        .container {{ max-width: 600px; margin: 0 auto; }}
-                        .success {{ color: #28a745; }}
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1 class="success">Already Verified</h1>
-                        <p>Your email has already been verified.</p>
-                        <p>You can now login to your account.</p>
-                    </div>
-                </body>
-                </html>
-                """
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Email Already Verified</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body {{
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                background-color: #f8f9fa;
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                            }}
+                            .modal {{
+                                background: white;
+                                border-radius: 12px;
+                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                                width: 90%;
+                                max-width: 500px;
+                                padding: 30px;
+                                text-align: center;
+                                position: relative;
+                            }}
+                            .close-btn {{
+                                position: absolute;
+                                top: 20px;
+                                right: 20px;
+                                font-size: 24px;
+                                color: #aaa;
+                                cursor: pointer;
+                                text-decoration: none;
+                            }}
+                            .icon-container {{
+                                width: 80px;
+                                height: 80px;
+                                margin: 0 auto 20px;
+                                background-color: #f0f9eb;
+                                border-radius: 50%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }}
+                            .icon-success {{
+                                color: #52c41a;
+                                font-size: 40px;
+                                font-weight: bold;
+                            }}
+                            h1 {{
+                                font-size: 28px;
+                                color: #333;
+                                margin-bottom: 16px;
+                            }}
+                            p {{
+                                font-size: 16px;
+                                color: #666;
+                                margin-bottom: 30px;
+                                line-height: 1.5;
+                            }}
+                            .button {{
+                                display: inline-block;
+                                background-color: #7e3ff2;
+                                color: white;
+                                font-weight: 500;
+                                font-size: 16px;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                text-decoration: none;
+                                transition: background-color 0.2s;
+                                width: 100%;
+                                box-sizing: border-box;
+                                border: none;
+                                cursor: pointer;
+                            }}
+                            .button:hover {{
+                                background-color: #6930c3;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="modal">
+                            <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                            <div class="icon-container">
+                                <div class="icon-success">✓</div>
+                            </div>
+                            <h1>Email Verified!</h1>
+                            <p>Your email has been successfully verified. You can now access all features of your account.</p>
+                            <a href="https://taaft-deploy-18xw.vercel.app/auth/login" class="button">Login To Continue</a>
+                        </div>
+                    </body>
+                    </html>
+                    """
                 )
             else:
                 return HTMLResponse(
                     content=f"""
-                <html>
-                <head>
-                    <title>Email Verification Failed</title>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                        .container {{ max-width: 600px; margin: 0 auto; }}
-                        .error {{ color: #dc3545; }}
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1 class="error">Verification Failed</h1>
-                        <p>User not found or verification failed.</p>
-                        <p>Please contact support if this issue persists.</p>
-                    </div>
-                </body>
-                </html>
-                """,
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Verification Failed</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body {{
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                background-color: #f8f9fa;
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                            }}
+                            .modal {{
+                                background: white;
+                                border-radius: 12px;
+                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                                width: 90%;
+                                max-width: 500px;
+                                padding: 30px;
+                                text-align: center;
+                                position: relative;
+                            }}
+                            .close-btn {{
+                                position: absolute;
+                                top: 20px;
+                                right: 20px;
+                                font-size: 24px;
+                                color: #aaa;
+                                cursor: pointer;
+                                text-decoration: none;
+                            }}
+                            .icon-container {{
+                                width: 80px;
+                                height: 80px;
+                                margin: 0 auto 20px;
+                                background-color: #fff3f0;
+                                border-radius: 50%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }}
+                            .icon-error {{
+                                color: #e53935;
+                                font-size: 40px;
+                                font-weight: bold;
+                            }}
+                            h1 {{
+                                font-size: 28px;
+                                color: #333;
+                                margin-bottom: 16px;
+                            }}
+                            p {{
+                                font-size: 16px;
+                                color: #666;
+                                margin-bottom: 30px;
+                                line-height: 1.5;
+                            }}
+                            .button {{
+                                display: inline-block;
+                                background-color: #7e3ff2;
+                                color: white;
+                                font-weight: 500;
+                                font-size: 16px;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                text-decoration: none;
+                                transition: background-color 0.2s;
+                                width: 100%;
+                                box-sizing: border-box;
+                                border: none;
+                                cursor: pointer;
+                            }}
+                            .button:hover {{
+                                background-color: #6930c3;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="modal">
+                            <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                            <div class="icon-container">
+                                <div class="icon-error">i</div>
+                            </div>
+                            <h1>Verification Failed</h1>
+                            <p>We couldn't verify your email. The user was not found or verification failed.</p>
+                            <a href="https://taaft-deploy-18xw.vercel.app/auth/contact-support" class="button">Contact Support</a>
+                        </div>
+                    </body>
+                    </html>
+                    """,
                     status_code=400,
                 )
 
         # Return success page
         return HTMLResponse(
             content=f"""
-        <html>
-        <head>
-            <title>Email Verified</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                .container {{ max-width: 600px; margin: 0 auto; }}
-                .success {{ color: #28a745; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1 class="success">Email Verified</h1>
-                <p>Your email has been successfully verified.</p>
-                <p>You can now login to your account and access all features.</p>
-            </div>
-        </body>
-        </html>
-        """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verified</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }}
+                    .modal {{
+                        background: white;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        width: 90%;
+                        max-width: 500px;
+                        padding: 30px;
+                        text-align: center;
+                        position: relative;
+                    }}
+                    .close-btn {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #aaa;
+                        cursor: pointer;
+                        text-decoration: none;
+                    }}
+                    .icon-container {{
+                        width: 80px;
+                        height: 80px;
+                        margin: 0 auto 20px;
+                        background-color: #f0f9eb;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }}
+                    .icon-success {{
+                        color: #52c41a;
+                        font-size: 40px;
+                        font-weight: bold;
+                    }}
+                    h1 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 16px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        margin-bottom: 30px;
+                        line-height: 1.5;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #7e3ff2;
+                        color: white;
+                        font-weight: 500;
+                        font-size: 16px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        transition: background-color 0.2s;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border: none;
+                        cursor: pointer;
+                    }}
+                    .button:hover {{
+                        background-color: #6930c3;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="modal">
+                    <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                    <div class="icon-container">
+                        <div class="icon-success">✓</div>
+                    </div>
+                    <h1>Email Verified!</h1>
+                    <p>Your email has been successfully verified. You can now access all features of your account.</p>
+                    <a href="https://taaft-deploy-18xw.vercel.app/auth/login" class="button">Login To Continue</a>
+                </div>
+            </body>
+            </html>
+            """
         )
     except Exception as e:
         logger.error(f"Error verifying email: {str(e)}")
         return HTMLResponse(
             content=f"""
-        <html>
-        <head>
-            <title>Email Verification Error</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; text-align: center; padding: 50px; }}
-                .container {{ max-width: 600px; margin: 0 auto; }}
-                .error {{ color: #dc3545; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1 class="error">Verification Error</h1>
-                <p>An error occurred during verification.</p>
-                <p>Please try again or contact support if this issue persists.</p>
-            </div>
-        </body>
-        </html>
-        """,
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Verification Error</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }}
+                    .modal {{
+                        background: white;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        width: 90%;
+                        max-width: 500px;
+                        padding: 30px;
+                        text-align: center;
+                        position: relative;
+                    }}
+                    .close-btn {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #aaa;
+                        cursor: pointer;
+                        text-decoration: none;
+                    }}
+                    .icon-container {{
+                        width: 80px;
+                        height: 80px;
+                        margin: 0 auto 20px;
+                        background-color: #fff3f0;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }}
+                    .icon-error {{
+                        color: #e53935;
+                        font-size: 40px;
+                        font-weight: bold;
+                    }}
+                    h1 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 16px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        margin-bottom: 30px;
+                        line-height: 1.5;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #7e3ff2;
+                        color: white;
+                        font-weight: 500;
+                        font-size: 16px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        text-decoration: none;
+                        transition: background-color 0.2s;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border: none;
+                        cursor: pointer;
+                    }}
+                    .button:hover {{
+                        background-color: #6930c3;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="modal">
+                    <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                    <div class="icon-container">
+                        <div class="icon-error">i</div>
+                    </div>
+                    <h1>Verification Error</h1>
+                    <p>An error occurred during the verification process. Please try again or contact support.</p>
+                    <a href="https://taaft-deploy-18xw.vercel.app/auth/contact-support" class="button">Contact Support</a>
+                </div>
+            </body>
+            </html>
+            """,
             status_code=500,
+        )
+
+
+# Handle password reset link from emails
+@app.get("/reset-password", include_in_schema=False)
+async def handle_password_reset(token: str = None):
+    """
+    Handle password reset links from emails.
+    This route validates the token and redirects to the frontend reset page or error page.
+    """
+    # Get frontend URLs from environment
+    frontend_url = os.getenv("FRONTEND_URL", "https://taaft-deploy-18xw.vercel.app")
+    if frontend_url.endswith("/"):
+        frontend_url = frontend_url.rstrip("/")
+
+    reset_page_url = f"{frontend_url}/reset-password"
+    error_page_url = f"{frontend_url}/auth/error"
+
+    # If no token provided, redirect to error page
+    if not token:
+        return RedirectResponse(
+            f"{error_page_url}?error=missing_token&message=Reset+token+is+required"
+        )
+
+    try:
+        # Import token validation function
+        from .auth.utils import decode_token
+
+        # Validate the token
+        token_data = decode_token(token)
+
+        # If token is invalid or expired
+        if token_data is None:
+            return RedirectResponse(
+                f"{error_page_url}?error=invalid_token&message=The+reset+link+is+invalid+or+has+expired"
+            )
+
+        # Verify token purpose is for password reset
+        if not hasattr(token_data, "purpose") or token_data.purpose != "password_reset":
+            return RedirectResponse(
+                f"{error_page_url}?error=invalid_purpose&message=Invalid+reset+link+purpose"
+            )
+
+        # Token is valid, redirect to the reset password page with the token
+        return RedirectResponse(f"{reset_page_url}?token={token}")
+
+    except Exception as e:
+        logger.error(f"Error handling password reset link: {str(e)}")
+        return RedirectResponse(
+            f"{error_page_url}?error=server_error&message=An+error+occurred+while+processing+your+request"
         )
 
 
@@ -654,13 +1183,14 @@ async def get_all_tools(
     category: Optional[str] = Query(None, description="Filter by category"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     sort_by: Optional[str] = Query(
-        None, description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at)"
     ),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)"),
+    sort_order: str = Query("desc", description="Sort order (asc or desc)"),
 ):
     """
     List all tools with pagination, filtering and sorting.
     This endpoint is publicly accessible without authentication.
+    Default sorting is by created_at in descending order (newest first).
     """
     from .tools.tools_service import get_tools
 

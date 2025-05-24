@@ -7,9 +7,23 @@ services:
       - "8001:8001"
     environment:
       - MONGODB_URL=${MONGODB_URL}
+      - REDIS_URL=redis://redis:6379
+      - REDIS_CACHE_ENABLED=true
+      - REDIS_CACHE_TTL=300
+      - ALGOLIA_APP_ID=${ALGOLIA_APP_ID}
+      - ALGOLIA_API_KEY=${ALGOLIA_API_KEY}
+      - ALGOLIA_SEARCH_ONLY_API_KEY=${ALGOLIA_SEARCH_ONLY_API_KEY}
+      - ALGOLIA_WRITE_API_KEY=${ALGOLIA_WRITE_API_KEY}
+      - ALGOLIA_TOOLS_INDEX=${ALGOLIA_TOOLS_INDEX:-tools_index}
+      - ALGOLIA_GLOSSARY_INDEX=${ALGOLIA_GLOSSARY_INDEX:-taaft_glossary}
+      - ALGOLIA_TOOLS_JOB_IMPACTS_INDEX=${ALGOLIA_TOOLS_JOB_IMPACTS_INDEX:-tools_job_impacts_index}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ALGOLIA_ADMIN_KEY=${ALGOLIA_ADMIN_KEY}
     depends_on:
       mongo:
         condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped
@@ -28,5 +42,21 @@ services:
       retries: 5
       start_period: 5s
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
 volumes:
   mongo_data: 
+  redis_data: 

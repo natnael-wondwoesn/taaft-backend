@@ -1,11 +1,12 @@
 # TAAFT Backend
 
-FastAPI-based backend for the TAAFT project with WebSocket support and MongoDB integration.
+FastAPI-based backend for the TAAFT project with WebSocket support, MongoDB integration, and Redis caching.
 
 ## Features
 
 - FastAPI application with WebSocket support
 - MongoDB integration for data storage
+- Redis caching for improved performance
 - Sites prioritized queue management system
 - Dashboard API for sites queue
 
@@ -28,7 +29,8 @@ docker-compose up -d
 This will:
 - Build the FastAPI application
 - Start a MongoDB instance
-- Connect the application to MongoDB
+- Start a Redis instance for caching
+- Connect the application to MongoDB and Redis
 - Expose the API on port 8000
 
 ### Accessing the API
@@ -36,6 +38,23 @@ This will:
 - API Documentation: http://localhost:8000/docs
 - API Base URL: http://localhost:8000
 - WebSocket endpoint: ws://localhost:8000/ws
+
+## Redis Caching
+
+The application uses Redis for caching API responses to improve performance. Key features:
+
+- Automatic caching of tool endpoints responses
+- Configurable cache TTL (Time To Live)
+- Cache invalidation on data updates
+
+### Redis Configuration
+
+Redis caching can be configured using environment variables:
+
+- `REDIS_URL`: Redis connection URL (default: `redis://localhost:6379`)
+- `REDIS_PASSWORD`: Redis password (optional)
+- `REDIS_CACHE_ENABLED`: Enable/disable Redis caching (default: `true`)
+- `REDIS_CACHE_TTL`: Cache TTL in seconds (default: `300` - 5 minutes)
 
 ## API Endpoints
 

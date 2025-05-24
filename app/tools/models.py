@@ -7,7 +7,7 @@ from pydantic import (
     root_validator,
     model_validator,
 )
-from typing import Optional, Dict, Any, ClassVar, Annotated, List
+from typing import Optional, Dict, Any, ClassVar, Annotated, List, Union
 from pydantic.functional_validators import BeforeValidator
 from uuid import UUID, uuid4
 import datetime
@@ -45,7 +45,27 @@ class ToolBase(BaseModel):
     keywords: Optional[List[str]] = None
     categories: Optional[List[Dict[str, Any]]] = None
 
+    # New Fields
+    logo_url: Optional[str] = ""
+    user_reviews: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None
+    feature_list: Optional[List[str]] = []
+    referral_allow: Optional[bool] = False
+    generated_description: Optional[str] = None
+    industry: Optional[str] = None
+    image_url: Optional[str] = None
+    carriers: Optional[List[str]] = None
+    task: Optional[str] = None
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    @field_validator("user_reviews")
+    @classmethod
+    def validate_user_reviews(cls, v):
+        """Convert list of reviews to a dictionary if needed."""
+        if isinstance(v, list):
+            # Convert list to a dictionary with indices as keys
+            return {str(i): review for i, review in enumerate(v)}
+        return v
 
 
 class ToolCreate(ToolBase):
@@ -87,6 +107,15 @@ class ToolUpdate(BaseModel):
     features: Optional[List[str]] = None
     is_featured: Optional[bool] = None
     keywords: Optional[List[str]] = None
+    categories: Optional[List[Dict[str, Any]]] = None
+    logo_url: Optional[str] = None
+    user_reviews: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None
+    feature_list: Optional[List[str]] = None
+    referral_allow: Optional[bool] = None
+    generated_description: Optional[str] = None
+    industry: Optional[str] = None
+    carriers: Optional[List[str]] = None
+    task: Optional[str] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -118,6 +147,10 @@ class PaginatedToolsResponse(BaseModel):
     total: int
     skip: int
     limit: int
+    carriers: Optional[List[str]] = []
+    search_term: Optional[str] = None
+    current_page: Optional[int] = None
+    total_pages: Optional[int] = None
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,

@@ -21,6 +21,8 @@ from .config import algolia_config
 from .indexer import algolia_indexer
 from ..database import database
 from ..logger import logger
+from ..auth.dependencies import get_admin_user
+from ..models.user import UserInDB
 
 # Create the router before importing middleware that might use it
 router = APIRouter(
@@ -45,6 +47,11 @@ def get_tools_collection() -> AsyncIOMotorCollection:
 def get_glossary_collection() -> AsyncIOMotorCollection:
     """Get the glossary collection"""
     return database.client.get_database("taaft_db").get_collection("glossary")
+
+
+def get_job_impacts_collection() -> AsyncIOMotorCollection:
+    """Get the job impacts collection"""
+    return database.client.get_database("taaft_db").get_collection("tools_job_impacts")
 
 
 @router.post("/index/tools", status_code=status.HTTP_202_ACCEPTED)
@@ -112,6 +119,43 @@ async def index_glossary(
     return {
         "status": "processing",
         "message": "Indexing glossary to Algolia in the background",
+    }
+
+
+@router.post("/index/job-impacts", status_code=status.HTTP_202_ACCEPTED)
+async def index_job_impacts(
+    background_tasks: BackgroundTasks,
+    batch_size: int = Query(100, ge=1, le=1000),
+    job_impacts_collection: AsyncIOMotorCollection = Depends(
+        get_job_impacts_collection
+    ),
+):
+    """
+    Index all job impacts in MongoDB to Algolia (asynchronous operation)
+
+    Args:
+        background_tasks: FastAPI background tasks
+        batch_size: Number of job impacts to index in each batch
+        job_impacts_collection: MongoDB collection containing job impacts
+
+    Returns:
+        Status message
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    # Schedule the indexing task in the background
+    background_tasks.add_task(
+        algolia_indexer.index_job_impacts, job_impacts_collection, batch_size
+    )
+
+    return {
+        "status": "processing",
+        "message": "Indexing job impacts to Algolia in the background",
     }
 
 
@@ -458,3 +502,113 @@ async def reset_search_stats():
         "message": "Search statistics reset successfully",
         "previous_stats": previous_stats,
     }
+
+
+@router.get("/job-impacts")
+async def search_job_impacts(
+    query: str = Query(None, description="Search query"),
+    job_title: str = Query(None, description="Filter by job title"),
+    job_category: str = Query(None, description="Filter by job category"),
+    min_impact_score: float = Query(
+        None, ge=0, le=100, description="Minimum impact score"
+    ),
+    task_name: str = Query(None, description="Filter by task name"),
+    tool_name: str = Query(None, description="Filter by tool name"),
+    page: int = Query(1, ge=1, description="Page number (1-based)"),
+    per_page: int = Query(20, ge=1, le=100, description="Results per page"),
+    sort_by: str = Query(
+        "impact_score",
+        enum=["impact_score", "relevance", "date"],
+        description="Sort order",
+    ),
+    current_user: UserInDB = Depends(get_admin_user),
+):
+    """
+    Search for job impacts in the Algolia index
+
+    This endpoint allows searching and filtering job impacts data by various criteria.
+
+    Args:
+        query: General search query
+        job_title: Filter by job title
+        job_category: Filter by job category
+        min_impact_score: Filter by minimum impact score
+        task_name: Filter by task name
+        tool_name: Filter by tool name
+        page: Page number (1-based)
+        per_page: Number of results per page
+        sort_by: Sort order
+        current_user: Current authenticated user
+
+    Returns:
+        Search results with pagination
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+
+    # Build filters
+    filters = []
+    if job_title:
+        filters.append(f"job_title:{job_title}")
+    if job_category:
+        filters.append(f"job_category:{job_category}")
+    if min_impact_score is not None:
+        filters.append(f"numeric_impact_score >= {min_impact_score}")
+    if task_name:
+        filters.append(f"task_names:{task_name}")
+    if tool_name:
+        filters.append(f"tool_names:{tool_name}")
+
+    filter_str = " AND ".join(filters) if filters else ""
+
+    # Determine sort order
+    if sort_by == "impact_score":
+        ranking = ["desc(numeric_impact_score)"]
+    elif sort_by == "date":
+        ranking = ["desc(created_at)"]
+    else:  # relevance - use default Algolia ranking
+        ranking = []
+
+    # Perform the search
+    try:
+        index_name = algolia_config.tools_job_impacts_index_name
+        search_params = {
+            "page": page - 1,  # Algolia uses 0-based indexing
+            "hitsPerPage": per_page,
+            "filters": filter_str,
+        }
+
+        if ranking:
+            search_params["customRanking"] = ranking
+
+        result = algolia_config.client.search_single_index(
+            index_name, query or "", search_params
+        )
+
+        # Extract the hits and metadata
+        hits = result.get("hits", [])
+        nbHits = result.get("nbHits", 0)
+        nbPages = result.get("nbPages", 0)
+        processingTimeMS = result.get("processingTimeMS", 0)
+
+        return {
+            "hits": hits,
+            "page": page,
+            "per_page": per_page,
+            "total_hits": nbHits,
+            "total_pages": nbPages,
+            "processing_time_ms": processingTimeMS,
+            "query": query,
+            "filters": filter_str,
+        }
+
+    except Exception as e:
+        logger.error(f"Error searching job impacts: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching job impacts: {str(e)}",
+        )

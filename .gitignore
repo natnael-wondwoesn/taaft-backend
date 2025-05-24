@@ -29,3 +29,5 @@ app/__pycache__/main.cpython-312.pyc
 check_tools.py
 tests/auth/test_oauth.py
 tests/auth/test_oauth.py
+remove_placeholder_logo_tools.py
+README-TOOLS-JOB-IMPACTS-MIGRATION.md
