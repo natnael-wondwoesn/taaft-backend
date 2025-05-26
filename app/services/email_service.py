@@ -102,7 +102,7 @@ def send_password_reset_email(to_email: str, reset_token: str, base_url: str) ->
         bool: True if email was sent successfully, False otherwise
     """
     # Remove trailing slash from base_url if present to prevent double slashes
-    base_url = os.getenv("FRONTEND_URL", "https://taaft-deploy-18xw.vercel.app")
+    base_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
     if base_url.endswith("/"):
         base_url = base_url.rstrip("/")
 

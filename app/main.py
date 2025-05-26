@@ -178,22 +178,10 @@ app.add_middleware(
 )
 
 
-# Add middleware - CORS must be first, then other middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app",
-        "https://taaft-development.vercel.app",
-        "https://taaft-development.vercel.app/",
-        "https://taaft-development.vercel.app/tools/",
-        "https://taaft-development.vercel.app/tools/keyword-search",
-        "http://localhost:3000",  # Frontend development server
-        "https://taaft-deploy-18xw.vercel.app",  # Production frontend
-        "https://taaft-deploy-18xw.vercel.app/",
-        "https://taaft-deploy-18xw.vercel.app/tools/",
-        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search",
-        "https://taaft-deploy-18xw.vercel.app/tools/wayin-ai",
-        "https://taaft-deploy-18xw.vercel.app/tools/keyword-search/keyword-search",
+       "*"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -348,13 +336,13 @@ async def handle_email_verification(token: str):
                 </head>
                 <body>
                     <div class="modal">
-                        <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                        <a href="https://taaft-development.vercel.app" class="close-btn">×</a>
                         <div class="icon-container">
                             <div class="icon-error">i</div>
                         </div>
                         <h1>Verification Failed</h1>
                         <p>We couldn't verify your email. The link may have expired or is invalid</p>
-                        <a href="https://taaft-deploy-18xw.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
+                        <a href="https://taaft-development.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
                     </div>
                 </body>
                 </html>
@@ -449,13 +437,13 @@ async def handle_email_verification(token: str):
                 </head>
                 <body>
                     <div class="modal">
-                        <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                        <a href="https://taaft-development.vercel.app" class="close-btn">×</a>
                         <div class="icon-container">
                             <div class="icon-error">i</div>
                         </div>
                         <h1>Verification Failed</h1>
                         <p>We couldn't verify your email. The link may have expired or is invalid</p>
-                        <a href="https://taaft-deploy-18xw.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
+                        <a href="https://taaft-development.vercel.app/auth/resend-verification" class="button">Resend Verification Email</a>
                     </div>
                 </body>
                 </html>
@@ -558,13 +546,13 @@ async def handle_email_verification(token: str):
                     </head>
                     <body>
                         <div class="modal">
-                            <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                            <a href="https://taaft-development.vercel.app" class="close-btn">×</a>
                             <div class="icon-container">
                                 <div class="icon-success">✓</div>
                             </div>
                             <h1>Email Verified!</h1>
                             <p>Your email has been successfully verified. You can now access all features of your account.</p>
-                            <a href="https://taaft-deploy-18xw.vercel.app/auth/login" class="button">Login To Continue</a>
+                            <a href="https://taaft-development.vercel.app/auth/login" class="button">Login To Continue</a>
                         </div>
                     </body>
                     </html>
@@ -656,13 +644,13 @@ async def handle_email_verification(token: str):
                     </head>
                     <body>
                         <div class="modal">
-                            <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                            <a href="https://taaft-development.vercel.app" class="close-btn">×</a>
                             <div class="icon-container">
                                 <div class="icon-error">i</div>
                             </div>
                             <h1>Verification Failed</h1>
                             <p>We couldn't verify your email. The user was not found or verification failed.</p>
-                            <a href="https://taaft-deploy-18xw.vercel.app/auth/contact-support" class="button">Contact Support</a>
+                            <a href="https://taaft-development.vercel.app/auth/contact-support" class="button">Contact Support</a>
                         </div>
                     </body>
                     </html>
@@ -756,13 +744,13 @@ async def handle_email_verification(token: str):
             </head>
             <body>
                 <div class="modal">
-                    <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                    <a href="https://taaft-development.vercel.app" class="close-btn">×</a>
                     <div class="icon-container">
                         <div class="icon-success">✓</div>
                     </div>
                     <h1>Email Verified!</h1>
                     <p>Your email has been successfully verified. You can now access all features of your account.</p>
-                    <a href="https://taaft-deploy-18xw.vercel.app/auth/login" class="button">Login To Continue</a>
+                    <a href="https://taaft-development.vercel.app/auth/login" class="button">Login To Continue</a>
                 </div>
             </body>
             </html>
@@ -855,13 +843,13 @@ async def handle_email_verification(token: str):
             </head>
             <body>
                 <div class="modal">
-                    <a href="https://taaft-deploy-18xw.vercel.app" class="close-btn">×</a>
+                    <a href="https://taaft-development.vercel.app" class="close-btn">×</a>
                     <div class="icon-container">
                         <div class="icon-error">i</div>
                     </div>
                     <h1>Verification Error</h1>
                     <p>An error occurred during the verification process. Please try again or contact support.</p>
-                    <a href="https://taaft-deploy-18xw.vercel.app/auth/contact-support" class="button">Contact Support</a>
+                    <a href="https://taaft-development.vercel.app/auth/contact-support" class="button">Contact Support</a>
                 </div>
             </body>
             </html>
@@ -878,7 +866,7 @@ async def handle_password_reset(token: str = None):
     This route validates the token and redirects to the frontend reset page or error page.
     """
     # Get frontend URLs from environment
-    frontend_url = os.getenv("FRONTEND_URL", "https://taaft-deploy-18xw.vercel.app")
+    frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
     if frontend_url.endswith("/"):
         frontend_url = frontend_url.rstrip("/")
 

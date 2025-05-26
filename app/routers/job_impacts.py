@@ -81,6 +81,14 @@ async def search_job_impacts_in_db(
     return await JobImpactInDB.search(database, query=query, skip=skip, limit=limit)
 
 
+async def get_job_impact_by_title(job_title: str) -> Optional[JobImpactInDB]:
+    """Get a job impact by exact job title"""
+    result = await database[JobImpactInDB.collection_name].find_one({"job_title": job_title})
+    if result:
+        return JobImpactInDB(**result)
+    return None
+
+
 # --- API Endpoints ---
 
 
@@ -115,27 +123,41 @@ async def list_job_impacts(
     return jobs  # List of JobImpactInDB, will be serialized by List[JobImpact]
 
 
-@router.get("/{id_or_slug}", response_model=JobImpact)
-async def get_job_impact_details(
-    id_or_slug: Union[PyObjectId, str] = Path(
-        ..., description="MongoDB ObjectId or URL-safe slug of the job"
-    )
+@router.get("/by-title", response_model=JobImpact)
+async def get_job_impact_by_job_title(
+    job_title: str = Query(..., description="Exact job title to look up")
 ):
-    job: Optional[JobImpactInDB] = None
-    if ObjectId.is_valid(id_or_slug):
-        # Use the id-based lookup
-        job = await JobImpactInDB.get_by_id(database, id_or_slug)
-
-        if not job:
-            # Fallback to slug-based lookup
-            job = await JobImpactInDB.get_by_slug(database, str(id_or_slug))
-    else:
-        # Use slug-based lookup
-        job = await JobImpactInDB.get_by_slug(database, str(id_or_slug))
-
+    """
+    Get a job impact by its exact job title.
+    This endpoint performs an exact match on the job title.
+    """
+    job = await get_job_impact_by_title(job_title)
     if not job:
         raise HTTPException(status_code=404, detail="Job impact analysis not found")
     return job  # Will be serialized by JobImpact model
+
+
+# @router.get("/{id_or_slug}", response_model=JobImpact)
+# async def get_job_impact_details(
+#     id_or_slug: Union[PyObjectId, str] = Path(
+#         ..., description="MongoDB ObjectId or URL-safe slug of the job"
+#     )
+# ):
+#     job: Optional[JobImpactInDB] = None
+#     if ObjectId.is_valid(id_or_slug):
+#         # Use the id-based lookup
+#         job = await JobImpactInDB.get_by_id(database, id_or_slug)
+
+#         if not job:
+#             # Fallback to slug-based lookup
+#             job = await JobImpactInDB.get_by_slug(database, str(id_or_slug))
+#     else:
+#         # Use slug-based lookup
+#         job = await JobImpactInDB.get_by_slug(database, str(id_or_slug))
+
+#     if not job:
+#         raise HTTPException(status_code=404, detail="Job impact analysis not found")
+#     return job  # Will be serialized by JobImpact model
 
 
 @router.put("/{id}", response_model=JobImpact)

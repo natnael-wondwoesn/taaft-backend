@@ -46,7 +46,7 @@ github = oauth.register(
     access_token_url="https://github.com/login/oauth/access_token",
     access_token_params=None,
     refresh_token_url=None,
-    client_kwargs={"scope": "read:user user:email", "prompt": "select_account"},
+    client_kwargs={"scope": "read:user user:email","prompt": "select_account"},
 )
 
 
@@ -63,6 +63,7 @@ async def create_sso_user(
     provider: str,
     provider_user_id: str,
     name: Optional[str] = None,
+    username: Optional[str] = None,  # Add username parameter
     subscribeToNewsletter: bool = False,
     provider_data: Optional[Dict[str, Any]] = None,
 ) -> UserInDB:
@@ -86,9 +87,11 @@ async def create_sso_user(
             "last_login": datetime.datetime.utcnow(),
         }
 
-        # Update name if it wasn't set before
+        # Update name and username if not set before
         if name and not existing_user.full_name:
             update_data["full_name"] = name
+        if username and not existing_user.username:
+            update_data["username"] = username
 
         await database.users.update_one(
             {"email": email},
@@ -101,12 +104,12 @@ async def create_sso_user(
     # Create new user
     new_user = UserInDB(
         email=email,
-        # For SSO users, we set a dummy hashed_password since they will use SSO
+        username=username,  # Set username
         hashed_password="SSO_USER",
         full_name=name,
-        service_tier=ServiceTier.FREE,  # Default to free tier
+        service_tier=ServiceTier.FREE,
         is_active=True,
-        is_verified=True,  # SSO users are pre-verified
+        is_verified=True,
         subscribeToNewsletter=subscribeToNewsletter,
         created_at=datetime.datetime.utcnow(),
         updated_at=datetime.datetime.utcnow(),
@@ -139,8 +142,8 @@ async def create_sso_user(
 
 async def get_google_user(
     access_token: str,
-) -> Tuple[str, str, Optional[str], Dict[str, Any]]:
-    """Get user information from Google."""
+) -> Tuple[str, str, Optional[str], Optional[str], Dict[str, Any]]:
+    """Get user information from Google, including email, name, and username."""
     async with httpx.AsyncClient() as client:
         resp = await client.get(
             "https://www.googleapis.com/oauth2/v1/userinfo",
@@ -156,14 +159,22 @@ async def get_google_user(
             )
         logger.info(f"Google user data: {user_data}")
 
+        # Extract email, provider user ID, and name
+        email = user_data["email"]
+        provider_user_id = user_data["id"]
+        name = user_data.get("name")
+
+        # Derive username from email (part before @)
+        username = email.split("@")[0] if email else None
+
         # Return all user data for storage
-        return user_data["email"], user_data["id"], user_data.get("name"), user_data
+        return email, provider_user_id, name, username, user_data
 
 
 async def get_github_user(
     access_token: str,
-) -> Tuple[str, str, Optional[str], Dict[str, Any]]:
-    """Get user information from GitHub."""
+) -> Tuple[str, str, Optional[str], Optional[str], Dict[str, Any]]:
+    """Get user information from GitHub, including email, name, and username."""
     async with httpx.AsyncClient() as client:
         # Get user profile
         headers = {"Authorization": f"token {access_token}"}
@@ -217,12 +228,17 @@ async def get_github_user(
                 detail="GitHub account doesn't have a verified email. Please verify an email in your GitHub account settings.",
             )
 
-        logger.info(f"Github user authenticated with email: {primary_email}")
+        logger.info(f"GitHub user authenticated with email: {primary_email}")
+
+        # Extract provider user ID, name, and username
+        provider_user_id = str(user_data["id"])
+        name = user_data.get("name")
+        username = user_data.get("login")  # GitHub username (handle)
 
         # Add email data to user_data for completeness
         user_data["email_data"] = email_data
 
-        return primary_email, str(user_data["id"]), user_data.get("name"), user_data
+        return primary_email, provider_user_id, name, username, user_data
 
 
 async def sync_to_company_ghl(user: Dict[str, Any], signup_type: SignupType):

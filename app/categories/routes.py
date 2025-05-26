@@ -13,7 +13,7 @@ from ..tools.models import PaginatedToolsResponse
 # Remove the direct import to avoid circular dependencies
 # from ..tools.tools_service import get_tools, search_tools
 from ..logger import logger
-from ..services.redis_cache import redis_cache, invalidate_cache
+from ..services.redis_cache import invalidate_cache
 from ..auth.dependencies import get_admin_user
 from ..models.user import UserResponse
 
@@ -84,7 +84,6 @@ async def get_category_by_slug(slug: str):
 
 
 @router.get("/slug/{slug}/tools", response_model=PaginatedToolsResponse)
-@redis_cache(prefix="category_tools")
 async def get_tools_by_category_slug(
     slug: str,
     search: Optional[str] = Query(None, description="Search term for filtering tools"),
@@ -239,7 +238,6 @@ async def recalculate_category_counts():
 
 
 @public_router.get("/", response_model=List[CategoryResponse])
-@redis_cache(prefix="public_categories_list")
 async def get_public_categories():
     """
     Get all available categories for tools.
@@ -253,7 +251,6 @@ async def get_public_categories():
 
 
 @public_router.get("/slug/{slug}", response_model=CategoryResponse)
-@redis_cache(prefix="public_category_slug")
 async def get_public_category_by_slug(slug: str):
     """
     Get a category by its slug.
@@ -275,7 +272,6 @@ async def get_public_category_by_slug(slug: str):
 
 
 @public_router.get("/slug/{slug}/tools", response_model=PaginatedToolsResponse)
-@redis_cache(prefix="public_category_tools")
 async def get_public_tools_by_category_slug(
     slug: str,
     search: Optional[str] = Query(None, description="Search term for filtering tools"),

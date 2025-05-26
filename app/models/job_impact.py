@@ -252,7 +252,7 @@ class JobImpactInDB(JobImpact):
     """
 
     # MongoDB collection name used for this model
-    collection_name: ClassVar[str] = "tools_job_impacts"
+    collection_name: ClassVar[str] = "tools_Job_impacts"
 
     @model_validator(mode="before")
     @classmethod

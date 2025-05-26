@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Frontend URLs for redirection after OAuth
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://taaft-deploy-18xw.vercel.app/")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app/")
 FRONTEND_SUCCESS_URL = os.getenv("FRONTEND_SUCCESS_URL", f"{FRONTEND_URL}/auth/success")
 FRONTEND_ERROR_URL = os.getenv("FRONTEND_ERROR_URL", f"{FRONTEND_URL}/auth/error")
 
@@ -38,7 +38,13 @@ async def login(request: Request, provider: str):
         )
 
     # Get redirect URL
-    redirect_uri = request.url_for(f"auth_callback", provider=provider)
+    base_url = os.getenv("BASE_URL", "https://taaft.zapto.org")
+    if base_url.endswith("/"):
+        base_url = base_url.rstrip("/")
+    
+    redirect_uri = f"{base_url}/sso/callback/{provider}"
+    
+    logger.info(f"OAuth redirect URI: {redirect_uri}")
 
     # State for security
     if provider == OAuthProvider.GOOGLE:
@@ -64,7 +70,7 @@ async def auth_callback(request: Request, provider: str):
         if provider == OAuthProvider.GOOGLE:
             try:
                 token = await google.authorize_access_token(request)
-                email, provider_user_id, name, provider_data = await get_google_user(
+                email, provider_user_id, name, username, provider_data = await get_google_user(
                     token["access_token"]
                 )
             except Exception as e:
@@ -75,7 +81,7 @@ async def auth_callback(request: Request, provider: str):
         elif provider == OAuthProvider.GITHUB:
             try:
                 token = await github.authorize_access_token(request)
-                email, provider_user_id, name, provider_data = await get_github_user(
+                email, provider_user_id, name, username, provider_data = await get_github_user(
                     token["access_token"]
                 )
             except HTTPException as e:
@@ -100,6 +106,7 @@ async def auth_callback(request: Request, provider: str):
             provider,
             provider_user_id,
             name,
+            username=username,
             subscribeToNewsletter=False,
             provider_data=provider_data,
         )
@@ -133,13 +140,13 @@ async def get_providers():
     if os.getenv("GOOGLE_CLIENT_ID"):
         providers["google"] = {
             "name": "Google",
-            "url": "/api/auth/sso/login/google",
+            "url": "/sso/login/google",
         }
 
     if os.getenv("GITHUB_CLIENT_ID"):
         providers["github"] = {
             "name": "GitHub",
-            "url": "/api/auth/sso/login/github",
+            "url": "/sso/login/github",
         }
 
     return {"providers": providers}
