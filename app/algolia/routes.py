@@ -17,6 +17,11 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 import datetime
 
 from .models import (
+    AlgoliaJobImpactRecord,
+    AlgoliaToolRecord,
+    JobImpactWithTools,
+    SearchFacet,
+    SearchFacets,
     SearchParams, 
     SearchResult, 
     NaturalLanguageQuery, 
@@ -973,3 +978,155 @@ async def recommend_tools_for_job(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error recommending tools for job: {str(e)}",
         )
+
+
+@router.get("/direct-search/job-impacts/mock-test",response_model=JobImpactSearchResult)
+async def mock_direct_search_job_impacts(query: Optional[str] = Query(None, description="Search query"),
+    job_title: Optional[str] = Query(None, description="Filter by job title"),
+    job_category: Optional[str] = Query(None, description="Filter by job category"),
+    industry: Optional[str] = Query(None, description="Filter by industry"),
+    min_impact_score: Optional[float] = Query(
+        None, ge=0, le=100, description="Minimum impact score"
+    ),
+    task_name: Optional[str] = Query(None, description="Filter by task name"),
+    tool_name: Optional[str] = Query(None, description="Filter by tool name"),
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(20, ge=1, le=100, description="Results per page"),
+    sort_by: str = Query(
+        "impact_score",
+        description="Sort order",
+    ),
+):
+    """
+    Direct search for job impacts in the Algolia index.
+    
+    This endpoint allows searching and filtering job impacts data by various criteria,
+    similar to the /job-impacts endpoint but using the new direct search implementation.
+    
+    Args:
+        query: General search query
+        job_title: Filter by job title
+        job_category: Filter by job category
+        industry: Filter by industry
+        min_impact_score: Filter by minimum impact score
+        task_name: Filter by task name
+        tool_name: Filter by tool name
+        page: Page number (0-based)
+        per_page: Number of results per page
+        sort_by: Sort order (impact_score, relevance, date)
+        
+    Returns:
+        JobImpactSearchResult with search results and pagination
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the search using the new direct search method
+        search_result = await algolia_search.direct_search_job_impacts(
+            query=query,
+            job_title=job_title,
+            job_category=job_category, 
+            industry=industry,
+            min_impact_score=min_impact_score,
+            task_name=task_name,
+            tool_name=tool_name,
+            page=page,
+            per_page=per_page,
+            sort_by=sort_by,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching job impacts: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching job impacts: {str(e)}",
+        )
+
+
+@router.get("/job-impact-tools/mock-test", response_model=JobImpactToolsSearchResult)
+async def mock_search_job_impacts_with_tools():
+    """
+    Mock API endpoint for testing job impact tools search.
+    No authentication required.
+
+    Returns:
+        A sample JobImpactToolsSearchResult with mock data
+    """
+    # Create a sample job impact record
+    sample_job_impact = AlgoliaJobImpactRecord(
+        objectID="sample123",
+        job_title="Software Engineer",
+        job_category="Technology",
+        industry="Software Development",
+        description="A software engineer designs and develops software applications",
+        ai_impact_score="High",
+        numeric_impact_score=85.5,
+        ai_impact_summary="AI will significantly impact this role through automation of routine coding tasks",
+        detailed_analysis="Software engineers will need to adapt to working with AI pair programmers",
+        tasks=[
+            {"name": "Code writing", "impact": "High"},
+            {"name": "Code review", "impact": "Medium"},
+            {"name": "Testing", "impact": "Medium"}
+        ],
+        task_names=["Code writing", "Code review", "Testing"],
+        tool_names=["GitHub Copilot", "ChatGPT", "Cursor IDE"],
+        keywords=["software", "programming", "coding", "development"],
+        created_at=datetime.datetime.utcnow(),
+        updated_at=datetime.datetime.utcnow(),
+        source_date=datetime.datetime.utcnow(),
+        detail_page_link="/job-impacts/software-engineer"
+    )
+    
+    # Create sample tools
+    sample_tools = [
+        AlgoliaToolRecord(
+            objectID="tool1",
+            name="GitHub Copilot",
+            description="AI pair programmer that helps write better code faster",
+            category="Development",
+            is_featured=True,
+            logo_url="https://example.com/copilot-logo.png"
+        ),
+        AlgoliaToolRecord(
+            objectID="tool2",
+            name="ChatGPT",
+            description="Advanced language model for coding assistance and more",
+            category="AI Assistants",
+            is_featured=True,
+            logo_url="https://example.com/chatgpt-logo.png"
+        ),
+        AlgoliaToolRecord(
+            objectID="tool3",
+            name="Cursor IDE",
+            description="AI-native code editor built for pair programming",
+            category="Development",
+            is_featured=False,
+            logo_url="https://example.com/cursor-logo.png"
+        )
+    ]
+    
+    # Create sample job impact with tools
+    sample_impact_with_tools = JobImpactWithTools(
+        job_impact=sample_job_impact,
+        tools_by_task={
+            "Code writing": [sample_tools[0], sample_tools[2]],
+            "Code review": [sample_tools[1]],
+            "Testing": [sample_tools[2]]
+        }
+    )
+    
+    return JobImpactToolsSearchResult(
+        results=[sample_impact_with_tools],
+        total=1,
+        page=1,
+        per_page=10,
+        job_title="Software Engineer",
+        processing_time_ms=25
+    )

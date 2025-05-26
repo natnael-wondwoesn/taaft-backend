@@ -14,8 +14,8 @@ from ..tools.models import PaginatedToolsResponse
 # from ..tools.tools_service import get_tools, search_tools
 from ..logger import logger
 from ..services.redis_cache import invalidate_cache
-from ..auth.dependencies import get_admin_user
-from ..models.user import UserResponse
+from ..auth.dependencies import get_admin_user, get_current_active_user
+from ..models.user import UserResponse, UserInDB
 
 router = APIRouter(
     prefix="/api/categories",
@@ -42,6 +42,17 @@ async def get_categories():
     categories = await categories_service.get_all_categories()
     return categories
 
+
+@router.get("/mock-test",response_model=List[CategoryResponse])
+async def mock_categories_test():
+    """
+    Get all available categories for tools
+
+    Returns:
+        List of category objects with id, name, slug, and count
+    """
+    categories = await categories_service.get_all_categories()
+    return categories
 
 @router.get("/{category_id}", response_model=CategoryResponse)
 async def get_category_by_id(category_id: str):
@@ -248,6 +259,21 @@ async def get_public_categories():
     """
     categories = await categories_service.get_all_categories()
     return categories
+
+
+@public_router.get("/mock-test", response_model=Dict[str, str])
+async def public_mock_categories_test():
+    """
+    Public mock API endpoint for testing categories.
+    No authentication required.
+
+    Returns:
+        A simple Hello World message
+    """
+    return {
+        "message": "Hello World",
+        "status": "success"
+    }
 
 
 @public_router.get("/slug/{slug}", response_model=CategoryResponse)
