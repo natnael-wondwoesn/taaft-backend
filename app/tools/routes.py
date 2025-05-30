@@ -23,12 +23,12 @@ from .tools_service import (
     get_keywords,
 )
 from ..logger import logger
-from ..services.redis_cache import redis_client, REDIS_CACHE_ENABLED
+# from ..services.redis_cache import redis_client, REDIS_CACHE_ENABLED
 from os import getenv
 
 router = APIRouter(prefix="/tools", tags=["tools"])
 
-SEARCH_CACHE_TTL = int(getenv("SEARCH_CACHE_TTL", "300"))
+# SEARCH_CACHE_TTL = int(getenv("SEARCH_CACHE_TTL", "300"))
 
 
 @router.get("/", response_model=PaginatedToolsResponse)
@@ -135,15 +135,6 @@ async def search_tools_endpoint(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
-    # Redis cache key
-    cache_key = f"tools:search:{current_user.id}:{q}:{skip}:{limit}:{sort_by}:{sort_order}"
-    cache_key = hashlib.sha256(cache_key.encode()).hexdigest()
-    if REDIS_CACHE_ENABLED and redis_client:
-        cached = await redis_client.get(cache_key)
-        if cached:
-            logger.info(f"Cache hit for tools search: {cache_key}")
-            return json.loads(cached)
-
     result = await search_tools(
         search_term=q,
         skip=skip,
@@ -176,10 +167,6 @@ async def search_tools_endpoint(
         "limit": limit,
         "carriers": unique_carriers,
     }
-
-    if REDIS_CACHE_ENABLED and redis_client:
-        await redis_client.set(cache_key, json.dumps(response, default=str), ex=SEARCH_CACHE_TTL)
-        logger.info(f"Cache set for tools search: {cache_key}")
 
     return response
 
@@ -641,15 +628,6 @@ async def keyword_search_endpoint(
     """
     Search for tools by exact keywords match.
     """
-    # Redis cache key
-    cache_key = f"tools:keyword-search:{current_user.id}:{','.join(sorted(keywords))}:{skip}:{limit}"
-    cache_key = hashlib.sha256(cache_key.encode()).hexdigest()
-    if REDIS_CACHE_ENABLED and redis_client:
-        cached = await redis_client.get(cache_key)
-        if cached:
-            logger.info(f"Cache hit for tools keyword-search: {cache_key}")
-            return json.loads(cached)
-
     # Get tools that match any of the provided keywords
     tools = await keyword_search_tools(
         keywords=keywords, skip=skip, limit=limit, user_id=str(current_user.id)
@@ -682,10 +660,6 @@ async def keyword_search_endpoint(
         "limit": limit,
         "carriers": unique_carriers,
     }
-
-    if REDIS_CACHE_ENABLED and redis_client:
-        await redis_client.set(cache_key, json.dumps(response, default=str), ex=SEARCH_CACHE_TTL)
-        logger.info(f"Cache set for tools keyword-search: {cache_key}")
 
     return response
 

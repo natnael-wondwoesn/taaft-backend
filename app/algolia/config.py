@@ -110,54 +110,69 @@ class AlgoliaConfig:
 
         try:
             # Configure searchable attributes using the updated API structure
-            # settings = {
-            #     "searchableAttributes": [
-            #         "name",
-            #         "description",
-            #         "long_description",
-            #         "features",
-            #         "use_cases",
-            #         "categories.name",
-            #         "keywords",
-            #         "tags",
-            #         "pricing_type",
-            #         "pricing_url",
-            #         "url",
-            #         "logo_url",
-            #         "keywords",
-            #         "category_id",
-            #         "unique_id",
-            #     ],
-            #     # Configure custom ranking
-            #     "customRanking": [
-            #         "desc(trending_score)",
-            #         "desc(ratings.average)",
-            #         "desc(is_featured)",
-            #         "desc(updated_at)",
-            #     ],
-            #     # Configure facets for filtering
-            #     "attributesForFaceting": [
-            #         "categories.name",
-            #         "categories.id",
-            #         "pricing.type",
-            #         "is_featured",
-            #         "is_sponsored",
-            #         "searchable(features)",
-            #         "searchable(keywords)",
-            #     ],
-            #     # Configure highlighting
-            #     "attributesToHighlight": ["name", "description", "features"],
-            #     # Configure snippeting
-            #     "attributesToSnippet": ["long_description:50", "description:30"],
-            #     # Configure pagination
-            #     "hitsPerPage": 20,
-            #     # Additional settings
-            #     "typoTolerance": True,
-            #     "distinct": True,
-            #     "enablePersonalization": True,
-            #     "queryLanguages": ["en"],
-            #     "removeWordsIfNoResults": "allOptional",
-            # }
+            settings =         {
+            "searchableAttributes": [
+                "name",
+                "description",
+                "task",
+                "keywords",
+            ],
+            "attributesForFaceting": [
+                "name",
+                "searchable(task)",
+                "searchable(keywords)",
+            ],
+            "attributesToRetrieve": [
+                "name",
+                "description",
+                "summary",
+                "url",
+                "logo_url",
+                "category",
+                "features",
+                "pricing_type",
+                "pricing_url",
+                "is_featured",
+                "created_at",
+                "updated_at",
+                "tags",
+                "price",
+                "is_featured",
+                "rating",
+                "saved_numbers",
+                "keywords",
+                "industry",
+                "referral_allow",
+                "feature_list",
+                "generated_description",
+                "user_reviews",
+                "categories",
+                "logo_url",
+                "created_at",
+                "updated_at",
+                "tags",
+                "price",
+                "is_featured",
+                "rating",
+                "saved_numbers",
+                "carriers",
+                "task",
+            ],
+            "ranking": [
+                "words",
+                "typo",
+                "geo",
+                "filters",
+                "proximity",
+                "attribute",
+                "exact",
+                "custom",
+            ],
+            "customRanking": ["desc(is_featured)", "desc(updated_at)"],
+            "ignorePlurals": True,
+            "advancedSyntax": True,
+            "typoTolerance": "min",
+        },
 
             # Fix: Use the correct format for set_settings
             response = self.client.set_settings(self.tools_index_name, settings)
@@ -212,23 +227,12 @@ class AlgoliaConfig:
             settings = {
                 "searchableAttributes": [
                     "job_title",
-                    "impact_description",
-                    "job_category",
-                    "industry",
-                    "skills_required",
-                    "keywords",
                 ],
                 # Configure custom ranking
                 "customRanking": ["desc(impact_score)", "desc(updated_at)"],
                 # Configure facets for filtering
                 "attributesForFaceting": [
                     "job_title",
-                    "job_category",
-                    "industry",
-                    "automation_potential",
-                    "impact_score",
-                    "tool_id",
-                    "ai_generated",
                 ],
                 # Configure highlighting
                 "attributesToHighlight": [
@@ -241,7 +245,8 @@ class AlgoliaConfig:
                 # Configure pagination
                 "hitsPerPage": 20,
                 # Additional settings
-                "typoTolerance": True,
+                "typoTolerance": "strict",
+                "advancedSyntax": True,
                 "distinct": True,
                 "queryLanguages": ["en"],
                 "removeWordsIfNoResults": "allOptional",

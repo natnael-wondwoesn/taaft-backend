@@ -980,7 +980,7 @@ async def recommend_tools_for_job(
         )
 
 
-@router.get("/direct-search/job-impacts/mock-test",response_model=JobImpactSearchResult)
+@router.get("/direct-search/job-impacts/mock-test",response_model=Any)
 async def mock_direct_search_job_impacts(query: Optional[str] = Query(None, description="Search query"),
     job_title: Optional[str] = Query(None, description="Filter by job title"),
     job_category: Optional[str] = Query(None, description="Filter by job category"),

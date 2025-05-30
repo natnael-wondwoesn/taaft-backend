@@ -180,10 +180,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Local development
-        "https://taaft-development.vercel.app",  # Development frontend
         "https://taaft-deploy-18xw.vercel.app",  # Old production frontend
+        "https://taaft-development.vercel.app",
+        "http://taaft-development.vercel.app",
+        "http://taaft-development.vercel.app/",
+        "https://taaft-development.vercel.app/",
         "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app",  # Additional frontend
-        "https://taaft-development.vercel.app/"
+        "https://taaft.zapto.org",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],

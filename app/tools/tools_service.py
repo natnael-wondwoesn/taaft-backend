@@ -890,7 +890,7 @@ async def delete_tool(tool_id: UUID) -> bool:
     return result.deleted_count > 0
 
 
-@redis_cache(prefix="search_tools")
+# @redis_cache(prefix="search_tools")
 async def search_tools(
     search_term: str,
     skip: int = 0,
@@ -1081,170 +1081,7 @@ async def search_tools(
     return {"tools": tools_list, "total": total}
 
 
-@redis_cache(prefix="keywords")
-async def get_keywords(
-    skip: int = 0,
-    limit: int = 100,
-    min_frequency: int = 0,
-    sort_by_frequency: bool = True,
-) -> List[Dict[str, Any]]:
-    """
-    Get a list of keywords with their frequency.
-
-    Args:
-        skip: Number of items to skip
-        limit: Maximum number of items to return
-        min_frequency: Minimum frequency to include
-        sort_by_frequency: Whether to sort by frequency
-
-    Returns:
-        List of keywords with their frequency
-    """
-    query = {}
-
-    # # Apply minimum frequency filter if specified
-    # if min_frequency > 0:
-    #     query["frequency"] = {"$gte": min_frequency}
-
-    # # Create cursor
-    cursor = keywords_collection.find(query).skip(skip).limit(limit)
-
-    # # Apply sorting if requested
-    # if sort_by_frequency:
-    #     cursor = cursor.sort("frequency", -1)  # Sort by frequency descending
-
-    # Process results
-    keywords_list = []
-    async for keyword in cursor:
-        # Check the field name - could be either 'keyword' or 'word' depending on
-        # which function created it. The update_tool_keywords uses 'keyword',
-        # while the get_tools function uses 'word'
-        keyword_value = keyword.get("keyword") or keyword.get("word")
-
-        keywords_list.append(keyword_value)
-
-    return keywords_list
-
-
-async def toggle_tool_featured_status(
-    tool_id: UUID, is_featured: bool
-) -> Optional[ToolResponse]:
-    """
-    Toggle the featured status of a tool.
-
-    Args:
-        tool_id: The UUID of the tool
-        is_featured: Whether the tool should be featured
-
-    Returns:
-        The updated tool or None if not found
-    """
-    logger.info(f"Setting tool {tool_id} featured status to {is_featured}")
-
-    # Update the tool in the database
-    result = await tools.update_one(
-        {"id": str(tool_id)},
-        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
-    )
-
-    if result.matched_count == 0:
-        logger.warning(f"Tool {tool_id} not found for featured status update")
-        return None
-
-    # Get the updated tool
-    updated_tool = await tools.find_one({"id": str(tool_id)})
-    if not updated_tool:
-        logger.error(f"Tool {tool_id} was updated but could not be retrieved")
-        return None
-
-    # Update the tool in Algolia
-    try:
-        if algolia_indexer.is_configured():
-            # Create a dictionary with the tool data for Algolia
-            algolia_data = {
-                "objectID": str(updated_tool["id"]),
-                "is_featured": is_featured,
-            }
-            # Update the record in Algolia
-            await algolia_indexer.update_record(algolia_data)
-            logger.info(f"Updated featured status in Algolia for tool {tool_id}")
-    except Exception as e:
-        # Log the error but don't fail the request
-        logger.error(f"Failed to update Algolia index: {str(e)}")
-
-    # Invalidate caches after toggling featured status
-    invalidate_cache("tools_list")
-    invalidate_cache("tool_by_id")
-
-    # Return the updated tool as a ToolResponse
-    return await create_tool_response(updated_tool)
-
-
-async def toggle_tool_featured_status_by_unique_id(
-    unique_id: str, is_featured: bool
-) -> Optional[ToolResponse]:
-    """
-    Toggle the featured status of a tool by its unique_id.
-
-    Args:
-        unique_id: The unique_id of the tool
-        is_featured: Whether the tool should be featured
-
-    Returns:
-        The updated tool or None if not found
-    """
-    logger.info(
-        f"Setting tool with unique_id={unique_id} featured status to {is_featured}"
-    )
-
-    # Update the tool in the database
-    result = await tools.update_one(
-        {"unique_id": unique_id},
-        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
-    )
-
-    if result.matched_count == 0:
-        logger.warning(
-            f"Tool with unique_id={unique_id} not found for featured status update"
-        )
-        return None
-
-    # Get the updated tool
-    updated_tool = await tools.find_one({"unique_id": unique_id})
-    if not updated_tool:
-        logger.error(
-            f"Tool with unique_id={unique_id} was updated but could not be retrieved"
-        )
-        return None
-
-    # Update the tool in Algolia
-    try:
-        from ..algolia.config import algolia_config
-
-        if algolia_config.is_configured():
-            # Create a dictionary with the tool data for Algolia
-            algolia_data = {
-                "objectID": str(updated_tool["id"]),
-                "is_featured": is_featured,
-            }
-            # Update the record in Algolia
-            await algolia_indexer.update_record(algolia_data)
-            logger.info(
-                f"Updated featured status in Algolia for tool with unique_id={unique_id}"
-            )
-    except Exception as e:
-        # Log the error but don't fail the request
-        logger.error(f"Failed to update Algolia index: {str(e)}")
-
-    # Invalidate caches after toggling featured status
-    invalidate_cache("tools_list")
-    invalidate_cache("tool_by_unique_id")
-
-    # Return the updated tool as a ToolResponse
-    return await create_tool_response(updated_tool)
-
-
-@redis_cache(prefix="keyword_search")
+# @redis_cache(prefix="keyword_search")
 async def keyword_search_tools(
     keywords: List[str],
     skip: int = 0,
@@ -1529,3 +1366,166 @@ async def get_tool_with_favorite_status(
     tool.saved_by_user = favorite is not None or saved_in_user
 
     return tool
+
+
+# @redis_cache(prefix="keywords")
+async def get_keywords(
+    skip: int = 0,
+    limit: int = 100,
+    min_frequency: int = 0,
+    sort_by_frequency: bool = True,
+) -> List[Dict[str, Any]]:
+    """
+    Get a list of keywords with their frequency.
+
+    Args:
+        skip: Number of items to skip
+        limit: Maximum number of items to return
+        min_frequency: Minimum frequency to include
+        sort_by_frequency: Whether to sort by frequency
+
+    Returns:
+        List of keywords with their frequency
+    """
+    query = {}
+
+    # # Apply minimum frequency filter if specified
+    # if min_frequency > 0:
+    #     query["frequency"] = {"$gte": min_frequency}
+
+    # # Create cursor
+    cursor = keywords_collection.find(query).skip(skip).limit(limit)
+
+    # # Apply sorting if requested
+    # if sort_by_frequency:
+    #     cursor = cursor.sort("frequency", -1)  # Sort by frequency descending
+
+    # Process results
+    keywords_list = []
+    async for keyword in cursor:
+        # Check the field name - could be either 'keyword' or 'word' depending on
+        # which function created it. The update_tool_keywords uses 'keyword',
+        # while the get_tools function uses 'word'
+        keyword_value = keyword.get("keyword") or keyword.get("word")
+
+        keywords_list.append(keyword_value)
+
+    return keywords_list
+
+
+async def toggle_tool_featured_status(
+    tool_id: UUID, is_featured: bool
+) -> Optional[ToolResponse]:
+    """
+    Toggle the featured status of a tool.
+
+    Args:
+        tool_id: The UUID of the tool
+        is_featured: Whether the tool should be featured
+
+    Returns:
+        The updated tool or None if not found
+    """
+    logger.info(f"Setting tool {tool_id} featured status to {is_featured}")
+
+    # Update the tool in the database
+    result = await tools.update_one(
+        {"id": str(tool_id)},
+        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
+    )
+
+    if result.matched_count == 0:
+        logger.warning(f"Tool {tool_id} not found for featured status update")
+        return None
+
+    # Get the updated tool
+    updated_tool = await tools.find_one({"id": str(tool_id)})
+    if not updated_tool:
+        logger.error(f"Tool {tool_id} was updated but could not be retrieved")
+        return None
+
+    # Update the tool in Algolia
+    try:
+        if algolia_indexer.is_configured():
+            # Create a dictionary with the tool data for Algolia
+            algolia_data = {
+                "objectID": str(updated_tool["id"]),
+                "is_featured": is_featured,
+            }
+            # Update the record in Algolia
+            await algolia_indexer.update_record(algolia_data)
+            logger.info(f"Updated featured status in Algolia for tool {tool_id}")
+    except Exception as e:
+        # Log the error but don't fail the request
+        logger.error(f"Failed to update Algolia index: {str(e)}")
+
+    # Invalidate caches after toggling featured status
+    invalidate_cache("tools_list")
+    invalidate_cache("tool_by_id")
+
+    # Return the updated tool as a ToolResponse
+    return await create_tool_response(updated_tool)
+
+
+async def toggle_tool_featured_status_by_unique_id(
+    unique_id: str, is_featured: bool
+) -> Optional[ToolResponse]:
+    """
+    Toggle the featured status of a tool by its unique_id.
+
+    Args:
+        unique_id: The unique_id of the tool
+        is_featured: Whether the tool should be featured
+
+    Returns:
+        The updated tool or None if not found
+    """
+    logger.info(
+        f"Setting tool with unique_id={unique_id} featured status to {is_featured}"
+    )
+
+    # Update the tool in the database
+    result = await tools.update_one(
+        {"unique_id": unique_id},
+        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
+    )
+
+    if result.matched_count == 0:
+        logger.warning(
+            f"Tool with unique_id={unique_id} not found for featured status update"
+        )
+        return None
+
+    # Get the updated tool
+    updated_tool = await tools.find_one({"unique_id": unique_id})
+    if not updated_tool:
+        logger.error(
+            f"Tool with unique_id={unique_id} was updated but could not be retrieved"
+        )
+        return None
+
+    # Update the tool in Algolia
+    try:
+        from ..algolia.config import algolia_config
+
+        if algolia_config.is_configured():
+            # Create a dictionary with the tool data for Algolia
+            algolia_data = {
+                "objectID": str(updated_tool["id"]),
+                "is_featured": is_featured,
+            }
+            # Update the record in Algolia
+            await algolia_indexer.update_record(algolia_data)
+            logger.info(
+                f"Updated featured status in Algolia for tool with unique_id={unique_id}"
+            )
+    except Exception as e:
+        # Log the error but don't fail the request
+        logger.error(f"Failed to update Algolia index: {str(e)}")
+
+    # Invalidate caches after toggling featured status
+    invalidate_cache("tools_list")
+    invalidate_cache("tool_by_unique_id")
+
+    # Return the updated tool as a ToolResponse
+    return await create_tool_response(updated_tool)
