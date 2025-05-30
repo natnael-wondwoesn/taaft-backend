@@ -30,7 +30,7 @@ TIER_LIMITS = {
         "max_storage_mb": 100,
         "features": ["basic_search", "basic_chat", "advanced_search"],
     },
-    ServiceTier.PRO: {
+    ServiceTier.PREMIUM: {
         "max_requests_per_day": 10000,
         "max_tokens_per_request": 16000,
         "max_storage_mb": 1000,

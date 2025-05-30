@@ -17,6 +17,8 @@ class PublicFeaturedToolsMiddleware(BaseHTTPMiddleware):
         self.public_patterns = [
             # Public tools router
             re.compile(r"^/public/tools/.*$"),
+            # Public tool logs router
+            re.compile(r"^/public/tool-logs/.*$"),
             # Original featured endpoint
             re.compile(r"^/tools/featured/?(\?.*)?$"),
             # New sponsored endpoint

@@ -51,3 +51,6 @@ favorites = database.get_collection("favorites")
 
 # Shares collection
 shares = database.get_collection("shares")
+
+# Tool click logs collection
+tool_clicks = database.get_collection("tool_clicks")

@@ -37,7 +37,7 @@ algolia_index_name = os.getenv(
 # MongoDB connection parameters
 mongodb_url = os.getenv("MONGODB_URL")
 mongodb_db = os.getenv("MONGODB_DB", "taaft_db")
-mongodb_collection = "tools_job_impacts"
+mongodb_collection = "tools_Job_impacts"
 
 # Function to parse command-line arguments
 def parse_args():
@@ -130,7 +130,7 @@ def get_mongodb_job_impacts():
         logger.info(f"Available collections in database: {collection_names}")
 
         # Get collection instance - ensure it's using the right name
-        collection_name = "tools_job_impacts"
+        collection_name = "tools_Job_impacts"
         if collection_name not in collection_names:
             # Try alternative collection names that might contain job impacts
             possible_alternatives = [
@@ -370,21 +370,9 @@ def configure_algolia_index(client, index_name):
         {
             "searchableAttributes": [
                 "job_title",
-                "description",
-                "ai_impact_summary",
-                "detailed_analysis",
-                "job_category",
-                "tasks.name",
-                "tasks.tools.tool_name",
-                "keywords",
             ],
             "attributesForFaceting": [
                 "searchable(job_title)",
-                "searchable(job_category)",
-                "searchable(task_names)",
-                "searchable(tool_names)",
-                "numeric_impact_score",
-                "ai_impact_score",
             ],
             "attributesToRetrieve": [
                 "objectID",

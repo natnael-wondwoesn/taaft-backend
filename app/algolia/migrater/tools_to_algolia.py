@@ -212,19 +212,13 @@ def configure_algolia_index(client, index_name):
             "searchableAttributes": [
                 "name",
                 "description",
-                "keywords",
-                "carriers",
-                "industry",
                 "task",
+                "keywords",
             ],
             "attributesForFaceting": [
-                "category",
-                "keywords",
-                "unique_id",
-                "description",
                 "name",
-                "features_list",
-                "task",
+                "searchable(task)",
+                "searchable(keywords)",
             ],
             "attributesToRetrieve": [
                 "name",

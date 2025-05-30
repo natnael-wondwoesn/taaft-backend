@@ -128,12 +128,14 @@ async def list_job_impacts(
 
 @router.get("/by-title")
 async def get_job_impact_by_job_title(
+    request: Request,
     job_title: str = Query(..., description="Exact job title to look up")
 ):
     """
     Get a job impact by its exact job title.
     This endpoint performs an exact match on the job title.
     The response includes the job impact data and the total tool count if available.
+    If the tool count is not available, it will try to calculate it.
     """
     job = await get_job_impact_by_title(job_title)
     if not job:
@@ -142,11 +144,65 @@ async def get_job_impact_by_job_title(
     # Try to get the tool count from the database
     tool_count = await JobImpactToolCountInDB.get_by_job_name(database, job_title)
     
+    # If tool count not found, calculate it
+    if not tool_count:
+        total_tool_count = 0
+        # Get base URL from request
+        base_url = str(request.base_url).rstrip('/')
+        
+        # If using http, switch to https
+        if base_url.startswith('http:'):
+            base_url = 'https:' + base_url[5:]
+            
+        print(f"Tool count not found, calculating now. Using base URL: {base_url}")
+        
+        # Create httpx client for API calls with redirect following
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            for task in job.tasks:
+                try:
+                    # Use the existing /api/search/task-tools/{task_name} endpoint
+                    task_name = task.name
+                    # URL encode the task name to handle spaces and special characters
+                    encoded_task_name = urllib.parse.quote(task_name)
+                    
+                    request_url = f"{base_url}/api/search/task-tools/{encoded_task_name}"
+                    print(f"Directly requesting tools for task: {task_name} at URL: {request_url}")
+                    
+                    response = await client.get(request_url, timeout=10.0)
+                    
+                    if response.status_code == 200:
+                        # Extract the number of tools from the response
+                        task_tools_data = response.json()
+                        if "tools" in task_tools_data and isinstance(task_tools_data["tools"], list):
+                            tools_count = len(task_tools_data["tools"])
+                            total_tool_count += tools_count
+                            print(f"Found {tools_count} tools for task: {task_name}")
+                        elif isinstance(task_tools_data, list):
+                            tools_count = len(task_tools_data)
+                            total_tool_count += tools_count
+                            print(f"Found {tools_count} tools (list format) for task: {task_name}")
+                        elif "total" in task_tools_data:
+                            total_tool_count += task_tools_data["total"]
+                            print(f"Found {task_tools_data['total']} tools (total field) for task: {task_name}")
+                    else:
+                        print(f"Error response ({response.status_code}) for task {task_name}: {response.text}")
+                except Exception as e:
+                    print(f"Error fetching tools for task {task_name}: {str(e)}")
+                    continue
+            
+            # Save the fetched tool count
+            tool_count = JobImpactToolCountInDB(
+                job_impact_name=job_title,
+                total_tool_count=total_tool_count
+            )
+            await tool_count.save(database)
+            print(f"Saved new tool count: {total_tool_count} for job: {job_title}")
+    
     # Create response with both job impact data and tool count
     job_dict = job.model_dump()
     response_data = {
         "job_impact": job_dict,
-        "total_tool_count": tool_count.total_tool_count if tool_count else 0
+        "total_tool_count": tool_count.total_tool_count
     }
     
     return response_data
@@ -176,8 +232,14 @@ async def get_job_impact_details_with_tool_count(
     # Get base URL from request
     base_url = str(request.base_url).rstrip('/')
     
-    # Create httpx client for API calls
-    async with httpx.AsyncClient() as client:
+    # If using http, switch to https
+    if base_url.startswith('http:'):
+        base_url = 'https:' + base_url[5:]
+    
+    print(f"Using base URL: {base_url}")
+    
+    # Create httpx client for API calls with redirect following
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         for task in job.tasks:
             try:
                 # Use the existing /api/search/task-tools/{task_name} endpoint

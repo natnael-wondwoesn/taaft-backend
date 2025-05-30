@@ -4,29 +4,29 @@ from enum import Enum
 import datetime
 from bson import ObjectId
 from pydantic.json_schema import JsonSchemaMode
-from bson.objectid import ObjectId
+from pydantic.functional_validators import BeforeValidator
 
 
-class PydanticObjectId(str):
-    """Custom ObjectId field for Pydantic models."""
-
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(str(v)):
+def validate_object_id(v) -> str:
+    """Validate and convert string to ObjectId."""
+    if isinstance(v, str):
+        if not ObjectId.is_valid(v):
             raise ValueError("Invalid ObjectId")
-        return str(v)  # Return string representation instead of ObjectId
+        return v
+    if isinstance(v, ObjectId):
+        return str(v)
+    raise ValueError("Invalid ObjectId")
+
+
+PydanticObjectId = Annotated[str, BeforeValidator(validate_object_id)]
 
 
 class ServiceTier(str, Enum):
-    """Enum representing different service tiers."""
+    """User service tier levels."""
 
     FREE = "free"
     BASIC = "basic"
-    PRO = "pro"
+    PREMIUM = "premium"
     ENTERPRISE = "enterprise"
 
 
@@ -40,7 +40,7 @@ class TierLimits(BaseModel):
 
 
 class UserCreate(BaseModel):
-    """Model for user creation."""
+    """User registration model."""
 
     email: EmailStr
     password: str
@@ -57,17 +57,47 @@ class UserCreate(BaseModel):
         return v
 
 
+class UserLogin(BaseModel):
+    """User login model."""
+
+    email: EmailStr
+    password: str
+
+
+class Token(BaseModel):
+    """JWT token model."""
+
+    access_token: str
+    token_type: str = "bearer"
+    refresh_token: Optional[str] = None
+    expires_in: int = 3600  # seconds
+    user: Dict[str, Any] = {}
+
+
+class TokenData(BaseModel):
+    """JWT token payload data."""
+
+    email: Optional[EmailStr] = None
+    user_id: Optional[str] = None
+    exp: Optional[datetime.datetime] = None
+    iat: Optional[datetime.datetime] = None
+    sub: Optional[str] = None
+    iss: Optional[str] = None
+    aud: Optional[str] = None
+    jti: Optional[str] = None
+
+
 class UserUpdate(BaseModel):
-    """Model for user updates."""
+    """User update model."""
 
     full_name: Optional[str] = None
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
     username: Optional[str] = None
-    service_tier: Optional[ServiceTier] = None
-    subscribeToNewsletter: Optional[bool] = None
     bio: Optional[str] = None
     profile_image: Optional[str] = None
+    password: Optional[str] = None
+    service_tier: Optional[ServiceTier] = None
+    is_active: Optional[bool] = None
+    subscribeToNewsletter: Optional[bool] = None
 
 
 class OAuthProvider(str, Enum):
@@ -80,7 +110,7 @@ class OAuthProvider(str, Enum):
 class UserInDB(BaseModel):
     """Internal user model with hashed password."""
 
-    id: Optional[ObjectId] = Field(alias="_id", default=None)
+    id: Optional[PydanticObjectId] = Field(alias="_id", default=None)
     email: EmailStr
     hashed_password: str
     full_name: Optional[str] = None
@@ -104,7 +134,17 @@ class UserInDB(BaseModel):
         }
     )
 
-    model_config = {"arbitrary_types_allowed": True, "json_encoders": {ObjectId: str}}
+    model_config = {
+        "arbitrary_types_allowed": True, 
+        "json_schema_extra": {
+            "example": {
+                "_id": "507f1f77bcf86cd799439011",
+                "email": "user@example.com",
+                "full_name": "John Doe",
+                "service_tier": "free"
+            }
+        }
+    }
 
 
 class UserResponse(BaseModel):
@@ -124,17 +164,16 @@ class UserResponse(BaseModel):
     oauth_providers: Dict[str, Dict[str, Any]] = {}
     usage: dict
 
-    model_config = {"json_encoders": {ObjectId: lambda oid: str(oid)}}
-
-
-class TokenData(BaseModel):
-    """Model for JWT token data."""
-
-    sub: str  # User ID
-    exp: datetime.datetime
-    service_tier: ServiceTier = ServiceTier.FREE
-    is_verified: bool = False
-    saved_tools: List[str] = []  # List of saved tool IDs
-    purpose: Optional[str] = (
-        None  # Token purpose (e.g., "password_reset", "email_verification")
-    )
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "id": "507f1f77bcf86cd799439011",
+                "email": "user@example.com",
+                "full_name": "John Doe",
+                "service_tier": "free",
+                "is_active": True,
+                "is_verified": True,
+                "created_at": "2023-01-01T00:00:00"
+            }
+        }
+    }

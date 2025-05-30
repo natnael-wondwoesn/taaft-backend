@@ -1,1 +1,3 @@
 {"email": "natywonde@gmail.com", "first_name": "Nati", "last_name": null, "tags": ["full_account"]}
+{"email": "natywonde@gmail.com", "first_name": "Nat", "last_name": null, "tags": ["full_account"]}
+{"email": "natywonde@gmail.com", "first_name": "Nat", "last_name": null, "tags": ["full_account"]}

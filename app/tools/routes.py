@@ -1,6 +1,8 @@
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Request
 from typing import List, Optional
 from uuid import UUID
+import hashlib
+import json
 
 from ..auth.dependencies import get_current_active_user, get_admin_user
 from .models import ToolCreate, ToolUpdate, ToolResponse, PaginatedToolsResponse
@@ -21,8 +23,12 @@ from .tools_service import (
     get_keywords,
 )
 from ..logger import logger
+from ..services.redis_cache import redis_client, REDIS_CACHE_ENABLED
+from os import getenv
 
 router = APIRouter(prefix="/tools", tags=["tools"])
+
+SEARCH_CACHE_TTL = int(getenv("SEARCH_CACHE_TTL", "300"))
 
 
 @router.get("/", response_model=PaginatedToolsResponse)
@@ -129,6 +135,15 @@ async def search_tools_endpoint(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
+    # Redis cache key
+    cache_key = f"tools:search:{current_user.id}:{q}:{skip}:{limit}:{sort_by}:{sort_order}"
+    cache_key = hashlib.sha256(cache_key.encode()).hexdigest()
+    if REDIS_CACHE_ENABLED and redis_client:
+        cached = await redis_client.get(cache_key)
+        if cached:
+            logger.info(f"Cache hit for tools search: {cache_key}")
+            return json.loads(cached)
+
     result = await search_tools(
         search_term=q,
         skip=skip,
@@ -154,13 +169,19 @@ async def search_tools_endpoint(
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
 
-    return {
+    response = {
         "tools": tools,
         "total": total,
         "skip": skip,
         "limit": limit,
         "carriers": unique_carriers,
     }
+
+    if REDIS_CACHE_ENABLED and redis_client:
+        await redis_client.set(cache_key, json.dumps(response, default=str), ex=SEARCH_CACHE_TTL)
+        logger.info(f"Cache set for tools search: {cache_key}")
+
+    return response
 
 
 @router.get("/featured", response_model=PaginatedToolsResponse)
@@ -620,6 +641,15 @@ async def keyword_search_endpoint(
     """
     Search for tools by exact keywords match.
     """
+    # Redis cache key
+    cache_key = f"tools:keyword-search:{current_user.id}:{','.join(sorted(keywords))}:{skip}:{limit}"
+    cache_key = hashlib.sha256(cache_key.encode()).hexdigest()
+    if REDIS_CACHE_ENABLED and redis_client:
+        cached = await redis_client.get(cache_key)
+        if cached:
+            logger.info(f"Cache hit for tools keyword-search: {cache_key}")
+            return json.loads(cached)
+
     # Get tools that match any of the provided keywords
     tools = await keyword_search_tools(
         keywords=keywords, skip=skip, limit=limit, user_id=str(current_user.id)
@@ -645,13 +675,19 @@ async def keyword_search_endpoint(
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
 
-    return {
+    response = {
         "tools": tools or [],  # Ensure we always return a list
         "total": total if isinstance(total, int) else 0,  # Ensure total is an integer
         "skip": skip,
         "limit": limit,
         "carriers": unique_carriers,
     }
+
+    if REDIS_CACHE_ENABLED and redis_client:
+        await redis_client.set(cache_key, json.dumps(response, default=str), ex=SEARCH_CACHE_TTL)
+        logger.info(f"Cache set for tools keyword-search: {cache_key}")
+
+    return response
 
 
 @router.get("/unique/{unique_id}/with-favorite", response_model=ToolResponse)

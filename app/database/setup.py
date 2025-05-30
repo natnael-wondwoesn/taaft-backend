@@ -118,23 +118,17 @@ async def setup_database():
         await database.sites.create_index("created_at")
         await database.sites.create_index([("priority", 1), ("created_at", 1)])
         await database.sites.create_index([("name", "text"), ("description", "text")])
+        logger.info("Created indexes for sites collection")
 
-    # Initialize glossary terms collection
+    # Initialize glossary collection
     if "glossary_terms" not in collections:
         await database.create_collection("glossary_terms")
         logger.info("Created glossary_terms collection")
 
-        # Create indexes for glossary_terms collection
-        await database.glossary_terms.create_index("name", unique=True)
-        await database.glossary_terms.create_index("categories")
-        await database.glossary_terms.create_index("created_at")
-        await database.glossary_terms.create_index("updated_at")
-        await database.glossary_terms.create_index(
-            [("name", TEXT), ("definition", TEXT), ("related_terms", TEXT)]
-        )
-
-        # Add index for first letter search (for alphabetical grouping)
-        await database.glossary_terms.create_index([("first_letter", ASCENDING)])
+        # Create indexes for glossary collection
+        await database.glossary_terms.create_index("term", unique=True)
+        await database.glossary_terms.create_index([("term", "text"), ("definition", "text")])
+        logger.info("Created indexes for glossary_terms collection")
 
     # Initialize categories collection
     if "categories" not in collections:
@@ -189,23 +183,22 @@ async def setup_database():
         logger.info("Created keywords collection")
 
         # Create indexes for keywords collection
-        await database.keywords.create_index("id", unique=True)
-        await database.keywords.create_index("word", unique=True)
+        await database.keywords.create_index("keyword", unique=True)
+        await database.keywords.create_index("count")
         logger.info("Created indexes for keywords collection")
 
-    # Initialize login_codes collection
-    if "login_codes" not in collections:
-        await database.create_collection("login_codes")
-        logger.info("Created login_codes collection")
+    # Initialize blogs collection
+    if "blogs" not in collections:
+        await database.create_collection("blogs")
+        logger.info("Created blogs collection")
 
-        # Create indexes for login_codes collection
-        await database.login_codes.create_index("user_id", unique=True)
-        await database.login_codes.create_index("expires_at")
-        await database.login_codes.create_index("created_at")
-
-        # Create TTL index to automatically delete expired codes
-        await database.login_codes.create_index("expires_at", expireAfterSeconds=0)
-        logger.info("Created indexes for login_codes collection")
+        # Create indexes for blogs collection
+        await database.blogs.create_index("slug", unique=True)
+        await database.blogs.create_index("created_at")
+        await database.blogs.create_index("updated_at")
+        await database.blogs.create_index("published")
+        await database.blogs.create_index([("title", "text"), ("content", "text")])
+        logger.info("Created indexes for blogs collection")
 
     # Initialize favorites collection
     if "favorites" not in collections:
@@ -213,11 +206,9 @@ async def setup_database():
         logger.info("Created favorites collection")
 
         # Create indexes for favorites collection
-        await database.favorites.create_index(
-            [("user_id", ASCENDING), ("tool_unique_id", ASCENDING)], unique=True
-        )
         await database.favorites.create_index("user_id")
-        await database.favorites.create_index("tool_unique_id")
+        await database.favorites.create_index("tool_id")
+        await database.favorites.create_index([("user_id", 1), ("tool_id", 1)], unique=True)
         await database.favorites.create_index("created_at")
         logger.info("Created indexes for favorites collection")
 
@@ -232,6 +223,19 @@ async def setup_database():
         await database.shares.create_index("share_id", unique=True)
         await database.shares.create_index("created_at")
         logger.info("Created indexes for shares collection")
+        
+    # Initialize tool_clicks collection
+    if "tool_clicks" not in collections:
+        await database.create_collection("tool_clicks")
+        logger.info("Created tool_clicks collection")
+        
+        # Create indexes for tool_clicks collection
+        await database.tool_clicks.create_index("tool_id")
+        await database.tool_clicks.create_index("timestamp")
+        await database.tool_clicks.create_index("user_id")
+        # Compound index for efficient querying by date ranges
+        await database.tool_clicks.create_index([("timestamp", 1), ("tool_id", 1)])
+        logger.info("Created indexes for tool_clicks collection")
 
     logger.info("Database setup completed successfully")
 

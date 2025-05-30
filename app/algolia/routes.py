@@ -1050,83 +1050,47 @@ async def mock_direct_search_job_impacts(query: Optional[str] = Query(None, desc
         )
 
 
-@router.get("/job-impact-tools/mock-test", response_model=JobImpactToolsSearchResult)
-async def mock_search_job_impacts_with_tools():
+@router.get("/job-impact-tools/mock-test", response_model=TaskToolsSearchResult)
+async def mock_search_job_impacts_with_tools(
+    task_name: str,
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(10, ge=1, le=50, description="Results per page"),
+):
     """
-    Mock API endpoint for testing job impact tools search.
-    No authentication required.
-
+    Search for tools relevant to a specific task name.
+    
+    This endpoint allows finding tools that are relevant to a specific task,
+    which is useful when users want to find tools for specific tasks without
+    going through the job impacts.
+    
+    Args:
+        task_name: Name of the task to find tools for
+        page: Page number (0-based)
+        per_page: Number of tools per page
+        
     Returns:
-        A sample JobImpactToolsSearchResult with mock data
+        TaskToolsSearchResult containing the tools related to the task
     """
-    # Create a sample job impact record
-    sample_job_impact = AlgoliaJobImpactRecord(
-        objectID="sample123",
-        job_title="Software Engineer",
-        job_category="Technology",
-        industry="Software Development",
-        description="A software engineer designs and develops software applications",
-        ai_impact_score="High",
-        numeric_impact_score=85.5,
-        ai_impact_summary="AI will significantly impact this role through automation of routine coding tasks",
-        detailed_analysis="Software engineers will need to adapt to working with AI pair programmers",
-        tasks=[
-            {"name": "Code writing", "impact": "High"},
-            {"name": "Code review", "impact": "Medium"},
-            {"name": "Testing", "impact": "Medium"}
-        ],
-        task_names=["Code writing", "Code review", "Testing"],
-        tool_names=["GitHub Copilot", "ChatGPT", "Cursor IDE"],
-        keywords=["software", "programming", "coding", "development"],
-        created_at=datetime.datetime.utcnow(),
-        updated_at=datetime.datetime.utcnow(),
-        source_date=datetime.datetime.utcnow(),
-        detail_page_link="/job-impacts/software-engineer"
-    )
-    
-    # Create sample tools
-    sample_tools = [
-        AlgoliaToolRecord(
-            objectID="tool1",
-            name="GitHub Copilot",
-            description="AI pair programmer that helps write better code faster",
-            category="Development",
-            is_featured=True,
-            logo_url="https://example.com/copilot-logo.png"
-        ),
-        AlgoliaToolRecord(
-            objectID="tool2",
-            name="ChatGPT",
-            description="Advanced language model for coding assistance and more",
-            category="AI Assistants",
-            is_featured=True,
-            logo_url="https://example.com/chatgpt-logo.png"
-        ),
-        AlgoliaToolRecord(
-            objectID="tool3",
-            name="Cursor IDE",
-            description="AI-native code editor built for pair programming",
-            category="Development",
-            is_featured=False,
-            logo_url="https://example.com/cursor-logo.png"
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
         )
-    ]
     
-    # Create sample job impact with tools
-    sample_impact_with_tools = JobImpactWithTools(
-        job_impact=sample_job_impact,
-        tools_by_task={
-            "Code writing": [sample_tools[0], sample_tools[2]],
-            "Code review": [sample_tools[1]],
-            "Testing": [sample_tools[2]]
-        }
-    )
+    try:
+        # Perform the search
+        search_result = await algolia_search.search_tools_by_task(
+            task_name=task_name,
+            page=page,
+            per_page=per_page,
+        )
+        
+        return search_result
     
-    return JobImpactToolsSearchResult(
-        results=[sample_impact_with_tools],
-        total=1,
-        page=1,
-        per_page=10,
-        job_title="Software Engineer",
-        processing_time_ms=25
-    )
+    except Exception as e:
+        logger.error(f"Error searching tools by task: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching tools by task: {str(e)}",
+        )
