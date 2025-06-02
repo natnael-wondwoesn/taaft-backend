@@ -929,8 +929,7 @@ async def search_tools(
                 page=(skip // limit) if limit > 0 else 0,  # Convert skip/limit to page
                 per_page=(
                     limit if not count_only else 1
-                ),  # Only need one result if just counting
-                filters=additional_filters,  # Pass additional filters to Algolia
+                ),  # Only need one result if just countin
             )
 
             if count_only:
