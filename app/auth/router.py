@@ -331,7 +331,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                         <h2>Missing Verification Token</h2>
                         <p>The verification link is missing a required token.</p>
                         <p>Please use the complete verification link sent to your email or request a new verification email.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
                     </div>
                 </div>
             </body>
@@ -406,7 +406,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                         <h2>Invalid Verification Token</h2>
                         <p>The verification link is invalid or has expired.</p>
                         <p>Please request a new verification email from the login page.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
                     </div>
                 </div>
             </body>
@@ -479,7 +479,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                         <h2>Invalid Token Type</h2>
                         <p>The token in the verification link is not valid for email verification.</p>
                         <p>Please request a new verification email from the login page.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
                     </div>
                 </div>
             </body>
@@ -554,7 +554,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                         <h2>User Not Found</h2>
                         <p>We couldn't find an account associated with this verification link.</p>
                         <p>The account may have been deleted or the verification link is invalid.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
                     </div>
                 </div>
             </body>
@@ -579,58 +579,153 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Email Already Verified</title>
+                <title>Email Verified Successfully</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login">
+                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}">
                 <style>
                     body {{
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                         line-height: 1.6;
                         color: #333333;
-                        max-width: 600px;
-                        margin: 40px auto;
-                        padding: 20px;
-                        text-align: center;
+                        background-color: #f9f9f9;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
                     }}
                     .container {{
-                        border: 1px solid #E0E0E0;
-                        border-radius: 8px;
+                        width: 90%;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        background-color: #fff;
+                        border-radius: 12px;
                         overflow: hidden;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
                     }}
                     .header {{
-                        background-color: #4CAF50;
+                        background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
                         color: white;
-                        padding: 20px;
+                        padding: 30px;
                         text-align: center;
+                    }}
+                    .header h1 {{
+                        margin: 0;
+                        font-size: 28px;
+                        font-weight: 600;
                     }}
                     .content {{
                         background-color: #FFFFFF;
-                        padding: 30px;
+                        padding: 40px;
+                        text-align: center;
                     }}
                     .button {{
                         display: inline-block;
-                        background-color: #4A6FFF;
+                        background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
                         color: white;
                         text-decoration: none;
-                        padding: 12px 24px;
-                        border-radius: 4px;
+                        padding: 14px 28px;
+                        border-radius: 50px;
                         margin: 20px 0;
-                        font-weight: bold;
+                        font-weight: 600;
+                        font-size: 16px;
+                        box-shadow: 0 4px 15px rgba(74, 111, 255, 0.3);
+                        transition: all 0.3s ease;
+                    }}
+                    .button:hover {{
+                        transform: translateY(-3px);
+                        box-shadow: 0 6px 20px rgba(74, 111, 255, 0.4);
+                    }}
+                    .success-icon {{
+                        width: 100px;
+                        height: 100px;
+                        margin: 0 auto 20px;
+                        background-color: #4CAF50;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+                        animation: scaleIn 0.5s ease-out;
+                    }}
+                    .checkmark {{
+                        width: 50px;
+                        height: 50px;
+                    }}
+                    .checkmark path {{
+                        stroke: white;
+                        stroke-width: 4;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        stroke-dasharray: 100;
+                        stroke-dashoffset: 100;
+                        animation: dash 1s ease-in-out forwards;
+                    }}
+                    .message {{
+                        opacity: 0;
+                        animation: fadeIn 0.5s ease-out 0.5s forwards;
+                    }}
+                    .redirect-info {{
+                        margin-top: 30px;
+                        padding: 15px;
+                        background-color: #f8f9fa;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        color: #6c757d;
+                    }}
+                    .brand {{
+                        display: block;
+                        margin: 0 auto 30px;
+                        font-size: 30px;
+                        font-weight: 700;
+                        color: #4A6FFF;
+                        letter-spacing: 1px;
+                    }}
+                    @keyframes dash {{
+                        to {{
+                            stroke-dashoffset: 0;
+                        }}
+                    }}
+                    @keyframes fadeIn {{
+                        to {{
+                            opacity: 1;
+                        }}
+                    }}
+                    @keyframes scaleIn {{
+                        0% {{
+                            transform: scale(0);
+                        }}
+                        80% {{
+                            transform: scale(1.1);
+                        }}
+                        100% {{
+                            transform: scale(1);
+                        }}
                     }}
                 </style>
             </head>
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Email Already Verified</h1>
+                        <h1>Email Verified Successfully</h1>
                     </div>
                     <div class="content">
-                        <h2>Your email has already been verified!</h2>
-                        <p>You can now log in to your account.</p>
-                        <p>You will be redirected to the login page in 5 seconds...</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                        <span class="brand">TAAFT</span>
+                        <div class="success-icon">
+                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <path fill="none" d="M14,27 L22,35 L38,15"/>
+                            </svg>
+                        </div>
+                        <div class="message">
+                            <h2>Thank you for verifying your email!</h2>
+                            <p>Your email has been successfully verified. You can now log in to your account and access all features.</p>
+                            <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
+                            <div class="redirect-info">
+                                <p>You will be automatically redirected to the login page in 5 seconds...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </body>
@@ -641,8 +736,8 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
         
         # For API requests, return JSON
         return {
-            "message": "Email already verified. You can now log in.", 
-            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
+            "message": "Email verified successfully. You can now log in.",
+            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
         }
 
     # Check if token is already used
@@ -658,7 +753,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                 <title>Verification Link Used</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login">
+                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}">
                 <style>
                     body {{
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -818,86 +913,126 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
             <title>Email Verified Successfully</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login">
+            <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}">
             <style>
                 body {{
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                     line-height: 1.6;
                     color: #333333;
-                    max-width: 600px;
-                    margin: 40px auto;
-                    padding: 20px;
-                    text-align: center;
+                    background-color: #f9f9f9;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
                 }}
                 .container {{
-                    border: 1px solid #E0E0E0;
-                    border-radius: 8px;
+                    width: 90%;
+                    max-width: 600px;
+                    margin: 40px auto;
+                    background-color: #fff;
+                    border-radius: 12px;
                     overflow: hidden;
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
                 }}
                 .header {{
-                    background-color: #4CAF50;
+                    background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
                     color: white;
-                    padding: 20px;
+                    padding: 30px;
                     text-align: center;
+                }}
+                .header h1 {{
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: 600;
                 }}
                 .content {{
                     background-color: #FFFFFF;
-                    padding: 30px;
+                    padding: 40px;
+                    text-align: center;
                 }}
                 .button {{
                     display: inline-block;
-                    background-color: #4A6FFF;
+                    background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
                     color: white;
                     text-decoration: none;
-                    padding: 12px 24px;
-                    border-radius: 4px;
+                    padding: 14px 28px;
+                    border-radius: 50px;
                     margin: 20px 0;
-                    font-weight: bold;
+                    font-weight: 600;
+                    font-size: 16px;
+                    box-shadow: 0 4px 15px rgba(74, 111, 255, 0.3);
+                    transition: all 0.3s ease;
+                }}
+                .button:hover {{
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 20px rgba(74, 111, 255, 0.4);
+                }}
+                .success-icon {{
+                    width: 100px;
+                    height: 100px;
+                    margin: 0 auto 20px;
+                    background-color: #4CAF50;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+                    animation: scaleIn 0.5s ease-out;
                 }}
                 .checkmark {{
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 50%;
+                    width: 50px;
+                    height: 50px;
+                }}
+                .checkmark path {{
+                    stroke: white;
+                    stroke-width: 4;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    stroke-dasharray: 100;
+                    stroke-dashoffset: 100;
+                    animation: dash 1s ease-in-out forwards;
+                }}
+                .message {{
+                    opacity: 0;
+                    animation: fadeIn 0.5s ease-out 0.5s forwards;
+                }}
+                .redirect-info {{
+                    margin-top: 30px;
+                    padding: 15px;
+                    background-color: #f8f9fa;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    color: #6c757d;
+                }}
+                .brand {{
                     display: block;
-                    stroke-width: 2;
-                    stroke: #4CAF50;
-                    stroke-miterlimit: 10;
-                    margin: 10% auto;
-                    box-shadow: inset 0px 0px 0px #4CAF50;
-                    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+                    margin: 0 auto 30px;
+                    font-size: 30px;
+                    font-weight: 700;
+                    color: #4A6FFF;
+                    letter-spacing: 1px;
                 }}
-                .checkmark__circle {{
-                    stroke-dasharray: 166;
-                    stroke-dashoffset: 166;
-                    stroke-width: 2;
-                    stroke-miterlimit: 10;
-                    stroke: #4CAF50;
-                    fill: none;
-                    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-                }}
-                .checkmark__check {{
-                    transform-origin: 50% 50%;
-                    stroke-dasharray: 48;
-                    stroke-dashoffset: 48;
-                    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-                }}
-                @keyframes stroke {{
-                    100% {{
+                @keyframes dash {{
+                    to {{
                         stroke-dashoffset: 0;
                     }}
                 }}
-                @keyframes scale {{
-                    0%, 100% {{
-                        transform: none;
-                    }}
-                    50% {{
-                        transform: scale3d(1.1, 1.1, 1);
+                @keyframes fadeIn {{
+                    to {{
+                        opacity: 1;
                     }}
                 }}
-                @keyframes fill {{
+                @keyframes scaleIn {{
+                    0% {{
+                        transform: scale(0);
+                    }}
+                    80% {{
+                        transform: scale(1.1);
+                    }}
                     100% {{
-                        box-shadow: inset 0px 0px 0px 30px #4CAF50;
+                        transform: scale(1);
                     }}
                 }}
             </style>
@@ -908,14 +1043,20 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                     <h1>Email Verified Successfully</h1>
                 </div>
                 <div class="content">
-                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                    </svg>
-                    <h2>Thank you for verifying your email!</h2>
-                    <p>Your email has been successfully verified. You can now log in to your account and access all features.</p>
-                    <p>You will be redirected to the login page in 5 seconds...</p>
-                    <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    <span class="brand">TAAFT</span>
+                    <div class="success-icon">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <path fill="none" d="M14,27 L22,35 L38,15"/>
+                        </svg>
+                    </div>
+                    <div class="message">
+                        <h2>Thank you for verifying your email!</h2>
+                        <p>Your email has been successfully verified. You can now log in to your account and access all features.</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
+                        <div class="redirect-info">
+                            <p>You will be automatically redirected to the login page in 5 seconds...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </body>
@@ -927,7 +1068,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     # For API requests, return JSON
     return {
         "message": "Email verified successfully. You can now log in.",
-        "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
+        "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
     }
 
 
