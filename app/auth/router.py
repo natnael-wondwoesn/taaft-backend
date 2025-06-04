@@ -274,6 +274,73 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     
     if not token:
         logger.error("[/verify-email] No token provided in request")
+        
+        # For GET requests (browser), return HTML error page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verification Failed</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #FF5252;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Verification Failed</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Missing Verification Token</h2>
+                        <p>The verification link is missing a required token.</p>
+                        <p>Please use the complete verification link sent to your email or request a new verification email.</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content, status_code=400)
+        
+        # For API requests, return JSON
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Verification token is required"
         )
@@ -282,12 +349,146 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     token_data = decode_token(token)
     if token_data is None or not hasattr(token_data, 'sub') or not hasattr(token_data, 'purpose'):
         logger.error(f"[/verify-email] Invalid or malformed token received. Token (first 20 chars): {token[:20]}...")
+        
+        # For GET requests (browser), return HTML error page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verification Failed</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #FF5252;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Verification Failed</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Invalid Verification Token</h2>
+                        <p>The verification link is invalid or has expired.</p>
+                        <p>Please request a new verification email from the login page.</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content, status_code=400)
+            
+        # For API requests, return JSON
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid verification token"
         )
     
     if token_data.purpose != "email_verification":
         logger.error(f"[/verify-email] Invalid token purpose: '{token_data.purpose}' for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        
+        # For GET requests (browser), return HTML error page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verification Failed</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #FF5252;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Verification Failed</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Invalid Token Type</h2>
+                        <p>The token in the verification link is not valid for email verification.</p>
+                        <p>Please request a new verification email from the login page.</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content, status_code=400)
+            
+        # For API requests, return JSON
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid token type for email verification"
         )
@@ -296,6 +497,73 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     user = await database.users.find_one({"_id": ObjectId(token_data.sub)})
     if not user:
         logger.error(f"[/verify-email] User not found for verification. User ID from token: {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        
+        # For GET requests (browser), return HTML error page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Verification Failed</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #FF5252;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Verification Failed</h1>
+                    </div>
+                    <div class="content">
+                        <h2>User Not Found</h2>
+                        <p>We couldn't find an account associated with this verification link.</p>
+                        <p>The account may have been deleted or the verification link is invalid.</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content, status_code=400)
+            
+        # For API requests, return JSON
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User not found or verification failed",
@@ -304,7 +572,74 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     # Check if user is already verified
     if user.get("is_verified", False):
         logger.info(f"[/verify-email] Email already verified for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
-        # Return success with login redirect
+        
+        # For GET requests (browser), return HTML success page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Email Already Verified</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #4CAF50;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Email Already Verified</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Your email has already been verified!</h2>
+                        <p>You can now log in to your account.</p>
+                        <p>You will be redirected to the login page in 5 seconds...</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content)
+        
+        # For API requests, return JSON
         return {
             "message": "Email already verified. You can now log in.", 
             "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
@@ -313,6 +648,74 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     # Check if token is already used
     if user.get("verification_token_used", False):
         logger.info(f"[/verify-email] Verification token already used for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        
+        # For GET requests (browser), return HTML already used page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Verification Link Used</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #FF9800;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Verification Link Already Used</h1>
+                    </div>
+                    <div class="content">
+                        <h2>This verification link has already been used</h2>
+                        <p>Please log in to your account or request a new verification link if needed.</p>
+                        <p>You will be redirected to the login page in 5 seconds...</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content)
+        
+        # For API requests, return JSON
         return {
             "message": "This verification link has already been used. Please login or request a new verification link if needed.",
             "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
@@ -332,17 +735,199 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
 
     if result.modified_count == 0:
         logger.warning(f"[/verify-email] User {token_data.sub} found but not modified. Token (first 20 chars): {token[:20]}...")
-        # This might indicate an issue - we should have been able to update
+        
+        # For GET requests (browser), return HTML error page
+        if request and request.method == "GET":
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Verification Failed</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        line-height: 1.6;
+                        color: #333333;
+                        max-width: 600px;
+                        margin: 40px auto;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .container {{
+                        border: 1px solid #E0E0E0;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    }}
+                    .header {{
+                        background-color: #FF5252;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                    }}
+                    .content {{
+                        background-color: #FFFFFF;
+                        padding: 30px;
+                    }}
+                    .button {{
+                        display: inline-block;
+                        background-color: #4A6FFF;
+                        color: white;
+                        text-decoration: none;
+                        padding: 12px 24px;
+                        border-radius: 4px;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Verification Failed</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Unable to Verify Email</h2>
+                        <p>We encountered an issue while trying to verify your email.</p>
+                        <p>Please try again or request a new verification link from the login page.</p>
+                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content, status_code=400)
+        
+        # For API requests, return JSON
         return {
             "message": "Email verification failed. Please try again or request a new verification link.",
-            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
         }
     
     logger.info(f"[/verify-email] Email successfully verified for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
-    # Return success with login redirect
+    
+    # For GET requests (browser), return HTML success page
+    if request and request.method == "GET":
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Email Verified Successfully</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login">
+            <style>
+                body {{
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333333;
+                    max-width: 600px;
+                    margin: 40px auto;
+                    padding: 20px;
+                    text-align: center;
+                }}
+                .container {{
+                    border: 1px solid #E0E0E0;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                }}
+                .header {{
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                }}
+                .content {{
+                    background-color: #FFFFFF;
+                    padding: 30px;
+                }}
+                .button {{
+                    display: inline-block;
+                    background-color: #4A6FFF;
+                    color: white;
+                    text-decoration: none;
+                    padding: 12px 24px;
+                    border-radius: 4px;
+                    margin: 20px 0;
+                    font-weight: bold;
+                }}
+                .checkmark {{
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    display: block;
+                    stroke-width: 2;
+                    stroke: #4CAF50;
+                    stroke-miterlimit: 10;
+                    margin: 10% auto;
+                    box-shadow: inset 0px 0px 0px #4CAF50;
+                    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+                }}
+                .checkmark__circle {{
+                    stroke-dasharray: 166;
+                    stroke-dashoffset: 166;
+                    stroke-width: 2;
+                    stroke-miterlimit: 10;
+                    stroke: #4CAF50;
+                    fill: none;
+                    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+                }}
+                .checkmark__check {{
+                    transform-origin: 50% 50%;
+                    stroke-dasharray: 48;
+                    stroke-dashoffset: 48;
+                    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+                }}
+                @keyframes stroke {{
+                    100% {{
+                        stroke-dashoffset: 0;
+                    }}
+                }}
+                @keyframes scale {{
+                    0%, 100% {{
+                        transform: none;
+                    }}
+                    50% {{
+                        transform: scale3d(1.1, 1.1, 1);
+                    }}
+                }}
+                @keyframes fill {{
+                    100% {{
+                        box-shadow: inset 0px 0px 0px 30px #4CAF50;
+                    }}
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Email Verified Successfully</h1>
+                </div>
+                <div class="content">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                    <h2>Thank you for verifying your email!</h2>
+                    <p>Your email has been successfully verified. You can now log in to your account and access all features.</p>
+                    <p>You will be redirected to the login page in 5 seconds...</p>
+                    <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}/login" class="button">Go to Login Page</a>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        from fastapi.responses import HTMLResponse
+        return HTMLResponse(content=html_content)
+    
+    # For API requests, return JSON
     return {
         "message": "Email verified successfully. You can now log in.",
-        "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+        "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
     }
 
 
