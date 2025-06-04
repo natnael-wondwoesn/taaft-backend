@@ -5,6 +5,7 @@ from typing import Optional, Dict, Any
 import os
 from dotenv import load_dotenv
 from ..models.user import TokenData, ServiceTier
+import logging
 
 load_dotenv()
 
@@ -21,6 +22,7 @@ REFRESH_TOKEN_EXPIRE_DAYS = int(
     os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "14")
 )  # 7 days by default
 
+logger = logging.getLogger(__name__)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against a hash."""
@@ -83,5 +85,7 @@ def decode_token(token: str) -> Optional[TokenData]:
             purpose=purpose,
         )
         return token_data
-    except JWTError:
+    except JWTError as e:
+        # Log the specific JWTError
+        logger.error(f"[decode_token] JWTError encountered: {type(e).__name__} - {str(e)}")
         return None

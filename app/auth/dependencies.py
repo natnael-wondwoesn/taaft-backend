@@ -322,6 +322,8 @@ class AdminControlMiddleware:
         self.unrestricted_prefixes.append("/share")
         # Search endpoints should be accessible to all users
         self.unrestricted_prefixes.append("/api/search")
+        # Tool logs endpoints should be accessible to all authenticated users
+        self.unrestricted_prefixes.append("/api/tool-logs")
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":

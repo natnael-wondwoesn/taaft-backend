@@ -24,23 +24,31 @@ class ToolClickLogService:
         Returns:
             The created log entry
         """
-        # Create a new log document
-        log_dict = log_data.model_dump()
-        
-        # Add user_id if provided
-        if user_id:
-            log_dict["user_id"] = user_id
+        try:
+            # Create a new log document
+            log_dict = log_data.model_dump()
             
-        # Insert into database
-        result = await database.tool_clicks.insert_one(log_dict)
-        
-        # Return the created log
-        created_log = ToolClickLog(
-            _id=result.inserted_id,
-            **log_dict
-        )
-        
-        return created_log
+            # Add user_id if provided
+            if user_id:
+                log_dict["user_id"] = user_id
+                
+            # Insert into database
+            result = await database.tool_clicks.insert_one(log_dict)
+            
+            # Create a new dict without _id to avoid duplicate _id error
+            response_dict = {k: v for k, v in log_dict.items() if k != "_id"}
+            
+            # Convert ObjectId to string for the response
+            inserted_id_str = str(result.inserted_id)
+            
+            # Return the created log
+            return ToolClickLog(
+                _id=inserted_id_str,
+                **response_dict
+            )
+        except Exception as e:
+            logger.error(f"Error in log_tool_click: {str(e)}")
+            raise e
     
     @classmethod
     async def get_daily_summary(cls, date: datetime) -> ToolClickSummary:
@@ -69,7 +77,7 @@ class ToolClickLogService:
             },
             {
                 "$group": {
-                    "_id": "$tool_id",
+                    "_id": "$tool_unique_id",
                     "count": {"$sum": 1}
                 }
             }

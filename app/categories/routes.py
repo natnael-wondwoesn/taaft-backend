@@ -100,7 +100,7 @@ async def get_tools_by_category_slug(
     search: Optional[str] = Query(None, description="Search term for filtering tools"),
     skip: int = Query(0, ge=0, description="Number of items to skip"),
     limit: int = Query(
-        20, ge=1, le=100, description="Maximum number of items to return"
+        20, ge=1, le=2000, description="Maximum number of items to return"
     ),
     sort_by: Optional[str] = Query(
         "created_at",

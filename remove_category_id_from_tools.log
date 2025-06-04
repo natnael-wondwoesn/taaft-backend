@@ -1,0 +1,4 @@
+2025-06-03 06:22:59,377 - remove_category_id_remover - INFO - Starting removal of 'category_id' from tools at 2025-06-03 06:22:59.377090
+2025-06-03 06:23:01,074 - remove_category_id_remover - INFO - Found 986 tools with 'category_id' field
+2025-06-03 06:23:01,476 - remove_category_id_remover - INFO - Removed 'category_id' field from 986 tools
+2025-06-03 06:23:01,476 - remove_category_id_remover - INFO - Completed in 2.10 seconds

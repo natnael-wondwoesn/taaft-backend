@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Optional
 from motor.motor_asyncio import AsyncIOMotorCollection
 import os
 import json
+import re
 
 from .models import Category, CategoryResponse
 from ..logger import logger
@@ -135,12 +136,13 @@ class CategoriesService:
                 logger.info(
                     f"Found {len(categories_list)} categories in categories collection"
                 )
+                # Reverted to use stored count
                 return [
                     CategoryResponse(
                         id=cat["id"],
                         name=cat["name"],
                         slug=cat["slug"],
-                        count=cat.get("count", 0),
+                        count=cat.get("count", 0), # Use stored count
                         svg=await self._get_svg_path(cat["id"], cat.get("svg")),
                     )
                     for cat in categories_list
@@ -148,47 +150,54 @@ class CategoriesService:
 
             # Otherwise, fall back to extracting from tools collection
             logger.warning(
-                "No categories found in categories collection, checking tools collection"
+                "No categories found in categories collection, checking tools collection. "
+                "Attempting to derive categories from 'tools.category' string field."
             )
-            # Get tools collection
             tools_collection = await self._get_tools_collection()
+            
+            # Pipeline to get distinct, non-empty, string category names from tools.category
+            pipeline = [
+                {"$match": {"category": {"$exists": True, "$type": "string", "$ne": ""}}},
+                {"$group": {"_id": "$category"}}, # Group by the category string
+                {"$project": {"name": "$_id", "_id": 0}} # Project to 'name'
+            ]
+            # The result of distinct_category_name_docs will be like [{'name': 'Category A'}, {'name': 'Category B'}]
+            distinct_category_name_docs = await tools_collection.aggregate(pipeline).to_list(None)
+            
+            categories = [] # Initialize list for categories derived from tools or defaults
 
-            # Get distinct categories from database
-            db_categories = await tools_collection.distinct("categories")
+            if distinct_category_name_docs:
+                logger.info(f"Found {len(distinct_category_name_docs)} distinct category names in tools collection.")
+                for doc in distinct_category_name_docs:
+                    cat_name_str = doc["name"]
+                    
+                    # Count tools for this specific category string
+                    count = await tools_collection.count_documents({"category": cat_name_str})
 
-            # Process database categories
-            categories = []
+                    # Generate id and slug from name string (consistent with update_or_create_category)
+                    generated_slug = cat_name_str.lower().replace(" ", "-")
+                    # Basic sanitization for slug to be used as ID:
+                    generated_id = re.sub(r'[^\w-]', '', generated_slug) # Keep alphanumeric and hyphens
+                    generated_id = re.sub(r'-+', '-', generated_id).strip('-')
+                    if not generated_id : generated_id = "unknown-" + str(len(categories)) # very basic fallback for empty id
 
-            for category in db_categories:
-                if (
-                    isinstance(category, dict)
-                    and "name" in category
-                    and "id" in category
-                ):
-                    # Get count of tools in this category using aggregation
-                    count = await tools_collection.count_documents(
-                        {"categories.id": category["id"]}
-                    )
-
-                    # Create category response
-                    cat_name = category["name"]
                     categories.append(
                         CategoryResponse(
-                            id=category["id"],
-                            name=cat_name,
-                            slug=category.get(
-                                "slug", cat_name.lower().replace(" ", "-")
-                            ),
+                            id=generated_id, 
+                            name=cat_name_str,
+                            slug=generated_id, # Slug is same as generated ID
                             count=count,
-                            svg=await self._get_svg_path(
-                                category["id"], category.get("svg")
-                            ),
+                            # No direct SVG content from tool.category string, _get_svg_path will handle
+                            svg=await self._get_svg_path(generated_id, None), 
                         )
                     )
+            else:
+                logger.info("No valid category strings found in tools collection to derive categories from.")
+                # categories list remains empty, will proceed to default categories if this path is taken.
 
-            # If no categories were found in either collection, only then use the defaults
-            if not categories:
-                logger.warning("No categories found in database, using defaults")
+            # If no categories were found in either dedicated collection or derived from tools, use defaults
+            if not categories: # This checks if the list is still empty after attempting to derive from tools
+                logger.warning("No categories found in database (neither dedicated collection nor derived from tools), using defaults")
                 for category in self.default_categories:
                     categories.append(
                         CategoryResponse(
@@ -248,11 +257,12 @@ class CategoriesService:
             category = await categories_collection.find_one({"id": category_id})
 
             if category:
+                # Reverted to use stored count
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=category.get("count", 0),
+                    count=category.get("count", 0), # Use stored count
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
@@ -287,11 +297,12 @@ class CategoriesService:
             category = await categories_collection.find_one({"slug": slug})
 
             if category:
+                # Reverted to use stored count
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=category.get("count", 0),
+                    count=category.get("count", 0), # Use stored count
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 

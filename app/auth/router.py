@@ -17,12 +17,18 @@ from .dependencies import get_current_user, oauth2_scheme
 from typing import Dict, Any, Optional, List
 import datetime
 from bson import ObjectId
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 from ..logger import logger
 import os
 import random
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+# Pydantic model for changing password
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str
 
 
 # app/auth/router.py (update existing /register endpoint)
@@ -75,13 +81,19 @@ async def register_user(user_data: UserCreate, request: Request = None):
     logger.info(f"New user registered: {user_data.email}")
 
     verification_token = create_access_token(
-        data={"sub": str(result.inserted_id), "purpose": "email_verification"}
+        data={"sub": str(result.inserted_id), "purpose": "email_verification"},
+        expires_delta=datetime.timedelta(hours=24)
     )
-    base_url = (
-        str(request.base_url)
-        if request
-        else os.getenv("BASE_URL", "https://taaft.zapto.org")
-    )
+    
+    # Get the backend URL for verification
+    base_url = os.getenv("BACKEND_URL", "https://taaft.zapto.org")
+    if not base_url.startswith("http"):
+        base_url = "https://" + base_url
+    
+    # Remove trailing slash if present
+    if base_url.endswith("/"):
+        base_url = base_url.rstrip("/")
+    
     logger.info(f"Base URL for verification email: {base_url}")
     logger.info(f"Attempting to send verification email to {user_data.email}")
 
@@ -252,30 +264,86 @@ async def get_current_user_info(current_user: UserInDB = Depends(get_current_use
     )
 
 
-@router.post("/verify-email", response_model=Dict[str, str])
-async def verify_email(token: str = Body(...)):
+@router.api_route("/verify-email", methods=["GET", "POST"], response_model=Dict[str, str])
+async def verify_email(token: Optional[str] = None, request: Request = None):
     """Verify user email with verification token."""
+    
+    # Get token from query params (GET) or request body (POST)
+    if not token and request:
+        token = request.query_params.get("token")
+    
+    if not token:
+        logger.error("[/verify-email] No token provided in request")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Verification token is required"
+        )
 
     # Decode and validate token
     token_data = decode_token(token)
-    if token_data is None:
+    if token_data is None or not hasattr(token_data, 'sub') or not hasattr(token_data, 'purpose'):
+        logger.error(f"[/verify-email] Invalid or malformed token received. Token (first 20 chars): {token[:20]}...")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid verification token"
         )
+    
+    if token_data.purpose != "email_verification":
+        logger.error(f"[/verify-email] Invalid token purpose: '{token_data.purpose}' for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid token type for email verification"
+        )
 
-    # Update user verification status
+    # Get user from database
+    user = await database.users.find_one({"_id": ObjectId(token_data.sub)})
+    if not user:
+        logger.error(f"[/verify-email] User not found for verification. User ID from token: {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User not found or verification failed",
+        )
+
+    # Check if user is already verified
+    if user.get("is_verified", False):
+        logger.info(f"[/verify-email] Email already verified for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        # Return success with login redirect
+        return {
+            "message": "Email already verified. You can now log in.", 
+            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
+        }
+
+    # Check if token is already used
+    if user.get("verification_token_used", False):
+        logger.info(f"[/verify-email] Verification token already used for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+        return {
+            "message": "This verification link has already been used. Please login or request a new verification link if needed.",
+            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app") + "/login"
+        }
+
+    # Update user verification status and mark token as used
     result = await database.users.update_one(
         {"_id": ObjectId(token_data.sub)},
-        {"$set": {"is_verified": True, "updated_at": datetime.datetime.utcnow()}},
+        {
+            "$set": {
+                "is_verified": True, 
+                "verification_token_used": True,
+                "updated_at": datetime.datetime.utcnow()
+            }
+        },
     )
 
     if result.modified_count == 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User not found or already verified",
-        )
-
-    return {"message": "Email verified successfully"}
+        logger.warning(f"[/verify-email] User {token_data.sub} found but not modified. Token (first 20 chars): {token[:20]}...")
+        # This might indicate an issue - we should have been able to update
+        return {
+            "message": "Email verification failed. Please try again or request a new verification link.",
+            "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+        }
+    
+    logger.info(f"[/verify-email] Email successfully verified for user {token_data.sub}. Token (first 20 chars): {token[:20]}...")
+    # Return success with login redirect
+    return {
+        "message": "Email verified successfully. You can now log in.",
+        "redirect": os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+    }
 
 
 @router.post("/request-password-reset", response_model=Dict[str, str])
@@ -299,7 +367,7 @@ async def request_password_reset(
     base_url = (
         str(request.base_url)
         if request
-        else os.getenv("BASE_URL", "http://localhost:8000")
+        else os.getenv("BASE_URL", "https://taaft.zapto.org/")
     )
 
     # Import here to avoid circular imports
@@ -555,23 +623,45 @@ async def resend_verification_email(
     # Find user
     user = await database.users.find_one({"email": email})
 
-    # If user doesn't exist or is already verified, return generic message
-    if not user or user.get("is_verified", False):
+    # If user doesn't exist, return a generic message for security
+    if not user:
+        logger.info(f"[/resend-verification] Request for email '{email}' - User not found.")
         return {
-            "message": "If the email exists and is not verified, a verification link will be sent"
+            "message": "If the email exists and is not verified, a verification link will be sent",
+            "status": "success"
         }
 
-    # Create a verification token
+    # If user is already verified, inform the client
+    if user.get("is_verified", False):
+        logger.info(f"[/resend-verification] Email '{email}' is already verified (User ID: {user['_id']}).")
+        return {
+            "message": "This email is already verified. You can log in with your credentials.",
+            "status": "already_verified"
+        }
+
+    # User exists and is not verified, proceed to resend
+    logger.info(f"[/resend-verification] Attempting to resend verification for '{email}' (User ID: {user['_id']}).")
+    
+    # Reset the verification token usage flag if it exists
+    await database.users.update_one(
+        {"_id": user["_id"]},
+        {"$set": {"verification_token_used": False}}
+    )
+    
+    # Create a new verification token
     verification_token = create_access_token(
-        data={"sub": str(user["_id"]), "purpose": "email_verification"}
+        data={"sub": str(user["_id"]), "purpose": "email_verification"},
+        expires_delta=datetime.timedelta(hours=24)
     )
 
-    # Get base URL from request or settings
-    base_url = (
-        str(request.base_url)
-        if request
-        else os.getenv("BASE_URL", "http://localhost:8000")
-    )
+    # Get base URL for the backend
+    base_url = os.getenv("BACKEND_URL", "https://taaft.zapto.org")
+    if not base_url.startswith("http"):
+        base_url = "https://" + base_url
+    
+    # Remove trailing slash if present
+    if base_url.endswith("/"):
+        base_url = base_url.rstrip("/")
 
     # Import email service
     from ..services.email_service import send_verification_email
@@ -580,10 +670,19 @@ async def resend_verification_email(
     email_sent = send_verification_email(email, verification_token, base_url)
 
     if not email_sent:
-        logger.warning(f"Failed to send verification email to {email}")
+        logger.error(
+            f"[/resend-verification] Failed to send verification email to {email} for user {user['_id']}. Token (first 20 chars for ref): {verification_token[:20]}..."
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send verification email. Please try again later.",
+        )
+    else:
+        logger.info(f"[/resend-verification] Verification email successfully resent to {email} for user {user['_id']}.")
 
     return {
-        "message": "If the email exists and is not verified, a verification link will be sent"
+        "message": "Verification email sent successfully. Please check your inbox.",
+        "status": "success"
     }
 
 
@@ -640,12 +739,64 @@ async def resend_verification_email(
 #     }
 
 
+@router.post("/change-password", response_model=Dict[str, str])
+async def change_password(
+    password_data: ChangePasswordRequest,
+    current_user: UserInDB = Depends(get_current_user),
+):
+    """Change the current user's password."""
+    logger.info(f"[change_password] User {current_user.email} ({current_user.id}) is attempting to change their password.")
+    if password_data.old_password == password_data.new_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New password cannot be the same as the old password",
+        )
+
+    # Verify old password
+    if not verify_password(password_data.old_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect old password",
+        )
+
+    # Hash the new password
+    hashed_new_password = get_password_hash(password_data.new_password)
+
+    # Update user password in database
+    result = await database.users.update_one(
+        {"_id": ObjectId(current_user.id)},
+        {
+            "$set": {
+                "hashed_password": hashed_new_password,
+                "updated_at": datetime.datetime.utcnow(),
+            }
+        },
+    )
+
+    if result.modified_count == 0:
+        logger.error(
+            f"[change_password] Failed to update password for user {current_user.email} ({current_user.id})."
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update password. Please try again later.",
+        )
+
+    logger.info(
+        f"[change_password] User {current_user.email} ({current_user.id}) changed their password successfully."
+    )
+
+    return {"message": "Password changed successfully"}
+
+
 @router.post("/update-profile", response_model=UserResponse)
 async def update_profile(
     profile_data: UserUpdate,
     current_user: UserInDB = Depends(get_current_user),
 ):
     """Update the user's profile information."""
+
+    logger.info(f"[update_profile] User: {current_user.email} ({current_user.id}) is attempting to update profile with payload: {profile_data.dict()}")
 
     # Initialize update data
     update_data = {"updated_at": datetime.datetime.utcnow()}
@@ -656,6 +807,7 @@ async def update_profile(
             {"username": profile_data.username}
         )
         if existing_username:
+            logger.warning(f"[update_profile] Username '{profile_data.username}' already taken for user {current_user.email} ({current_user.id})")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Username already taken",
@@ -670,23 +822,35 @@ async def update_profile(
     if profile_data.profile_image is not None:
         update_data["profile_image"] = profile_data.profile_image
 
+    logger.info(f"[update_profile] Computed update_data for user {current_user.email} ({current_user.id}): {update_data}")
+
     # Update user in database
     result = await database.users.update_one(
-        {"_id": current_user.id}, {"$set": update_data}
+        {"_id": ObjectId(current_user.id)}, {"$set": update_data}
     )
+
+    logger.info(f"[update_profile] DB update result for user {current_user.email} ({current_user.id}): matched_count={result.matched_count}, modified_count={result.modified_count}")
 
     if (
         result.modified_count == 0 and len(update_data) > 1
     ):  # Only updated_at would mean length 1
+        logger.warning(f"[update_profile] Failed to update profile for user {current_user.email} ({current_user.id}). update_data: {update_data}, matched_count={result.matched_count}, modified_count={result.modified_count}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Failed to update profile",
         )
 
     # Get updated user data
-    updated_user = await database.users.find_one({"_id": current_user.id})
+    updated_user = await database.users.find_one({"_id": ObjectId(current_user.id)})
 
-    logger.info(f"User {current_user.email} updated profile information")
+    if updated_user is None:
+        logger.error(f"[update_profile] CRITICAL: User {current_user.email} ({current_user.id}) with ObjectId {ObjectId(current_user.id)} NOT FOUND after update attempt. Update DB result was: matched={result.matched_count}, modified={result.modified_count}. Update data sent: {update_data}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not retrieve user information after update.",
+        )
+
+    logger.info(f"[update_profile] User {current_user.email} ({current_user.id}) updated profile information successfully. Found user post-update.")
 
     return UserResponse(
         id=str(updated_user["_id"]),

@@ -107,12 +107,12 @@ def send_password_reset_email(to_email: str, reset_token: str, base_url: str) ->
         base_url = base_url.rstrip("/")
 
     # Get the backend URL for token validation
-    backend_url = os.getenv("BASE_URL", "https://taaft-backend.onrender.com")
+    backend_url = os.getenv("https://taaft.zapto.org", "https://taaft.zapto.org")
     if backend_url.endswith("/"):
         backend_url = backend_url.rstrip("/")
 
     # Create a reset URL that goes through the backend validation first
-    reset_url = f"{backend_url}/reset-password?token={reset_token}"
+    reset_url = f"{base_url}/reset-password?token={reset_token}"
 
     subject = "Password Reset Request"
 
@@ -241,11 +241,24 @@ def send_verification_email(
     Returns:
         bool: True if email was sent successfully, False otherwise
     """
-    # Remove trailing slash from base_url if present to prevent double slashes
+    # Use FRONTEND_URL for the frontend application
+    base_url = os.getenv("BACKEND_URL", "https://taaft.zapto.org")
+    
+    # Make sure base_url has https:// prefix
+    if not base_url.startswith("http"):
+        base_url = "https://" + base_url
+    
+    # Remove trailing slash from base_url if present
     if base_url.endswith("/"):
         base_url = base_url.rstrip("/")
 
-    verification_url = f"{base_url}/verify-email?token={verification_token}"
+    # The verification endpoint that will consume the token
+    api_url = os.getenv("API_URL", "https://taaft.zapto.org")
+    if api_url.endswith("/"):
+        api_url = api_url.rstrip("/")
+
+    # Frontend page that will call the API endpoint with the token
+    verification_url = f"{base_url}/auth/verify-email?token={verification_token}"
 
     subject = "Verify Your Email Address"
 

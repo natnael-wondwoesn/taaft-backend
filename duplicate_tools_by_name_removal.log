@@ -1,0 +1,32 @@
+2025-06-03 06:37:18,630 - duplicate_tools_by_name_remover - INFO - Starting duplicate tools (by name) removal script
+2025-06-03 06:37:18,631 - duplicate_tools_by_name_remover - INFO - Starting duplicate tools (by name) removal at 2025-06-03 06:37:18.631077
+2025-06-03 06:37:22,843 - duplicate_tools_by_name_remover - INFO - Found 3142 total tools in database
+2025-06-03 06:37:22,848 - duplicate_tools_by_name_remover - INFO - Found 25 sets of duplicates with a total of 30 duplicate tools to remove (by name)
+2025-06-03 06:37:23,026 - duplicate_tools_by_name_remover - INFO - Kept tool 'Thea' (ID: 6822cd78314b48ef9427fde0) and removed 1 duplicates by name
+2025-06-03 06:37:23,204 - duplicate_tools_by_name_remover - INFO - Kept tool 'TalkText' (ID: 682425fa314b48ef9428003c) and removed 1 duplicates by name
+2025-06-03 06:37:23,380 - duplicate_tools_by_name_remover - INFO - Kept tool 'Stable Diffusion 3.5 Large Turbo' (ID: 680a36e4a40b1de891a1417b) and removed 1 duplicates by name
+2025-06-03 06:37:23,556 - duplicate_tools_by_name_remover - INFO - Kept tool 'DeepSeek MoE' (ID: 680a36eda40b1de891a14180) and removed 1 duplicates by name
+2025-06-03 06:37:23,732 - duplicate_tools_by_name_remover - INFO - Kept tool 'Hermes-2 Θ Llama-3 8B' (ID: 680a5473a40b1de891a14269) and removed 1 duplicates by name
+2025-06-03 06:37:23,911 - duplicate_tools_by_name_remover - INFO - Kept tool 'Korbit' (ID: 6816422d314b48ef9427fac3) and removed 4 duplicates by name
+2025-06-03 06:37:24,091 - duplicate_tools_by_name_remover - INFO - Kept tool 'TheLibrarian.io' (ID: 68164651314b48ef9427faca) and removed 1 duplicates by name
+2025-06-03 06:37:24,268 - duplicate_tools_by_name_remover - INFO - Kept tool 'Taplio' (ID: 68227332314b48ef9427fbf7) and removed 1 duplicates by name
+2025-06-03 06:37:24,445 - duplicate_tools_by_name_remover - INFO - Kept tool 'Breezemail' (ID: 6822892d314b48ef9427fc70) and removed 1 duplicates by name
+2025-06-03 06:37:24,621 - duplicate_tools_by_name_remover - INFO - Kept tool 'GirlfriendGPT' (ID: 68229051314b48ef9427fc9e) and removed 1 duplicates by name
+2025-06-03 06:37:24,798 - duplicate_tools_by_name_remover - INFO - Kept tool 'Nebius AI Studio' (ID: 6822925d314b48ef9427fcaa) and removed 1 duplicates by name
+2025-06-03 06:37:24,975 - duplicate_tools_by_name_remover - INFO - Kept tool 'DecorAI' (ID: 682292ea314b48ef9427fcad) and removed 1 duplicates by name
+2025-06-03 06:37:25,150 - duplicate_tools_by_name_remover - INFO - Kept tool 'Millis AI' (ID: 6822a97f314b48ef9427fd24) and removed 1 duplicates by name
+2025-06-03 06:37:25,330 - duplicate_tools_by_name_remover - INFO - Kept tool 'StylePal' (ID: 6822ae11314b48ef9427fd3f) and removed 1 duplicates by name
+2025-06-03 06:37:25,507 - duplicate_tools_by_name_remover - INFO - Kept tool 'Transcript LOL' (ID: 6822b439314b48ef9427fd5c) and removed 1 duplicates by name
+2025-06-03 06:37:25,683 - duplicate_tools_by_name_remover - INFO - Kept tool 'Kick' (ID: 6822b73f314b48ef9427fd6c) and removed 1 duplicates by name
+2025-06-03 06:37:25,859 - duplicate_tools_by_name_remover - INFO - Kept tool 'Hal9' (ID: 6822b75c314b48ef9427fd6d) and removed 1 duplicates by name
+2025-06-03 06:37:26,034 - duplicate_tools_by_name_remover - INFO - Kept tool 'SciSummary' (ID: 6822b796314b48ef9427fd6f) and removed 1 duplicates by name
+2025-06-03 06:37:26,212 - duplicate_tools_by_name_remover - INFO - Kept tool 'CodeRabbit' (ID: 6822b7f3314b48ef9427fd71) and removed 2 duplicates by name
+2025-06-03 06:37:26,388 - duplicate_tools_by_name_remover - INFO - Kept tool 'LinkedBase' (ID: 6822b80c314b48ef9427fd72) and removed 1 duplicates by name
+2025-06-03 06:37:26,565 - duplicate_tools_by_name_remover - INFO - Kept tool 'Chatbit' (ID: 6822ce55314b48ef9427fde5) and removed 2 duplicates by name
+2025-06-03 06:37:26,742 - duplicate_tools_by_name_remover - INFO - Kept tool 'TeamPal' (ID: 6822d8f2314b48ef9427fe23) and removed 1 duplicates by name
+2025-06-03 06:37:26,918 - duplicate_tools_by_name_remover - INFO - Kept tool 'RivalOut' (ID: 6822d96c314b48ef9427fe25) and removed 1 duplicates by name
+2025-06-03 06:37:27,094 - duplicate_tools_by_name_remover - INFO - Kept tool 'Flowpoint' (ID: 6822da3b314b48ef9427fe29) and removed 1 duplicates by name
+2025-06-03 06:37:27,271 - duplicate_tools_by_name_remover - INFO - Kept tool 'AI Note Taker - Coconote' (ID: 6824a5ac314b48ef942800bc) and removed 1 duplicates by name
+2025-06-03 06:37:27,271 - duplicate_tools_by_name_remover - INFO - Duplicate tools (by name) removal completed in 8.64 seconds
+2025-06-03 06:37:27,271 - duplicate_tools_by_name_remover - INFO - Removed 30 duplicate tools by name
+2025-06-03 06:37:27,272 - duplicate_tools_by_name_remover - INFO - Duplicate tools (by name) removal completed successfully

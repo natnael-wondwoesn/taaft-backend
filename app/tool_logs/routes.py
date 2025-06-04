@@ -32,6 +32,9 @@ async def log_tool_click(
     Record a tool click event.
     
     This endpoint logs when a user clicks the "Try Tool" button.
+    Uses tool_unique_id to identify the tool.
+    
+    Any authenticated user can log tool clicks.
     """
     user_id = str(current_user.id) if current_user else None
     
@@ -55,6 +58,7 @@ async def public_log_tool_click(
     Public endpoint to record a tool click event without authentication.
     
     This endpoint logs when a user clicks the "Try Tool" button and does not require authentication.
+    Uses tool_unique_id to identify the tool.
     """
     try:
         log = await tool_click_log_service.log_tool_click(log_data)

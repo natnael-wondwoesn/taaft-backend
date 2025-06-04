@@ -85,6 +85,7 @@ class TokenData(BaseModel):
     iss: Optional[str] = None
     aud: Optional[str] = None
     jti: Optional[str] = None
+    purpose: Optional[str] = None
 
 
 class UserUpdate(BaseModel):

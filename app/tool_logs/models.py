@@ -8,17 +8,22 @@ from typing_extensions import Annotated
 
 
 def validate_object_id(v) -> str:
+    """
+    Validate and convert various ID types to string.
+    For ObjectId, converts to string.
+    For UUID, converts to string.
+    For string, returns as is if not a valid ObjectId.
+    For string that is a valid ObjectId, returns as is.
+    """
     if v is None:
         return v
     if isinstance(v, str):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return v
+        return v  # Return any string, valid ObjectId or not
     if isinstance(v, ObjectId):
         return str(v)
     if isinstance(v, UUID):
         return str(v)
-    raise ValueError("Invalid ObjectId")
+    return str(v)  # Try to convert other types to string
 
 
 PydanticObjectId = Annotated[ObjectId, BeforeValidator(validate_object_id)]
@@ -26,7 +31,7 @@ PydanticObjectId = Annotated[ObjectId, BeforeValidator(validate_object_id)]
 
 class ToolClickLogBase(BaseModel):
     """Base model for tool click logs."""
-    tool_id: str
+    tool_unique_id: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -42,9 +47,17 @@ class ToolClickLog(ToolClickLogBase):
     id_: Optional[str] = Field(alias="_id", default=None)
     user_id: Optional[str] = None
 
-    _validate_id = validator("id_", allow_reuse=True)(validate_object_id)
+    @validator("id_", pre=True)
+    def validate_id(cls, v):
+        if isinstance(v, ObjectId):
+            return str(v)
+        return v
     
-    model_config = ConfigDict(arbitrary_types_allowed=True, populate_by_name=True)
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, 
+        populate_by_name=True,
+        json_encoders={ObjectId: str}
+    )
 
 
 class ToolClickSummary(BaseModel):
