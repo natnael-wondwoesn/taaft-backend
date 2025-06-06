@@ -47,7 +47,11 @@ async def list_public_tools(
     # Build filters dictionary from query parameters
     filters = {}
     if category:
-        filters["category"] = category
+        # Use $or to match either categories.id OR the category string field
+        filters["$or"] = [
+            {"categories.id": category},  # Array-based categories
+            {"category": category}        # String-based category
+        ]
     if is_featured is not None:
         filters["is_featured"] = is_featured
     if price_type:
@@ -550,7 +554,13 @@ async def get_public_tools_by_category(
         )
 
     # Build filters dictionary
-    filters = {"categories.id": category.id}
+    # Use $or to match either categories.id OR the category string field
+    filters = {
+        "$or": [
+            {"categories.id": category.id},  # Array-based categories
+            {"category": category.name}      # String-based category
+        ]
+    }
 
     if price_type:
         filters["price"] = price_type

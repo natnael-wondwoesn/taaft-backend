@@ -81,7 +81,7 @@ async def migrate_job_impacts_to_algolia(
     from app.algolia.migrater.tools_job_impacts_to_algolia import main as run_migration
 
     # Add migration task to background tasks
-    background_tasks.add_task(run_migration)
+    background_tasks.add_task(run_migration, cli_args=[])
 
     # Log the migration request
     logger.info(f"Job impacts to Algolia migration started by admin: {current_user.email}")

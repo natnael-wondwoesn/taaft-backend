@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Query, Request
+from fastapi import APIRouter, HTTPException, Depends, Query, Request,status
 from typing import List, Optional
 from uuid import UUID
 import hashlib
@@ -447,15 +447,16 @@ async def get_tool_by_unique_identifier(
     return tool
 
 
-@router.get("/category/{category_slug}", response_model=PaginatedToolsResponse)
+@router.get("/category/{category_name}", response_model=PaginatedToolsResponse)
 async def get_tools_by_category(
-    category_slug: str,
+    category_name: str,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     sort_by: Optional[str] = Query(
-        "created_at", description="Field to sort by (name, created_at, updated_at)"
+        "created_at", description="Field to sort by (name, created_at, updated_at, price)"
     ),
     sort_order: str = Query("desc", description="Sort order (asc or desc)"),
+    search_query: Optional[str] = Query(None, description="Search query to filter tools by name or description"),
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
@@ -469,6 +470,7 @@ async def get_tools_by_category(
         limit: Maximum number of items to return
         sort_by: Field to sort by
         sort_order: Sort order ('asc' or 'desc')
+        search_query: Optional search query to filter tools by name or description
 
     Returns:
         Paginated list of tools belonging to the specified category
@@ -477,17 +479,56 @@ async def get_tools_by_category(
     from ..categories.service import categories_service
 
     # Get the category by slug
-    category = await categories_service.get_category_by_slug(category_slug)
+    # category = await categories_service.get_category_by_slug(category_slug)
+    category = await categories_service.get_category_by_name(category_name)
+    if not category:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Category with slug or name '{category_name}' not found",
+        )
+
+    # Validate sort_by field if provided
+    valid_sort_fields = ["name", "created_at", "updated_at", "price"]
+    if sort_by and sort_by not in valid_sort_fields:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid sort_by field. Must be one of: {', '.join(valid_sort_fields)}",
+        )
+
+    # Validate sort_order
+    if sort_order.lower() not in ["asc", "desc"]:
+        raise HTTPException(
+            status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
+        )
 
     # If category is not found, return 404
     if not category:
         raise HTTPException(
             status_code=404,
-            detail=f"Category with slug '{category_slug}' not found",
+            detail=f"Category with name '{category_name}' not found",
         )
 
-    # Apply filter using the category ID
-    filters = {"category": category.id}
+    # Build filters dictionary
+    # Use $or to match either categories.id OR the category string field
+    category_filters = {
+        "$or": [
+            {"categories.id": category.id},  # Array-based categories
+            {"category": category.name}      # String-based category
+        ]
+    }
+
+    filters = category_filters
+
+    if search_query:
+        search_filters = {
+            "$or": [
+                {"name": {"$regex": search_query, "$options": "i"}},
+                {"description": {"$regex": search_query, "$options": "i"}},
+                # Add other fields to search here if needed
+            ]
+        }
+        # Combine category filters and search filters
+        filters = {"$and": [category_filters, search_filters]}
 
     # Validate sort_by field if provided
     valid_sort_fields = ["name", "created_at", "updated_at", "price"]
@@ -509,7 +550,7 @@ async def get_tools_by_category(
     if total == 0:
         raise HTTPException(
             status_code=404,
-            detail=f"No tools found for category '{category_slug}'",
+            detail=f"No tools found for category '{category_name}'",
         )
 
     # Get tools filtered by category

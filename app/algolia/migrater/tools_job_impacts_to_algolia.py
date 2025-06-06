@@ -40,12 +40,12 @@ mongodb_db = os.getenv("MONGODB_DB", "taaft_db")
 mongodb_collection = "tools_Job_impacts"
 
 # Function to parse command-line arguments
-def parse_args():
+def parse_args(args_list=None):
     parser = argparse.ArgumentParser(description="Migrate job impacts from MongoDB to Algolia")
     parser.add_argument("--fix-record", type=str, help="Fix a specific record by ID")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument("--check-size", action="store_true", help="Check record sizes without uploading")
-    return parser.parse_args()
+    return parser.parse_args(args_list)
 
 # Initialize Algolia client (only when needed)
 def get_algolia_client():
@@ -535,9 +535,9 @@ def check_record_sizes(mongodb_job_impacts):
     return oversized_records
         
 
-def main():
+def main(cli_args=None):
     """Main function to orchestrate the migration process"""
-    args = parse_args()
+    args = parse_args(cli_args)
     
     try:
         # Get MongoDB connection for specific record fix if needed

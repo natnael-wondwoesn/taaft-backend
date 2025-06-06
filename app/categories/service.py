@@ -130,23 +130,39 @@ class CategoriesService:
             # Get categories collection
             categories_collection = await self._get_categories_collection()
             categories_list = await categories_collection.find().to_list(length=100)
+            
+            # Get tools collection for accurate counts
+            tools_collection = await self._get_tools_collection()
 
             # If we have categories in the dedicated collection, return those
             if categories_list:
                 logger.info(
                     f"Found {len(categories_list)} categories in categories collection"
                 )
-                # Reverted to use stored count
-                return [
-                    CategoryResponse(
-                        id=cat["id"],
-                        name=cat["name"],
-                        slug=cat["slug"],
-                        count=cat.get("count", 0), # Use stored count
-                        svg=await self._get_svg_path(cat["id"], cat.get("svg")),
+                
+                # Create a list to store categories with accurate counts
+                categories_with_counts = []
+                
+                for cat in categories_list:
+                    # Count tools that match EITHER the category ID in the categories array OR the category string field
+                    count = await tools_collection.count_documents({
+                        "$or": [
+                            {"categories.id": cat["id"]},  # Array-based categories
+                            {"category": cat["name"]}      # String-based category
+                        ]
+                    })
+                    
+                    categories_with_counts.append(
+                        CategoryResponse(
+                            id=cat["id"],
+                            name=cat["name"],
+                            slug=cat["slug"],
+                            count=count,  # Use accurate count from query
+                            svg=await self._get_svg_path(cat["id"], cat.get("svg")),
+                        )
                     )
-                    for cat in categories_list
-                ]
+                
+                return categories_with_counts
 
             # Otherwise, fall back to extracting from tools collection
             logger.warning(
@@ -257,12 +273,22 @@ class CategoriesService:
             category = await categories_collection.find_one({"id": category_id})
 
             if category:
-                # Reverted to use stored count
+                # Get tools collection for accurate count
+                tools_collection = await self._get_tools_collection()
+                
+                # Count tools that match EITHER the category ID in the categories array OR the category string field
+                count = await tools_collection.count_documents({
+                    "$or": [
+                        {"categories.id": category_id},  # Array-based categories
+                        {"category": category["name"]}   # String-based category
+                    ]
+                })
+                
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=category.get("count", 0), # Use stored count
+                    count=count,  # Use accurate count from query
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
@@ -297,12 +323,22 @@ class CategoriesService:
             category = await categories_collection.find_one({"slug": slug})
 
             if category:
-                # Reverted to use stored count
+                # Get tools collection for accurate count
+                tools_collection = await self._get_tools_collection()
+                
+                # Count tools that match EITHER the category ID in the categories array OR the category string field
+                count = await tools_collection.count_documents({
+                    "$or": [
+                        {"categories.id": category["id"]},  # Array-based categories
+                        {"category": category["name"]}      # String-based category
+                    ]
+                })
+                
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=category.get("count", 0), # Use stored count
+                    count=count,  # Use accurate count from query
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
@@ -397,6 +433,49 @@ class CategoriesService:
 
         except Exception as e:
             logger.error(f"Error updating or creating category: {str(e)}")
+            return None
+
+    async def get_category_by_name(self, name: str) -> Optional[CategoryResponse]:
+        """
+        Get a category by its name (case-insensitive)
+
+        Args:
+            name: Name of the category to fetch
+
+        Returns:
+            CategoryResponse object if found, None otherwise
+        """
+        try:
+            categories_collection = await self._get_categories_collection()
+            # Try case-insensitive match in the collection
+            category = await categories_collection.find_one({"name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}})
+            if category:
+                # Get tools collection for accurate count
+                tools_collection = await self._get_tools_collection()
+                
+                # Count tools that match EITHER the category ID in the categories array OR the category string field
+                count = await tools_collection.count_documents({
+                    "$or": [
+                        {"categories.id": category["id"]},  # Array-based categories
+                        {"category": {"$regex": f"^{re.escape(name)}$", "$options": "i"}}  # String-based category (case-insensitive)
+                    ]
+                })
+                
+                return CategoryResponse(
+                    id=category["id"],
+                    name=category["name"],
+                    slug=category["slug"],
+                    count=count,  # Use accurate count from query
+                    svg=await self._get_svg_path(category["id"], category.get("svg")),
+                )
+            # Fallback: search in all categories (in-memory)
+            categories = await self.get_all_categories()
+            for category in categories:
+                if category.name.lower() == name.lower():
+                    return category
+            return None
+        except Exception as e:
+            logger.error(f"Error getting category by name: {str(e)}")
             return None
 
 

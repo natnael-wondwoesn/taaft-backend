@@ -277,63 +277,163 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
         
         # For GET requests (browser), return HTML error page
         if request and request.method == "GET":
+            # Determine the error message and sub-message
+            if not token:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't verify your email. The link may have expired or is invalid."
+            elif token_data is None or not hasattr(token_data, 'sub') or not hasattr(token_data, 'purpose'):
+                main_message = "Verification Failed"
+                sub_message = "The verification link is invalid or has expired."
+            elif token_data.purpose != "email_verification":
+                main_message = "Verification Failed"
+                sub_message = "The token in the verification link is not valid for email verification."
+            elif not user:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't find an account associated with this verification link. The account may have been deleted or the verification link is invalid."
+            else:
+                main_message = "Verification Failed"
+                sub_message = "We encountered an issue while trying to verify your email."
+
+            frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+            backend_url = os.getenv("BACKEND_URL", "")
             html_content = f"""
             <!DOCTYPE html>
-            <html>
+            <html lang=\"en\">
             <head>
-                <title>Email Verification Failed</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta charset=\"UTF-8\">
+                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                <title>Verification Failed</title>
+                <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+                <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+                <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">
                 <style>
                     body {{
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        line-height: 1.6;
-                        color: #333333;
-                        max-width: 600px;
-                        margin: 40px auto;
-                        padding: 20px;
+                        font-family: 'Inter', sans-serif;
+                        background-color: #f0f2f5;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        box-sizing: border-box;
+                    }}
+                    .modal-container {{
+                        background-color: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                        padding: 40px;
                         text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        position: relative;
                     }}
-                    .container {{
-                        border: 1px solid #E0E0E0;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    .close-button {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #ccc;
+                        cursor: pointer;
+                        border: none;
+                        background: none;
                     }}
-                    .header {{
-                        background-color: #FF5252;
-                        color: white;
-                        padding: 20px;
-                        text-align: center;
+                    .info-circle {{
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        background-color: #ffeceb;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin: 0 auto 30px;
                     }}
-                    .content {{
-                        background-color: #FFFFFF;
-                        padding: 30px;
-                    }}
-                    .button {{
-                        display: inline-block;
-                        background-color: #4A6FFF;
-                        color: white;
-                        text-decoration: none;
-                        padding: 12px 24px;
-                        border-radius: 4px;
-                        margin: 20px 0;
+                    .info-icon {{
+                        color: #ff4d4f;
+                        font-size: 40px;
                         font-weight: bold;
+                    }}
+                    h2 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 15px;
+                        font-weight: 700;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        line-height: 1.6;
+                        margin-bottom: 30px;
+                    }}
+                    .resend-button {{
+                        background-color: #a855f7;
+                        color: #fff;
+                        padding: 15px 30px;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        width: 100%;
+                    }}
+                    .resend-button:hover {{
+                        background-color: #4c068e;
+                    }}
+                    .login-link {{
+                        display: block;
+                        margin-top: 20px;
+                        color: #a855f7;
+                        text-decoration: underline;
+                        font-weight: 600;
+                        font-size: 16px;
                     }}
                 </style>
             </head>
             <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>Verification Failed</h1>
+                <div class=\"modal-container\">
+                    <button class=\"close-button\" aria-label=\"Close\">&times;</button>
+                    <div class=\"info-circle\">
+                        <span class=\"info-icon\">&#x2139;</span>
                     </div>
-                    <div class="content">
-                        <h2>Missing Verification Token</h2>
-                        <p>The verification link is missing a required token.</p>
-                        <p>Please use the complete verification link sent to your email or request a new verification email.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
-                    </div>
+                    <h2>{main_message}</h2>
+                    <p>{sub_message}</p>
+                    <input type=\"email\" id=\"userEmail\" placeholder=\"Enter your email to resend\" style=\"width:100%;padding:12px 10px;margin-bottom:16px;border-radius:6px;border:1px solid #ddd;font-size:16px;box-sizing:border-box;\" />
+                    <button class=\"resend-button\" id=\"resendButton\">Resend Verification Email</button>
+                    <a href=\"{frontend_url}/login\" class=\"login-link\">Go to Login Page</a>
                 </div>
+                <script>
+                    // Hide modal on close
+                    document.querySelector('.close-button').addEventListener('click', function() {{
+                        document.querySelector('.modal-container').style.display = 'none';
+                    }});
+                    // Resend verification email
+                    document.getElementById('resendButton').addEventListener('click', function() {{
+                        var email = document.getElementById('userEmail').value;
+                        if (!email) {{
+                            alert('Please enter your email address.');
+                            return;
+                        }}
+                        fetch('{backend_url}/resend-verification', {{
+                            method: 'POST',
+                            headers: {{ 'Content-Type': 'application/json' }},
+                            body: JSON.stringify({{ email: email }})
+                        }})
+                        .then(response => response.json())
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                alert('A new verification email has been sent!');
+                            }} else if (data.status === 'already_verified') {{
+                                alert('This email is already verified. You can log in.');
+                            }} else {{
+                                alert('Failed to send verification email: ' + (data.message || 'Unknown error'));
+                            }}
+                        }})
+                        .catch(error => {{
+                            console.error('Error:', error);
+                            alert('An error occurred while trying to resend the email.');
+                        }});
+                    }});
+                </script>
             </body>
             </html>
             """
@@ -352,63 +452,163 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
         
         # For GET requests (browser), return HTML error page
         if request and request.method == "GET":
+            # Determine the error message and sub-message
+            if not token:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't verify your email. The link may have expired or is invalid."
+            elif token_data is None or not hasattr(token_data, 'sub') or not hasattr(token_data, 'purpose'):
+                main_message = "Verification Failed"
+                sub_message = "The verification link is invalid or has expired."
+            elif token_data.purpose != "email_verification":
+                main_message = "Verification Failed"
+                sub_message = "The token in the verification link is not valid for email verification."
+            elif not user:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't find an account associated with this verification link. The account may have been deleted or the verification link is invalid."
+            else:
+                main_message = "Verification Failed"
+                sub_message = "We encountered an issue while trying to verify your email."
+
+            frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+            backend_url = os.getenv("BACKEND_URL", "")
             html_content = f"""
             <!DOCTYPE html>
-            <html>
+            <html lang=\"en\">
             <head>
-                <title>Email Verification Failed</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta charset=\"UTF-8\">
+                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                <title>Verification Failed</title>
+                <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+                <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+                <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">
                 <style>
                     body {{
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        line-height: 1.6;
-                        color: #333333;
-                        max-width: 600px;
-                        margin: 40px auto;
-                        padding: 20px;
+                        font-family: 'Inter', sans-serif;
+                        background-color: #f0f2f5;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        box-sizing: border-box;
+                    }}
+                    .modal-container {{
+                        background-color: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                        padding: 40px;
                         text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        position: relative;
                     }}
-                    .container {{
-                        border: 1px solid #E0E0E0;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    .close-button {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #ccc;
+                        cursor: pointer;
+                        border: none;
+                        background: none;
                     }}
-                    .header {{
-                        background-color: #FF5252;
-                        color: white;
-                        padding: 20px;
-                        text-align: center;
+                    .info-circle {{
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        background-color: #ffeceb;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin: 0 auto 30px;
                     }}
-                    .content {{
-                        background-color: #FFFFFF;
-                        padding: 30px;
-                    }}
-                    .button {{
-                        display: inline-block;
-                        background-color: #4A6FFF;
-                        color: white;
-                        text-decoration: none;
-                        padding: 12px 24px;
-                        border-radius: 4px;
-                        margin: 20px 0;
+                    .info-icon {{
+                        color: #ff4d4f;
+                        font-size: 40px;
                         font-weight: bold;
+                    }}
+                    h2 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 15px;
+                        font-weight: 700;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        line-height: 1.6;
+                        margin-bottom: 30px;
+                    }}
+                    .resend-button {{
+                        background-color: #a855f7;
+                        color: #fff;
+                        padding: 15px 30px;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        width: 100%;
+                    }}
+                    .resend-button:hover {{
+                        background-color: #4c068e;
+                    }}
+                    .login-link {{
+                        display: block;
+                        margin-top: 20px;
+                        color: #a855f7;
+                        text-decoration: underline;
+                        font-weight: 600;
+                        font-size: 16px;
                     }}
                 </style>
             </head>
             <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>Verification Failed</h1>
+                <div class=\"modal-container\">
+                    <button class=\"close-button\" aria-label=\"Close\">&times;</button>
+                    <div class=\"info-circle\">
+                        <span class=\"info-icon\">&#x2139;</span>
                     </div>
-                    <div class="content">
-                        <h2>Invalid Verification Token</h2>
-                        <p>The verification link is invalid or has expired.</p>
-                        <p>Please request a new verification email from the login page.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
-                    </div>
+                    <h2>{main_message}</h2>
+                    <p>{sub_message}</p>
+                    <input type=\"email\" id=\"userEmail\" placeholder=\"Enter your email to resend\" style=\"width:100%;padding:12px 10px;margin-bottom:16px;border-radius:6px;border:1px solid #ddd;font-size:16px;box-sizing:border-box;\" />
+                    <button class=\"resend-button\" id=\"resendButton\">Resend Verification Email</button>
+                    <a href=\"{frontend_url}/login\" class=\"login-link\">Go to Login Page</a>
                 </div>
+                <script>
+                    // Hide modal on close
+                    document.querySelector('.close-button').addEventListener('click', function() {{
+                        document.querySelector('.modal-container').style.display = 'none';
+                    }});
+                    // Resend verification email
+                    document.getElementById('resendButton').addEventListener('click', function() {{
+                        var email = document.getElementById('userEmail').value;
+                        if (!email) {{
+                            alert('Please enter your email address.');
+                            return;
+                        }}
+                        fetch('{backend_url}/resend-verification', {{
+                            method: 'POST',
+                            headers: {{ 'Content-Type': 'application/json' }},
+                            body: JSON.stringify({{ email: email }})
+                        }})
+                        .then(response => response.json())
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                alert('A new verification email has been sent!');
+                            }} else if (data.status === 'already_verified') {{
+                                alert('This email is already verified. You can log in.');
+                            }} else {{
+                                alert('Failed to send verification email: ' + (data.message || 'Unknown error'));
+                            }}
+                        }})
+                        .catch(error => {{
+                            console.error('Error:', error);
+                            alert('An error occurred while trying to resend the email.');
+                        }});
+                    }});
+                </script>
             </body>
             </html>
             """
@@ -425,63 +625,163 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
         
         # For GET requests (browser), return HTML error page
         if request and request.method == "GET":
+            # Determine the error message and sub-message
+            if not token:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't verify your email. The link may have expired or is invalid."
+            elif token_data is None or not hasattr(token_data, 'sub') or not hasattr(token_data, 'purpose'):
+                main_message = "Verification Failed"
+                sub_message = "The verification link is invalid or has expired."
+            elif token_data.purpose != "email_verification":
+                main_message = "Verification Failed"
+                sub_message = "The token in the verification link is not valid for email verification."
+            elif not user:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't find an account associated with this verification link. The account may have been deleted or the verification link is invalid."
+            else:
+                main_message = "Verification Failed"
+                sub_message = "We encountered an issue while trying to verify your email."
+
+            frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+            backend_url = os.getenv("BACKEND_URL", "")
             html_content = f"""
             <!DOCTYPE html>
-            <html>
+            <html lang=\"en\">
             <head>
-                <title>Email Verification Failed</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta charset=\"UTF-8\">
+                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                <title>Verification Failed</title>
+                <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+                <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+                <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">
                 <style>
                     body {{
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        line-height: 1.6;
-                        color: #333333;
-                        max-width: 600px;
-                        margin: 40px auto;
-                        padding: 20px;
+                        font-family: 'Inter', sans-serif;
+                        background-color: #f0f2f5;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        box-sizing: border-box;
+                    }}
+                    .modal-container {{
+                        background-color: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                        padding: 40px;
                         text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        position: relative;
                     }}
-                    .container {{
-                        border: 1px solid #E0E0E0;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    .close-button {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #ccc;
+                        cursor: pointer;
+                        border: none;
+                        background: none;
                     }}
-                    .header {{
-                        background-color: #FF5252;
-                        color: white;
-                        padding: 20px;
-                        text-align: center;
+                    .info-circle {{
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        background-color: #ffeceb;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin: 0 auto 30px;
                     }}
-                    .content {{
-                        background-color: #FFFFFF;
-                        padding: 30px;
-                    }}
-                    .button {{
-                        display: inline-block;
-                        background-color: #4A6FFF;
-                        color: white;
-                        text-decoration: none;
-                        padding: 12px 24px;
-                        border-radius: 4px;
-                        margin: 20px 0;
+                    .info-icon {{
+                        color: #ff4d4f;
+                        font-size: 40px;
                         font-weight: bold;
+                    }}
+                    h2 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 15px;
+                        font-weight: 700;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        line-height: 1.6;
+                        margin-bottom: 30px;
+                    }}
+                    .resend-button {{
+                        background-color: #a855f7;
+                        color: #fff;
+                        padding: 15px 30px;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        width: 100%;
+                    }}
+                    .resend-button:hover {{
+                        background-color: #4c068e;
+                    }}
+                    .login-link {{
+                        display: block;
+                        margin-top: 20px;
+                        color: #a855f7;
+                        text-decoration: underline;
+                        font-weight: 600;
+                        font-size: 16px;
                     }}
                 </style>
             </head>
             <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>Verification Failed</h1>
+                <div class=\"modal-container\">
+                    <button class=\"close-button\" aria-label=\"Close\">&times;</button>
+                    <div class=\"info-circle\">
+                        <span class=\"info-icon\">&#x2139;</span>
                     </div>
-                    <div class="content">
-                        <h2>Invalid Token Type</h2>
-                        <p>The token in the verification link is not valid for email verification.</p>
-                        <p>Please request a new verification email from the login page.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
-                    </div>
+                    <h2>{main_message}</h2>
+                    <p>{sub_message}</p>
+                    <input type=\"email\" id=\"userEmail\" placeholder=\"Enter your email to resend\" style=\"width:100%;padding:12px 10px;margin-bottom:16px;border-radius:6px;border:1px solid #ddd;font-size:16px;box-sizing:border-box;\" />
+                    <button class=\"resend-button\" id=\"resendButton\">Resend Verification Email</button>
+                    <a href=\"{frontend_url}/login\" class=\"login-link\">Go to Login Page</a>
                 </div>
+                <script>
+                    // Hide modal on close
+                    document.querySelector('.close-button').addEventListener('click', function() {{
+                        document.querySelector('.modal-container').style.display = 'none';
+                    }});
+                    // Resend verification email
+                    document.getElementById('resendButton').addEventListener('click', function() {{
+                        var email = document.getElementById('userEmail').value;
+                        if (!email) {{
+                            alert('Please enter your email address.');
+                            return;
+                        }}
+                        fetch('{backend_url}/resend-verification', {{
+                            method: 'POST',
+                            headers: {{ 'Content-Type': 'application/json' }},
+                            body: JSON.stringify({{ email: email }})
+                        }})
+                        .then(response => response.json())
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                alert('A new verification email has been sent!');
+                            }} else if (data.status === 'already_verified') {{
+                                alert('This email is already verified. You can log in.');
+                            }} else {{
+                                alert('Failed to send verification email: ' + (data.message || 'Unknown error'));
+                            }}
+                        }})
+                        .catch(error => {{
+                            console.error('Error:', error);
+                            alert('An error occurred while trying to resend the email.');
+                        }});
+                    }});
+                </script>
             </body>
             </html>
             """
@@ -500,63 +800,163 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
         
         # For GET requests (browser), return HTML error page
         if request and request.method == "GET":
+            # Determine the error message and sub-message
+            if not token:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't verify your email. The link may have expired or is invalid."
+            elif token_data is None or not hasattr(token_data, 'sub') or not hasattr(token_data, 'purpose'):
+                main_message = "Verification Failed"
+                sub_message = "The verification link is invalid or has expired."
+            elif token_data.purpose != "email_verification":
+                main_message = "Verification Failed"
+                sub_message = "The token in the verification link is not valid for email verification."
+            elif not user:
+                main_message = "Verification Failed"
+                sub_message = "We couldn't find an account associated with this verification link. The account may have been deleted or the verification link is invalid."
+            else:
+                main_message = "Verification Failed"
+                sub_message = "We encountered an issue while trying to verify your email."
+
+            frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
+            backend_url = os.getenv("BACKEND_URL", "")
             html_content = f"""
             <!DOCTYPE html>
-            <html>
+            <html lang=\"en\">
             <head>
-                <title>Email Verification Failed</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta charset=\"UTF-8\">
+                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                <title>Verification Failed</title>
+                <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+                <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+                <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">
                 <style>
                     body {{
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        line-height: 1.6;
-                        color: #333333;
-                        max-width: 600px;
-                        margin: 40px auto;
-                        padding: 20px;
+                        font-family: 'Inter', sans-serif;
+                        background-color: #f0f2f5;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        box-sizing: border-box;
+                    }}
+                    .modal-container {{
+                        background-color: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                        padding: 40px;
                         text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        position: relative;
                     }}
-                    .container {{
-                        border: 1px solid #E0E0E0;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    .close-button {{
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        font-size: 24px;
+                        color: #ccc;
+                        cursor: pointer;
+                        border: none;
+                        background: none;
                     }}
-                    .header {{
-                        background-color: #FF5252;
-                        color: white;
-                        padding: 20px;
-                        text-align: center;
+                    .info-circle {{
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        background-color: #ffeceb;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin: 0 auto 30px;
                     }}
-                    .content {{
-                        background-color: #FFFFFF;
-                        padding: 30px;
-                    }}
-                    .button {{
-                        display: inline-block;
-                        background-color: #4A6FFF;
-                        color: white;
-                        text-decoration: none;
-                        padding: 12px 24px;
-                        border-radius: 4px;
-                        margin: 20px 0;
+                    .info-icon {{
+                        color: #ff4d4f;
+                        font-size: 40px;
                         font-weight: bold;
+                    }}
+                    h2 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 15px;
+                        font-weight: 700;
+                    }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        line-height: 1.6;
+                        margin-bottom: 30px;
+                    }}
+                    .resend-button {{
+                        background-color: #a855f7;
+                        color: #fff;
+                        padding: 15px 30px;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        width: 100%;
+                    }}
+                    .resend-button:hover {{
+                        background-color: #4c068e;
+                    }}
+                    .login-link {{
+                        display: block;
+                        margin-top: 20px;
+                        color: #a855f7;
+                        text-decoration: underline;
+                        font-weight: 600;
+                        font-size: 16px;
                     }}
                 </style>
             </head>
             <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>Verification Failed</h1>
+                <div class=\"modal-container\">
+                    <button class=\"close-button\" aria-label=\"Close\">&times;</button>
+                    <div class=\"info-circle\">
+                        <span class=\"info-icon\">&#x2139;</span>
                     </div>
-                    <div class="content">
-                        <h2>User Not Found</h2>
-                        <p>We couldn't find an account associated with this verification link.</p>
-                        <p>The account may have been deleted or the verification link is invalid.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
-                    </div>
+                    <h2>{main_message}</h2>
+                    <p>{sub_message}</p>
+                    <input type=\"email\" id=\"userEmail\" placeholder=\"Enter your email to resend\" style=\"width:100%;padding:12px 10px;margin-bottom:16px;border-radius:6px;border:1px solid #ddd;font-size:16px;box-sizing:border-box;\" />
+                    <button class=\"resend-button\" id=\"resendButton\">Resend Verification Email</button>
+                    <a href=\"{frontend_url}/login\" class=\"login-link\">Go to Login Page</a>
                 </div>
+                <script>
+                    // Hide modal on close
+                    document.querySelector('.close-button').addEventListener('click', function() {{
+                        document.querySelector('.modal-container').style.display = 'none';
+                    }});
+                    // Resend verification email
+                    document.getElementById('resendButton').addEventListener('click', function() {{
+                        var email = document.getElementById('userEmail').value;
+                        if (!email) {{
+                            alert('Please enter your email address.');
+                            return;
+                        }}
+                        fetch('{backend_url}/resend-verification', {{
+                            method: 'POST',
+                            headers: {{ 'Content-Type': 'application/json' }},
+                            body: JSON.stringify({{ email: email }})
+                        }})
+                        .then(response => response.json())
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                alert('A new verification email has been sent!');
+                            }} else if (data.status === 'already_verified') {{
+                                alert('This email is already verified. You can log in.');
+                            }} else {{
+                                alert('Failed to send verification email: ' + (data.message || 'Unknown error'));
+                            }}
+                        }})
+                        .catch(error => {{
+                            console.error('Error:', error);
+                            alert('An error occurred while trying to resend the email.');
+                        }});
+                    }});
+                </script>
             </body>
             </html>
             """
@@ -575,159 +975,124 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
         
         # For GET requests (browser), return HTML success page
         if request and request.method == "GET":
+            frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
             html_content = f"""
             <!DOCTYPE html>
-            <html>
+            <html lang=\"en\">
             <head>
-                <title>Email Verified Successfully</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}">
+                <meta charset=\"UTF-8\">
+                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                <title>Email Verified</title>
+                <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+                <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+                <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">
                 <style>
                     body {{
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        line-height: 1.6;
-                        color: #333333;
-                        background-color: #f9f9f9;
-                        margin: 0;
-                        padding: 0;
+                        font-family: 'Inter', sans-serif;
+                        background-color: #f0f2f5;
                         display: flex;
                         justify-content: center;
                         align-items: center;
                         min-height: 100vh;
+                        margin: 0;
+                        box-sizing: border-box;
                     }}
-                    .container {{
-                        width: 90%;
-                        max-width: 600px;
-                        margin: 40px auto;
+                    .modal-container {{
                         background-color: #fff;
                         border-radius: 12px;
-                        overflow: hidden;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-                    }}
-                    .header {{
-                        background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
-                        color: white;
-                        padding: 30px;
-                        text-align: center;
-                    }}
-                    .header h1 {{
-                        margin: 0;
-                        font-size: 28px;
-                        font-weight: 600;
-                    }}
-                    .content {{
-                        background-color: #FFFFFF;
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
                         padding: 40px;
                         text-align: center;
+                        max-width: 450px;
+                        width: 90%;
+                        position: relative;
                     }}
-                    .button {{
-                        display: inline-block;
-                        background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
-                        color: white;
-                        text-decoration: none;
-                        padding: 14px 28px;
-                        border-radius: 50px;
-                        margin: 20px 0;
-                        font-weight: 600;
-                        font-size: 16px;
-                        box-shadow: 0 4px 15px rgba(74, 111, 255, 0.3);
-                        transition: all 0.3s ease;
-                    }}
-                    .button:hover {{
-                        transform: translateY(-3px);
-                        box-shadow: 0 6px 20px rgba(74, 111, 255, 0.4);
-                    }}
-                    .success-icon {{
-                        width: 100px;
-                        height: 100px;
-                        margin: 0 auto 20px;
-                        background-color: #4CAF50;
+                    .check-circle {{
+                        width: 80px;
+                        height: 80px;
                         border-radius: 50%;
+                        background-color: #e6f7ed;
                         display: flex;
-                        align-items: center;
                         justify-content: center;
-                        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-                        animation: scaleIn 0.5s ease-out;
-                    }}
-                    .checkmark {{
-                        width: 50px;
-                        height: 50px;
-                    }}
-                    .checkmark path {{
-                        stroke: white;
-                        stroke-width: 4;
-                        stroke-linecap: round;
-                        stroke-linejoin: round;
-                        stroke-dasharray: 100;
-                        stroke-dashoffset: 100;
-                        animation: dash 1s ease-in-out forwards;
-                    }}
-                    .message {{
-                        opacity: 0;
-                        animation: fadeIn 0.5s ease-out 0.5s forwards;
-                    }}
-                    .redirect-info {{
-                        margin-top: 30px;
-                        padding: 15px;
-                        background-color: #f8f9fa;
-                        border-radius: 8px;
-                        font-size: 14px;
-                        color: #6c757d;
-                    }}
-                    .brand {{
-                        display: block;
+                        align-items: center;
                         margin: 0 auto 30px;
-                        font-size: 30px;
+                    }}
+                    .check-icon {{
+                        color: #52c41a;
+                        font-size: 40px;
+                        font-weight: bold;
+                    }}
+                    h2 {{
+                        font-size: 28px;
+                        color: #333;
+                        margin-bottom: 15px;
                         font-weight: 700;
-                        color: #4A6FFF;
-                        letter-spacing: 1px;
                     }}
-                    @keyframes dash {{
-                        to {{
-                            stroke-dashoffset: 0;
-                        }}
+                    p {{
+                        font-size: 16px;
+                        color: #666;
+                        line-height: 1.6;
+                        margin-bottom: 30px;
                     }}
-                    @keyframes fadeIn {{
-                        to {{
-                            opacity: 1;
-                        }}
+                    .action-button {{
+                        background-color: #a855f7;
+                        color: #fff;
+                        padding: 15px 30px;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        width: 100%;
+                        text-decoration: none;
+                        display: inline-block;
+                        margin-top: 10px;
+                        box-sizing: border-box;
                     }}
-                    @keyframes scaleIn {{
-                        0% {{
-                            transform: scale(0);
-                        }}
-                        80% {{
-                            transform: scale(1.1);
-                        }}
-                        100% {{
-                            transform: scale(1);
-                        }}
+                    .action-button:hover {{
+                        background-color: #4c068e;
+                    }}
+                    .already-verified-message {{
+                        display: none;
+                        font-size: 18px;
+                        color: #52c41a;
+                        font-weight: 600;
+                        margin-top: 20px;
+                        margin-bottom: 20px;
                     }}
                 </style>
             </head>
             <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>Email Verified Successfully</h1>
+                <div class=\"modal-container\">
+                    <div class=\"check-circle\" id=\"checkCircle\">
+                        <span class=\"check-icon\">&#10003;</span>
                     </div>
-                    <div class="content">
-                        <span class="brand">TAAFT</span>
-                        <div class="success-icon">
-                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                <path fill="none" d="M14,27 L22,35 L38,15"/>
-                            </svg>
-                        </div>
-                        <div class="message">
-                            <h2>Thank you for verifying your email!</h2>
-                            <p>Your email has been successfully verified. You can now log in to your account and access all features.</p>
-                            <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
-                            <div class="redirect-info">
-                                <p>You will be automatically redirected to the login page in 5 seconds...</p>
-                            </div>
-                        </div>
-                    </div>
+                    <h2 id=\"modalTitle\">Email Verified!</h2>
+                    <p id=\"modalMessage\">Your email has been successfully verified. You can now access all features of your account.</p>
+                    <button class=\"action-button\" id=\"loginButton\">Login To Continue</button>
+                    <div id=\"alreadyVerified\" class=\"already-verified-message\">Your email is already verified.</div>
+                    <a href=\"{frontend_url}/\" class=\"action-button\" id=\"homeButton\" style=\"display: none;\">Go to Home</a>
                 </div>
+                <script>
+                    document.getElementById('loginButton').addEventListener('click', function() {{
+                        const modalTitle = document.getElementById('modalTitle');
+                        const modalMessage = document.getElementById('modalMessage');
+                        const loginButton = document.getElementById('loginButton');
+                        const homeButton = document.getElementById('homeButton');
+                        const alreadyVerified = document.getElementById('alreadyVerified');
+                        const checkCircle = document.getElementById('checkCircle');
+
+                        modalTitle.textContent = "Email Verification";
+                        modalMessage.textContent = "";
+                        loginButton.style.display = 'none';
+                        checkCircle.style.display = 'none';
+                        alreadyVerified.style.display = 'block';
+                        homeButton.style.display = 'block';
+
+                        console.log('Login button clicked! Displaying "Already Verified" message and "Go to Home" button.');
+                    }});
+                </script>
             </body>
             </html>
             """
@@ -906,159 +1271,124 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
     
     # For GET requests (browser), return HTML success page
     if request and request.method == "GET":
+        frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
         html_content = f"""
         <!DOCTYPE html>
-        <html>
+        <html lang=\"en\">
         <head>
-            <title>Email Verified Successfully</title>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="refresh" content="5;url={os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}">
+            <meta charset=\"UTF-8\">
+            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+            <title>Email Verified</title>
+            <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+            <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+            <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap\" rel=\"stylesheet\">
             <style>
                 body {{
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    line-height: 1.6;
-                    color: #333333;
-                    background-color: #f9f9f9;
-                    margin: 0;
-                    padding: 0;
+                    font-family: 'Inter', sans-serif;
+                    background-color: #f0f2f5;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     min-height: 100vh;
+                    margin: 0;
+                    box-sizing: border-box;
                 }}
-                .container {{
-                    width: 90%;
-                    max-width: 600px;
-                    margin: 40px auto;
+                .modal-container {{
                     background-color: #fff;
                     border-radius: 12px;
-                    overflow: hidden;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-                }}
-                .header {{
-                    background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
-                    color: white;
-                    padding: 30px;
-                    text-align: center;
-                }}
-                .header h1 {{
-                    margin: 0;
-                    font-size: 28px;
-                    font-weight: 600;
-                }}
-                .content {{
-                    background-color: #FFFFFF;
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
                     padding: 40px;
                     text-align: center;
+                    max-width: 450px;
+                    width: 90%;
+                    position: relative;
                 }}
-                .button {{
-                    display: inline-block;
-                    background: linear-gradient(135deg, #4A6FFF 0%, #2C4ABC 100%);
-                    color: white;
-                    text-decoration: none;
-                    padding: 14px 28px;
-                    border-radius: 50px;
-                    margin: 20px 0;
-                    font-weight: 600;
-                    font-size: 16px;
-                    box-shadow: 0 4px 15px rgba(74, 111, 255, 0.3);
-                    transition: all 0.3s ease;
-                }}
-                .button:hover {{
-                    transform: translateY(-3px);
-                    box-shadow: 0 6px 20px rgba(74, 111, 255, 0.4);
-                }}
-                .success-icon {{
-                    width: 100px;
-                    height: 100px;
-                    margin: 0 auto 20px;
-                    background-color: #4CAF50;
+                .check-circle {{
+                    width: 80px;
+                    height: 80px;
                     border-radius: 50%;
+                    background-color: #e6f7ed;
                     display: flex;
-                    align-items: center;
                     justify-content: center;
-                    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-                    animation: scaleIn 0.5s ease-out;
-                }}
-                .checkmark {{
-                    width: 50px;
-                    height: 50px;
-                }}
-                .checkmark path {{
-                    stroke: white;
-                    stroke-width: 4;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
-                    stroke-dasharray: 100;
-                    stroke-dashoffset: 100;
-                    animation: dash 1s ease-in-out forwards;
-                }}
-                .message {{
-                    opacity: 0;
-                    animation: fadeIn 0.5s ease-out 0.5s forwards;
-                }}
-                .redirect-info {{
-                    margin-top: 30px;
-                    padding: 15px;
-                    background-color: #f8f9fa;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    color: #6c757d;
-                }}
-                .brand {{
-                    display: block;
+                    align-items: center;
                     margin: 0 auto 30px;
-                    font-size: 30px;
+                }}
+                .check-icon {{
+                    color: #52c41a;
+                    font-size: 40px;
+                    font-weight: bold;
+                }}
+                h2 {{
+                    font-size: 28px;
+                    color: #333;
+                    margin-bottom: 15px;
                     font-weight: 700;
-                    color: #4A6FFF;
-                    letter-spacing: 1px;
                 }}
-                @keyframes dash {{
-                    to {{
-                        stroke-dashoffset: 0;
-                    }}
+                p {{
+                    font-size: 16px;
+                    color: #666;
+                    line-height: 1.6;
+                    margin-bottom: 30px;
                 }}
-                @keyframes fadeIn {{
-                    to {{
-                        opacity: 1;
-                    }}
+                .action-button {{
+                    background-color: #a855f7;
+                    color: #fff;
+                    padding: 15px 30px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    width: 100%;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin-top: 10px;
+                    box-sizing: border-box;
                 }}
-                @keyframes scaleIn {{
-                    0% {{
-                        transform: scale(0);
-                    }}
-                    80% {{
-                        transform: scale(1.1);
-                    }}
-                    100% {{
-                        transform: scale(1);
-                    }}
+                .action-button:hover {{
+                    background-color: #4c068e;
+                }}
+                .already-verified-message {{
+                    display: none;
+                    font-size: 18px;
+                    color: #52c41a;
+                    font-weight: 600;
+                    margin-top: 20px;
+                    margin-bottom: 20px;
                 }}
             </style>
         </head>
         <body>
-            <div class="container">
-                <div class="header">
-                    <h1>Email Verified Successfully</h1>
+            <div class=\"modal-container\">
+                <div class=\"check-circle\" id=\"checkCircle\">
+                    <span class=\"check-icon\">&#10003;</span>
                 </div>
-                <div class="content">
-                    <span class="brand">TAAFT</span>
-                    <div class="success-icon">
-                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                            <path fill="none" d="M14,27 L22,35 L38,15"/>
-                        </svg>
-                    </div>
-                    <div class="message">
-                        <h2>Thank you for verifying your email!</h2>
-                        <p>Your email has been successfully verified. You can now log in to your account and access all features.</p>
-                        <a href="{os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")}" class="button">Go to Login Page</a>
-                        <div class="redirect-info">
-                            <p>You will be automatically redirected to the login page in 5 seconds...</p>
-                        </div>
-                    </div>
-                </div>
+                <h2 id=\"modalTitle\">Email Verified!</h2>
+                <p id=\"modalMessage\">Your email has been successfully verified. You can now access all features of your account.</p>
+                <button class=\"action-button\" id=\"loginButton\">Login To Continue</button>
+                <div id=\"alreadyVerified\" class=\"already-verified-message\">Your email is already verified.</div>
+                <a href=\"{frontend_url}/\" class=\"action-button\" id=\"homeButton\" style=\"display: none;\">Go to Home</a>
             </div>
+            <script>
+                document.getElementById('loginButton').addEventListener('click', function() {{
+                    const modalTitle = document.getElementById('modalTitle');
+                    const modalMessage = document.getElementById('modalMessage');
+                    const loginButton = document.getElementById('loginButton');
+                    const homeButton = document.getElementById('homeButton');
+                    const alreadyVerified = document.getElementById('alreadyVerified');
+                    const checkCircle = document.getElementById('checkCircle');
+
+                    modalTitle.textContent = "Email Verification";
+                    modalMessage.textContent = "";
+                    loginButton.style.display = 'none';
+                    checkCircle.style.display = 'none';
+                    alreadyVerified.style.display = 'block';
+                    homeButton.style.display = 'block';
+
+                    console.log('Login button clicked! Displaying "Already Verified" message and "Go to Home" button.');
+                }});
+            </script>
         </body>
         </html>
         """

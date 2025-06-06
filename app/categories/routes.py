@@ -87,9 +87,12 @@ async def get_category_by_slug(slug: str):
     """
     category = await categories_service.get_category_by_slug(slug)
     if not category:
+        # Try by name if not found by slug
+        category = await categories_service.get_category_by_name(slug)
+    if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with slug '{slug}' not found",
+            detail=f"Category with slug or name '{slug}' not found",
         )
     return category
 
@@ -126,15 +129,17 @@ async def get_tools_by_category_slug(
     Returns:
         Paginated list of tools in the specified category
     """
-    # Import tools_service functions here to avoid circular imports
     from ..tools.tools_service import get_tools, search_tools
 
     # First, get the category to verify it exists
     category = await categories_service.get_category_by_slug(slug)
     if not category:
+        # Try by name if not found by slug
+        category = await categories_service.get_category_by_name(slug)
+    if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with slug '{slug}' not found",
+            detail=f"Category with slug or name '{slug}' not found",
         )
 
     # Validate sort_by field if provided
@@ -152,7 +157,13 @@ async def get_tools_by_category_slug(
         )
 
     # Build filters dictionary
-    filters = {"categories.id": category.id}
+    # Use $or to match either categories.id OR the category string field
+    filters = {
+        "$or": [
+            {"categories.id": category.id},  # Array-based categories
+            {"category": category.name}      # String-based category
+        ]
+    }
 
     if price_type:
         filters["price"] = price_type
@@ -221,12 +232,12 @@ async def recalculate_category_counts():
     Returns:
         Dictionary with success status and summary of updated categories
     """
-    # Import the update_category_counts function from the script
-    from ..scripts.update_category_counts import update_category_counts
+    # Import the update_category_counts function from the correct script
+    from app.scripts.update_category_counts import main
 
     try:
         # Run the update function and get the result
-        result = await update_category_counts()
+        result = await main()
 
         # Invalidate any category-related caches
         invalidate_cache("category_tools")
@@ -290,9 +301,12 @@ async def get_public_category_by_slug(slug: str):
     """
     category = await categories_service.get_category_by_slug(slug)
     if not category:
+        # Try by name if not found by slug
+        category = await categories_service.get_category_by_name(slug)
+    if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with slug '{slug}' not found",
+            detail=f"Category with slug or name '{slug}' not found",
         )
     return category
 
@@ -330,15 +344,17 @@ async def get_public_tools_by_category_slug(
     Returns:
         Paginated list of tools in the specified category
     """
-    # Import tools_service functions here to avoid circular imports
     from ..tools.tools_service import get_tools, search_tools
 
     # First, get the category to verify it exists
     category = await categories_service.get_category_by_slug(slug)
     if not category:
+        # Try by name if not found by slug
+        category = await categories_service.get_category_by_name(slug)
+    if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with slug '{slug}' not found",
+            detail=f"Category with slug or name '{slug}' not found",
         )
 
     # Validate sort_by field if provided
@@ -356,7 +372,13 @@ async def get_public_tools_by_category_slug(
         )
 
     # Build filters dictionary
-    filters = {"categories.id": category.id}
+    # Use $or to match either categories.id OR the category string field
+    filters = {
+        "$or": [
+            {"categories.id": category.id},  # Array-based categories
+            {"category": category.name}      # String-based category
+        ]
+    }
 
     if price_type:
         filters["price"] = price_type

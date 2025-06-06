@@ -908,6 +908,50 @@ async def search_tools_by_task(
             detail=f"Error searching tools by task: {str(e)}",
         )
 
+@router.get("/new-task-tools/{task_name}", response_model=Any)
+async def new_search_tools_by_task(
+    task_name: str,
+    page: int = Query(0, ge=0, description="Page number (0-based)"),
+    per_page: int = Query(10, ge=1, le=50, description="Results per page"),
+):
+    """
+    Search for tools relevant to a specific task name.
+    
+    This endpoint allows finding tools that are relevant to a specific task,
+    which is useful when users want to find tools for specific tasks without
+    going through the job impacts.
+    
+    Args:
+        task_name: Name of the task to find tools for
+        page: Page number (0-based)
+        per_page: Number of tools per page
+        
+    Returns:
+        TaskToolsSearchResult containing the tools related to the task
+    """
+    # Validate Algolia configuration
+    if not algolia_config.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Search service is not configured",
+        )
+    
+    try:
+        # Perform the search
+        search_result = await algolia_search.search_tools_by_task(
+            task_name=task_name,
+            page=page,
+            per_page=per_page,
+        )
+        
+        return search_result
+    
+    except Exception as e:
+        logger.error(f"Error searching tools by task: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error searching tools by task: {str(e)}",
+        )
 
 @router.get("/recommend-tools/{job_title}", response_model=JobToolsRecommendation)
 async def recommend_tools_for_job(
