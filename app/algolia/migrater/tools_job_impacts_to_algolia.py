@@ -18,6 +18,7 @@ Prerequisites:
 import os
 import sys
 import argparse
+import json
 from datetime import datetime
 from dotenv import load_dotenv
 from algoliasearch.search.client import SearchClientSync as SearchClient
@@ -277,7 +278,6 @@ def prepare_algolia_object(mongo_job_impact):
 
     # Ensure the record size is within Algolia's limits (10KB)
     # Truncate large text fields if necessary
-    import json
     
     # First attempt: Check if the record is already within size limits
     record_size = len(json.dumps(algolia_job_impact).encode('utf-8'))
@@ -460,7 +460,6 @@ def fix_record_by_id(mongo_collection, record_id):
         algolia_record = prepare_algolia_object(record)
         
         # Get the size of the record
-        import json
         record_size = len(json.dumps(algolia_record).encode('utf-8'))
         logger.info(f"Record {record_id} size: {record_size} bytes")
         
@@ -503,7 +502,6 @@ def fix_record_by_id(mongo_collection, record_id):
 
 def check_record_sizes(mongodb_job_impacts):
     """Check the size of each record and report any that exceed Algolia's limit"""
-    import json
     
     logger.info("Checking record sizes...")
     oversized_records = []
@@ -534,6 +532,47 @@ def check_record_sizes(mongodb_job_impacts):
         
     return oversized_records
         
+
+def upload_batch(client, index_name, batch, failed_records_list):
+    """Uploads a batch of records and handles errors, returning success count."""
+    if not batch:
+        return 0
+
+    success_count = 0
+    try:
+        # Upload the whole batch
+        client.save_objects(index_name, batch)
+        success_count = len(batch)
+        logger.info(f"Successfully uploaded batch of {len(batch)} records")
+        return success_count
+    except Exception as e:
+        logger.error(f"Error uploading batch: {str(e)}")
+        # If batch upload fails, try uploading records individually
+        if len(batch) > 1:
+            logger.info("Attempting to upload records individually...")
+            for record in batch:
+                try:
+                    # Individual upload is a list with one item
+                    client.save_objects(index_name, [record])
+                    success_count += 1
+                except Exception as individual_error:
+                    record_id = record.get("objectID", "N/A")
+                    logger.error(
+                        f"Failed to upload record {record_id}: {str(individual_error)}"
+                    )
+                    failed_records_list.append(
+                        {"objectID": record_id, "error": str(individual_error)}
+                    )
+            return success_count
+        else:
+            # The batch had only one record and it failed
+            record_id = batch[0].get("objectID", "N/A")
+            logger.error(
+                f"Failed to upload single-record batch (ID: {record_id}): {str(e)}"
+            )
+            failed_records_list.append({"objectID": record_id, "error": str(e)})
+            return 0
+
 
 def main(cli_args=None):
     """Main function to orchestrate the migration process"""
@@ -596,59 +635,90 @@ def main(cli_args=None):
         # Clear the index first to remove any outdated objects
         algolia_client.clear_objects(algolia_index_name)
 
+        total_success_count = 0
+        failed_records = []
+
         # Only proceed with upload if we have objects
         if algolia_objects:
-            # Use a smaller batch size to avoid size limit issues
-            batch_size = 50  # Reduced from 1000
-            failed_records = []
-            success_count = 0
-            
-            for i in range(0, len(algolia_objects), batch_size):
-                batch = algolia_objects[i : i + batch_size]
-                batch_num = i // batch_size + 1
-                total_batches = (len(algolia_objects) + batch_size - 1) // batch_size
-                
-                logger.info(f"Uploading batch {batch_num} of {total_batches}...")
-                
-                try:
-                    algolia_client.save_objects(algolia_index_name, batch)
-                    success_count += len(batch)
-                    logger.info(f"Successfully uploaded batch {batch_num} ({len(batch)} records)")
-                except Exception as e:
-                    logger.error(f"Error uploading batch {batch_num}: {str(e)}")
-                    
-                    # If batch fails, try uploading records individually
-                    if len(batch) > 1:
-                        logger.info("Attempting to upload records individually...")
-                        for record in batch:
-                            try:
-                                algolia_client.save_objects(algolia_index_name, [record])
-                                success_count += 1
-                            except Exception as individual_error:
-                                logger.error(f"Failed to upload record {record.get('objectID')}: {str(individual_error)}")
-                                failed_records.append({
-                                    "objectID": record.get("objectID"),
-                                    "error": str(individual_error)
-                                })
-            
+            # Algolia's batch request size limit is around 1MB. We'll use a safer limit.
+            max_batch_size_bytes = 800 * 1024  # 800KB
+
+            current_batch = []
+            current_batch_size = 0
+
+            logger.info("Starting batch upload process...")
+            for record in algolia_objects:
+                # The 'json' module is needed to calculate the record size
+                record_size = len(json.dumps(record).encode("utf-8"))
+
+                # If a single record is too large, it can't be batched.
+                if record_size > max_batch_size_bytes:
+                    logger.warning(
+                        f"Record {record.get('objectID')} is too large ({record_size} bytes) to be batched and is being skipped."
+                    )
+                    failed_records.append(
+                        {
+                            "objectID": record.get("objectID"),
+                            "error": "Record size exceeds max batch size.",
+                        }
+                    )
+                    continue
+
+                # If adding the record exceeds the batch size, upload the current batch
+                if current_batch and (
+                    current_batch_size + record_size > max_batch_size_bytes
+                ):
+                    logger.info(
+                        f"Uploading batch of {len(current_batch)} records (size: {current_batch_size} bytes)..."
+                    )
+                    total_success_count += upload_batch(
+                        algolia_client,
+                        algolia_index_name,
+                        current_batch,
+                        failed_records,
+                    )
+
+                    # Reset the batch
+                    current_batch = []
+                    current_batch_size = 0
+
+                # Add the record to the current batch
+                current_batch.append(record)
+                current_batch_size += record_size
+
+            # Upload the last remaining batch
+            if current_batch:
+                logger.info(
+                    f"Uploading final batch of {len(current_batch)} records (size: {current_batch_size} bytes)..."
+                )
+                total_success_count += upload_batch(
+                    algolia_client, algolia_index_name, current_batch, failed_records
+                )
+
             # Report results
             if failed_records:
-                logger.warning(f"Migration completed with {len(failed_records)} failed records out of {len(algolia_objects)}")
-                logger.warning(f"Failed record IDs: {', '.join([r['objectID'] for r in failed_records[:10]])}")
+                logger.warning(
+                    f"Migration completed with {len(failed_records)} failed records out of {len(algolia_objects)}"
+                )
+                logger.warning(
+                    f"Failed record IDs: {', '.join([r['objectID'] for r in failed_records[:10]])}"
+                )
                 if len(failed_records) > 10:
                     logger.warning(f"... and {len(failed_records) - 10} more")
             else:
-                logger.info(f"All {success_count} records successfully uploaded to Algolia")
+                logger.info(
+                    f"All {total_success_count} records successfully uploaded to Algolia"
+                )
         else:
             logger.info("No objects to upload. Created an empty index.")
 
         logger.info("Migration completed!")
         return {
-            "status": "success", 
+            "status": "success",
             "message": "Migration completed successfully",
             "total_records": len(algolia_objects) if algolia_objects else 0,
-            "successful_records": success_count if algolia_objects else 0,
-            "failed_records": len(failed_records) if algolia_objects else 0
+            "successful_records": total_success_count,
+            "failed_records": len(failed_records),
         }
 
     except Exception as e:

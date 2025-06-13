@@ -1,0 +1,131 @@
+2025-06-13 08:43:41,633 | INFO | Starting job impact tool count calculation at 2025-06-13 08:43:41.633832
+2025-06-13 08:43:41,634 | INFO | Using base URL: http://localhost:8000
+2025-06-13 08:43:41,634 | INFO | Force update: False
+2025-06-13 08:43:41,634 | INFO | Getting all job impacts from database
+2025-06-13 08:46:32,062 | INFO | Starting job impact tool count calculation at 2025-06-13 08:46:32.062478
+2025-06-13 08:46:32,062 | INFO | Using base URL: http://localhost:8000
+2025-06-13 08:46:32,062 | INFO | Force update: False
+2025-06-13 08:46:32,062 | INFO | Getting all job impacts from database
+2025-06-13 08:46:32,123 | INFO | Found 71 job impacts
+2025-06-13 08:46:32,274 | INFO | Tool count for 'Biostatistician' already exists: 67
+2025-06-13 08:46:32,350 | INFO | Tool count for 'Telemarketer' already exists: 50
+2025-06-13 08:46:32,400 | INFO | Tool count for 'Tester' already exists: 48
+2025-06-13 08:46:32,425 | INFO | Tool count for 'Metallurgist' already exists: 73
+2025-06-13 08:46:32,427 | INFO | Tool count for 'Actor' already exists: 93
+2025-06-13 08:46:32,428 | INFO | Tool count for 'Pharmaceutical' already exists: 52
+2025-06-13 08:46:32,542 | INFO | Tool count for 'Musician' already exists: 99
+2025-06-13 08:46:32,600 | INFO | Tool count for 'Organist' already exists: 130
+2025-06-13 08:46:32,645 | INFO | Tool count for 'Transcriber' already exists: 0
+2025-06-13 08:46:32,716 | INFO | Tool count for 'Therapist' already exists: 0
+2025-06-13 08:46:32,773 | INFO | Tool count for 'Editor' already exists: 50
+2025-06-13 08:46:32,819 | INFO | Tool count for 'Baker' already exists: 720
+2025-06-13 08:46:33,125 | INFO | Tool count for 'Bricklayer' already exists: 0
+2025-06-13 08:46:33,275 | INFO | Tool count for 'Pianist' already exists: 600
+2025-06-13 08:46:33,660 | INFO | Tool count for 'Hacker' already exists: 695
+2025-06-13 08:46:33,661 | INFO | Tool count for 'Writer' already exists: 713
+2025-06-13 08:46:33,663 | INFO | Tool count for 'Programmer' already exists: 727
+2025-06-13 08:46:33,991 | INFO | Tool count for 'Animator' already exists: 0
+2025-06-13 08:46:34,026 | INFO | Tool count for 'Nutritionist' already exists: 622
+2025-06-13 08:46:34,027 | INFO | Tool count for 'Architect' already exists: 785
+2025-06-13 08:47:35,919 | INFO | Starting job impact tool count calculation at 2025-06-13 08:47:35.919047
+2025-06-13 08:47:35,919 | INFO | Using base URL: http://localhost:8000
+2025-06-13 08:47:35,919 | INFO | Force update: False
+2025-06-13 08:47:35,919 | INFO | Getting all job impacts from database
+2025-06-13 08:47:36,040 | INFO | Found 71 job impacts
+2025-06-13 08:47:36,043 | INFO | Tool count for 'Model' already exists: 0
+2025-06-13 08:47:36,045 | INFO | Tool count for 'Biostatistician' already exists: 67
+2025-06-13 08:47:36,047 | INFO | Tool count for 'Maid' already exists: 0
+2025-06-13 08:47:36,048 | INFO | Tool count for 'Physiologist' already exists: 0
+2025-06-13 08:47:36,050 | INFO | Tool count for 'Telemarketer' already exists: 50
+2025-06-13 08:47:36,051 | INFO | Tool count for 'Copywriter' already exists: 0
+2025-06-13 08:47:36,054 | INFO | Tool count for 'Interpreter' already exists: 0
+2025-06-13 08:47:36,056 | INFO | Tool count for 'Tester' already exists: 48
+2025-06-13 08:47:36,057 | INFO | Tool count for 'Bookkeeper' already exists: 0
+2025-06-13 08:47:36,059 | INFO | Tool count for 'Metallurgist' already exists: 73
+2025-06-13 08:47:36,060 | INFO | Tool count for 'Actor' already exists: 93
+2025-06-13 08:47:36,062 | INFO | Tool count for 'Pharmaceutical' already exists: 52
+2025-06-13 08:47:36,064 | INFO | Tool count for 'Meteorologist' already exists: 0
+2025-06-13 08:47:36,065 | INFO | Tool count for 'Musician' already exists: 99
+2025-06-13 08:47:36,067 | INFO | Tool count for 'Psychometrist' already exists: 0
+2025-06-13 08:47:36,068 | INFO | Tool count for 'Gynecologist' already exists: 0
+2025-06-13 08:47:36,070 | INFO | Tool count for 'Organist' already exists: 130
+2025-06-13 08:47:36,071 | INFO | Tool count for 'Veterinarian' already exists: 0
+2025-06-13 08:47:36,073 | INFO | Tool count for 'Transcriber' already exists: 0
+2025-06-13 08:47:36,075 | INFO | Tool count for 'Bookkeeping' already exists: 0
+2025-06-13 08:47:36,076 | INFO | Tool count for 'Bodyguard' already exists: 0
+2025-06-13 08:47:36,078 | INFO | Tool count for 'Therapist' already exists: 0
+2025-06-13 08:47:36,079 | INFO | Tool count for 'Illustrator' already exists: 0
+2025-06-13 08:47:36,081 | INFO | Tool count for 'Editor' already exists: 50
+2025-06-13 08:47:36,082 | INFO | Tool count for 'Pressman' already exists: 0
+2025-06-13 08:47:36,084 | INFO | Tool count for 'Transcriptionist' already exists: 0
+2025-06-13 08:47:36,086 | INFO | Tool count for 'Baker' already exists: 720
+2025-06-13 08:47:36,087 | INFO | Tool count for 'Painter' already exists: 0
+2025-06-13 08:47:36,089 | INFO | Tool count for 'Canvasser' already exists: 0
+2025-06-13 08:47:36,090 | INFO | Tool count for 'Bricklayer' already exists: 0
+2025-06-13 08:47:36,092 | INFO | Tool count for 'Producer' already exists: 0
+2025-06-13 08:47:36,093 | INFO | Tool count for 'Pianist' already exists: 600
+2025-06-13 08:47:36,095 | INFO | Tool count for 'Bagger' already exists: 0
+2025-06-13 08:47:36,096 | INFO | Tool count for 'Receptionist' already exists: 0
+2025-06-13 08:47:36,098 | INFO | Tool count for 'Decorator' already exists: 0
+2025-06-13 08:47:36,100 | INFO | Tool count for 'Hacker' already exists: 695
+2025-06-13 08:47:36,101 | INFO | Tool count for 'Writer' already exists: 713
+2025-06-13 08:47:36,103 | INFO | Tool count for 'Programmer' already exists: 727
+2025-06-13 08:47:36,104 | INFO | Tool count for 'Headhunter' already exists: 0
+2025-06-13 08:47:36,106 | INFO | Tool count for 'Biotechnology' already exists: 0
+2025-06-13 08:47:36,107 | INFO | Tool count for 'Fundraiser' already exists: 0
+2025-06-13 08:47:36,109 | INFO | Tool count for 'Animator' already exists: 0
+2025-06-13 08:47:36,110 | INFO | Tool count for 'Paralegal' already exists: 0
+2025-06-13 08:47:36,112 | INFO | Tool count for 'Nutritionist' already exists: 622
+2025-06-13 08:47:36,113 | INFO | Tool count for 'Architect' already exists: 785
+2025-06-13 08:47:36,115 | INFO | Tool count for 'Electrician' already exists: 0
+2025-06-13 08:48:52,053 | INFO | Starting job impact tool count calculation at 2025-06-13 08:48:52.053697
+2025-06-13 08:48:52,054 | INFO | Using base URL: http://localhost:8080
+2025-06-13 08:48:52,054 | INFO | Force update: False
+2025-06-13 08:48:52,054 | INFO | Getting all job impacts from database
+2025-06-13 08:48:52,114 | INFO | Found 71 job impacts
+2025-06-13 08:48:52,118 | INFO | Tool count for 'Model' already exists: 0
+2025-06-13 08:48:52,119 | INFO | Tool count for 'Biostatistician' already exists: 67
+2025-06-13 08:48:52,121 | INFO | Tool count for 'Maid' already exists: 0
+2025-06-13 08:48:52,123 | INFO | Tool count for 'Physiologist' already exists: 0
+2025-06-13 08:48:52,124 | INFO | Tool count for 'Telemarketer' already exists: 50
+2025-06-13 08:48:52,126 | INFO | Tool count for 'Copywriter' already exists: 0
+2025-06-13 08:48:52,127 | INFO | Tool count for 'Interpreter' already exists: 0
+2025-06-13 08:48:52,129 | INFO | Tool count for 'Tester' already exists: 48
+2025-06-13 08:48:52,131 | INFO | Tool count for 'Bookkeeper' already exists: 0
+2025-06-13 08:48:52,132 | INFO | Tool count for 'Metallurgist' already exists: 73
+2025-06-13 08:48:52,134 | INFO | Tool count for 'Actor' already exists: 93
+2025-06-13 08:48:52,136 | INFO | Tool count for 'Pharmaceutical' already exists: 52
+2025-06-13 08:48:52,137 | INFO | Tool count for 'Meteorologist' already exists: 0
+2025-06-13 08:48:52,139 | INFO | Tool count for 'Musician' already exists: 99
+2025-06-13 08:48:52,140 | INFO | Tool count for 'Psychometrist' already exists: 0
+2025-06-13 08:48:52,141 | INFO | Tool count for 'Gynecologist' already exists: 0
+2025-06-13 08:48:52,144 | INFO | Tool count for 'Organist' already exists: 130
+2025-06-13 08:48:52,145 | INFO | Tool count for 'Veterinarian' already exists: 0
+2025-06-13 08:48:52,146 | INFO | Tool count for 'Transcriber' already exists: 0
+2025-06-13 08:48:52,148 | INFO | Tool count for 'Bookkeeping' already exists: 0
+2025-06-13 08:48:52,150 | INFO | Tool count for 'Bodyguard' already exists: 0
+2025-06-13 08:48:52,151 | INFO | Tool count for 'Therapist' already exists: 0
+2025-06-13 08:48:52,153 | INFO | Tool count for 'Illustrator' already exists: 0
+2025-06-13 08:48:52,155 | INFO | Tool count for 'Editor' already exists: 50
+2025-06-13 08:48:52,156 | INFO | Tool count for 'Pressman' already exists: 0
+2025-06-13 08:48:52,158 | INFO | Tool count for 'Transcriptionist' already exists: 0
+2025-06-13 08:48:52,160 | INFO | Tool count for 'Baker' already exists: 720
+2025-06-13 08:48:52,161 | INFO | Tool count for 'Painter' already exists: 0
+2025-06-13 08:48:52,163 | INFO | Tool count for 'Canvasser' already exists: 0
+2025-06-13 08:48:52,165 | INFO | Tool count for 'Bricklayer' already exists: 0
+2025-06-13 08:48:52,166 | INFO | Tool count for 'Producer' already exists: 0
+2025-06-13 08:48:52,168 | INFO | Tool count for 'Pianist' already exists: 600
+2025-06-13 08:48:52,170 | INFO | Tool count for 'Bagger' already exists: 0
+2025-06-13 08:48:52,171 | INFO | Tool count for 'Receptionist' already exists: 0
+2025-06-13 08:48:52,173 | INFO | Tool count for 'Decorator' already exists: 0
+2025-06-13 08:48:52,175 | INFO | Tool count for 'Hacker' already exists: 695
+2025-06-13 08:48:52,176 | INFO | Tool count for 'Writer' already exists: 713
+2025-06-13 08:48:52,178 | INFO | Tool count for 'Programmer' already exists: 727
+2025-06-13 08:48:52,179 | INFO | Tool count for 'Headhunter' already exists: 0
+2025-06-13 08:48:52,181 | INFO | Tool count for 'Biotechnology' already exists: 0
+2025-06-13 08:48:52,183 | INFO | Tool count for 'Fundraiser' already exists: 0
+2025-06-13 08:48:52,185 | INFO | Tool count for 'Animator' already exists: 0
+2025-06-13 08:48:52,186 | INFO | Tool count for 'Paralegal' already exists: 0
+2025-06-13 08:48:52,188 | INFO | Tool count for 'Nutritionist' already exists: 622
+2025-06-13 08:48:52,189 | INFO | Tool count for 'Architect' already exists: 785
+2025-06-13 08:48:52,191 | INFO | Tool count for 'Electrician' already exists: 0

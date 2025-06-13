@@ -5,6 +5,9 @@ This script will:
 1. Fetch all keywords from the database
 2. Use an LLM to generate meaningful tool categories
 3. Insert the generated categories into the categories collection
+
+This is now a wrapper around the scripts/update_category_counts.py functionality
+to avoid code duplication.
 """
 
 import asyncio
@@ -16,6 +19,16 @@ from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from pymongo.server_api import ServerApi
 import openai
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Import from the updated script to reuse functionality
+from scripts.update_category_counts import (
+    generate_slug
+)
 
 # Fallback to the keywords.py file if direct DB access fails
 try:
@@ -40,6 +53,7 @@ client = AsyncIOMotorClient(MONGODB_URL, server_api=ServerApi("1"))
 database = client.get_database("taaft_db")
 categories_collection = database.get_collection("categories")
 keywords_collection = database.get_collection("keywords")
+tools_collection = database.get_collection("tools")
 
 
 async def fetch_keywords_from_db() -> List[str]:
@@ -192,31 +206,122 @@ async def save_categories_to_db(categories: List[Dict[str, str]]) -> None:
         print("No new categories to save")
 
 
+async def update_category_counts() -> Dict[str, Any]:
+    """
+    Update the counts for all categories in the database using the accurate counting method.
+    
+    Returns:
+        Dictionary with operation results
+    """
+    result = {
+        "success": True,
+        "total_categories": 0,
+        "categories_updated": 0,
+        "categories_with_errors": 0,
+    }
+    
+    try:
+        # Get all categories
+        categories = await categories_collection.find({}).to_list(length=None)
+        result["total_categories"] = len(categories)
+        
+        # Update count for each category
+        for category in categories:
+            category_id = category.get("id")
+            category_name = category.get("name")
+            
+            if not category_id or not category_name:
+                logger.warning(f"Skipping category with missing id or name: {category}")
+                result["categories_with_errors"] += 1
+                continue
+            
+            # Use aggregation pipeline to get accurate count of unique tools
+            pipeline = [
+                {
+                    "$match": {
+                        "$or": [
+                            {"categories.id": category_id},  # Array-based categories
+                            {"category": category_name}      # String-based category
+                        ]
+                    }
+                },
+                # Group by tool ID to ensure uniqueness
+                {
+                    "$group": {
+                        "_id": "$_id"  # Group by MongoDB ObjectID
+                    }
+                },
+                # Count the results
+                {
+                    "$count": "count"
+                }
+            ]
+            
+            # Execute the aggregation
+            count_results = await tools_collection.aggregate(pipeline).to_list(length=1)
+            accurate_count = count_results[0]["count"] if count_results else 0
+            
+            # Only update if count has changed
+            if category.get("count") != accurate_count:
+                old_count = category.get("count", 0)
+                logger.info(f"Updating category '{category_name}' count: {old_count} → {accurate_count}")
+                
+                # Update the count in the database
+                await categories_collection.update_one(
+                    {"id": category_id},
+                    {"$set": {"count": accurate_count}}
+                )
+                
+                result["categories_updated"] += 1
+            else:
+                logger.info(f"Category '{category_name}' count unchanged: {category.get('count')}")
+                
+        return result
+    
+    except Exception as e:
+        logger.error(f"Error updating category counts: {str(e)}")
+        result["success"] = False
+        result["error"] = str(e)
+        return result
+
+
 async def main():
     """Main function to execute the category generation process"""
     try:
-        # Fetch keywords from database
-        db_keywords = await fetch_keywords_from_db()
+        # First update the category counts using our improved method
+        logger.info("Updating category counts with accurate aggregation...")
+        update_result = await update_category_counts()
+        
+        if update_result["success"]:
+            logger.info(f"Successfully updated {update_result['categories_updated']} category counts")
+        else:
+            logger.error(f"Error updating category counts: {update_result.get('error')}")
+        
+        # Only proceed with category generation if requested
+        generate_new = os.getenv("GENERATE_NEW_CATEGORIES", "false").lower() == "true"
+        if generate_new:
+            # Fetch keywords from database
+            db_keywords = await fetch_keywords_from_db()
 
-        # Use DB keywords if available, otherwise fall back to imported KEYWORDS
-        keywords = db_keywords if db_keywords else KEYWORDS
+            # Use DB keywords if available, otherwise fall back to imported KEYWORDS
+            keywords = db_keywords if db_keywords else KEYWORDS
 
-        if not keywords:
-            print(
-                "No keywords found. Please ensure either the database contains keywords or the keywords.py file is available."
-            )
-            return
+            if not keywords:
+                print(
+                    "No keywords found. Please ensure either the database contains keywords or the keywords.py file is available."
+                )
+                return
 
-        # Generate categories using LLM
-        categories = await generate_categories_with_llm(keywords)
+            # Generate categories using LLM
+            categories = await generate_categories_with_llm(keywords)
 
-        # Save categories to database
-        await save_categories_to_db(categories)
+            # Save categories to database
+            await save_categories_to_db(categories)
 
-        print("Category generation completed successfully!")
+        print("Category count update completed successfully!")
 
     except Exception as e:
-        print(f"Error during category generation: {str(e)}")
+        print(f"Error during category processing: {str(e)}")
     finally:
         # Close the MongoDB connection
         client.close()

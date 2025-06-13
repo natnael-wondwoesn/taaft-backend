@@ -11,6 +11,7 @@ from fastapi import (
     Body,
     status,
     BackgroundTasks,
+    Response,
 )
 from typing import Dict, List, Optional, Any
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -866,6 +867,7 @@ async def search_job_impacts_with_tools_post(
 @router.get("/task-tools/{task_name}", response_model=TaskToolsSearchResult)
 async def search_tools_by_task(
     task_name: str,
+    response: Response,
     page: int = Query(0, ge=0, description="Page number (0-based)"),
     per_page: int = Query(10, ge=1, le=50, description="Results per page"),
 ):
@@ -893,11 +895,14 @@ async def search_tools_by_task(
     
     try:
         # Perform the search
-        search_result = await algolia_search.search_tools_by_task(
+        search_result, from_cache = await algolia_search.search_tools_by_task(
             task_name=task_name,
             page=page,
             per_page=per_page,
         )
+        
+        # Add header flag indicating data source
+        response.headers["X-Data-Source"] = "redis-cache" if from_cache else "database"
         
         return search_result
     
@@ -911,6 +916,7 @@ async def search_tools_by_task(
 @router.get("/new-task-tools/{task_name}", response_model=Any)
 async def new_search_tools_by_task(
     task_name: str,
+    response: Response,
     page: int = Query(0, ge=0, description="Page number (0-based)"),
     per_page: int = Query(10, ge=1, le=50, description="Results per page"),
 ):
@@ -938,11 +944,14 @@ async def new_search_tools_by_task(
     
     try:
         # Perform the search
-        search_result = await algolia_search.search_tools_by_task(
+        search_result, from_cache = await algolia_search.search_tools_by_task(
             task_name=task_name,
             page=page,
             per_page=per_page,
         )
+        
+        # Add header flag indicating data source
+        response.headers["X-Data-Source"] = "redis-cache" if from_cache else "database"
         
         return search_result
     

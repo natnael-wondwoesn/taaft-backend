@@ -2,17 +2,19 @@ from fastapi import HTTPException
 from uuid import UUID, uuid4, uuid5, NAMESPACE_OID
 from datetime import datetime
 import asyncio
-from typing import List, Optional, Union, Dict, Any
+from typing import List, Optional, Union, Dict, Any, Tuple
 from bson import ObjectId
 
 from app.algolia.models import AlgoliaToolRecord
 
-from ..database.database import tools, database, favorites
+from ..database.database import tools, database, favorites, users
 from .models import ToolCreate, ToolUpdate, ToolInDB, ToolResponse
 from ..algolia.indexer import algolia_indexer
 from ..categories.service import categories_service
 from collections import Counter
-from ..services.redis_cache import redis_cache, invalidate_cache
+from ..services.redis_cache import redis_cache, invalidate_cache, redis_client, REDIS_CACHE_ENABLED
+from ..models.user import UserResponse
+# from ..scraper.utils import format_price, get_palo_alto_data
 
 from ..logger import logger
 
@@ -347,13 +349,14 @@ async def create_tool_response(tool: Dict[str, Any]) -> Optional[ToolResponse]:
             image_url=tool.get("image_url"),
             carriers=tool.get("carriers"),
             task=tool.get("task"),
+            is_sponsored_public=tool.get("is_sponsored_public", False),
+            is_sponsored_private=tool.get("is_sponsored_private", False),
         )
     except Exception as e:
         logger.error(f"Error creating tool response: {str(e)}")
         return None
 
 
-@redis_cache(prefix="tools_list")
 async def get_tools(
     skip: int = 0,
     limit: int = 100,
@@ -380,115 +383,30 @@ async def get_tools(
     """
     # Build the query
     query = {}
-
-    # Apply filters if provided
     if filters:
-        for field, value in filters.items():
-            # Handle special filter cases
-            if field == "category":
-                # Look for category in both the "category" field and the "categories" array
-                query["$or"] = [
-                    {"category": value},  # Direct match on category field
-                    {"categories.id": value},  # Match on categories.id in array
-                ]
-            elif field == "is_featured":
-                # Correctly convert string values from query parameters to boolean
-                if isinstance(value, str):
-                    if value.lower() == "true":
-                        query["is_featured"] = True
-                    elif value.lower() == "false":
-                        # When looking for non-featured tools, need to handle tools
-                        # where the field doesn't exist (count as non-featured)
-                        query["$or"] = [
-                            {"is_featured": False},
-                            {"is_featured": {"$exists": False}},
-                        ]
-                    else:
-                        # If it's not a valid boolean string, use the value as-is
-                        query["is_featured"] = value
-                else:
-                    # For boolean values
-                    if value is False:
-                        # Include both explicit False and missing field
-                        query["$or"] = [
-                            {"is_featured": False},
-                            {"is_featured": {"$exists": False}},
-                        ]
-                    else:
-                        query["is_featured"] = bool(value)
+        # To handle both string and list of strings for category
+        if "category" in filters and isinstance(filters["category"], list):
+            query["category"] = {"$in": filters["category"]}
+            del filters["category"]
+        query.update(filters)
 
-                # Log the value for debugging
-                logger.info(
-                    f"Applying is_featured filter with value: {value} (type: {type(value)}), query: {query}"
-                )
-            elif field == "price":
-                query["price"] = value
-            elif field == "features":
-                if isinstance(value, list):
-                    query["features"] = {"$all": value}
-                else:
-                    query["features"] = value
-            else:
-                # Default to exact match for other fields
-                query[field] = value
-
-    # Count documents if requested
     if count_only:
         return await tools.count_documents(query)
 
-    # Create the cursor with efficient sorting in MongoDB
-    # Use aggregation pipeline for more complex sorting logic
-    pipeline = [{"$match": query}]
+    # Determine sort direction
+    sort_direction = -1 if sort_order.lower() == "desc" else 1
 
-    # Add a stage to create a new field indicating if description is empty
-    pipeline.append(
-        {
-            "$addFields": {
-                "has_description": {
-                    "$cond": [
-                        {
-                            "$or": [
-                                {"$eq": ["$description", ""]},
-                                {"$eq": ["$description", None]},
-                            ]
-                        },
-                        0,  # description is empty or null
-                        1,  # description has content
-                    ]
-                }
-            }
-        }
-    )
+    # Create cursor with sorting
+    cursor = tools.find(query).skip(skip).limit(limit).sort(sort_by, sort_direction)
 
-    # Create a sort object that combines both sorts
-    sort_obj = {"has_description": -1}  # Always prioritize tools with descriptions
-
-    # Add the requested sort if provided
-    if sort_by:
-        sort_direction = -1 if sort_order.lower() == "desc" else 1
-        sort_obj[sort_by] = sort_direction
-
-    # Apply the combined sort in a single stage
-    pipeline.append({"$sort": sort_obj})
-
-    # Apply pagination after sorting
-    pipeline.append({"$skip": skip})
-    pipeline.append({"$limit": limit})
-
-    # Log the pipeline for debugging
-    logger.debug(f"MongoDB aggregation pipeline: {pipeline}")
-
-    # Execute the aggregation pipeline
-    cursor = tools.aggregate(pipeline)
-
-    # Process results
     tools_list = []
+    
     saved_tools_list = []
 
     # If user_id is provided, get the user's saved tools
     if user_id and not count_only:
         # Check if the user exists and has saved tools
-        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        user = await users.find_one({"_id": ObjectId(user_id)})
         if user and "saved_tools" in user:
             # Convert all items to strings for consistent comparison
             saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
@@ -518,7 +436,6 @@ async def get_tools(
     # return tools_list
 
 
-@redis_cache(prefix="tool_by_id")
 async def get_tool_by_id(
     tool_id: UUID, user_id: Optional[str] = None
 ) -> Optional[ToolResponse]:
@@ -541,7 +458,7 @@ async def get_tool_by_id(
     # If user_id is provided, check if the tool is saved by the user
     if user_id and tool_response:
         # Check if user has saved_tools array
-        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        user = await users.find_one({"_id": ObjectId(user_id)})
         if user and "saved_tools" in user:
             # Convert to strings for consistent comparison
             saved_tools = [str(t) for t in user["saved_tools"]]
@@ -566,7 +483,6 @@ async def get_tool_by_id(
     return tool_response
 
 
-@redis_cache(prefix="tool_by_unique_id")
 async def get_tool_by_unique_id(
     unique_id: str, user_id: Optional[str] = None
 ) -> Optional[ToolResponse]:
@@ -578,8 +494,27 @@ async def get_tool_by_unique_id(
         user_id: Optional user ID to check favorite status
 
     Returns:
-        Tool object or None if not found
+        The tool response or None if not found
     """
+    # Check for cached response first
+    if REDIS_CACHE_ENABLED and redis_client:
+        try:
+            cache_key = f"tool_by_unique_id:{unique_id}"
+            if user_id:
+                cache_key += f":{user_id}"
+            
+            cached_result = await redis_client.get(cache_key)
+            if cached_result:
+                import json
+                result_data = json.loads(cached_result)
+                
+                # Convert to ToolResponse
+                tool_response = ToolResponse(**result_data)
+                return tool_response
+        except Exception as e:
+            logger.error(f"Error retrieving cached tool by unique_id: {str(e)}")
+    
+    # If not cached, fetch from database
     tool = await tools.find_one({"unique_id": unique_id})
     if not tool:
         return None
@@ -589,7 +524,7 @@ async def get_tool_by_unique_id(
     # If user_id is provided, check if the tool is saved by the user
     if user_id and tool_response:
         # Check if user has saved_tools array
-        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        user = await users.find_one({"_id": ObjectId(user_id)})
         if user and "saved_tools" in user:
             # Convert to strings for consistent comparison
             saved_tools = [str(t) for t in user["saved_tools"]]
@@ -608,6 +543,23 @@ async def get_tool_by_unique_id(
                 f"Tool {unique_id} saved status from favorites: {tool_response.saved_by_user}"
             )
 
+    # Cache the result for future requests
+    if REDIS_CACHE_ENABLED and redis_client and tool_response:
+        try:
+            import json
+            cache_key = f"tool_by_unique_id:{unique_id}"
+            if user_id:
+                cache_key += f":{user_id}"
+            
+            # Cache for 1 hour (3600 seconds)
+            await redis_client.setex(
+                cache_key, 
+                3600, 
+                json.dumps(tool_response.model_dump(), default=str)
+            )
+        except Exception as e:
+            logger.error(f"Error caching tool by unique_id: {str(e)}")
+    
     return tool_response
 
 
@@ -902,7 +854,7 @@ async def search_tools(
     user_id: Optional[str] = None,
 ) -> Union[Dict[str, Any], int]:
     """
-    Search for tools by name or description.
+    Search for tools by name or description using MongoDB only.
 
     Args:
         search_term: The search query
@@ -917,117 +869,27 @@ async def search_tools(
     Returns:
         Dictionary with tools list and total count, or just count if count_only is True
     """
-    from ..algolia.config import algolia_config
-    from ..algolia.search import algolia_search
-
-    # Try using Algolia first if configured
-    if algolia_config.is_configured():
-        try:
-            # Use the direct search function for more flexible name/description search
-            search_result = await algolia_search.direct_search_tools(
-                query=search_term,
-                page=(skip // limit) if limit > 0 else 0,  # Convert skip/limit to page
-                per_page=(
-                    limit if not count_only else 1
-                ),  # Only need one result if just countin
-            )
-
-            if count_only:
-                return search_result.total
-
-            # Get saved tools if user is provided
-            saved_tools_list = []
-            if user_id:
-                # Check if the user exists and has saved tools
-                user = await database.users.find_one({"_id": ObjectId(user_id)})
-                if user and "saved_tools" in user:
-                    # Convert all items to strings for consistent comparison
-                    saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
-                else:
-                    # If user doesn't have saved_tools field, check favorites collection
-                    fav_cursor = favorites.find({"user_id": str(user_id)})
-                    async for favorite in fav_cursor:
-                        saved_tools_list.append(str(favorite["tool_unique_id"]))
-
-                # For debugging
-                logger.info(
-                    f"User {user_id} has saved tools (Algolia search): {saved_tools_list}"
-                )
-
-            # logger.info(f"Search result: {search_result.tools}")
-            # Convert Algolia results to ToolResponse objects
-            tools_list = []
-            for tool in search_result.tools:
-                # logger.info(f"Tool: {tool}")
-                # Convert Algolia result to a dictionary format compatible with our helper
-                tool_dict = {
-                    "id": getattr(tool, "objectID", ""),
-                    "price": getattr(tool, "price", ""),
-                    "name": getattr(tool, "name", ""),
-                    "description": getattr(tool, "description", ""),
-                    "link": getattr(tool, "link", ""),
-                    "unique_id": getattr(tool, "unique_id", ""),
-                    "rating": getattr(tool, "rating", None),
-                    "saved_numbers": getattr(tool, "saved_numbers", None),
-                    "created_at": getattr(tool, "created_at", None),
-                    "updated_at": getattr(tool, "updated_at", None),
-                    "features": getattr(tool, "features", None),
-                    "is_featured": getattr(tool, "is_featured", False),
-                    "keywords": getattr(tool, "keywords", []),
-                    "categories": getattr(tool, "categories", None),
-                    "logo_url": getattr(tool, "logo_url", ""),
-                    "user_reviews": getattr(tool, "user_reviews", None),
-                    "feature_list": getattr(tool, "feature_list", []),
-                    "referral_allow": getattr(tool, "referral_allow", False),
-                    "generated_description": getattr(
-                        tool, "generated_description", None
-                    ),
-                    "industry": getattr(tool, "industry", None),
-                    "carriers": getattr(tool, "carriers", []),
-                }
-                logger.info(f"Tool dict: {tool_dict}")
-
-                # Add categories if available
-                if getattr(tool, "categories", None):
-                    if (
-                        isinstance(getattr(tool, "categories", None), list)
-                        and len(getattr(tool, "categories", None)) > 0
-                    ):
-                        if isinstance(getattr(tool, "categories", None)[0], dict):
-                            tool_dict["category"] = getattr(tool, "categories", None)[
-                                0
-                            ].get("id")
-                        elif hasattr(getattr(tool, "categories", None)[0], "id"):
-                            tool_dict["category"] = getattr(tool, "categories", None)[
-                                0
-                            ].id
-
-                tool_response = await create_tool_response(tool_dict)
-                if tool_response:
-                    # Check if this tool is saved by the user
-                    if user_id:
-                        # Make sure both are strings for consistent comparison
-                        tool_unique_id = str(getattr(tool, "unique_id", "") or "")
-                        tool_response.saved_by_user = tool_unique_id in saved_tools_list
-                        logger.info(
-                            f"Tool {tool_unique_id} saved status (Algolia): {tool_response.saved_by_user}"
-                        )
-                    tools_list.append(tool_response)
-
-            return {"tools": tools_list, "total": search_result.total}
-        except Exception as e:
-            # Log the error and fall back to MongoDB
-            logger.error(
-                f"Error searching with Algolia, falling back to MongoDB: {str(e)}"
-            )
-
-    # Fall back to MongoDB text search
+    from ..database.database import tools, users, favorites
+    from bson import ObjectId
+    from ..logger import logger
+    
     # Create the base query for text search
     query = {"$text": {"$search": search_term}}
 
     # Add additional filters if provided
     if additional_filters:
-        query.update(additional_filters)
+        # If the filter is a $or (for category), combine with $and
+        if "$or" in additional_filters:
+            and_clauses = [
+                {"$text": {"$search": search_term}},
+                {"$or": additional_filters["$or"]}
+            ]
+            for k, v in additional_filters.items():
+                if k != "$or":
+                    and_clauses.append({k: v})
+            query = {"$and": and_clauses}
+        else:
+            query.update(additional_filters)
 
     if count_only:
         return await tools.count_documents(query)
@@ -1046,18 +908,13 @@ async def search_tools(
 
     # If user_id is provided, get the user's saved tools
     if user_id:
-        # Check if the user exists and has saved tools
-        user = await database.users.find_one({"_id": ObjectId(user_id)})
+        user = await users.find_one({"_id": ObjectId(user_id)})
         if user and "saved_tools" in user:
-            # Convert all items to strings for consistent comparison
             saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
         else:
-            # If user doesn't have saved_tools field, check favorites collection
             fav_cursor = favorites.find({"user_id": str(user_id)})
             async for favorite in fav_cursor:
                 saved_tools_list.append(str(favorite["tool_unique_id"]))
-
-        # For debugging
         logger.info(
             f"User {user_id} has saved tools (MongoDB search): {saved_tools_list}"
         )
@@ -1065,16 +922,11 @@ async def search_tools(
     async for tool in cursor:
         tool_response = await create_tool_response(tool)
         if tool_response:
-            # Check if this tool is saved by the user
             if user_id:
                 unique_id = str(tool.get("unique_id", ""))
                 tool_response.saved_by_user = unique_id in saved_tools_list
-                logger.info(
-                    f"Tool {unique_id} saved status (MongoDB search): {tool_response.saved_by_user}"
-                )
             tools_list.append(tool_response)
 
-    # Get total count with the same query
     total = await tools.count_documents(query)
 
     return {"tools": tools_list, "total": total}
@@ -1144,7 +996,7 @@ async def keyword_search_tools(
                 saved_tools_list = []
                 if user_id:
                     # Check if the user exists and has saved tools
-                    user = await database.users.find_one({"_id": ObjectId(user_id)})
+                    user = await users.find_one({"_id": ObjectId(user_id)})
                     if user and "saved_tools" in user:
                         # Convert all items to strings for consistent comparison
                         saved_tools_list = [
@@ -1298,7 +1150,7 @@ async def keyword_search_tools(
             saved_tools_list = []
             if user_id:
                 # Check if the user exists and has saved tools
-                user = await database.users.find_one({"_id": ObjectId(user_id)})
+                user = await users.find_one({"_id": ObjectId(user_id)})
                 if user and "saved_tools" in user:
                     # Convert all items to strings for consistent comparison
                     saved_tools_list = [str(tool_id) for tool_id in user["saved_tools"]]
@@ -1325,46 +1177,31 @@ async def keyword_search_tools(
     return tools_list
 
 
-@redis_cache(prefix="tool_with_favorite")
 async def get_tool_with_favorite_status(
     tool_unique_id: str, user_id: str
-) -> Optional[ToolResponse]:
+) -> Tuple[Optional[ToolResponse], bool]:
     """
-    Get a tool with its favorite status for a specific user.
+    Get a tool by its unique_id with favorite status for a specific user.
 
     Args:
         tool_unique_id: The unique_id of the tool
-        user_id: The ID of the user
+        user_id: User ID to check favorite status
 
     Returns:
-        Tool object with favorite status or None if not found
+        Tuple of (tool_response, is_favorite)
     """
+    # Get the tool
     tool = await get_tool_by_unique_id(tool_unique_id)
-
     if not tool:
-        return None
+        return None, False
 
-    # Check if tool is in user's favorites
+    # Check if it's a favorite
     favorite = await favorites.find_one(
         {"user_id": str(user_id), "tool_unique_id": str(tool_unique_id)}
     )
+    is_favorite = favorite is not None
 
-    # Also check saved_tools array in user document
-    user = await database.users.find_one({"_id": ObjectId(user_id)})
-    saved_in_user = False
-    if user and "saved_tools" in user:
-        saved_tools = [str(t) for t in user["saved_tools"]]
-        saved_in_user = str(tool_unique_id) in saved_tools
-
-    # Log the findings for debugging
-    logger.info(
-        f"Tool {tool_unique_id} favorite status for user {user_id}: favorite={favorite is not None}, saved_in_user={saved_in_user}"
-    )
-
-    # Update the saved_by_user field
-    tool.saved_by_user = favorite is not None or saved_in_user
-
-    return tool
+    return tool, is_favorite
 
 
 # @redis_cache(prefix="keywords")
@@ -1479,52 +1316,274 @@ async def toggle_tool_featured_status_by_unique_id(
     Returns:
         The updated tool or None if not found
     """
-    logger.info(
-        f"Setting tool with unique_id={unique_id} featured status to {is_featured}"
-    )
-
-    # Update the tool in the database
-    result = await tools.update_one(
-        {"unique_id": unique_id},
-        {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
-    )
-
-    if result.matched_count == 0:
-        logger.warning(
-            f"Tool with unique_id={unique_id} not found for featured status update"
-        )
-        return None
-
-    # Get the updated tool
-    updated_tool = await tools.find_one({"unique_id": unique_id})
-    if not updated_tool:
-        logger.error(
-            f"Tool with unique_id={unique_id} was updated but could not be retrieved"
-        )
-        return None
-
-    # Update the tool in Algolia
     try:
-        from ..algolia.config import algolia_config
+        if not unique_id:
+            logger.error("Cannot toggle featured status: unique_id is empty or None")
+            return None
+            
+        logger.info(f"Setting tool with unique_id '{unique_id}' featured status to {is_featured}")
+        
+        # Try to find the tool using multiple approaches
+        tool = None
+        
+        # 1. First try exact match on unique_id
+        logger.info(f"Searching for tool with exact unique_id: '{unique_id}'")
+        tool = await tools.find_one({"unique_id": unique_id})
+        
+        # 2. If not found, try case-insensitive match
+        if not tool:
+            logger.info(f"Tool not found with exact unique_id, trying case-insensitive search")
+            try:
+                tool = await tools.find_one({"unique_id": {"$regex": f"^{unique_id}$", "$options": "i"}})
+            except Exception as e:
+                logger.warning(f"Case-insensitive search failed: {e}")
+        
+        # 3. If still not found, try by partial match
+        if not tool:
+            logger.info(f"Tool not found with case-insensitive search, trying partial match")
+            try:
+                tool = await tools.find_one({"unique_id": {"$regex": f".*{unique_id}.*", "$options": "i"}})
+            except Exception as e:
+                logger.warning(f"Partial match search failed: {e}")
+                
+        # 4. Try to find by name if it looks like a tool name rather than an ID
+        if not tool and len(unique_id) > 10 and " " in unique_id:
+            logger.info(f"Trying to find tool by name: '{unique_id}'")
+            try:
+                tool = await tools.find_one({"name": {"$regex": f".*{unique_id}.*", "$options": "i"}})
+            except Exception as e:
+                logger.warning(f"Name search failed: {e}")
+        
+        # Final check - if tool is still not found
+        if not tool:
+            logger.warning(f"Tool with unique_id '{unique_id}' not found using any search method")
+            # Dump some database statistics to help diagnose the issue
+            try:
+                count = await tools.count_documents({})
+                logger.info(f"Total tools in database: {count}")
+                
+                # Sample a few tools to check if database connection is working
+                sample = await tools.find().limit(3).to_list(length=3)
+                if sample:
+                    logger.info(f"Sample tool names: {[t.get('name', 'unnamed') for t in sample]}")
+                    logger.info(f"Sample tool unique_ids: {[t.get('unique_id', 'no-id') for t in sample]}")
+                else:
+                    logger.warning("No tools found in database sample")
+            except Exception as e:
+                logger.error(f"Error accessing database: {e}")
+                
+            return None
+            
+        # Log the found tool details
+        logger.info(f"Found tool: '{tool.get('name')}' (ID: {tool.get('_id')}, unique_id: {tool.get('unique_id')})")
 
-        if algolia_config.is_configured():
-            # Create a dictionary with the tool data for Algolia
-            algolia_data = {
-                "objectID": str(updated_tool["id"]),
-                "is_featured": is_featured,
-            }
-            # Update the record in Algolia
-            await algolia_indexer.update_record(algolia_data)
-            logger.info(
-                f"Updated featured status in Algolia for tool with unique_id={unique_id}"
+        # Verify the tool has an _id field
+        if not tool.get("_id"):
+            logger.error(f"Tool found but has no _id field: {tool}")
+            return None
+
+        # Update the is_featured field
+        try:
+            update_result = await tools.update_one(
+                {"_id": tool["_id"]},
+                {"$set": {"is_featured": is_featured, "updated_at": datetime.utcnow()}},
             )
+            
+            logger.info(f"Update result: matched={update_result.matched_count}, modified={update_result.modified_count}")
+            
+            if update_result.matched_count == 0:
+                logger.error(f"Failed to update tool with _id {tool['_id']}, no document matched")
+                return None
+        except Exception as e:
+            logger.error(f"Database update error: {e}")
+            return None
+
+        # Get the updated tool
+        try:
+            updated_tool = await tools.find_one({"_id": tool["_id"]})
+            if not updated_tool:
+                logger.error(f"Tool with _id {tool['_id']} was updated but could not be retrieved")
+                return None
+                
+            logger.info(f"Successfully retrieved updated tool: {updated_tool.get('name')}")
+        except Exception as e:
+            logger.error(f"Error retrieving updated tool: {e}")
+            return None
+
+        # Invalidate cache
+        try:
+            invalidate_cache_tasks = [
+                invalidate_cache(f"tool_by_unique_id:{unique_id}"),
+                invalidate_cache("tools_list")
+            ]
+            
+            # Run all invalidation tasks
+            for task in invalidate_cache_tasks:
+                await task
+                
+            logger.info("Cache invalidation completed")
+        except Exception as e:
+            logger.warning(f"Cache invalidation error (non-critical): {e}")
+
+        # Convert to response model
+        try:
+            tool_response = await create_tool_response(updated_tool)
+            if not tool_response:
+                logger.error("Failed to create tool response from updated tool")
+                return None
+                
+            logger.info(f"Successfully updated tool '{updated_tool.get('name')}' featured status to {is_featured}")
+            return tool_response
+        except Exception as e:
+            logger.error(f"Error creating tool response: {e}")
+            return None
+            
     except Exception as e:
-        # Log the error but don't fail the request
-        logger.error(f"Failed to update Algolia index: {str(e)}")
+        logger.error(f"Error toggling tool featured status by unique_id: {e}")
+        # Include traceback for easier debugging
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return None
 
-    # Invalidate caches after toggling featured status
-    invalidate_cache("tools_list")
-    invalidate_cache("tool_by_unique_id")
 
-    # Return the updated tool as a ToolResponse
-    return await create_tool_response(updated_tool)
+async def toggle_tool_sponsored_private_status(
+    unique_id: str, is_sponsored_private: bool
+) -> Optional[ToolResponse]:
+    """
+    Toggle the private sponsored status of a tool by its unique_id.
+
+    Args:
+        unique_id: The unique_id of the tool
+        is_sponsored_private: Whether the tool should be privately sponsored
+
+    Returns:
+        Updated tool or None if not found
+    """
+    try:
+        if not unique_id:
+            logger.error("Cannot toggle sponsored status: unique_id is empty or None")
+            return None
+            
+        logger.info(f"Setting tool with unique_id '{unique_id}' private sponsored status to {is_sponsored_private}")
+        
+        # Try to find the tool using multiple approaches
+        tool = None
+        
+        # 1. First try exact match on unique_id
+        logger.info(f"Searching for tool with exact unique_id: '{unique_id}'")
+        tool = await tools.find_one({"unique_id": unique_id})
+        
+        # 2. If not found, try case-insensitive match
+        if not tool:
+            logger.info(f"Tool not found with exact unique_id, trying case-insensitive search")
+            try:
+                tool = await tools.find_one({"unique_id": {"$regex": f"^{unique_id}$", "$options": "i"}})
+            except Exception as e:
+                logger.warning(f"Case-insensitive search failed: {e}")
+        
+        # 3. If still not found, try by partial match
+        if not tool:
+            logger.info(f"Tool not found with case-insensitive search, trying partial match")
+            try:
+                tool = await tools.find_one({"unique_id": {"$regex": f".*{unique_id}.*", "$options": "i"}})
+            except Exception as e:
+                logger.warning(f"Partial match search failed: {e}")
+                
+        # 4. Try to find by name if it looks like a tool name rather than an ID
+        if not tool and len(unique_id) > 10 and " " in unique_id:
+            logger.info(f"Trying to find tool by name: '{unique_id}'")
+            try:
+                tool = await tools.find_one({"name": {"$regex": f".*{unique_id}.*", "$options": "i"}})
+            except Exception as e:
+                logger.warning(f"Name search failed: {e}")
+        
+        # Final check - if tool is still not found
+        if not tool:
+            logger.warning(f"Tool with unique_id '{unique_id}' not found using any search method")
+            # Dump some database statistics to help diagnose the issue
+            try:
+                count = await tools.count_documents({})
+                logger.info(f"Total tools in database: {count}")
+                
+                # Sample a few tools to check if database connection is working
+                sample = await tools.find().limit(3).to_list(length=3)
+                if sample:
+                    logger.info(f"Sample tool names: {[t.get('name', 'unnamed') for t in sample]}")
+                    logger.info(f"Sample tool unique_ids: {[t.get('unique_id', 'no-id') for t in sample]}")
+                else:
+                    logger.warning("No tools found in database sample")
+            except Exception as e:
+                logger.error(f"Error accessing database: {e}")
+                
+            return None
+            
+        # Log the found tool details
+        logger.info(f"Found tool: '{tool.get('name')}' (ID: {tool.get('_id')}, unique_id: {tool.get('unique_id')})")
+
+        # Verify the tool has an _id field
+        if not tool.get("_id"):
+            logger.error(f"Tool found but has no _id field: {tool}")
+            return None
+
+        # Update the is_sponsored_private field
+        try:
+            update_result = await tools.update_one(
+                {"_id": tool["_id"]},
+                {"$set": {"is_sponsored_private": is_sponsored_private, "updated_at": datetime.utcnow()}},
+            )
+            
+            logger.info(f"Update result: matched={update_result.matched_count}, modified={update_result.modified_count}")
+            
+            if update_result.matched_count == 0:
+                logger.error(f"Failed to update tool with _id {tool['_id']}, no document matched")
+                return None
+        except Exception as e:
+            logger.error(f"Database update error: {e}")
+            return None
+
+        # Get the updated tool
+        try:
+            updated_tool = await tools.find_one({"_id": tool["_id"]})
+            if not updated_tool:
+                logger.error(f"Tool with _id {tool['_id']} was updated but could not be retrieved")
+                return None
+                
+            logger.info(f"Successfully retrieved updated tool: {updated_tool.get('name')}")
+        except Exception as e:
+            logger.error(f"Error retrieving updated tool: {e}")
+            return None
+
+        # Invalidate cache
+        try:
+            invalidate_cache_tasks = [
+                invalidate_cache(f"tool_by_unique_id:{unique_id}"),
+                invalidate_cache("tools_list")
+            ]
+            
+            # Run all invalidation tasks
+            for task in invalidate_cache_tasks:
+                await task
+                
+            logger.info("Cache invalidation completed")
+        except Exception as e:
+            logger.warning(f"Cache invalidation error (non-critical): {e}")
+
+        # Convert to response model
+        try:
+            tool_response = await create_tool_response(updated_tool)
+            if not tool_response:
+                logger.error("Failed to create tool response from updated tool")
+                return None
+                
+            logger.info(f"Successfully updated tool '{updated_tool.get('name')}' sponsored private status to {is_sponsored_private}")
+            return tool_response
+        except Exception as e:
+            logger.error(f"Error creating tool response: {e}")
+            return None
+            
+    except Exception as e:
+        logger.error(f"Error toggling tool private sponsored status by unique_id: {e}")
+        # Include traceback for easier debugging
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return None

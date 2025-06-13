@@ -13,7 +13,7 @@ from ..tools.models import PaginatedToolsResponse
 # Remove the direct import to avoid circular dependencies
 # from ..tools.tools_service import get_tools, search_tools
 from ..logger import logger
-from ..services.redis_cache import invalidate_cache
+from ..services.redis_cache import invalidate_cache, redis_cache
 from ..auth.dependencies import get_admin_user, get_current_active_user
 from ..models.user import UserResponse, UserInDB
 
@@ -112,6 +112,7 @@ async def get_tools_by_category_slug(
     sort_order: str = Query("desc", description="Sort order (asc or desc)"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
+    current_user: Optional[UserResponse] = Depends(get_current_active_user),
 ):
     """
     Get tools by category slug with search and pagination
@@ -125,6 +126,7 @@ async def get_tools_by_category_slug(
         sort_order: Sort order (asc or desc)
         price_type: Filter by price type
         is_featured: Filter featured tools
+        current_user: Optional authenticated user
 
     Returns:
         Paginated list of tools in the specified category
@@ -156,6 +158,9 @@ async def get_tools_by_category_slug(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
+    # Get user ID if authenticated
+    user_id = str(current_user.id) if current_user else None
+
     # Build filters dictionary
     # Use $or to match either categories.id OR the category string field
     filters = {
@@ -173,28 +178,127 @@ async def get_tools_by_category_slug(
 
     # If search term is provided, use search_tools function
     if search and search.strip():
+        # For search, we need to use $or with distinct tool IDs
+        # First, get the unique tool IDs in this category to avoid duplicates
+        from ..database.database import tools as tools_collection
+        pipeline = [
+            {
+                "$match": filters
+            },
+            # Group by tool ID to ensure uniqueness
+            {
+                "$group": {
+                    "_id": "$_id"  # Group by MongoDB ObjectID
+                }
+            }
+        ]
+        
+        distinct_tool_ids = []
+        cursor = tools_collection.aggregate(pipeline)
+        async for doc in cursor:
+            distinct_tool_ids.append(doc["_id"])
+            
+        # If no tools found for this category, return empty result
+        if not distinct_tool_ids:
+            return {
+                "tools": [],
+                "total": 0,
+                "skip": skip,
+                "limit": limit,
+                "carriers": [],
+            }
+        
+        # Use these distinct IDs in the search
+        refined_filters = {"_id": {"$in": distinct_tool_ids}}
+        
         result = await search_tools(
             search_term=search,
             skip=skip,
             limit=limit,
-            additional_filters=filters,
+            additional_filters=refined_filters,
             sort_by=sort_by,
             sort_order=sort_order,
+            user_id=user_id,
         )
 
         tools = result.get("tools", [])
         total = result.get("total", 0)
     else:
-        # Otherwise, use get_tools with filters
-        tools = await get_tools(
-            skip=skip,
-            limit=limit,
-            filters=filters,
-            sort_by=sort_by,
-            sort_order=sort_order,
-        )
-
-        total = await get_tools(count_only=True, filters=filters)
+        # For non-search, use aggregation to get distinct tools
+        from ..database.database import tools as tools_collection
+        from ..tools.tools_service import create_tool_response
+        
+        # First get the total count using aggregation
+        count_pipeline = [
+            {
+                "$match": filters
+            },
+            # Group by tool ID to ensure uniqueness
+            {
+                "$group": {
+                    "_id": "$_id"
+                }
+            },
+            # Count the results
+            {
+                "$count": "total"
+            }
+        ]
+        
+        count_result = await tools_collection.aggregate(count_pipeline).to_list(length=1)
+        total = count_result[0]["total"] if count_result else 0
+        
+        # Now get the paginated tools with sort
+        sort_direction = -1 if sort_order.lower() == "desc" else 1
+        
+        pipeline = [
+            {
+                "$match": filters
+            },
+            # Group by tool ID to ensure uniqueness
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "doc": {"$first": "$$ROOT"}  # Keep the first document for each ID
+                }
+            },
+            # Sort after deduplication
+            {
+                "$sort": {f"doc.{sort_by}": sort_direction}
+            },
+            # Apply pagination
+            {
+                "$skip": skip
+            },
+            {
+                "$limit": limit
+            },
+            # Return the full document
+            {
+                "$replaceRoot": {"newRoot": "$doc"}
+            }
+        ]
+        
+        cursor = tools_collection.aggregate(pipeline)
+        
+        # Get user's favorite tools if authenticated
+        favorites_set = set()
+        if user_id:
+            from ..database.database import favorites
+            user_favorites = favorites.find({"user_id": user_id})
+            async for fav in user_favorites:
+                favorites_set.add(fav["tool_unique_id"])
+        
+        # Process the tools using the existing create_tool_response function
+        tools = []
+        async for tool in cursor:
+            tool_response = await create_tool_response(tool)
+            if tool_response:
+                # Set saved_by_user flag if authenticated
+                if user_id and hasattr(tool_response, "unique_id"):
+                    tool_response.saved_by_user = str(tool_response.unique_id) in favorites_set
+                
+                tools.append(tool_response)
 
     # Ensure tools is always a list, even if None is returned
     if tools is None:
@@ -213,6 +317,10 @@ async def get_tools_by_category_slug(
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
+    
+    # Calculate pagination metadata
+    current_page = skip // limit + 1 if limit > 0 else 1
+    total_pages = (total + limit - 1) // limit if limit > 0 else 1
 
     return {
         "tools": tools,
@@ -220,6 +328,9 @@ async def get_tools_by_category_slug(
         "skip": skip,
         "limit": limit,
         "carriers": unique_carriers,
+        "search_term": search,
+        "current_page": current_page,
+        "total_pages": total_pages,
     }
 
 
@@ -326,6 +437,7 @@ async def get_public_tools_by_category_slug(
     sort_order: str = Query("desc", description="Sort order (asc or desc)"),
     price_type: Optional[str] = Query(None, description="Filter by price type"),
     is_featured: Optional[bool] = Query(None, description="Filter featured tools"),
+    current_user: Optional[UserResponse] = Depends(get_current_active_user),
 ):
     """
     Get tools by category slug with search and pagination.
@@ -340,6 +452,7 @@ async def get_public_tools_by_category_slug(
         sort_order: Sort order (asc or desc)
         price_type: Filter by price type
         is_featured: Filter featured tools
+        current_user: Optional authenticated user
 
     Returns:
         Paginated list of tools in the specified category
@@ -371,6 +484,9 @@ async def get_public_tools_by_category_slug(
             status_code=400, detail="Invalid sort_order. Must be 'asc' or 'desc'"
         )
 
+    # Get user ID if authenticated
+    user_id = str(current_user.id) if current_user else None
+
     # Build filters dictionary
     # Use $or to match either categories.id OR the category string field
     filters = {
@@ -388,28 +504,127 @@ async def get_public_tools_by_category_slug(
 
     # If search term is provided, use search_tools function
     if search and search.strip():
+        # For search, we need to use $or with distinct tool IDs
+        # First, get the unique tool IDs in this category to avoid duplicates
+        from ..database.database import tools as tools_collection
+        pipeline = [
+            {
+                "$match": filters
+            },
+            # Group by tool ID to ensure uniqueness
+            {
+                "$group": {
+                    "_id": "$_id"  # Group by MongoDB ObjectID
+                }
+            }
+        ]
+        
+        distinct_tool_ids = []
+        cursor = tools_collection.aggregate(pipeline)
+        async for doc in cursor:
+            distinct_tool_ids.append(doc["_id"])
+            
+        # If no tools found for this category, return empty result
+        if not distinct_tool_ids:
+            return {
+                "tools": [],
+                "total": 0,
+                "skip": skip,
+                "limit": limit,
+                "carriers": [],
+            }
+        
+        # Use these distinct IDs in the search
+        refined_filters = {"_id": {"$in": distinct_tool_ids}}
+        
         result = await search_tools(
             search_term=search,
             skip=skip,
             limit=limit,
-            additional_filters=filters,
+            additional_filters=refined_filters,
             sort_by=sort_by,
             sort_order=sort_order,
+            user_id=user_id,
         )
 
         tools = result.get("tools", [])
         total = result.get("total", 0)
     else:
-        # Otherwise, use get_tools with filters
-        tools = await get_tools(
-            skip=skip,
-            limit=limit,
-            filters=filters,
-            sort_by=sort_by,
-            sort_order=sort_order,
-        )
-
-        total = await get_tools(count_only=True, filters=filters)
+        # For non-search, use aggregation to get distinct tools
+        from ..database.database import tools as tools_collection
+        from ..tools.tools_service import create_tool_response
+        
+        # First get the total count using aggregation
+        count_pipeline = [
+            {
+                "$match": filters
+            },
+            # Group by tool ID to ensure uniqueness
+            {
+                "$group": {
+                    "_id": "$_id"
+                }
+            },
+            # Count the results
+            {
+                "$count": "total"
+            }
+        ]
+        
+        count_result = await tools_collection.aggregate(count_pipeline).to_list(length=1)
+        total = count_result[0]["total"] if count_result else 0
+        
+        # Now get the paginated tools with sort
+        sort_direction = -1 if sort_order.lower() == "desc" else 1
+        
+        pipeline = [
+            {
+                "$match": filters
+            },
+            # Group by tool ID to ensure uniqueness
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "doc": {"$first": "$$ROOT"}  # Keep the first document for each ID
+                }
+            },
+            # Sort after deduplication
+            {
+                "$sort": {f"doc.{sort_by}": sort_direction}
+            },
+            # Apply pagination
+            {
+                "$skip": skip
+            },
+            {
+                "$limit": limit
+            },
+            # Return the full document
+            {
+                "$replaceRoot": {"newRoot": "$doc"}
+            }
+        ]
+        
+        cursor = tools_collection.aggregate(pipeline)
+        
+        # Get user's favorite tools if authenticated
+        favorites_set = set()
+        if user_id:
+            from ..database.database import favorites
+            user_favorites = favorites.find({"user_id": user_id})
+            async for fav in user_favorites:
+                favorites_set.add(fav["tool_unique_id"])
+        
+        # Process the tools using the existing create_tool_response function
+        tools = []
+        async for tool in cursor:
+            tool_response = await create_tool_response(tool)
+            if tool_response:
+                # Set saved_by_user flag if authenticated
+                if user_id and hasattr(tool_response, "unique_id"):
+                    tool_response.saved_by_user = str(tool_response.unique_id) in favorites_set
+                
+                tools.append(tool_response)
 
     # Ensure tools is always a list, even if None is returned
     if tools is None:
@@ -428,7 +643,7 @@ async def get_public_tools_by_category_slug(
 
     # Convert to sorted list
     unique_carriers = sorted(list(all_carriers))
-
+    
     # Calculate pagination metadata
     current_page = skip // limit + 1 if limit > 0 else 1
     total_pages = (total + limit - 1) // limit if limit > 0 else 1

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MONGODB_URL = os.getenv("MONGODB_URL")
-# print(MONGODB_URL)
+print(MONGODB_URL)
 
 # Create a new client and connect to the server
 client = AsyncIOMotorClient(MONGODB_URL, server_api=ServerApi("1"))

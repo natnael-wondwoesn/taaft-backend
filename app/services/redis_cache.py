@@ -119,7 +119,7 @@ def deserialize_from_cache(data: str, return_type_hint: Optional[Type] = None) -
         return json.loads(data)
 
 
-def redis_cache(prefix: str, ttl: int = REDIS_CACHE_TTL):
+def redis_cache(prefix: str, ttl: int = REDIS_CACHE_TTL,user_id_cache:bool=False):
     """
     Decorator to cache function results in Redis
 
@@ -195,3 +195,23 @@ def invalidate_cache(prefix: str, pattern: str = "*"):
             logger.info(f"Invalidated {len(keys)} cache entries with prefix {prefix}")
     except Exception as e:
         logger.error(f"Failed to invalidate cache for prefix {prefix}: {str(e)}")
+
+
+def invalidate_cache_by_prefix(prefix: str):
+    """
+    Invalidate all cache entries that start with the given prefix.
+
+    Args:
+        prefix: Cache key prefix (e.g., 'tools_list')
+    """
+    if not REDIS_CACHE_ENABLED or not redis_client:
+        return
+
+    try:
+        # Find all keys that start with the prefix
+        keys = redis_client.keys(f"taaft:{prefix}:*")
+        if keys:
+            redis_client.delete(*keys)
+            logger.info(f"Invalidated {len(keys)} cache entries with prefix {prefix}")
+    except Exception as e:
+        logger.error(f"Failed to invalidate cache by prefix {prefix}: {str(e)}")

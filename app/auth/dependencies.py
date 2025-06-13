@@ -169,6 +169,9 @@ class RateLimitMiddleware:
             or request.url.path.startswith("/public/")
             or request.url.path.startswith("/tools/featured")
             or request.url.path.startswith("/tools/sponsored")
+            or request.url.path.startswith("/tools/category/")
+            or request.url.path.startswith("/tools/search")
+            or request.url.path.startswith("/tools/browse/search")
             or request.url.path.startswith("/favorites/")
             or request.url.path.startswith("/share/")
             or request.url.path == "/api/auth/reset-password"
@@ -375,6 +378,20 @@ class AdminControlMiddleware:
             "/api/search/index/tools",
             "/api/search/index/glossary",
             "/api/search/index/job-impacts",
+            # Public tools endpoints
+            "/public/tools",
+            "/public/tools/",
+            "/public/tools/search",
+            "/public/tools/featured",
+            "/public/tools/category",
+            "/public/tools/browse/search",
+            # Public categories endpoints
+            "/public/categories",
+            "/public/categories/",
+            "/public/categories/slug",
+            # Public tool logs endpoints
+            "/public/tool-logs",
+            "/public/tool-logs/",
         ]
 
         # If it's a public endpoint, skip auth checks

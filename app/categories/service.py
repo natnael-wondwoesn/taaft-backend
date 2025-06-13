@@ -144,20 +144,43 @@ class CategoriesService:
                 categories_with_counts = []
                 
                 for cat in categories_list:
-                    # Count tools that match EITHER the category ID in the categories array OR the category string field
-                    count = await tools_collection.count_documents({
-                        "$or": [
-                            {"categories.id": cat["id"]},  # Array-based categories
-                            {"category": cat["name"]}      # String-based category
+                    # Use the count stored in the database rather than calculating it dynamically
+                    # This ensures consistency between the stored count and the API response
+                    if "count" in cat:
+                        count = cat["count"]
+                    else:
+                        # Fallback to counting if the count field is missing
+                        # Use $or to avoid double counting the same tool
+                        pipeline = [
+                            {
+                                "$match": {
+                                    "$or": [
+                                        {"categories.id": cat["id"]},  # Array-based categories
+                                        {"category": cat["name"]}      # String-based category
+                                    ]
+                                }
+                            },
+                            # Group to get distinct tools
+                            {
+                                "$group": {
+                                    "_id": "$_id"  # Group by tool ID to count distinct tools
+                                }
+                            },
+                            # Count the results
+                            {
+                                "$count": "count"
+                            }
                         ]
-                    })
+                        
+                        count_results = await tools_collection.aggregate(pipeline).to_list(length=1)
+                        count = count_results[0]["count"] if count_results else 0
                     
                     categories_with_counts.append(
                         CategoryResponse(
                             id=cat["id"],
                             name=cat["name"],
                             slug=cat["slug"],
-                            count=count,  # Use accurate count from query
+                            count=count,  # Use database count or accurate count from aggregate query
                             svg=await self._get_svg_path(cat["id"], cat.get("svg")),
                         )
                     )
@@ -273,22 +296,44 @@ class CategoriesService:
             category = await categories_collection.find_one({"id": category_id})
 
             if category:
-                # Get tools collection for accurate count
-                tools_collection = await self._get_tools_collection()
-                
-                # Count tools that match EITHER the category ID in the categories array OR the category string field
-                count = await tools_collection.count_documents({
-                    "$or": [
-                        {"categories.id": category_id},  # Array-based categories
-                        {"category": category["name"]}   # String-based category
+                # Use the count stored in the database rather than calculating it dynamically
+                if "count" in category:
+                    count = category["count"]
+                else:
+                    # Fallback to counting if the count field is missing
+                    # Get tools collection for accurate count
+                    tools_collection = await self._get_tools_collection()
+                    
+                    # Use aggregation to avoid double counting
+                    pipeline = [
+                        {
+                            "$match": {
+                                "$or": [
+                                    {"categories.id": category_id},  # Array-based categories
+                                    {"category": category["name"]}   # String-based category
+                                ]
+                            }
+                        },
+                        # Group to get distinct tools
+                        {
+                            "$group": {
+                                "_id": "$_id"  # Group by tool ID to count distinct tools
+                            }
+                        },
+                        # Count the results
+                        {
+                            "$count": "count"
+                        }
                     ]
-                })
+                    
+                    count_results = await tools_collection.aggregate(pipeline).to_list(length=1)
+                    count = count_results[0]["count"] if count_results else 0
                 
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=count,  # Use accurate count from query
+                    count=count,  # Use database count or accurate count from aggregate query
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
@@ -323,22 +368,44 @@ class CategoriesService:
             category = await categories_collection.find_one({"slug": slug})
 
             if category:
-                # Get tools collection for accurate count
-                tools_collection = await self._get_tools_collection()
-                
-                # Count tools that match EITHER the category ID in the categories array OR the category string field
-                count = await tools_collection.count_documents({
-                    "$or": [
-                        {"categories.id": category["id"]},  # Array-based categories
-                        {"category": category["name"]}      # String-based category
+                # Use the count stored in the database rather than calculating it dynamically
+                if "count" in category:
+                    count = category["count"]
+                else:
+                    # Fallback to counting if the count field is missing
+                    # Get tools collection for accurate count
+                    tools_collection = await self._get_tools_collection()
+                    
+                    # Use aggregation to avoid double counting
+                    pipeline = [
+                        {
+                            "$match": {
+                                "$or": [
+                                    {"categories.id": category["id"]},  # Array-based categories
+                                    {"category": category["name"]}      # String-based category
+                                ]
+                            }
+                        },
+                        # Group to get distinct tools
+                        {
+                            "$group": {
+                                "_id": "$_id"  # Group by tool ID to count distinct tools
+                            }
+                        },
+                        # Count the results
+                        {
+                            "$count": "count"
+                        }
                     ]
-                })
+                    
+                    count_results = await tools_collection.aggregate(pipeline).to_list(length=1)
+                    count = count_results[0]["count"] if count_results else 0
                 
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=count,  # Use accurate count from query
+                    count=count,  # Use database count or accurate count from aggregate query
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
 
@@ -450,22 +517,44 @@ class CategoriesService:
             # Try case-insensitive match in the collection
             category = await categories_collection.find_one({"name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}})
             if category:
-                # Get tools collection for accurate count
-                tools_collection = await self._get_tools_collection()
-                
-                # Count tools that match EITHER the category ID in the categories array OR the category string field
-                count = await tools_collection.count_documents({
-                    "$or": [
-                        {"categories.id": category["id"]},  # Array-based categories
-                        {"category": {"$regex": f"^{re.escape(name)}$", "$options": "i"}}  # String-based category (case-insensitive)
+                # Use the count stored in the database rather than calculating it dynamically
+                if "count" in category:
+                    count = category["count"]
+                else:
+                    # Fallback to counting if the count field is missing
+                    # Get tools collection for accurate count
+                    tools_collection = await self._get_tools_collection()
+                    
+                    # Use aggregation to avoid double counting
+                    pipeline = [
+                        {
+                            "$match": {
+                                "$or": [
+                                    {"categories.id": category["id"]},  # Array-based categories
+                                    {"category": {"$regex": f"^{re.escape(name)}$", "$options": "i"}}  # String-based category (case-insensitive)
+                                ]
+                            }
+                        },
+                        # Group to get distinct tools
+                        {
+                            "$group": {
+                                "_id": "$_id"  # Group by tool ID to count distinct tools
+                            }
+                        },
+                        # Count the results
+                        {
+                            "$count": "count"
+                        }
                     ]
-                })
+                    
+                    count_results = await tools_collection.aggregate(pipeline).to_list(length=1)
+                    count = count_results[0]["count"] if count_results else 0
                 
                 return CategoryResponse(
                     id=category["id"],
                     name=category["name"],
                     slug=category["slug"],
-                    count=count,  # Use accurate count from query
+                    count=count,  # Use database count or accurate count from aggregate query
                     svg=await self._get_svg_path(category["id"], category.get("svg")),
                 )
             # Fallback: search in all categories (in-memory)

@@ -267,6 +267,112 @@ paths:
           description: Unauthorized
         '404':
           description: Tool not found
+    put:
+      tags:
+        - tools
+      summary: Set tool featured status by unique ID
+      description: Set the featured status of a tool by its unique ID (admin only)
+      operationId: set_tool_featured_status_by_unique_id
+      parameters:
+        - name: unique_id
+          in: path
+          description: Unique ID of the tool
+          required: true
+          schema:
+            type: string
+        - name: is_featured
+          in: query
+          description: Whether the tool should be featured
+          required: true
+          schema:
+            type: boolean
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Tool featured status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin user
+        "404":
+          description: Tool not found
+
+  /tools/unique/{unique_id}/sponsored-public:
+    put:
+      tags:
+        - tools
+      summary: Set tool public sponsored status
+      description: Set the public sponsored status of a tool by its unique ID (admin only)
+      operationId: set_tool_sponsored_public_status
+      parameters:
+        - name: unique_id
+          in: path
+          description: Unique ID of the tool
+          required: true
+          schema:
+            type: string
+        - name: is_sponsored_public
+          in: query
+          description: Whether the tool should be publicly sponsored
+          required: true
+          schema:
+            type: boolean
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Tool public sponsored status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin user
+        "404":
+          description: Tool not found
+
+  /tools/unique/{unique_id}/sponsored-private:
+    put:
+      tags:
+        - tools
+      summary: Set tool private sponsored status
+      description: Set the private sponsored status of a tool by its unique ID (admin only)
+      operationId: set_tool_sponsored_private_status
+      parameters:
+        - name: unique_id
+          in: path
+          description: Unique ID of the tool
+          required: true
+          schema:
+            type: string
+        - name: is_sponsored_private
+          in: query
+          description: Whether the tool should be privately sponsored
+          required: true
+          schema:
+            type: boolean
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Tool private sponsored status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin user
+        "404":
+          description: Tool not found
 
   /public/tools/category/{category_slug}:
     get:
@@ -563,6 +669,12 @@ components:
           items:
             type: string
           description: Tags associated with this tool
+        is_sponsored_public:
+          type: boolean
+          description: Whether the tool is publicly sponsored
+        is_sponsored_private:
+          type: boolean
+          description: Whether the tool is privately sponsored
         metadata:
           type: object
           additionalProperties: true
@@ -621,6 +733,12 @@ components:
           type: string
           format: date-time
           description: Tool last update timestamp
+        is_sponsored_public:
+          type: boolean
+          description: Whether the tool is publicly sponsored
+        is_sponsored_private:
+          type: boolean
+          description: Whether the tool is privately sponsored
         metadata:
           type: object
           additionalProperties: true

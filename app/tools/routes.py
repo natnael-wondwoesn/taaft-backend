@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Query, Request,status
+from fastapi import APIRouter, HTTPException, Depends, Query, Request,status, Response, Path
 from typing import List, Optional
 from uuid import UUID
 import hashlib
@@ -18,6 +18,7 @@ from .tools_service import (
     search_tools,
     toggle_tool_featured_status,
     toggle_tool_featured_status_by_unique_id,
+    toggle_tool_sponsored_private_status,
     keyword_search_tools,
     get_tool_with_favorite_status,
     get_keywords,
@@ -254,7 +255,7 @@ async def get_sponsored_tools_authenticated(
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
-    Get a list of sponsored tools (identical to featured tools) for authenticated users.
+    Get a list of sponsored tools for authenticated users.
     Default sorting is by created_at in descending order (newest first).
 
     - **search**: Optional search term to filter tools by name, description, or keywords
@@ -263,8 +264,8 @@ async def get_sponsored_tools_authenticated(
     - **sort_by**: Field to sort by
     - **sort_order**: Sort order (asc or desc)
     """
-    # Apply filter for featured tools only (reusing the same field)
-    filters = {"is_featured": True}
+    # Apply filter for privately sponsored tools
+    filters = {"is_sponsored_private": True}
 
     # Add additional filters if provided
     if category:
@@ -290,8 +291,8 @@ async def get_sponsored_tools_authenticated(
     if search and search.strip():
         from ..database.database import tools
 
-        # Create a query that combines search term with featured filter
-        query = {"$text": {"$search": search}, "is_featured": True}
+        # Create a query that combines search term with sponsored filter
+        query = {"$text": {"$search": search}, "is_sponsored_private": True}
 
         # Add additional filters if provided
         if category:
@@ -436,6 +437,7 @@ async def get_tool(
 @router.get("/unique/{unique_id}", response_model=ToolResponse)
 async def get_tool_by_unique_identifier(
     unique_id: str,
+    response: Response,
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
@@ -444,6 +446,10 @@ async def get_tool_by_unique_identifier(
     tool = await get_tool_by_unique_id(unique_id, user_id=str(current_user.id))
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
+    
+    # Add header flag indicating data source (always from database now that we don't track cache status)
+    response.headers["X-Data-Source"] = "database"
+    
     return tool
 
 
@@ -592,12 +598,49 @@ async def set_tool_featured_status_by_unique_id(
     current_user: UserResponse = Depends(get_admin_user),
 ):
     """
-    Set or unset a tool as featured by its unique_id. Only available to admin users.
+    Set the featured status of a tool by its unique ID.
+    This endpoint is only accessible to admin users.
     """
-    tool = await toggle_tool_featured_status_by_unique_id(unique_id, is_featured)
-    if not tool:
+    updated_tool = await toggle_tool_featured_status_by_unique_id(
+        unique_id, is_featured
+    )
+    if not updated_tool:
         raise HTTPException(status_code=404, detail="Tool not found")
-    return tool
+    return updated_tool
+
+
+@router.put("/unique/{unique_id}/sponsored-public", response_model=ToolResponse)
+async def set_tool_sponsored_public_status(
+    unique_id: str,
+    is_sponsored_public: bool = Query(..., description="Whether the tool should be publicly sponsored"),
+    current_user: UserResponse = Depends(get_admin_user),
+):
+    """
+    Set the public sponsored status of a tool by its unique ID.
+    This endpoint is only accessible to admin users.
+    """
+    # updated_tool = await toggle_tool_sponsored_public_status(
+    #     unique_id, is_sponsored_public
+    # )
+    raise HTTPException(status_code=501, detail="Feature not implemented")
+
+
+@router.put("/unique/{unique_id}/sponsored-private", response_model=ToolResponse)
+async def set_tool_sponsored_private_status(
+    unique_id: str,
+    is_sponsored_private: bool = Query(..., description="Whether the tool should be privately sponsored"),
+    current_user: UserResponse = Depends(get_admin_user),
+):
+    """
+    Set the private sponsored status of a tool by its unique ID.
+    This endpoint is only accessible to admin users.
+    """
+    updated_tool = await toggle_tool_sponsored_private_status(
+        unique_id, is_sponsored_private
+    )
+    if not updated_tool:
+        raise HTTPException(status_code=404, detail="Tool not found")
+    return updated_tool
 
 
 # @router.post("/", response_model=ToolResponse, status_code=201)
@@ -708,14 +751,19 @@ async def keyword_search_endpoint(
 @router.get("/unique/{unique_id}/with-favorite", response_model=ToolResponse)
 async def get_tool_with_favorite_by_unique_id(
     unique_id: str,
+    response: Response,
     current_user: UserResponse = Depends(get_current_active_user),
 ):
     """
     Get a specific tool by its unique_id and include whether it is in the user's favorites.
     """
-    tool = await get_tool_with_favorite_status(unique_id, current_user.id)
+    tool, from_cache = await get_tool_with_favorite_status(unique_id, current_user.id)
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
+    
+    # Add header flag indicating data source
+    response.headers["X-Data-Source"] = "redis-cache" if from_cache else "database"
+    
     return tool
 
 

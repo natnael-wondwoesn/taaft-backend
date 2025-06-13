@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Query, Path, Depends, Request
+from fastapi import APIRouter, HTTPException, Query, Path, Depends, Request, Response
 from typing import List, Union, Optional, Dict, Any
 import uuid  # Keep for type hint in id_or_slug, though actual ID is ObjectId
 from slugify import slugify
@@ -17,6 +17,11 @@ from app.models.job_impact import (
 )
 from app.models.job_impact_tool_count import JobImpactToolCountInDB
 from app.database import database  # Import the database instance
+from app.services.job_impacts_service import (
+    calculate_and_save_job_impact_tool_count, 
+    get_job_impact_tool_count
+)
+from app.logger import logger
 
 router = APIRouter(
     prefix="/api/jobs",
@@ -134,159 +139,36 @@ async def get_job_impact_by_job_title(
     """
     Get a job impact by its exact job title.
     This endpoint performs an exact match on the job title.
-    The response includes the job impact data and the total tool count if available.
-    If the tool count is not available, it will try to calculate it.
+    The response includes the job impact data and the total tool count from the database.
     """
+    logger.info(f"Getting job impact by title: {job_title}")
+    
     job = await get_job_impact_by_title(job_title)
     if not job:
+        logger.warning(f"Job impact not found: {job_title}")
         raise HTTPException(status_code=404, detail="Job impact analysis not found")
     
-    # Try to get the tool count from the database
-    tool_count = await JobImpactToolCountInDB.get_by_job_name(database, job_title)
+    # Get the tool count from the database
+    tool_count = await get_job_impact_tool_count(job_title)
     
-    # If tool count not found, calculate it
-    if not tool_count:
-        total_tool_count = 0
+    # If tool count not found, return 0
+    total_tool_count = 0
+    if tool_count:
+        total_tool_count = tool_count.total_tool_count
+        logger.info(f"Retrieved tool count for {job_title}: {total_tool_count}")
+    else:
+        # No tool count found - this shouldn't happen if the script has been run
+        logger.warning(f"No tool count found for job impact: {job_title}")
+        
         # Get base URL from request
         base_url = str(request.base_url).rstrip('/')
-        
         # If using http, switch to https
         if base_url.startswith('http:'):
             base_url = 'https:' + base_url[5:]
-            
-        print(f"Tool count not found, calculating now. Using base URL: {base_url}")
         
-        # Create httpx client for API calls with redirect following
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            for task in job.tasks:
-                try:
-                    # Use the existing /api/search/task-tools/{task_name} endpoint
-                    task_name = task.name
-                    # URL encode the task name to handle spaces and special characters
-                    encoded_task_name = urllib.parse.quote(task_name)
-                    
-                    request_url = f"{base_url}/api/search/task-tools/{encoded_task_name}"
-                    print(f"Directly requesting tools for task: {task_name} at URL: {request_url}")
-                    
-                    response = await client.get(request_url, timeout=10.0)
-                    
-                    if response.status_code == 200:
-                        # Extract the number of tools from the response
-                        task_tools_data = response.json()
-                        if "tools" in task_tools_data and isinstance(task_tools_data["tools"], list):
-                            tools_count = len(task_tools_data["tools"])
-                            total_tool_count += tools_count
-                            print(f"Found {tools_count} tools for task: {task_name}")
-                        elif isinstance(task_tools_data, list):
-                            tools_count = len(task_tools_data)
-                            total_tool_count += tools_count
-                            print(f"Found {tools_count} tools (list format) for task: {task_name}")
-                        elif "total" in task_tools_data:
-                            total_tool_count += task_tools_data["total"]
-                            print(f"Found {task_tools_data['total']} tools (total field) for task: {task_name}")
-                    else:
-                        print(f"Error response ({response.status_code}) for task {task_name}: {response.text}")
-                except Exception as e:
-                    print(f"Error fetching tools for task {task_name}: {str(e)}")
-                    continue
-            
-            # Save the fetched tool count
-            tool_count = JobImpactToolCountInDB(
-                job_impact_name=job_title,
-                total_tool_count=total_tool_count
-            )
-            await tool_count.save(database)
-            print(f"Saved new tool count: {total_tool_count} for job: {job_title}")
-    
-    # Create response with both job impact data and tool count
-    job_dict = job.model_dump()
-    response_data = {
-        "job_impact": job_dict,
-        "total_tool_count": tool_count.total_tool_count
-    }
-    
-    return response_data
-
-
-@router.get("/by-title/{job_title}/with-tool-count")
-async def get_job_impact_details_with_tool_count(
-    request: Request,
-    job_title: str = Path(
-        ..., description="Job title to get details and calculate tool count for"
-    )
-):
-    """
-    Get job impact details by job title, while calculating and saving tool counts.
-    This endpoint also retrieves tool counts for each task and updates the tool count database.
-    Returns both the job impact details and the total tool count.
-    """
-    # Get job by title
-    job = await get_job_impact_by_title(job_title)
-    
-    if not job:
-        raise HTTPException(status_code=404, detail="Job impact analysis not found")
-    
-    # Calculate total tool count by fetching tools for each task
-    total_tool_count = 0
-    
-    # Get base URL from request
-    base_url = str(request.base_url).rstrip('/')
-    
-    # If using http, switch to https
-    if base_url.startswith('http:'):
-        base_url = 'https:' + base_url[5:]
-    
-    print(f"Using base URL: {base_url}")
-    
-    # Create httpx client for API calls with redirect following
-    async with httpx.AsyncClient(follow_redirects=True) as client:
-        for task in job.tasks:
-            try:
-                # Use the existing /api/search/task-tools/{task_name} endpoint
-                task_name = task.name
-                # URL encode the task name to handle spaces and special characters
-                encoded_task_name = urllib.parse.quote(task_name)
-                
-                # Log the URL being requested
-                request_url = f"{base_url}/api/search/task-tools/{encoded_task_name}"
-                print(f"Requesting tools for task: {task_name} at URL: {request_url}")
-                
-                response = await client.get(
-                    request_url, 
-                    timeout=10.0
-                )
-                
-                if response.status_code == 200:
-                    # Extract the number of tools from the response
-                    task_tools_data = response.json()
-                    if "tools" in task_tools_data and isinstance(task_tools_data["tools"], list):
-                        # This matches the TaskToolsSearchResult model
-                        tools_count = len(task_tools_data["tools"])
-                        total_tool_count += tools_count
-                        print(f"Found {tools_count} tools for task: {task_name}")
-                    elif isinstance(task_tools_data, list):
-                        tools_count = len(task_tools_data)
-                        total_tool_count += tools_count
-                        print(f"Found {tools_count} tools (list format) for task: {task_name}")
-                    # Also get the "total" field if available for more accurate counting
-                    elif "total" in task_tools_data:
-                        total_tool_count += task_tools_data["total"]
-                        print(f"Found {task_tools_data['total']} tools (total field) for task: {task_name}")
-                    else:
-                        print(f"Unexpected response format for task: {task_name}. Response: {task_tools_data}")
-                else:
-                    print(f"Error response ({response.status_code}) for task {task_name}: {response.text}")
-            except Exception as e:
-                # Log error but continue processing other tasks
-                print(f"Error fetching tools for task {task_name}: {str(e)}")
-                continue
-    
-    # Save or update the tool count in the database
-    tool_count = JobImpactToolCountInDB(
-        job_impact_name=job.job_title,
-        total_tool_count=total_tool_count
-    )
-    await tool_count.save(database)
+        # Get the result using the service function that will calculate and save
+        result, from_cache = await calculate_and_save_job_impact_tool_count(job_title, base_url)
+        return result
     
     # Create response with both job impact data and tool count
     job_dict = job.model_dump()
@@ -298,16 +180,45 @@ async def get_job_impact_details_with_tool_count(
     return response_data
 
 
+@router.get("/by-title/{job_title}/with-tool-count")
+async def get_job_impact_details_with_tool_count(
+    request: Request,
+    response: Response,
+    job_title: str = Path(
+        ..., description="Job title to get details and tool count for"
+    )
+):
+    """
+    Get job impact details by job title with tool counts.
+    This endpoint retrieves both the job impact details and the pre-calculated tool count.
+    """
+    logger.info(f"Getting job impact details with tool count: {job_title}")
+    
+    base_url = str(request.base_url).rstrip('/')
+    result, from_cache = await calculate_and_save_job_impact_tool_count(job_title, base_url)
+    
+    # Add header flag indicating data source
+    response.headers["X-Data-Source"] = "database-cache" if from_cache else "newly-calculated"
+    
+    return result
+
+
 @router.get("/tool-counts/{job_title}", response_model=JobImpactToolCountInDB)
-async def get_job_impact_tool_count(
+async def get_job_impact_tool_count_endpoint(
     job_title: str = Path(..., description="Job title to get tool count for")
 ):
     """
     Get the total tool count for a specific job impact by job title.
+    This endpoint retrieves the pre-calculated tool count from the database.
     """
-    tool_count = await JobImpactToolCountInDB.get_by_job_name(database, job_title)
+    logger.info(f"Getting tool count for job impact: {job_title}")
+    
+    tool_count = await get_job_impact_tool_count(job_title)
     if not tool_count:
+        logger.warning(f"Tool count not found for job: {job_title}")
         raise HTTPException(status_code=404, detail="Tool count not found for this job")
+    
+    logger.info(f"Retrieved tool count for {job_title}: {tool_count.total_tool_count}")
     return tool_count
 
 

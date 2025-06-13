@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # Load environment variables from .env file
 load_dotenv()
 
-MONGO_URI = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+MONGO_URI = os.getenv("mongodb://localhost:27017", "mongodb://localhost:27017")
 DB_NAME = os.getenv("DB_NAME", "taaft_db")
 TOOLS_COLLECTION_NAME = "tools"
 CATEGORIES_COLLECTION_NAME = "categories"
@@ -68,17 +68,26 @@ async def get_tool_counts_by_category(tools_collection) -> Dict[str, Dict[str, A
         if not category or not isinstance(category, str):
             continue
             
-        # Case-sensitive counting
-        if category not in category_counts:
-            category_counts[category] = {"count": 0, "slug": generate_slug(category)}
-        category_counts[category]["count"] += 1
-        
-        # Case-insensitive counting
-        category_lower = category.lower()
-        if category_lower not in category_counts_lower:
-            category_counts_lower[category_lower] = {"count": 0, "slug": generate_slug(category)}
-            lowercase_to_original[category_lower] = category
-        category_counts_lower[category_lower]["count"] += 1
+        # Split by comma if the category contains commas
+        if "," in category:
+            # Split and clean up each category name
+            categories = [cat.strip() for cat in category.split(",") if cat.strip()]
+        else:
+            # Single category case
+            categories = [category]
+            
+        for single_category in categories:
+            # Case-sensitive counting
+            if single_category not in category_counts:
+                category_counts[single_category] = {"count": 0, "slug": generate_slug(single_category)}
+            category_counts[single_category]["count"] += 1
+            
+            # Case-insensitive counting
+            category_lower = single_category.lower()
+            if category_lower not in category_counts_lower:
+                category_counts_lower[category_lower] = {"count": 0, "slug": generate_slug(single_category)}
+                lowercase_to_original[category_lower] = single_category
+            category_counts_lower[category_lower]["count"] += 1
     
     # Combine the dictionaries into a single result
     return {
@@ -115,8 +124,18 @@ async def get_existing_categories(categories_collection) -> Dict[str, Dict[str, 
 
 async def main():
     """Main function to update category counts."""
+    result = {
+        "success": False,
+        "categories_total": 0,
+        "categories_updated": 0,
+        "categories_created": 0,
+        "categories_mismatched": 0,
+        "categories_reconciled": 0,
+        "orphaned_categories": 0
+    }
+    
     try:
-        client = AsyncIOMotorClient(MONGO_URI)
+        client = AsyncIOMotorClient("MONGO_URI")
         # Test connection by pinging the admin database
         await client.admin.command("ping")
         logger.info(f"Successfully connected to MongoDB at {MONGO_URI}.")
@@ -124,10 +143,12 @@ async def main():
         logger.error(
             f"Failed to connect to MongoDB. Please check your MONGO_URI: {MONGO_URI}"
         )
-        return
+        result["error"] = "Failed to connect to MongoDB"
+        return result
     except Exception as e:
         logger.error(f"An error occurred during MongoDB connection: {e}")
-        return
+        result["error"] = f"Connection error: {str(e)}"
+        return result
 
     db = client[DB_NAME]
     tools_collection = db[TOOLS_COLLECTION_NAME]
@@ -295,6 +316,19 @@ async def main():
     )
     client.close()
     logger.info("MongoDB connection closed.")
+    
+    # Update result dictionary
+    result.update({
+        "success": True,
+        "categories_total": len(categories_by_id),
+        "categories_updated": updated_count,
+        "categories_created": created_count,
+        "categories_mismatched": mismatched_count,
+        "categories_reconciled": reconciled_count,
+        "orphaned_categories": len(orphaned_categories)
+    })
+    
+    return result
 
 
 if __name__ == "__main__":

@@ -17,6 +17,8 @@ async def setup_database():
     try:
         await client.admin.command("ping")
         logger.info("Connected to MongoDB for setup")
+        logger.info(f"Database: {database}")
+        logger.info(f"Database Connection URL: {client.HOST}")
     except Exception as e:
         logger.error(f"Could not connect to MongoDB: {str(e)}")
         raise

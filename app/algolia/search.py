@@ -10,7 +10,7 @@ Enhanced search service for Algolia integration
 Handles natural language query processing for AI tool search
 """
 
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any, Union, Tuple
 import datetime
 import json
 import openai
@@ -817,7 +817,7 @@ class AlgoliaSearch:
         task_name: str,
         page: int = 0,
         per_page: int = 10,
-    ) -> TaskToolsSearchResult:
+    ) -> Tuple[TaskToolsSearchResult, bool]:
         """
         Search for tools relevant to a specific task name.
         
@@ -827,8 +827,44 @@ class AlgoliaSearch:
             per_page: Number of tools per page
             
         Returns:
-            TaskToolsSearchResult containing the tools related to the task
+            Tuple of (TaskToolsSearchResult, from_cache) indicating the search result and
+            whether it came from cache
         """
+        from ..services.redis_cache import redis_client, REDIS_CACHE_ENABLED
+        
+        # Try to get from cache first if Redis is enabled
+        from_cache = False
+        if REDIS_CACHE_ENABLED and redis_client:
+            try:
+                cache_key = f"task_tools:{task_name}:{page}:{per_page}"
+                cached_result = await redis_client.get(cache_key)
+                if cached_result:
+                    import json
+                    from .models import AlgoliaToolRecord, TaskToolsSearchResult
+                    
+                    # Deserialize the cached result
+                    result_dict = json.loads(cached_result)
+                    
+                    # Reconstruct the tool records
+                    tools = []
+                    for tool_dict in result_dict.get("tools", []):
+                        tools.append(AlgoliaToolRecord(**tool_dict))
+                    
+                    # Reconstruct and return the TaskToolsSearchResult
+                    result = TaskToolsSearchResult(
+                        task_name=result_dict.get("task_name"),
+                        tools=tools,
+                        total=result_dict.get("total"),
+                        page=result_dict.get("page"),
+                        per_page=result_dict.get("per_page"),
+                        processing_time_ms=result_dict.get("processing_time_ms"),
+                    )
+                    from_cache = True
+                    return result, from_cache
+            except Exception as e:
+                logger.error(f"Error retrieving cached task tools: {str(e)}")
+                # Continue with the normal search flow if cache retrieval fails
+        
         # Check if Algolia is configured
         if not self.config.is_configured():
             logger.warning("Algolia not configured. Returning empty search results.")
@@ -839,7 +875,7 @@ class AlgoliaSearch:
                 page=page,
                 per_page=per_page,
                 processing_time_ms=0,
-            )
+            ), from_cache
             
         try:
             # Search for tools related to this task
@@ -855,8 +891,8 @@ class AlgoliaSearch:
             end_time = datetime.datetime.now()
             processing_time_ms = int((end_time - start_time).total_seconds() * 1000) + tools_result.processing_time_ms
             
-            # Return the result
-            return TaskToolsSearchResult(
+            # Create the result
+            result = TaskToolsSearchResult(
                 task_name=task_name,
                 tools=tools_result.tools,
                 total=tools_result.total,
@@ -864,6 +900,40 @@ class AlgoliaSearch:
                 per_page=tools_result.per_page,
                 processing_time_ms=processing_time_ms,
             )
+            
+            # Cache the result if Redis is enabled
+            if REDIS_CACHE_ENABLED and redis_client:
+                try:
+                    cache_key = f"task_tools:{task_name}:{page}:{per_page}"
+                    # Serialize the result
+                    import json
+                    
+                    # Convert the tools to dictionaries
+                    tools_dict = []
+                    for tool in result.tools:
+                        tools_dict.append(tool.model_dump())
+                    
+                    # Create a dictionary representation of the result
+                    result_dict = {
+                        "task_name": result.task_name,
+                        "tools": tools_dict,
+                        "total": result.total,
+                        "page": result.page,
+                        "per_page": result.per_page,
+                        "processing_time_ms": result.processing_time_ms,
+                    }
+                    
+                    # Cache for 1 hour (3600 seconds)
+                    await redis_client.setex(
+                        cache_key, 
+                        3600, 
+                        json.dumps(result_dict, default=str)
+                    )
+                except Exception as e:
+                    logger.error(f"Error caching task tools: {str(e)}")
+                    # Continue even if caching fails
+            
+            return result, from_cache
             
         except Exception as e:
             logger.error(f"Error searching tools by task: {str(e)}")
@@ -875,7 +945,7 @@ class AlgoliaSearch:
                 page=page,
                 per_page=per_page,
                 processing_time_ms=0,
-            )
+            ), from_cache
 
     async def get_job_tools_recommendation(
         self,

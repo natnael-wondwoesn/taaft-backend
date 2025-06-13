@@ -17,6 +17,8 @@ class PublicFeaturedToolsMiddleware(BaseHTTPMiddleware):
         self.public_patterns = [
             # Public tools router
             re.compile(r"^/public/tools/.*$"),
+            # Public categories router 
+            re.compile(r"^/public/categories/.*$"),
             # Public tool logs router
             re.compile(r"^/public/tool-logs/.*$"),
             # Original featured endpoint
@@ -25,6 +27,12 @@ class PublicFeaturedToolsMiddleware(BaseHTTPMiddleware):
             re.compile(r"^/tools/sponsored/?(\?.*)?$"),
             # Main tools endpoint
             re.compile(r"^/tools/?(\?.*)?$"),
+            # Public tools search
+            re.compile(r"^/tools/search/?(\?.*)?$"),
+            # Public browse search
+            re.compile(r"^/tools/browse/search/?(\?.*)?$"),
+            # Public category tools
+            re.compile(r"^/tools/category/.*$"),
             # Password reset endpoint (POST)
             re.compile(r"^/api/auth/reset-password.*$"),
             # Password reset endpoint (GET)

@@ -85,11 +85,23 @@ async def list_favorite_tools(
     for favorite in favorites:
         tool = await get_tool_by_unique_id(favorite.tool_unique_id)
         if tool:
-            # Check if tool is a Pydantic model or a dict and handle accordingly
+            # Check if tool is a Pydantic model or a dict
             if hasattr(tool, "dict"):
                 tool_dict = tool.dict()
+            elif hasattr(tool, "__dict__"):
+                # Convert object to dict using __dict__
+                tool_dict = tool.__dict__
+            elif isinstance(tool, dict):
+                # Already a dict
+                tool_dict = tool
             else:
-                tool_dict = dict(tool)
+                # Try a safer approach for other object types
+                try:
+                    tool_dict = {key: getattr(tool, key) for key in dir(tool) 
+                               if not key.startswith('_') and not callable(getattr(tool, key))}
+                except Exception as e:
+                    logger.error(f"Failed to convert tool to dictionary: {str(e)}")
+                    continue
 
             tool_dict["favorited_at"] = favorite.created_at
             tool_dict["favorite_id"] = favorite.id

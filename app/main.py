@@ -14,6 +14,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from .websocket import manager
 from .database import database
 from .database.setup import setup_database, cleanup_database
@@ -95,6 +96,7 @@ from .tool_logs import public_router as public_tool_logs_router
 from .seed_glossary import seed_glossary_terms
 from typing import Dict, Any, List, Optional
 from .models.glossary import GlossaryTerm
+import time
 
 load_dotenv()
 
@@ -166,7 +168,9 @@ async def lifespan(app: FastAPI):
         logger.info("Shutdown complete.")
 
 
+# Create FastAPI app with proxy support
 app = FastAPI(lifespan=lifespan)
+
 # Add this line - must be added before other middlewares
 app.add_middleware(
     SessionMiddleware,
@@ -194,13 +198,32 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+# Custom middleware to handle X-Forwarded-Proto headers from Nginx
+class TrustProxyMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        # Get the X-Forwarded-Proto header, default to http if not present
+        forwarded_proto = request.headers.get("X-Forwarded-Proto", "http")
+        
+        # Store original scheme
+        request.state.original_scheme = request.url.scheme
+        
+        # Update request scope with the correct scheme from the proxy
+        request.scope["scheme"] = forwarded_proto
+        
+        # Update request base URL with correct scheme
+        request._url = request._url.replace(scheme=forwarded_proto)
+        
+        return await call_next(request)
+
 # The order is important here:
+# 0. TrustProxyMiddleware - to correctly handle HTTPS through Nginx
 # 1. PublicFeaturedToolsMiddleware - to mark certain routes as public
 # 2. AdminControlMiddleware - to restrict admin operations
 #    Note: Regular authenticated endpoints like /tools/keyword-search will use their
 #    own authentication via the route handler's get_current_active_user dependency
 # 3. RateLimitMiddleware - to limit request rates for authenticated users
 # 4. SearchPerformanceMiddleware - to monitor and cache search responses
+app.add_middleware(TrustProxyMiddleware)
 app.add_middleware(PublicFeaturedToolsMiddleware)
 app.add_middleware(AdminControlMiddleware)
 app.add_middleware(RateLimitMiddleware)
@@ -233,3 +256,18 @@ app.include_router(public_tool_logs_router)  # Include public tool logs router
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/frontend", StaticFiles(directory="static/frontend"), name="frontend")
+
+class PerformanceLoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        start_time = time.perf_counter()
+        response = await call_next(request)
+        process_time = (time.perf_counter() - start_time) * 1000  # ms
+        endpoint = request.url.path
+        method = request.method
+        # Log the performance
+        logger.info(f"[PERF] {method} {endpoint} took {process_time:.2f} ms")
+        # Optionally, add the timing to the response headers
+        response.headers["X-Process-Time-ms"] = str(f"{process_time:.2f}")
+        return response
+
+app.add_middleware(PerformanceLoggingMiddleware)

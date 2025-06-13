@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"c5c2bcdddc424fc3b57e55ae6dc99b4c","collectionName":"tools_Job_impacts","type":"collection"}

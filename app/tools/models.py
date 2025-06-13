@@ -55,6 +55,10 @@ class ToolBase(BaseModel):
     image_url: Optional[str] = None
     carriers: Optional[List[str]] = None
     task: Optional[str] = None
+    
+    # Sponsored fields
+    is_sponsored_public: bool = False
+    is_sponsored_private: bool = False
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -116,6 +120,9 @@ class ToolUpdate(BaseModel):
     industry: Optional[str] = None
     carriers: Optional[List[str]] = None
     task: Optional[str] = None
+    # Sponsored fields
+    is_sponsored_public: Optional[bool] = None
+    is_sponsored_private: Optional[bool] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

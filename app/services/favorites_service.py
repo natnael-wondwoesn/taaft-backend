@@ -7,6 +7,7 @@ from bson import ObjectId
 from ..database.database import favorites, tools, users
 from ..models.favorites import FavoriteCreate, FavoriteInDB, FavoriteResponse
 from ..logger import logger
+from .redis_cache import redis_client, REDIS_CACHE_ENABLED, invalidate_cache, invalidate_cache_by_prefix
 
 
 async def add_favorite(
@@ -59,6 +60,22 @@ async def add_favorite(
     # Get the inserted favorite
     favorite["_id"] = result.inserted_id
 
+    # Invalidate relevant cache entries
+    if REDIS_CACHE_ENABLED and redis_client:
+        try:
+            # Invalidate the general tools_list cache
+            invalidate_cache_by_prefix("tools_list")
+
+            # Invalidate cache for the specific tool
+            invalidate_cache(f"tool_by_unique_id:{favorite_data.tool_unique_id}")
+            
+            # Invalidate caches related to this user
+            invalidate_cache_by_prefix(f"user_favorites:{user_id}")
+
+            logger.info(f"Invalidated caches for tool {favorite_data.tool_unique_id} and user {user_id} after adding to favorites")
+        except Exception as e:
+            logger.error(f"Error invalidating cache: {str(e)}")
+
     # Convert to response model
     return FavoriteResponse(
         id=str(result.inserted_id),
@@ -102,6 +119,22 @@ async def remove_favorite(user_id: str, tool_unique_id: str) -> bool:
     await users.update_one(
         {"_id": ObjectId(user_id)}, {"$pull": {"saved_tools": tool_unique_id}}
     )
+
+    # Invalidate relevant cache entries
+    if REDIS_CACHE_ENABLED and redis_client:
+        try:
+            # Invalidate the general tools_list cache
+            invalidate_cache_by_prefix("tools_list")
+
+            # Invalidate cache for the specific tool
+            invalidate_cache(f"tool_by_unique_id:{tool_unique_id}")
+            
+            # Invalidate caches related to this user
+            invalidate_cache_by_prefix(f"user_favorites:{user_id}")
+
+            logger.info(f"Invalidated caches for tool {tool_unique_id} and user {user_id} after removing from favorites")
+        except Exception as e:
+            logger.error(f"Error invalidating cache: {str(e)}")
 
     logger.info(
         f"Successfully removed favorite: user_id={user_id}, tool_unique_id={tool_unique_id}"
