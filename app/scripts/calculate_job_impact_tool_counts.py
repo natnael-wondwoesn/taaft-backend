@@ -75,7 +75,7 @@ async def get_all_job_impacts() -> List[JobImpactInDB]:
     logger.info(f"Found {len(job_impacts)} job impacts")
     return job_impacts
 
-async def get_task_tools_count(task_name: str, tools_collection: AsyncIOMotorCollection) -> int:
+async def get_task_tools_count(task_name: str, tools_collection: AsyncIOMotorCollection) -> Tuple[int, str]:
     """
     Get the count of tools associated with a task directly from the database.
     More efficient than making HTTP requests.
@@ -85,11 +85,57 @@ async def get_task_tools_count(task_name: str, tools_collection: AsyncIOMotorCol
         tools_collection: The MongoDB collection containing the tools
         
     Returns:
-        int: The number of tools for the task
+        Tuple[int, str]: The number of tools for the task and the method used to find them
     """
-    count = await tools_collection.count_documents({"related_tasks": {"$elemMatch": {"name": task_name}}})
-    logger.debug(f"Found {count} tools for task: {task_name}")
-    return count
+    # Query the tools collection using the task field which contains the task name
+    # First try the exact task name match
+    count = await tools_collection.count_documents({"task": task_name})
+    if count > 0:
+        method = "exact_task_match"
+        logger.debug(f"Found {count} tools for task: {task_name} using exact task match")
+        return count, method
+    
+    # Try case-insensitive search as fallback
+    count = await tools_collection.count_documents({"task": {"$regex": f"^{task_name}$", "$options": "i"}})
+    if count > 0:
+        method = "case_insensitive_task_match"
+        logger.debug(f"Found {count} tools for task: {task_name} using case-insensitive task match")
+        return count, method
+    
+    # Try substring search
+    count = await tools_collection.count_documents({"task": {"$regex": task_name, "$options": "i"}})
+    if count > 0:
+        method = "substring_task_match"
+        logger.debug(f"Found {count} tools for task: {task_name} using substring task match")
+        return count, method
+    
+    # Try matching keywords
+    count = await tools_collection.count_documents({"keywords": {"$in": [task_name]}})
+    if count > 0:
+        method = "exact_keyword_match"
+        logger.debug(f"Found {count} tools for task: {task_name} using exact keyword match")
+        return count, method
+    
+    # Try matching case-insensitive keywords 
+    count = await tools_collection.count_documents({
+        "keywords": {"$elemMatch": {"$regex": f"^{task_name}$", "$options": "i"}}
+    })
+    if count > 0:
+        method = "case_insensitive_keyword_match"
+        logger.debug(f"Found {count} tools for task: {task_name} using case-insensitive keyword match")
+        return count, method
+    
+    # Try substring in description as last resort
+    count = await tools_collection.count_documents({
+        "description": {"$regex": task_name, "$options": "i"}
+    })
+    if count > 0:
+        method = "description_match"
+        logger.debug(f"Found {count} tools for task: {task_name} using description match")
+        return count, method
+    
+    logger.debug(f"No tools found for task: {task_name} after trying all methods")
+    return 0, "no_match"
 
 async def get_tools_collection() -> AsyncIOMotorCollection:
     """
@@ -119,7 +165,18 @@ async def calculate_job_impact_tool_count_efficient(
         return DEFAULT_MIN_TOOL_COUNT, {"default": DEFAULT_MIN_TOOL_COUNT}
     
     # Get unique task names to prevent duplicate counting
-    tasks = set(task.name for task in job_impact.tasks if task.name)
+    # First check for tasks list with task.name structure
+    tasks = set()
+    
+    # Add tasks from the tasks list
+    if hasattr(job_impact, 'tasks') and job_impact.tasks:
+        for task in job_impact.tasks:
+            if hasattr(task, 'name') and task.name:
+                tasks.add(task.name)
+    
+    # If we didn't find any tasks, check for task_names field
+    if not tasks and hasattr(job_impact, 'task_names') and job_impact.task_names:
+        tasks.update(job_impact.task_names)
     
     if not tasks:
         logger.warning(f"No task names found for job impact: {job_impact.job_title}")
@@ -129,17 +186,30 @@ async def calculate_job_impact_tool_count_efficient(
     
     # Get task counts in parallel
     tasks_count = {}
-    counts = await asyncio.gather(*[
+    tasks_methods = {}
+    results = await asyncio.gather(*[
         get_task_tools_count(task_name, tools_collection) 
         for task_name in tasks
     ])
     
-    # Map tasks to their counts
-    for task_name, count in zip(tasks, counts):
+    # Map tasks to their counts and methods
+    for task_name, (count, method) in zip(tasks, results):
+        # Apply minimum tool count per task if needed
+        if count == 0 or count < DEFAULT_MIN_TOOL_COUNT:
+            # If we found no tools for this task, set to the default minimum
+            logger.warning(f"Task '{task_name}' has only {count} tools, using minimum: {DEFAULT_MIN_TOOL_COUNT}")
+            count = DEFAULT_MIN_TOOL_COUNT
+            method = f"{method}_with_minimum"
+            
         tasks_count[task_name] = count
+        tasks_methods[task_name] = method
+        logger.debug(f"Task '{task_name}': {count} tools (method: {method})")
     
-    # Calculate total, handle cases with no tools
+    # Calculate total from all tasks
     total_count = sum(tasks_count.values())
+    
+    # Store methods used in the task counts dict for reference
+    tasks_count["_methods"] = tasks_methods
     
     # If total count is zero, use default minimum
     if total_count == 0:

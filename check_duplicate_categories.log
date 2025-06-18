@@ -1,0 +1,30 @@
+2025-06-18 11:57:57,308 - INFO - Successfully connected to MongoDB at mongodb://localhost:27017
+2025-06-18 11:57:57,309 - INFO - Checking tools from 'tools' collection in database 'taaft_db'
+2025-06-18 11:57:57,330 - INFO - Found 54 tools with duplicate categories
+2025-06-18 11:57:57,330 - INFO - Tools with duplicate categories:
+2025-06-18 11:57:57,330 - INFO - 1. 'Teapot LLM': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,330 - INFO - 2. 'Virtuoso-Lite': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,330 - INFO - 3. 'AI Token Visualization Tool': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,330 - INFO - 4. 'GPT Neo': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - 5. 'Arcee Agent': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - 6. 'Stable Audio Open 1.0': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - 7. 'BAAI/llm-embedder': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - 8. 'BAAI/bge-reranker-base': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - 9. 'BAAI/bge-small-en-v1.5': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - 10. 'BAAI/bge-large-en': category='AI Tools' matches categories['AI Tools']
+2025-06-18 11:57:57,331 - INFO - ... and 44 more tools
+2025-06-18 11:57:57,331 - INFO - 
+=== SEO Tools Analysis ===
+2025-06-18 11:57:57,332 - INFO - Tools with category='SEO Tools': 57
+2025-06-18 11:57:57,340 - INFO - Tools with categories.name='SEO Tools': 2
+2025-06-18 11:57:57,354 - INFO - Tools using $or query (API method): 59
+2025-06-18 11:57:57,364 - INFO - Tools using aggregation deduplication: 59
+2025-06-18 12:00:41,068 - INFO - Successfully connected to MongoDB at mongodb://localhost:27017
+2025-06-18 12:00:41,068 - INFO - Checking tools from 'tools' collection in database 'taaft_db'
+2025-06-18 12:00:41,088 - INFO - Found 0 tools with duplicate categories
+2025-06-18 12:00:41,088 - INFO - 
+=== SEO Tools Analysis ===
+2025-06-18 12:00:41,090 - INFO - Tools with category='SEO Tools': 57
+2025-06-18 12:00:41,097 - INFO - Tools with categories.name='SEO Tools': 2
+2025-06-18 12:00:41,104 - INFO - Tools using $or query (API method): 59
+2025-06-18 12:00:41,112 - INFO - Tools using aggregation deduplication: 59

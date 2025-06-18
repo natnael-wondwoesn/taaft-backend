@@ -837,7 +837,8 @@ class AlgoliaSearch:
         if REDIS_CACHE_ENABLED and redis_client:
             try:
                 cache_key = f"task_tools:{task_name}:{page}:{per_page}"
-                cached_result = await redis_client.get(cache_key)
+                # The redis_client.get method is synchronous, don't use await
+                cached_result = redis_client.get(cache_key)
                 if cached_result:
                     import json
                     from .models import AlgoliaToolRecord, TaskToolsSearchResult
@@ -924,7 +925,8 @@ class AlgoliaSearch:
                     }
                     
                     # Cache for 1 hour (3600 seconds)
-                    await redis_client.setex(
+                    # The redis_client.setex method is synchronous, don't use await
+                    redis_client.setex(
                         cache_key, 
                         3600, 
                         json.dumps(result_dict, default=str)

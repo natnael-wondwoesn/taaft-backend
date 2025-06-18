@@ -1,0 +1,18 @@
+2025-06-18 11:40:01,385 - INFO - Successfully connected to MongoDB at mongodb://localhost:27017
+2025-06-18 11:40:01,385 - INFO - Checking tools from 'tools' collection in database 'taaft_db'
+2025-06-18 11:40:01,391 - INFO - Found 5 tools with comma-separated categories
+2025-06-18 11:40:01,392 - INFO - Tools that would be updated:
+2025-06-18 11:40:01,392 - INFO - 1. 'Clay': 'AI Tools,Automation Tools,Business Tools,Communication Tools,Sales' → 'AI Tools'
+2025-06-18 11:40:01,392 - INFO - 2. 'Helper in Communication with Difficult People': 'AI Tools,Communication Tools,Productivity Tools,Collaboration' → 'AI Tools'
+2025-06-18 11:40:01,392 - INFO - 3. 'Media Headshot Generator': 'AI Tools,Image Editing' → 'AI Tools'
+2025-06-18 11:40:01,392 - INFO - 4. 'MixerBox WebSearchG': 'Communication,Productivity Tools' → 'Communication'
+2025-06-18 11:40:01,392 - INFO - 5. 'AutoJobs': 'Job recruitment,Job search,Workflow automation' → 'Job recruitment'
+2025-06-18 11:40:01,392 - INFO - 
+Unique first categories found: 3
+2025-06-18 11:40:01,392 - INFO -   - AI Tools
+2025-06-18 11:40:01,392 - INFO -   - Communication
+2025-06-18 11:40:01,392 - INFO -   - Job recruitment
+2025-06-18 11:40:01,392 - INFO - 
+===== SUMMARY =====
+2025-06-18 11:40:01,392 - INFO - Total tools with comma-separated categories: 5
+2025-06-18 11:40:01,392 - INFO - Unique first categories: 3

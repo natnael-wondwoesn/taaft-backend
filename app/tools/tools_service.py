@@ -4,6 +4,7 @@ from datetime import datetime
 import asyncio
 from typing import List, Optional, Union, Dict, Any, Tuple
 from bson import ObjectId
+import re
 
 from app.algolia.models import AlgoliaToolRecord
 
@@ -503,7 +504,8 @@ async def get_tool_by_unique_id(
             if user_id:
                 cache_key += f":{user_id}"
             
-            cached_result = await redis_client.get(cache_key)
+            # The redis_client.get method is synchronous, don't use await
+            cached_result = redis_client.get(cache_key)
             if cached_result:
                 import json
                 result_data = json.loads(cached_result)
@@ -552,7 +554,8 @@ async def get_tool_by_unique_id(
                 cache_key += f":{user_id}"
             
             # Cache for 1 hour (3600 seconds)
-            await redis_client.setex(
+            # The redis_client.setex method is synchronous, don't use await
+            redis_client.setex(
                 cache_key, 
                 3600, 
                 json.dumps(tool_response.model_dump(), default=str)
@@ -842,7 +845,6 @@ async def delete_tool(tool_id: UUID) -> bool:
     return result.deleted_count > 0
 
 
-# @redis_cache(prefix="search_tools")
 async def search_tools(
     search_term: str,
     skip: int = 0,
@@ -873,23 +875,124 @@ async def search_tools(
     from bson import ObjectId
     from ..logger import logger
     
-    # Create the base query for text search
-    query = {"$text": {"$search": search_term}}
-
+    # Split the search term into individual words
+    search_terms = search_term.strip().split()
+    if not search_terms:
+        return {"tools": [], "total": 0} if not count_only else 0
+    
+    # Create a MongoDB $and query with multiple parts to improve relevance
+    search_parts = []
+    
+    # For multi-word queries, ensure ALL words must appear in the document (AND logic)
+    # This prevents irrelevant results when nonsensical terms are mixed with real terms
+    if len(search_terms) > 1:
+        # Create text match conditions for each term
+        text_match_conditions = []
+        for term in search_terms:
+            escaped_term = re.escape(term.lower())
+            # Each term must appear in either name, description, or keywords
+            term_condition = {
+                "$or": [
+                    {"name": {"$regex": escaped_term, "$options": "i"}},
+                    {"description": {"$regex": escaped_term, "$options": "i"}},
+                    {"keywords": {"$in": [term.lower()]}}
+                ]
+            }
+            text_match_conditions.append(term_condition)
+        
+        # All terms must match (AND logic)
+        search_parts.append({"$and": text_match_conditions})
+    else:
+        # Single word query
+        single_term = search_terms[0]
+        
+        # For very short terms (1-2 characters), use only regex matching
+        # since MongoDB text search ignores short words
+        if len(single_term) <= 2:
+            escape_regex = re.escape(single_term)
+            name_regex = {"name": {"$regex": escape_regex, "$options": "i"}}
+            desc_regex = {"description": {"$regex": escape_regex, "$options": "i"}}
+            keyword_match = {"keywords": {"$in": [single_term.lower()]}}
+            
+            # For short terms, use regex matching only
+            search_parts.append({
+                "$or": [
+                    name_regex,
+                    desc_regex,
+                    keyword_match
+                ]
+            })
+        else:
+            # For longer terms, use text index for better performance
+            search_parts.append({"$text": {"$search": single_term}})
+            
+            # Add regex matches for name and description fields for better matching
+            escape_regex = re.escape(single_term)
+            name_regex = {"name": {"$regex": escape_regex, "$options": "i"}}
+            desc_regex = {"description": {"$regex": escape_regex, "$options": "i"}}
+            keyword_match = {"keywords": {"$in": [single_term.lower()]}}
+            
+            # Add regex conditions as a boost but not a requirement
+            search_parts.append({
+                "$or": [
+                    name_regex,
+                    desc_regex,
+                    keyword_match
+                ]
+            })
+    
     # Add additional filters if provided
     if additional_filters:
-        # If the filter is a $or (for category), combine with $and
         if "$or" in additional_filters:
-            and_clauses = [
-                {"$text": {"$search": search_term}},
-                {"$or": additional_filters["$or"]}
-            ]
+            # Add category filter directly to the search parts
+            search_parts.append({"$or": additional_filters["$or"]})
+            
+            # Add any other filters
             for k, v in additional_filters.items():
                 if k != "$or":
-                    and_clauses.append({k: v})
-            query = {"$and": and_clauses}
+                    search_parts.append({k: v})
         else:
-            query.update(additional_filters)
+            # Add all additional filters
+            for k, v in additional_filters.items():
+                search_parts.append({k: v})
+    
+    # Construct the final query
+    query = {"$and": search_parts}
+    
+    # Add a score field to rank results by relevance
+    # This gives higher weight to exact name matches
+    score_query = {
+        "$addFields": {
+            "search_score": {
+                "$sum": [
+                    # Highest score for exact name match
+                    {"$cond": [{"$eq": [{"$toLower": "$name"}, search_term.lower()]}, 100, 0]},
+                    # High score for name containing all search terms
+                    {"$cond": [
+                        {"$regexMatch": {"input": {"$toLower": "$name"}, "regex": re.escape(search_term.lower()), "options": "i"}}, 
+                        50, 
+                        0
+                    ]},
+                    # Medium score for description containing all search terms
+                    {"$cond": [
+                        {"$regexMatch": {"input": {"$toLower": "$description"}, "regex": re.escape(search_term.lower()), "options": "i"}}, 
+                        25, 
+                        0
+                    ]},
+                    # Score based on how many terms match in keywords
+                    {"$multiply": [
+                        {"$size": {
+                            "$setIntersection": [
+                                {"$ifNull": [{"$map": {"input": "$keywords", "in": {"$toLower": "$$this"}}}, []]},
+                                search_terms
+                            ]
+                        }},
+                        5  # 5 points per matched keyword
+                    ]}
+                ]
+            }
+        }
+    }
 
     if count_only:
         return await tools.count_documents(query)
@@ -897,12 +1000,17 @@ async def search_tools(
     # Determine sort direction
     sort_direction = -1 if sort_order.lower() == "desc" else 1
 
-    # Create cursor with sorting
-    if sort_by:
-        cursor = tools.find(query).skip(skip).limit(limit).sort(sort_by, sort_direction)
-    else:
-        cursor = tools.find(query).skip(skip).limit(limit)
-
+    # Use aggregation pipeline for better search results
+    pipeline = [
+        {"$match": query},
+        score_query,
+        {"$sort": {"search_score": -1, sort_by: sort_direction}},
+        {"$skip": skip},
+        {"$limit": limit}
+    ]
+    
+    cursor = tools.aggregate(pipeline)
+    
     tools_list = []
     saved_tools_list = []
 
@@ -915,11 +1023,35 @@ async def search_tools(
             fav_cursor = favorites.find({"user_id": str(user_id)})
             async for favorite in fav_cursor:
                 saved_tools_list.append(str(favorite["tool_unique_id"]))
+
+        # For debugging
         logger.info(
             f"User {user_id} has saved tools (MongoDB search): {saved_tools_list}"
         )
 
+    # For multi-term queries, check if all terms are in the document before including
+    multi_term_query = len(search_terms) > 1
+    
     async for tool in cursor:
+        # For multi-term queries with nonsense terms, double-check that all terms are present
+        if multi_term_query:
+            # Convert name, description, and keywords to lowercase for case-insensitive matching
+            tool_text = (tool.get("name", "").lower() + " " + 
+                        tool.get("description", "").lower())
+            
+            # Add keywords if they exist
+            if tool.get("keywords"):
+                for kw in tool.get("keywords", []):
+                    if isinstance(kw, str):
+                        tool_text += " " + kw.lower()
+            
+            # Check if all search terms are in the document
+            all_terms_present = all(term.lower() in tool_text for term in search_terms)
+            
+            # Skip this result if not all terms are present
+            if not all_terms_present:
+                continue
+        
         tool_response = await create_tool_response(tool)
         if tool_response:
             if user_id:
@@ -927,7 +1059,12 @@ async def search_tools(
                 tool_response.saved_by_user = unique_id in saved_tools_list
             tools_list.append(tool_response)
 
-    total = await tools.count_documents(query)
+    # For count, we need to recount based on our additional filtering
+    if multi_term_query:
+        total = len(tools_list)
+    else:
+        # For single-term queries, use the MongoDB count
+        total = await tools.count_documents(query)
 
     return {"tools": tools_list, "total": total}
 
@@ -1587,3 +1724,45 @@ async def toggle_tool_sponsored_private_status(
         import traceback
         logger.error(f"Traceback: {traceback.format_exc()}")
         return None
+
+
+async def ensure_search_indexes():
+    """
+    Ensure all necessary search indexes exist in the tools collection.
+    This should be called during application startup.
+    """
+    try:
+        from ..database.database import tools
+        from ..logger import logger
+        
+        # Create text index on name, description, and keywords fields with weights
+        await tools.create_index(
+            [
+                ("name", "text"),
+                ("description", "text"),
+                ("keywords", "text")
+            ],
+            weights={
+                "name": 10,  # Name matches are most important
+                "keywords": 5,  # Keyword matches are next
+                "description": 3,  # Description matches less important
+            },
+            name="tools_text_search_index",
+            default_language="english",
+            background=True
+        )
+        
+        # Create regular indexes for commonly searched/filtered fields
+        await tools.create_index("name", background=True)
+        await tools.create_index("keywords", background=True)
+        await tools.create_index("description", background=True)
+        await tools.create_index("categories.id", background=True)
+        await tools.create_index("category", background=True)
+        await tools.create_index("price", background=True)
+        await tools.create_index("is_featured", background=True)
+        await tools.create_index("created_at", background=True)
+        await tools.create_index("updated_at", background=True)
+        
+        logger.info("Search indexes created or updated successfully")
+    except Exception as e:
+        logger.error(f"Error creating search indexes: {str(e)}")

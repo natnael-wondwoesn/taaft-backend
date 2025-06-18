@@ -1,0 +1,70 @@
+2025-06-18 11:58:56,509 - INFO - Successfully connected to MongoDB at mongodb://localhost:27017
+2025-06-18 11:58:56,510 - INFO - Processing tools from 'tools' collection in database 'taaft_db'
+2025-06-18 11:58:56,535 - INFO - Found 54 tools with duplicate categories out of 101 examined
+2025-06-18 11:58:56,536 - INFO - Fixed tool 'Teapot LLM': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,537 - INFO - Fixed tool 'Virtuoso-Lite': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,538 - INFO - Fixed tool 'AI Token Visualization Tool': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,539 - INFO - Fixed tool 'GPT Neo': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,542 - INFO - Fixed tool 'Arcee Agent': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,544 - INFO - Fixed tool 'Stable Audio Open 1.0': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,545 - INFO - Fixed tool 'BAAI/llm-embedder': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,546 - INFO - Fixed tool 'BAAI/bge-reranker-base': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,548 - INFO - Fixed tool 'BAAI/bge-small-en-v1.5': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,549 - INFO - Fixed tool 'BAAI/bge-large-en': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,550 - INFO - Fixed tool 'BAAI/bge-base-en': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,552 - INFO - Fixed tool 'BAAI/bge-large-zh': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,553 - INFO - Fixed tool 'BAAI/bge-small-zh': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,555 - INFO - Fixed tool 'OpenChat 3.5': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,556 - INFO - Fixed tool 'Stable Diffusion 3.5 Large': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,558 - INFO - Fixed tool 'DeepSeek-Coder-V2': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,559 - INFO - Fixed tool 'Fuyu-8B': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,561 - INFO - Fixed tool 'Mistral-7B-v0.1': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,562 - INFO - Fixed tool 'APIscrapy': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,563 - INFO - Fixed tool 'Validator AI': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,565 - INFO - Fixed tool 'Stable Diffusion XL Refiner 1.0': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,567 - INFO - Fixed tool 'Kimi-VL': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,568 - INFO - Fixed tool 'Kimi-VL-A3B-Instruct': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,570 - INFO - Fixed tool 'DeepSeek-R1': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,571 - INFO - Fixed tool 'Hermes 2 Pro - Llama-3 8B': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,573 - INFO - Fixed tool 'Ollama Llama 3.3 70B': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,574 - INFO - Fixed tool 'HiDream-I1': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,575 - INFO - Fixed tool 'DeepSeek-Prover': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,576 - INFO - Fixed tool 'Textless Speech Model': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,578 - INFO - Fixed tool 'Summarization Model': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,579 - INFO - Fixed tool 'Hermes-2 Θ Llama-3 8B': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,580 - INFO - Fixed tool 'Dreamshaper V7': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,581 - INFO - Fixed tool 'Call Analysis AI Tool': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,582 - INFO - Fixed tool 'NexusRaven-13B': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,583 - INFO - Fixed tool 'Averroes.ai': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,586 - INFO - Fixed tool 'Snowflake — Copilot': Removed duplicate 'AI Tools' from categories array
+2025-06-18 11:58:56,587 - INFO - Fixed tool 'DeepSeek-R1-Zero': Removed duplicate 'Artificial Intelligence' from categories array
+2025-06-18 11:58:56,588 - INFO - Fixed tool 'MEGA': Removed duplicate 'Artificial Intelligence' from categories array
+2025-06-18 11:58:56,589 - INFO - Fixed tool 'CLIP': Removed duplicate 'Artificial Intelligence' from categories array
+2025-06-18 11:58:56,591 - INFO - Fixed tool 'WebscrapeAi': Removed duplicate 'Automation Tools' from categories array
+2025-06-18 11:58:56,592 - INFO - Fixed tool 'Kadoa': Removed duplicate 'Automation Tools' from categories array
+2025-06-18 11:58:56,593 - INFO - Fixed tool 'Simplescraper': Removed duplicate 'Automation Tools' from categories array
+2025-06-18 11:58:56,594 - INFO - Fixed tool 'ScrapeStorm': Removed duplicate 'Automation Tools' from categories array
+2025-06-18 11:58:56,595 - INFO - Fixed tool 'Power BI': Removed duplicate 'Business Tools' from categories array
+2025-06-18 11:58:56,596 - INFO - Fixed tool 'BAAI/bge-small-zh-v1.5': Removed duplicate 'Content Creation' from categories array
+2025-06-18 11:58:56,598 - INFO - Fixed tool 'BlacktoothAI': Removed duplicate 'Content Creation' from categories array
+2025-06-18 11:58:56,599 - INFO - Fixed tool 'OmniParser': Removed duplicate 'Document Management' from categories array
+2025-06-18 11:58:56,600 - INFO - Fixed tool 'LayoutXLM': Removed duplicate 'Document Management' from categories array
+2025-06-18 11:58:56,601 - INFO - Fixed tool 'Qwen2.5-7B-Instruct': Removed duplicate 'Education Tools' from categories array
+2025-06-18 11:58:56,603 - INFO - Fixed tool 'Kolors': Removed duplicate 'Image Editing Tools' from categories array
+2025-06-18 11:58:56,604 - INFO - Fixed tool 'MAGI-1': Removed duplicate 'Image Editing Tools' from categories array
+2025-06-18 11:58:56,606 - INFO - Fixed tool 'recraft-ai/recraft-creative-upscale': Removed duplicate 'Image Editing Tools' from categories array
+2025-06-18 11:58:56,607 - INFO - Fixed tool 'Ideogram v2 Turbo': Removed duplicate 'Image Editing Tools' from categories array
+2025-06-18 11:58:56,608 - INFO - Fixed tool 'qr2ai/outline': Removed duplicate 'Image Editing Tools' from categories array
+2025-06-18 11:58:56,608 - INFO - 
+        ===== SUMMARY =====
+        Tools examined: 101
+        Tools with duplicates: 54
+        Tools successfully fixed: 54
+        Errors: 0
+        
+2025-06-18 11:58:56,609 - INFO - 
+=== SEO Tools Verification ===
+2025-06-18 11:58:56,610 - INFO - Tools with category='SEO Tools': 57
+2025-06-18 11:58:56,618 - INFO - Tools with categories.name='SEO Tools': 2
+2025-06-18 11:58:56,626 - INFO - Tools using $or query (API method): 59
+2025-06-18 11:58:56,627 - INFO - ✅ SEO Tools count is now correct!

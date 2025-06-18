@@ -117,6 +117,12 @@ async def lifespan(app: FastAPI):
             await setup_database()
             logger.info("Database setup completed")
 
+            # Ensure all search indexes exist
+            logger.info("Ensuring search indexes...")
+            from .tools.tools_service import ensure_search_indexes
+            await ensure_search_indexes()
+            logger.info("Search indexes ready")
+
             # Check Redis connection
             if REDIS_CACHE_ENABLED and redis_client:
                 logger.info("Redis cache is enabled and connected")

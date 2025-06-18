@@ -285,10 +285,71 @@ async def update_category_counts() -> Dict[str, Any]:
         return result
 
 
+async def fix_null_category() -> Dict[str, Any]:
+    """
+    Check if a category called "null" exists and changes it to "Others".
+    
+    Returns:
+        Dictionary with operation results
+    """
+    result = {
+        "success": True,
+        "null_category_found": False,
+        "null_category_updated": False
+    }
+    
+    try:
+        # Look for a category with id or name "null"
+        null_category = await categories_collection.find_one({
+            "$or": [
+                {"id": "null"},
+                {"name": "null"}
+            ]
+        })
+        
+        if null_category:
+            result["null_category_found"] = True
+            logger.info("Found 'null' category, updating to 'Others'")
+            
+            # Update the category name and id to "Others"
+            await categories_collection.update_one(
+                {"_id": null_category["_id"]},
+                {"$set": {
+                    "name": "Others",
+                    "id": "others",
+                    "slug": "others"
+                }}
+            )
+            result["null_category_updated"] = True
+            logger.info("Successfully updated 'null' category to 'Others'")
+        else:
+            logger.info("No 'null' category found in the database")
+            
+        return result
+    
+    except Exception as e:
+        logger.error(f"Error fixing null category: {str(e)}")
+        result["success"] = False
+        result["error"] = str(e)
+        return result
+
+
 async def main():
     """Main function to execute the category generation process"""
     try:
-        # First update the category counts using our improved method
+        # First check for and fix null category
+        logger.info("Checking for 'null' category...")
+        null_fix_result = await fix_null_category()
+        
+        if null_fix_result["success"]:
+            if null_fix_result["null_category_updated"]:
+                logger.info("Successfully fixed 'null' category")
+            else:
+                logger.info("No 'null' category needed fixing")
+        else:
+            logger.error(f"Error fixing 'null' category: {null_fix_result.get('error')}")
+        
+        # Update the category counts using our improved method
         logger.info("Updating category counts with accurate aggregation...")
         update_result = await update_category_counts()
         
