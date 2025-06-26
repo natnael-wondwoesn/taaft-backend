@@ -1933,6 +1933,10 @@ components:
           type: boolean
         is_verified:
           type: boolean
+        is_sso_account:
+          type: boolean
+          description: Whether the user account was created via SSO (true) or email/password (false)
+          default: false
         created_at:
           type: string
           format: date-time

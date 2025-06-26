@@ -1,6 +1,6 @@
 """
 Test client for interacting with the GoHighLevel API directly
-Used for debugging and testing the integration
+Used for debugging and testing the integration with automatic token refresh
 """
 
 import httpx
@@ -9,26 +9,39 @@ import os
 from typing import Dict, Any, Optional, List
 import asyncio
 from dotenv import load_dotenv
+from .ghl_service import token_manager, GHLContactData
 
 # Load environment variables
 load_dotenv()
 
 # GoHighLevel API Configuration
-GHL_API_KEY = os.getenv("GHL_API_KEY", "")
 GHL_LOCATION_ID = os.getenv("GHL_LOCATION_ID", "")
 GHL_BASE_URL = "https://services.leadconnectorhq.com"
 
 
-async def test_connection():
-    """Test the connection to GoHighLevel API"""
-    headers = {
-        "Authorization": f"Bearer {GHL_API_KEY}",
-        "Version": "2020-01-01",
-        "Content-Type": "application/json",
-    }
+async def get_auth_headers():
+    """Get authorization headers with fresh token."""
+    try:
+        access_token = await token_manager.get_valid_token()
+        return {
+            "Authorization": f"Bearer {access_token}",
+            "Version": "2021-07-28",
+            "Content-Type": "application/json",
+        }
+    except Exception as e:
+        print(f"❌ Failed to get valid token: {str(e)}")
+        return None
 
-    if not GHL_API_KEY or not GHL_LOCATION_ID:
-        print("⚠️ GHL_API_KEY or GHL_LOCATION_ID not configured")
+
+async def test_connection():
+    """Test the connection to GoHighLevel API with automatic token refresh."""
+    headers = await get_auth_headers()
+    if not headers:
+        print("⚠️ GHL tokens not configured or invalid")
+        return False
+
+    if not GHL_LOCATION_ID:
+        print("⚠️ GHL_LOCATION_ID not configured")
         return False
 
     try:
@@ -36,10 +49,7 @@ async def test_connection():
         endpoint = f"{GHL_BASE_URL}/locations/{GHL_LOCATION_ID}"
 
         async with httpx.AsyncClient() as client:
-            response = await client.get(
-                endpoint,
-                headers=headers,
-            )
+            response = await client.get(endpoint, headers=headers)
 
             if response.status_code == 200:
                 location_data = response.json()
@@ -58,12 +68,10 @@ async def test_connection():
 
 
 async def get_contacts(limit: int = 10):
-    """Get contacts from GoHighLevel"""
-    headers = {
-        "Authorization": f"Bearer {GHL_API_KEY}",
-        "Version": "2020-01-01",
-        "Content-Type": "application/json",
-    }
+    """Get contacts from GoHighLevel with automatic token refresh."""
+    headers = await get_auth_headers()
+    if not headers:
+        return None
 
     try:
         # Get contacts endpoint
@@ -103,12 +111,10 @@ async def get_contacts(limit: int = 10):
 
 
 async def create_test_contact(email: str, first_name: str, last_name: str):
-    """Create a test contact in GoHighLevel"""
-    headers = {
-        "Authorization": f"Bearer {GHL_API_KEY}",
-        "Version": "2020-01-01",
-        "Content-Type": "application/json",
-    }
+    """Create a test contact in GoHighLevel with automatic token refresh."""
+    headers = await get_auth_headers()
+    if not headers:
+        return None
 
     try:
         # Create contact endpoint
@@ -144,12 +150,10 @@ async def create_test_contact(email: str, first_name: str, last_name: str):
 
 
 async def add_tag_to_contact(contact_id: str, tag: str):
-    """Add a tag to a contact in GoHighLevel"""
-    headers = {
-        "Authorization": f"Bearer {GHL_API_KEY}",
-        "Version": "2020-01-01",
-        "Content-Type": "application/json",
-    }
+    """Add a tag to a contact in GoHighLevel with automatic token refresh."""
+    headers = await get_auth_headers()
+    if not headers:
+        return False
 
     try:
         # First get current contact to get existing tags
@@ -169,71 +173,130 @@ async def add_tag_to_contact(contact_id: str, tag: str):
             contact_data = response.json()
             current_tags = contact_data.get("tags", [])
 
-            # Add new tag
-            updated_tags = current_tags + [tag]
+            # Add new tag if not already present
+            if tag not in current_tags:
+                updated_tags = current_tags + [tag]
 
-            # Update contact with new tags
-            update_payload = {"locationId": GHL_LOCATION_ID, "tags": updated_tags}
+                # Update contact with new tags
+                update_payload = {"locationId": GHL_LOCATION_ID, "tags": updated_tags}
 
-            update_response = await client.put(
-                endpoint, headers=headers, json=update_payload
-            )
-
-            if update_response.status_code == 200:
-                print(f"✅ Successfully added tag '{tag}' to contact")
-                return True
-            else:
-                print(
-                    f"❌ Failed to add tag: {update_response.status_code} - {update_response.text}"
+                update_response = await client.put(
+                    endpoint, headers=headers, json=update_payload
                 )
-                return False
+
+                if update_response.status_code == 200:
+                    print(f"✅ Successfully added tag '{tag}' to contact")
+                    return True
+                else:
+                    print(
+                        f"❌ Failed to add tag: {update_response.status_code} - {update_response.text}"
+                    )
+                    return False
+            else:
+                print(f"ℹ️  Tag '{tag}' already exists on contact")
+                return True
 
     except Exception as e:
         print(f"❌ Error adding tag: {str(e)}")
         return False
 
 
-async def run_tests():
-    """Run a series of tests to verify GoHighLevel integration"""
-    print("\n===== GoHighLevel Integration Test =====\n")
+async def test_token_refresh():
+    """Test the token refresh functionality."""
+    print("\n🔄 Testing token refresh...")
+    try:
+        result = await token_manager.force_refresh()
+        print(f"✅ Token refresh successful")
+        print(f"New token expires in: {result.get('expires_in', 'N/A')} seconds")
+        return True
+    except Exception as e:
+        print(f"❌ Token refresh failed: {str(e)}")
+        return False
 
-    # Test connection
-    connection_successful = await test_connection()
-    if not connection_successful:
-        print("\n⚠️ Connection failed. Check your API key and location ID.")
-        return
 
-    print("\n----- Testing Contact Operations -----\n")
-
-    # Generate a unique email for test
-    import uuid
-
-    test_email = f"test-{uuid.uuid4().hex[:8]}@taaft-integration.com"
-
-    # Create a test contact
-    print(f"Creating test contact with email: {test_email}")
-    contact = await create_test_contact(
-        email=test_email, first_name="Test", last_name="User"
+async def test_ghl_service_integration():
+    """Test the GHL service integration with automatic token refresh."""
+    print("\n🧪 Testing GHL Service Integration...")
+    
+    from .ghl_service import create_ghl_contact, SignupType
+    
+    # Test data
+    test_contact = GHLContactData(
+        email="test@example.com",
+        first_name="Test User",
+        tags=["test", "integration"]
     )
-
-    if not contact:
-        print("\n⚠️ Failed to create test contact. Aborting remaining tests.")
-        return
-
-    # Get the contact ID
-    contact_id = contact.get("id")
-
-    # Add a tag to the contact
-    print("\nAdding tag to test contact...")
-    tag_result = await add_tag_to_contact(contact_id, "Integration Test Passed")
-
-    # Get contacts to verify
-    print("\nRetrieving contacts to verify operations...")
-    await get_contacts(5)
-
-    print("\n===== Test Complete =====\n")
+    
+    try:
+        result = await create_ghl_contact(test_contact)
+        print(f"✅ GHL service integration test successful")
+        print(f"Result: {result}")
+        return True
+    except Exception as e:
+        print(f"❌ GHL service integration test failed: {str(e)}")
+        return False
 
 
+async def run_comprehensive_tests():
+    """Run a comprehensive test suite for GHL integration."""
+    print("\n===== Comprehensive GoHighLevel Integration Test =====\n")
+
+    test_results = {
+        "token_refresh": False,
+        "connection": False,
+        "get_contacts": False,
+        "create_contact": False,
+        "service_integration": False,
+    }
+
+    # Test 1: Token refresh
+    print("1. Testing token refresh...")
+    test_results["token_refresh"] = await test_token_refresh()
+
+    # Test 2: Connection test
+    print("\n2. Testing API connection...")
+    test_results["connection"] = await test_connection()
+
+    # Test 3: Get contacts
+    print("\n3. Testing get contacts...")
+    contacts = await get_contacts(5)
+    test_results["get_contacts"] = contacts is not None
+
+    # Test 4: Create test contact
+    print("\n4. Testing contact creation...")
+    test_contact = await create_test_contact(
+        "integration.test@example.com", "Integration", "Test"
+    )
+    test_results["create_contact"] = test_contact is not None
+
+    # Test 5: Service integration
+    print("\n5. Testing service integration...")
+    test_results["service_integration"] = await test_ghl_service_integration()
+
+    # Print summary
+    print("\n===== Test Results Summary =====")
+    passed = sum(test_results.values())
+    total = len(test_results)
+    
+    for test_name, result in test_results.items():
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"{test_name.replace('_', ' ').title()}: {status}")
+    
+    print(f"\nOverall: {passed}/{total} tests passed")
+    
+    if passed == total:
+        print("🎉 All tests passed! GHL integration is working correctly.")
+    else:
+        print("⚠️  Some tests failed. Please check the configuration and logs.")
+    
+    return test_results
+
+
+async def run_tests():
+    """Legacy function for backward compatibility."""
+    return await run_comprehensive_tests()
+
+
+# Run tests directly
 if __name__ == "__main__":
-    # Run the test suite
-    asyncio.run(run_tests())
+    asyncio.run(run_comprehensive_tests())

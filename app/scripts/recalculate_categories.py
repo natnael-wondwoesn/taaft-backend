@@ -20,7 +20,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database configuration
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://ec2-3-133-139-7.us-east-2.compute.amazonaws.com:27017")
 DB_NAME = "taaft_db"
 TOOLS_COLLECTION_NAME = "tools"
 CATEGORIES_COLLECTION_NAME = "categories"

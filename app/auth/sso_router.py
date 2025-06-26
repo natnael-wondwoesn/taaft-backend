@@ -38,7 +38,7 @@ async def login(request: Request, provider: str):
         )
 
     # Get redirect URL
-    base_url = os.getenv("BASE_URL", "https://taaft.zapto.org")
+    base_url = os.getenv("BASE_URL", "https://api.aibyhour.com")
     if base_url.endswith("/"):
         base_url = base_url.rstrip("/")
     

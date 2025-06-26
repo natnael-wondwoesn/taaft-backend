@@ -85,6 +85,7 @@ async def create_sso_user(
                 "profile_data": provider_data,
             },
             "last_login": datetime.datetime.utcnow(),
+            "is_sso_account": True,  # Mark existing user as SSO account
         }
 
         # Update name and username if not set before
@@ -110,6 +111,7 @@ async def create_sso_user(
         service_tier=ServiceTier.FREE,
         is_active=True,
         is_verified=True,
+        is_sso_account=True,  # Mark new user as SSO account
         subscribeToNewsletter=subscribeToNewsletter,
         created_at=datetime.datetime.utcnow(),
         updated_at=datetime.datetime.utcnow(),
@@ -241,24 +243,5 @@ async def get_github_user(
         return primary_email, provider_user_id, name, username, user_data
 
 
-async def sync_to_company_ghl(user: Dict[str, Any], signup_type: SignupType):
-    """Sync user data to company GHL account."""
-    tags = []
-    if signup_type in [SignupType.ACCOUNT, SignupType.BOTH]:
-        tags.append("full_account")
-    if signup_type in [SignupType.NEWSLETTER, SignupType.BOTH]:
-        tags.append("newsletter")
-
-    ghl_data = GHLContactData(
-        email=user["email"], first_name=user.get("full_name"), tags=tags
-    )
-    try:
-        ghl_contact = await create_ghl_contact(ghl_data)
-        logger.info(f"Created GHL contact for {user['email']}: {ghl_contact}")
-        return {"success": True, "data": ghl_contact}
-    except Exception as e:
-        logger.error(f"GHL contact creation failed for {user['email']}: {str(e)}")
-        # Save to file for retry
-        with open("failed_ghl_signups.txt", "a") as f:
-            f.write(f"{json.dumps(ghl_data.dict())}\n")
-        raise
+# sync_to_company_ghl function moved to app/ghl/ghl_service.py
+# This removes the duplicate function and uses the improved version

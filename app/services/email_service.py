@@ -107,7 +107,7 @@ def send_password_reset_email(to_email: str, reset_token: str, base_url: str) ->
         base_url = base_url.rstrip("/")
 
     # Get the backend URL for token validation
-    backend_url = os.getenv("https://taaft.zapto.org", "https://taaft.zapto.org")
+    backend_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
     if backend_url.endswith("/"):
         backend_url = backend_url.rstrip("/")
 
@@ -242,7 +242,7 @@ def send_verification_email(
         bool: True if email was sent successfully, False otherwise
     """
     # Use FRONTEND_URL for the frontend application
-    base_url = os.getenv("BACKEND_URL", "https://taaft.zapto.org")
+    base_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
     
     # Make sure base_url has https:// prefix
     if not base_url.startswith("http"):
@@ -253,7 +253,7 @@ def send_verification_email(
         base_url = base_url.rstrip("/")
 
     # The verification endpoint that will consume the token
-    api_url = os.getenv("API_URL", "https://taaft.zapto.org")
+    api_url = os.getenv("API_URL", "https://api.aibyhour.com")
     if api_url.endswith("/"):
         api_url = api_url.rstrip("/")
 

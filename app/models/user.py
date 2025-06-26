@@ -121,6 +121,7 @@ class UserInDB(BaseModel):
     service_tier: ServiceTier = ServiceTier.FREE
     is_active: bool = True
     is_verified: bool = False
+    is_sso_account: bool = False
     subscribeToNewsletter: bool = False
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
@@ -160,6 +161,7 @@ class UserResponse(BaseModel):
     service_tier: ServiceTier
     is_active: bool
     is_verified: bool
+    is_sso_account: bool = False
     subscribeToNewsletter: bool = False
     created_at: datetime.datetime
     oauth_providers: Dict[str, Dict[str, Any]] = {}

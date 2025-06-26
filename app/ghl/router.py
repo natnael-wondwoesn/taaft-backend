@@ -1,6 +1,6 @@
 """
 API router for GoHighLevel CRM integration
-Handles endpoints for managing GHL synchronization and status
+Handles endpoints for managing GHL synchronization and status with automatic token refresh
 """
 
 from fastapi import (
@@ -23,6 +23,7 @@ from .ghl_service import (
     refresh_ghl_token,
     retry_failed_signups,
     get_ghl_access_token,
+    token_manager,
 )
 from app.logger import logger
 
@@ -35,24 +36,67 @@ router = APIRouter(
 @router.get("/status")
 async def get_ghl_integration_status():
     """
-    Get the current status of the GoHighLevel integration
+    Get the current status of the GoHighLevel integration including token information
     """
     ghl_client_id = os.getenv("GHL_CLIENT_ID")
     ghl_client_secret = os.getenv("GHL_CLIENT_SECRET")
-    ghl_access_token = os.getenv("GHL_ACCESS_TOKEN")
-    ghl_refresh_token = os.getenv("GHL_REFRESH_TOKEN")
-
+    
     is_configured = bool(ghl_client_id and ghl_client_secret)
-    has_tokens = bool(ghl_access_token and ghl_refresh_token)
+    
+    # Get detailed token manager status
+    token_status = token_manager.get_status()
+    
+    # Try to get a fresh token to verify token validity (only if not marked as invalid)
+    token_valid = False
+    token_error = None
+    if token_status["has_access_token"] and token_status["has_refresh_token"] and not token_status["refresh_token_invalid"]:
+        try:
+            await token_manager.get_valid_token()
+            token_valid = True
+        except Exception as e:
+            token_error = str(e)
+            logger.error(f"Token validation failed: {str(e)}")
 
     return {
         "is_configured": is_configured,
         "client_id_configured": bool(ghl_client_id),
         "client_secret_configured": bool(ghl_client_secret),
-        "has_access_token": bool(ghl_access_token),
-        "has_refresh_token": bool(ghl_refresh_token),
-        "auth_status": "authenticated" if has_tokens else "not_authenticated",
+        "has_access_token": token_status["has_access_token"],
+        "has_refresh_token": token_status["has_refresh_token"],
+        "refresh_token_invalid": token_status["refresh_token_invalid"],
+        "needs_reauth": token_status["needs_reauth"],
+        "token_valid": token_valid,
+        "token_error": token_error,
+        "auth_status": _get_auth_status(token_status, token_valid),
+        "auto_refresh_enabled": True,  # New feature indicator
+        "message": _get_status_message(token_status, token_valid),
     }
+
+
+def _get_auth_status(token_status: dict, token_valid: bool) -> str:
+    """Determine the authentication status."""
+    if token_status["refresh_token_invalid"]:
+        return "needs_reauth"
+    elif token_status["has_access_token"] and token_status["has_refresh_token"] and token_valid:
+        return "authenticated"
+    elif token_status["has_access_token"] and token_status["has_refresh_token"]:
+        return "token_issues"
+    else:
+        return "not_authenticated"
+
+
+def _get_status_message(token_status: dict, token_valid: bool) -> str:
+    """Get a human-readable status message."""
+    if token_status["refresh_token_invalid"]:
+        return "GHL refresh token is invalid. Please re-authenticate via OAuth."
+    elif not token_status["has_refresh_token"]:
+        return "GHL not configured. Please set up OAuth authentication."
+    elif not token_valid and token_status["has_refresh_token"]:
+        return "GHL token refresh issues detected. May need re-authentication."
+    elif token_valid:
+        return "GHL integration is working correctly."
+    else:
+        return "GHL integration status unknown."
 
 
 @router.post("/sync-user", status_code=status.HTTP_200_OK)
@@ -64,15 +108,13 @@ async def sync_user(
 ):
     """
     Manually sync a user to GoHighLevel (admin only)
+    Uses automatic token refresh before API calls
     """
     from app.database.database import database
     from bson import ObjectId
 
-    # Verify GHL is configured
-    ghl_access_token = os.getenv("GHL_ACCESS_TOKEN")
-    ghl_refresh_token = os.getenv("GHL_REFRESH_TOKEN")
-
-    if not ghl_access_token or not ghl_refresh_token:
+    # Verify GHL is configured - the token will be refreshed automatically
+    if not token_manager.access_token or not token_manager.refresh_token:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="GoHighLevel integration not configured or not authenticated",
@@ -121,12 +163,10 @@ async def sync_newsletter_subscriber(
 ):
     """
     Manually sync a newsletter subscriber to GoHighLevel (admin only)
+    Uses automatic token refresh before API calls
     """
-    # Verify GHL is configured
-    ghl_access_token = os.getenv("GHL_ACCESS_TOKEN")
-    ghl_refresh_token = os.getenv("GHL_REFRESH_TOKEN")
-
-    if not ghl_access_token or not ghl_refresh_token:
+    # Verify GHL is configured - the token will be refreshed automatically
+    if not token_manager.access_token or not token_manager.refresh_token:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="GoHighLevel integration not configured or not authenticated",
@@ -160,12 +200,10 @@ async def handle_failed_syncs(
 ):
     """
     Process failed GoHighLevel synchronizations (admin only)
+    Uses automatic token refresh before API calls
     """
-    # Verify GHL is configured
-    ghl_access_token = os.getenv("GHL_ACCESS_TOKEN")
-    ghl_refresh_token = os.getenv("GHL_REFRESH_TOKEN")
-
-    if not ghl_access_token or not ghl_refresh_token:
+    # Verify GHL is configured - the token will be refreshed automatically
+    if not token_manager.access_token or not token_manager.refresh_token:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="GoHighLevel integration not configured or not authenticated",
@@ -178,8 +216,8 @@ async def handle_failed_syncs(
 
     # Otherwise run synchronously
     try:
-        await retry_failed_signups()
-        return {"status": "completed", "message": "Failed syncs processed"}
+        result = await retry_failed_signups()
+        return {"status": "completed", "message": "Failed syncs processed", "details": result}
     except Exception as e:
         logger.error(f"Error processing failed syncs: {str(e)}")
         return {"status": "error", "error": str(e)}
@@ -190,14 +228,16 @@ async def refresh_token(
     current_user: UserResponse = Depends(get_admin_user),
 ):
     """
-    Refresh the GHL access token (admin only)
+    Manually refresh the GHL access token (admin only)
+    Note: Tokens are now automatically refreshed before each API call
     """
     try:
-        result = await refresh_ghl_token()
+        result = await token_manager.force_refresh()
         return {
             "status": "success",
             "message": "GHL token refreshed successfully",
             "expires_in": result.get("expires_in"),
+            "note": "Tokens are now automatically refreshed before each API call",
         }
     except Exception as e:
         logger.error(f"Error refreshing GHL token: {str(e)}")
@@ -216,8 +256,6 @@ async def get_auth_url(
         "GHL_REDIRECT_URI",
         "http://taaf-backend.onrender.com/api/integrations/ghl/oauth-callback",
     )
-    print(client_id)
-    print(redirect_uri)
 
     if not client_id or not redirect_uri:
         raise HTTPException(
@@ -236,7 +274,7 @@ async def oauth_callback(
     code: str,
 ):
     """
-    Handle GoHighLevel OAuth callback
+    Handle GoHighLevel OAuth callback and initialize token manager
     """
     client_id = os.getenv("GHL_CLIENT_ID")
     client_secret = os.getenv("GHL_CLIENT_SECRET")
@@ -252,13 +290,15 @@ async def oauth_callback(
         )
 
     try:
+        # Get initial tokens and update token manager
         tokens = await get_ghl_access_token(
             code, client_id, client_secret, redirect_uri
         )
 
-        # Store tokens in environment variables
-        os.environ["GHL_ACCESS_TOKEN"] = tokens["access_token"]
-        os.environ["GHL_REFRESH_TOKEN"] = tokens["refresh_token"]
+        # Token manager is automatically updated in get_ghl_access_token
+        # Reset any invalid token status since we have fresh tokens
+        token_manager.reset_refresh_token_status()
+        logger.info("GHL OAuth callback successful - token manager updated with fresh tokens")
 
         # Optionally store in database for persistence
         # from app.database.database import database
@@ -271,6 +311,7 @@ async def oauth_callback(
         return {
             "message": "GHL authentication successful",
             "expires_in": tokens.get("expires_in"),
+            "auto_refresh_enabled": True,
         }
     except Exception as e:
         logger.error(f"GHL OAuth callback error: {str(e)}")
@@ -278,3 +319,38 @@ async def oauth_callback(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error during GHL authentication: {str(e)}",
         )
+
+
+@router.get("/test-integration")
+async def test_integration(
+    current_user: UserResponse = Depends(get_admin_user),
+):
+    """
+    Test the GHL integration with automatic token refresh (admin only)
+    """
+    try:
+        from .test_client import run_comprehensive_tests
+        
+        # Run comprehensive tests
+        test_results = await run_comprehensive_tests()
+        
+        passed = sum(test_results.values())
+        total = len(test_results)
+        
+        return {
+            "status": "completed",
+            "results": test_results,
+            "summary": {
+                "passed": passed,
+                "total": total,
+                "success_rate": f"{(passed/total)*100:.1f}%",
+                "all_passed": passed == total
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error running GHL integration tests: {str(e)}")
+        return {
+            "status": "error", 
+            "error": str(e),
+            "message": "Failed to run integration tests"
+        }

@@ -175,7 +175,7 @@ async def lifespan(app: FastAPI):
 
 
 # Create FastAPI app with proxy support
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan,root_path="/api")
 
 # Add this line - must be added before other middlewares
 app.add_middleware(
@@ -196,7 +196,7 @@ app.add_middleware(
         "http://taaft-development.vercel.app/",
         "https://taaft-development.vercel.app/",
         "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app",  # Additional frontend
-        "https://taaft.zapto.org",
+        "https://api.aibyhour.com",
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],

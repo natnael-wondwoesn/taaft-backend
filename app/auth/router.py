@@ -2,8 +2,7 @@ import asyncio
 from fastapi import APIRouter, HTTPException, status, Depends, Body, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.auth.oauth import sync_to_company_ghl
-from app.ghl.ghl_service import SignupType
+from app.ghl.ghl_service import sync_to_company_ghl, SignupType
 from ..models.user import UserCreate, UserInDB, UserResponse, ServiceTier, UserUpdate
 from ..database.database import database
 from .utils import (
@@ -64,6 +63,7 @@ async def register_user(user_data: UserCreate, request: Request = None):
         service_tier=ServiceTier.FREE,
         is_active=True,
         is_verified=False,
+        is_sso_account=False,
         created_at=datetime.datetime.utcnow(),
         updated_at=datetime.datetime.utcnow(),
         usage={
@@ -86,7 +86,7 @@ async def register_user(user_data: UserCreate, request: Request = None):
     )
     
     # Get the backend URL for verification
-    base_url = os.getenv("BACKEND_URL", "https://taaft.zapto.org")
+    base_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
     if not base_url.startswith("http"):
         base_url = "https://" + base_url
     
@@ -120,9 +120,30 @@ async def register_user(user_data: UserCreate, request: Request = None):
         signup_type = (
             SignupType.BOTH if user_data.subscribeToNewsletter else SignupType.ACCOUNT
         )
-        asyncio.create_task(sync_to_company_ghl(created_user, signup_type))
+        # Convert user to dict format expected by the GHL service
+        user_dict = {
+            "id": str(created_user["_id"]),
+            "email": created_user["email"],
+            "full_name": created_user.get("full_name", ""),
+        }
+        
+        # Create background task for GHL sync - don't block registration
+        async def safe_ghl_sync():
+            try:
+                result = await sync_to_company_ghl(user_dict, signup_type)
+                if result.get("skipped"):
+                    logger.info(f"GHL sync skipped for {user_dict['email']}: {result.get('message')}")
+                else:
+                    logger.info(f"GHL sync completed for {user_dict['email']}")
+            except Exception as e:
+                logger.error(f"GHL sync failed for {user_dict['email']}: {str(e)}")
+                # Don't re-raise - this shouldn't block user registration
+        
+        asyncio.create_task(safe_ghl_sync())
+        
     except Exception as e:
-        logger.error(f"Failed to sync user to company GoHighLevel account: {str(e)}")
+        logger.error(f"Failed to schedule GHL sync for user registration: {str(e)}")
+        # Don't re-raise - GHL sync failure shouldn't block user registration
 
     return UserResponse(
         id=str(created_user["_id"]),
@@ -132,6 +153,7 @@ async def register_user(user_data: UserCreate, request: Request = None):
         service_tier=created_user["service_tier"],
         is_active=created_user["is_active"],
         is_verified=created_user["is_verified"],
+        is_sso_account=created_user.get("is_sso_account", False),
         subscribeToNewsletter=created_user.get("subscribeToNewsletter", False),
         created_at=created_user["created_at"],
         usage=created_user["usage"],
@@ -259,7 +281,10 @@ async def get_current_user_info(current_user: UserInDB = Depends(get_current_use
         service_tier=current_user.service_tier,
         is_active=current_user.is_active,
         is_verified=current_user.is_verified,
+        is_sso_account=current_user.is_sso_account,
+        subscribeToNewsletter=current_user.subscribeToNewsletter,
         created_at=current_user.created_at,
+        oauth_providers=current_user.oauth_providers,
         usage=current_user.usage,
     )
 
@@ -295,7 +320,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                 sub_message = "We encountered an issue while trying to verify your email."
 
             frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
-            backend_url = os.getenv("BACKEND_URL", "")
+            backend_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
             html_content = f"""
             <!DOCTYPE html>
             <html lang=\"en\">
@@ -470,7 +495,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                 sub_message = "We encountered an issue while trying to verify your email."
 
             frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
-            backend_url = os.getenv("BACKEND_URL", "")
+            backend_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
             html_content = f"""
             <!DOCTYPE html>
             <html lang=\"en\">
@@ -643,7 +668,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                 sub_message = "We encountered an issue while trying to verify your email."
 
             frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
-            backend_url = os.getenv("BACKEND_URL", "")
+            backend_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
             html_content = f"""
             <!DOCTYPE html>
             <html lang=\"en\">
@@ -818,7 +843,7 @@ async def verify_email(token: Optional[str] = None, request: Request = None):
                 sub_message = "We encountered an issue while trying to verify your email."
 
             frontend_url = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app")
-            backend_url = os.getenv("BACKEND_URL", "")
+            backend_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
             html_content = f"""
             <!DOCTYPE html>
             <html lang=\"en\">
@@ -1423,7 +1448,7 @@ async def request_password_reset(
     base_url = (
         str(request.base_url)
         if request
-        else os.getenv("BASE_URL", "https://taaft.zapto.org/")
+        else os.getenv("BASE_URL", "https://api.aibyhour.com/")
     )
 
     # Import here to avoid circular imports
@@ -1711,7 +1736,7 @@ async def resend_verification_email(
     )
 
     # Get base URL for the backend
-    base_url = os.getenv("BACKEND_URL", "https://taaft.zapto.org")
+    base_url = os.getenv("BACKEND_URL", "https://api.aibyhour.com")
     if not base_url.startswith("http"):
         base_url = "https://" + base_url
     
@@ -1918,7 +1943,9 @@ async def update_profile(
         service_tier=updated_user["service_tier"],
         is_active=updated_user["is_active"],
         is_verified=updated_user["is_verified"],
+        is_sso_account=updated_user.get("is_sso_account", False),
         subscribeToNewsletter=updated_user.get("subscribeToNewsletter", False),
         created_at=updated_user["created_at"],
+        oauth_providers=updated_user.get("oauth_providers", []),
         usage=updated_user["usage"],
     )
