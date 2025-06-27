@@ -10,7 +10,7 @@ from ..models.user import UserResponse
 from ..logger import logger
 
 router = APIRouter(
-    prefix="/api/tool-logs",
+    prefix="/tool-logs",
     tags=["Tool Logs"],
     responses={404: {"description": "Not found"}},
 )

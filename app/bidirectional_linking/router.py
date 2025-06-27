@@ -14,7 +14,7 @@ from bson import ObjectId
 
 
 router = APIRouter(
-    prefix="/api/linking",
+    prefix="/linking",
     tags=["bidirectional_linking"],
     responses={404: {"description": "Not found"}},
 )

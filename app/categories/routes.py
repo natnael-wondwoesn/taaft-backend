@@ -22,7 +22,7 @@ from ..models.user import UserResponse, UserInDB
 from ..database.database import tools as tools_collection
 
 router = APIRouter(
-    prefix="/api/categories",
+    prefix="/categories",
     tags=["Categories"],
     responses={404: {"description": "Not found"}},
 )
@@ -169,11 +169,12 @@ async def update_category_counts() -> Dict[str, Any]:
         return result
 
 
-@router.post("/recalculate", response_model=Dict[str, Any])
+@public_router.post("/recalculate", response_model=Dict[str, Any])
 async def recalculate_category_counts():
     """
     Recalculate the count of tools for each category using optimized method.
     This endpoint resets all category counts to 0 and then rebuilds them by iterating through tools.
+    This endpoint is publicly accessible without authentication.
 
     Returns:
         Dictionary with success status and summary of updated categories

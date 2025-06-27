@@ -11,7 +11,7 @@ from bson import ObjectId
 from pymongo import DESCENDING
 
 router = APIRouter(
-    prefix="/api/blog",
+    prefix="/blog",
     tags=["blog"],
     responses={404: {"description": "Not found"}},
 )

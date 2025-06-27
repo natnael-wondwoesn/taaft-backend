@@ -374,6 +374,7 @@ class AdminControlMiddleware:
             "/api/sso/providers",
             # Category endpoints
             "/api/categories/recalculate",  # Public endpoint for recalculating category counts
+            "/public/categories/recalculate",  # Public endpoint for recalculating category counts
             # Algolia indexing endpoints
             "/api/search/index/tools",
             "/api/search/index/glossary",

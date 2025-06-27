@@ -38,6 +38,7 @@ services:
       - GHL_ACCESS_TOKEN=${GHL_ACCESS_TOKEN}
       - GHL_REFRESH_TOKEN=${GHL_REFRESH_TOKEN}
       - GHL_LOCATION_ID=${GHL_LOCATION_ID}
+      - BASE_URL=${BASE_URL}
     depends_on:
       mongo:
         condition: service_healthy

@@ -197,6 +197,7 @@ app.add_middleware(
         "https://taaft-development.vercel.app/",
         "https://taaft-deploy-18xw-git-fixes-natnael-alemsegeds-projects.vercel.app",  # Additional frontend
         "https://api.aibyhour.com",
+        "https://www.aibyhour.com",  # Main domain for API access
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -238,6 +239,12 @@ app.add_middleware(
     cache_enabled=SEARCH_CACHE_ENABLED,
     default_ttl=SEARCH_CACHE_TTL,
 )
+
+# Add a global OPTIONS handler for CORS preflight
+@app.options("/{full_path:path}")
+async def options_handler():
+    """Handle CORS preflight requests"""
+    return {"status": "ok"}
 
 # Include routers
 app.include_router(chat_router)

@@ -1,0 +1,6 @@
+{
+    "name": "Jira MCP Server",
+    "entry": "python3 app/jira_mcp_server.py",
+    "language": "python",
+    "version": "1.0.0"
+}

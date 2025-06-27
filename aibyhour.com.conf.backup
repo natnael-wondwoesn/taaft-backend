@@ -1,0 +1,41 @@
+# Redirect HTTP to HTTPS
+server {
+    if ($host = aibyhour.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name aibyhour.com;
+
+    return 301 https://aibyhour.com$request_uri;
+
+
+}
+
+# HTTPS site: frontend and backend
+server {
+    listen 443 ssl;
+    server_name aibyhour.com;
+    ssl_certificate /etc/letsencrypt/live/aibyhour.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/aibyhour.com/privkey.pem; # managed by Certbot
+
+    # Serve frontend from Amplify (option 1: iframe or deploy static version)
+    location / {
+    return 200 "Temporary placeholder for certbot";
+    add_header Content-Type text/plain;
+    
+    }
+
+
+    # Serve backend from EC2
+    location /api/ {
+        proxy_pass http://127.0.0.1:8001/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+}
+

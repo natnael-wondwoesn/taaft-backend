@@ -24,7 +24,7 @@ from app.services.job_impacts_service import (
 from app.logger import logger
 
 router = APIRouter(
-    prefix="/api/jobs",
+    prefix="/jobs",
     tags=["Job Impacts"],
 )
 

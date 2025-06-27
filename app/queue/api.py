@@ -22,7 +22,7 @@ from .database import get_sites_collection
 from .site_queue_manager import SiteQueueManager
 
 router = APIRouter(
-    prefix="/api/sites",
+    prefix="/sites",
     tags=["Sites Queue"],
     responses={404: {"description": "Not found"}},
 )

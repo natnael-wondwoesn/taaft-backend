@@ -43,7 +43,7 @@ from ..models.user import UserInDB
 
 # Create the router before importing middleware that might use it
 router = APIRouter(
-    prefix="/api/search",
+    prefix="/search",
     tags=["Search"],
     responses={404: {"description": "Not found"}},
 )

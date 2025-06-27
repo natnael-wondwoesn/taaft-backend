@@ -19,7 +19,7 @@ from ..models.user import UserInDB
 
 # Create router
 router = APIRouter(
-    prefix="/api/glossary",
+    prefix="/glossary",
     tags=["glossary"],
     responses={404: {"description": "Not found"}},
 )

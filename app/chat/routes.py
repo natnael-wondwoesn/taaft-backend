@@ -27,7 +27,7 @@ from ..logger import logger
 from ..database.database import database
 
 router = APIRouter(
-    prefix="/api/chat",
+    prefix="/chat",
     tags=["Chat"],
     responses={404: {"description": "Not found"}},
 )
