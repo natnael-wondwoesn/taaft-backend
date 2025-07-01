@@ -211,14 +211,9 @@ def configure_algolia_index(client, index_name):
         {
             "searchableAttributes": [
                 "name",
-                "description",
-                "task",
-                "keywords",
             ],
             "attributesForFaceting": [
                 "name",
-                "searchable(task)",
-                "searchable(keywords)",
             ],
             "attributesToRetrieve": [
                 "name",
@@ -257,6 +252,7 @@ def configure_algolia_index(client, index_name):
                 "task",
             ],
             "ranking": [
+                "asc(name)",
                 "words",
                 "typo",
                 "geo",

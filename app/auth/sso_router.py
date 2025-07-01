@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Frontend URLs for redirection after OAuth
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://taaft-development.vercel.app/")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://aibyhour.com")
 FRONTEND_SUCCESS_URL = os.getenv("FRONTEND_SUCCESS_URL", f"{FRONTEND_URL}/auth/success")
 FRONTEND_ERROR_URL = os.getenv("FRONTEND_ERROR_URL", f"{FRONTEND_URL}/auth/error")
 

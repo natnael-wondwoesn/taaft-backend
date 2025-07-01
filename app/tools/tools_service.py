@@ -856,7 +856,8 @@ async def search_tools(
     user_id: Optional[str] = None,
 ) -> Union[Dict[str, Any], int]:
     """
-    Search for tools by name or description using MongoDB only.
+    Search for tools by name (priority) and description using MongoDB.
+    Results are sorted lexicographically with name matches appearing first.
 
     Args:
         search_term: The search query
@@ -864,8 +865,8 @@ async def search_tools(
         limit: Maximum number of items to return
         count_only: If True, return only the count of items
         additional_filters: Additional MongoDB filters to apply
-        sort_by: Field to sort by
-        sort_order: Sort order (asc or desc)
+        sort_by: Field to sort by (ignored for relevance sorting)
+        sort_order: Sort order (ignored for relevance sorting)
         user_id: Optional user ID to check favorite status
 
     Returns:
@@ -875,136 +876,111 @@ async def search_tools(
     from bson import ObjectId
     from ..logger import logger
     
-    # Split the search term into individual words
-    search_terms = search_term.strip().split()
-    if not search_terms:
+    # Clean and validate search term
+    search_term = search_term.strip()
+    if not search_term:
         return {"tools": [], "total": 0} if not count_only else 0
     
-    # Create a MongoDB $and query with multiple parts to improve relevance
-    search_parts = []
+    # Escape regex special characters for safe matching
+    escaped_term = re.escape(search_term.lower())
     
-    # For multi-word queries, ensure ALL words must appear in the document (AND logic)
-    # This prevents irrelevant results when nonsensical terms are mixed with real terms
-    if len(search_terms) > 1:
-        # Create text match conditions for each term
-        text_match_conditions = []
-        for term in search_terms:
-            escaped_term = re.escape(term.lower())
-            # Each term must appear in either name, description, or keywords
-            term_condition = {
-                "$or": [
-                    {"name": {"$regex": escaped_term, "$options": "i"}},
-                    {"description": {"$regex": escaped_term, "$options": "i"}},
-                    {"keywords": {"$in": [term.lower()]}}
-                ]
-            }
-            text_match_conditions.append(term_condition)
-        
-        # All terms must match (AND logic)
-        search_parts.append({"$and": text_match_conditions})
-    else:
-        # Single word query
-        single_term = search_terms[0]
-        
-        # For very short terms (1-2 characters), use only regex matching
-        # since MongoDB text search ignores short words
-        if len(single_term) <= 2:
-            escape_regex = re.escape(single_term)
-            name_regex = {"name": {"$regex": escape_regex, "$options": "i"}}
-            desc_regex = {"description": {"$regex": escape_regex, "$options": "i"}}
-            keyword_match = {"keywords": {"$in": [single_term.lower()]}}
-            
-            # For short terms, use regex matching only
-            search_parts.append({
-                "$or": [
-                    name_regex,
-                    desc_regex,
-                    keyword_match
-                ]
-            })
-        else:
-            # For longer terms, use text index for better performance
-            search_parts.append({"$text": {"$search": single_term}})
-            
-            # Add regex matches for name and description fields for better matching
-            escape_regex = re.escape(single_term)
-            name_regex = {"name": {"$regex": escape_regex, "$options": "i"}}
-            desc_regex = {"description": {"$regex": escape_regex, "$options": "i"}}
-            keyword_match = {"keywords": {"$in": [single_term.lower()]}}
-            
-            # Add regex conditions as a boost but not a requirement
-            search_parts.append({
-                "$or": [
-                    name_regex,
-                    desc_regex,
-                    keyword_match
-                ]
-            })
+    # Create base query that searches in name and description
+    # Primary search: name and description contain the search term
+    base_query = {
+        "$or": [
+            {"name": {"$regex": escaped_term, "$options": "i"}},
+            {"description": {"$regex": escaped_term, "$options": "i"}},
+            {"keywords": {"$in": [search_term.lower()]}}
+        ]
+    }
     
     # Add additional filters if provided
     if additional_filters:
+        query_conditions = [base_query]
+        
         if "$or" in additional_filters:
-            # Add category filter directly to the search parts
-            search_parts.append({"$or": additional_filters["$or"]})
+            # Add category filter
+            query_conditions.append({"$or": additional_filters["$or"]})
             
             # Add any other filters
             for k, v in additional_filters.items():
                 if k != "$or":
-                    search_parts.append({k: v})
+                    query_conditions.append({k: v})
         else:
             # Add all additional filters
             for k, v in additional_filters.items():
-                search_parts.append({k: v})
+                query_conditions.append({k: v})
+        
+        query = {"$and": query_conditions}
+    else:
+        query = base_query
     
-    # Construct the final query
-    query = {"$and": search_parts}
-    
-    # Add a score field to rank results by relevance
-    # This gives higher weight to exact name matches
-    score_query = {
-        "$addFields": {
-            "search_score": {
-                "$sum": [
-                    # Highest score for exact name match
-                    {"$cond": [{"$eq": [{"$toLower": "$name"}, search_term.lower()]}, 100, 0]},
-                    # High score for name containing all search terms
-                    {"$cond": [
-                        {"$regexMatch": {"input": {"$toLower": "$name"}, "regex": re.escape(search_term.lower()), "options": "i"}}, 
-                        50, 
-                        0
-                    ]},
-                    # Medium score for description containing all search terms
-                    {"$cond": [
-                        {"$regexMatch": {"input": {"$toLower": "$description"}, "regex": re.escape(search_term.lower()), "options": "i"}}, 
-                        25, 
-                        0
-                    ]},
-                    # Score based on how many terms match in keywords
-                    {"$multiply": [
-                        {"$size": {
-                            "$setIntersection": [
-                                {"$ifNull": [{"$map": {"input": "$keywords", "in": {"$toLower": "$$this"}}}, []]},
-                                search_terms
-                            ]
-                        }},
-                        5  # 5 points per matched keyword
-                    ]}
-                ]
-            }
-        }
-    }
-
     if count_only:
         return await tools.count_documents(query)
-
-    # Determine sort direction
-    sort_direction = -1 if sort_order.lower() == "desc" else 1
-
-    # Use aggregation pipeline for better search results
+    
+    # Create aggregation pipeline for advanced scoring and sorting
     pipeline = [
         {"$match": query},
-        score_query,
-        {"$sort": {"search_score": -1, sort_by: sort_direction}},
+        {
+            "$addFields": {
+                "name_lower": {"$toLower": "$name"},
+                "description_lower": {"$toLower": "$description"},
+                "search_term_lower": search_term.lower()
+            }
+        },
+        {
+            "$addFields": {
+                # Calculate position of search term in name (earlier position = higher score)
+                "name_position": {
+                    "$cond": [
+                        {"$gte": [{"$indexOfCP": ["$name_lower", "$search_term_lower"]}, 0]},
+                        {"$indexOfCP": ["$name_lower", "$search_term_lower"]},
+                        1000  # Large number if not found in name
+                    ]
+                },
+                # Calculate position of search term in description
+                "desc_position": {
+                    "$cond": [
+                        {"$gte": [{"$indexOfCP": ["$description_lower", "$search_term_lower"]}, 0]},
+                        {"$indexOfCP": ["$description_lower", "$search_term_lower"]},
+                        2000  # Large number if not found in description
+                    ]
+                },
+                # Check for exact name match
+                "exact_name_match": {"$eq": ["$name_lower", "$search_term_lower"]},
+                # Check if name starts with search term
+                "name_starts_with": {
+                    "$eq": [{"$indexOfCP": ["$name_lower", "$search_term_lower"]}, 0]
+                }
+            }
+        },
+        {
+            "$addFields": {
+                # Calculate relevance score
+                "relevance_score": {
+                    "$switch": {
+                        "branches": [
+                            # Exact name match gets highest score
+                            {"case": "$exact_name_match", "then": 1000},
+                            # Name starts with search term gets high score
+                            {"case": "$name_starts_with", "then": 900},
+                            # Name contains search term (scored by position - earlier is better)
+                            {"case": {"$lt": ["$name_position", 1000]}, "then": {"$subtract": [800, "$name_position"]}},
+                            # Description contains search term (lower priority)
+                            {"case": {"$lt": ["$desc_position", 2000]}, "then": {"$subtract": [400, {"$divide": ["$desc_position", 2]}]}}
+                        ],
+                        "default": 0
+                    }
+                }
+            }
+        },
+        {
+            "$sort": {
+                "relevance_score": -1,  # Higher relevance first
+                "name_position": 1,     # Earlier position in name first
+                "name_lower": 1         # Lexicographic order as tiebreaker
+            }
+        },
         {"$skip": skip},
         {"$limit": limit}
     ]
@@ -1024,34 +1000,9 @@ async def search_tools(
             async for favorite in fav_cursor:
                 saved_tools_list.append(str(favorite["tool_unique_id"]))
 
-        # For debugging
-        logger.info(
-            f"User {user_id} has saved tools (MongoDB search): {saved_tools_list}"
-        )
+        logger.info(f"User {user_id} has saved tools (MongoDB search): {saved_tools_list}")
 
-    # For multi-term queries, check if all terms are in the document before including
-    multi_term_query = len(search_terms) > 1
-    
     async for tool in cursor:
-        # For multi-term queries with nonsense terms, double-check that all terms are present
-        if multi_term_query:
-            # Convert name, description, and keywords to lowercase for case-insensitive matching
-            tool_text = (tool.get("name", "").lower() + " " + 
-                        tool.get("description", "").lower())
-            
-            # Add keywords if they exist
-            if tool.get("keywords"):
-                for kw in tool.get("keywords", []):
-                    if isinstance(kw, str):
-                        tool_text += " " + kw.lower()
-            
-            # Check if all search terms are in the document
-            all_terms_present = all(term.lower() in tool_text for term in search_terms)
-            
-            # Skip this result if not all terms are present
-            if not all_terms_present:
-                continue
-        
         tool_response = await create_tool_response(tool)
         if tool_response:
             if user_id:
@@ -1059,12 +1010,8 @@ async def search_tools(
                 tool_response.saved_by_user = unique_id in saved_tools_list
             tools_list.append(tool_response)
 
-    # For count, we need to recount based on our additional filtering
-    if multi_term_query:
-        total = len(tools_list)
-    else:
-        # For single-term queries, use the MongoDB count
-        total = await tools.count_documents(query)
+    # Get total count for pagination
+    total = await tools.count_documents(query)
 
     return {"tools": tools_list, "total": total}
 

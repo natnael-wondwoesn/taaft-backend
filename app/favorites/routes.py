@@ -16,7 +16,7 @@ from . import router
 from ..logger import logger
 
 
-@router.post("/", response_model=FavoriteResponse)
+@router.post("", response_model=FavoriteResponse)
 async def add_to_favorites(
     favorite_data: FavoriteCreate,
     current_user: UserResponse = Depends(get_current_active_user),
@@ -46,7 +46,7 @@ async def remove_from_favorites(
     return {"status": "success", "message": "Tool successfully removed from favorites"}
 
 
-@router.get("/", response_model=FavoritesListResponse)
+@router.get("", response_model=FavoritesListResponse)
 async def list_favorites(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
